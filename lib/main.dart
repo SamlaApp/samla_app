@@ -16,9 +16,14 @@ void main() {
   //   password: '12345678',
   // );
 
-  // Test works FINE
+  // Tests works FINE
   loginWithEmailPassword(
     email: 'test@samla.com',
+    password: '12345678',
+  );
+
+  loginWithUserNamePassword(
+    username: 'samla_user',
     password: '12345678',
   );
    // runApp(MyApp());
