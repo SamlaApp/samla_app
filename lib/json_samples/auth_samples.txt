@@ -1,0 +1,20 @@
+// success register,login
+{
+    "user": {
+        "name": "mohammed",
+        "email": "test3@samla.com",
+        "username": "samla_user3",
+        "phone": "+966564364370",
+        "date_of_birth": "2000-03-21",
+        "updated_at": "2023-09-30T01:36:05.000000Z",
+        "created_at": "2023-09-30T01:36:05.000000Z",
+        "id": 20
+    },
+    "access_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiMmI4ODg5OTA4OWVlMDZjYWJlNzUxNjI5NzY5MzFmY2E0NTU3NDI2MGM4MGEyZWUxMmVjMWFiYTVjYzEwNDM3NjhmOWU2MDY3NmEwYTQwOGIiLCJpYXQiOjE2OTYwMzc3NjUuMDczMDYzLCJuYmYiOjE2OTYwMzc3NjUuMDczMDY5LCJleHAiOjE3Mjc2NjAxNjUuMDYyNDQ5LCJzdWIiOiIyMCIsInNjb3BlcyI6W119.snSeKzAx8y4cu163jrAzOeQbZuafPZlZjXSNGuydxKKTDA0IAEqW0TeGC4lEzQ1iPPofLCc1Xu_a4mlQcbe9sEzg3E0BXVloZsVitZGmc_DijIql0HJTxzY41x2EcwM09f0c2FsdEqYzTwIde1DneXOaqhPdoJ9F39PAh47pTFi1TjiDO2BvaThtH3I4rhgURj2PCBqxNfFbBcu-yPLNu0ZbePjmpz38EId504NuijHFiEMcrJ_w394S0xzTvSGfp6JCt_LUGtUZYlBRjHCTSwvDRtstmZLL5Jare62qhjnexp9i7kCsA-qR0CdbXcW8j3hWxP-HBPecv-7BzW7zx3LeqmqvfA08hLBm7H3gyyXXSzyjBQj2YYcXwoTslFTDH2PnzNlysZY5q8qopjFH5RmAI0i_Mz_AQSRymo1GkMbmGrZ9MKTtKLiErzz6Y8P-ejCBIGXxlJhk8kYtBBVHKmeoFxnrJ2QTrvzp42MwiO16uRfQ71QHSEjFqE4_JwUNOkP80_rjVZU5LQjSXApXchoGSSsyjUZbvVKbwiz6w8A1FMyQO5VS-Xtqeli_0LTOtlDzGjaIjyMeuYP9PHAE-7nGHLTd3WNHSdtwmMMH7rcB-pfKjMKv62OpPkv9PxIhPhu7SFfII1ee2F6Ne51DgDCOec1b8EVaNVAHs82CVvw"
+}
+
+// login with phone 
+{
+    "message": "OTP sent to your phone number",
+    "otp_message": null
+}
