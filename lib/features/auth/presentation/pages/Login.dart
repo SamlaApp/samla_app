@@ -79,7 +79,9 @@ class _LoginState extends State<Login> {
       
       await localDataSourceImpl.cacheUser(userModel);
       await Auth.getUser();
-      Navigator.pushReplacementNamed(context, '/');
+      // Navigator.pushReplacementNamed(context, '/');
+      Navigator.of(context).pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
+
     } on ServerException {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
