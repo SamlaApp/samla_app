@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:samla_app/config/themes/common_styles.dart';
+import 'package:samla_app/features/auth/data/datasources/remote_data_source.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class Register extends StatefulWidget {
-  const Register({Key? key}) : super(key: key);
+class RegisterPage extends StatefulWidget {
+  const RegisterPage({Key? key}) : super(key: key);
 
   @override
-  State<Register> createState() => _RegisterState();
+  State<RegisterPage> createState() => _RegisterState();
 }
 
-class _RegisterState extends State<Register> {
+class _RegisterState extends State<RegisterPage> {
   static const double x = 0.03;
 
   // Register form keys
@@ -25,9 +27,13 @@ class _RegisterState extends State<Register> {
   String? _accountType;
 
   final List<String> _accountTypeList = ['User', 'Trainer'];
-  
+
   _Register(){
-    
+    final http.Client client = http.Client();
+
+    late RemoteDataSourceImpl remoteDataSourceImpl =
+        RemoteDataSourceImpl(client: client);
+    late SharedPreferences sharedPreferences;
   }
   
 

@@ -47,7 +47,7 @@ class _LoginState extends State<Login> {
       await remoteDataSourceImpl
           .loginWithPhoneNumber(_phoneNumber.phoneNumber!);
       print('phone number');
-      await Auth.getUser();
+      await LocalAuth.init(); // register the user
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -76,12 +76,12 @@ class _LoginState extends State<Login> {
 
       final userModel =
           await remoteDataSourceImpl.loginWithUsername(username, password);
-      
-      await localDataSourceImpl.cacheUser(userModel);
-      await Auth.getUser();
-      // Navigator.pushReplacementNamed(context, '/');
-      Navigator.of(context).pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
 
+      await localDataSourceImpl.cacheUser(userModel);
+      await LocalAuth.init();
+      // Navigator.pushReplacementNamed(context, '/');
+      Navigator.of(context).pushNamedAndRemoveUntil(
+          '/MainPages', (Route<dynamic> route) => false);
     } on ServerException {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -102,8 +102,8 @@ class _LoginState extends State<Login> {
           await remoteDataSourceImpl.loginWithEmail(email, password);
       await localDataSourceImpl.cacheUser(userModel);
 
-      await Auth.getUser();
-      Navigator.pushReplacementNamed(context, '/');
+      await LocalAuth.init();
+      Navigator.pushReplacementNamed(context, '/MainPages');
     } on ServerException {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(

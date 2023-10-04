@@ -100,7 +100,7 @@ class _OTPPageState extends State<OTPPage> {
       final userModel = await remoteDataSourceImpl.sendOTP(
           widget.phoneNumber.phoneNumber!, enteredOtp);
       await localDataSourceImpl.cacheUser(userModel);
-      await Auth.getUser();
+      // await LocalAuth.user;
       Navigator.pushReplacementNamed(context, '/');
 
     } on ServerException catch (e) {
@@ -171,7 +171,7 @@ class _OTPPageState extends State<OTPPage> {
   Future<void> _loginUser(String phoneNumber) async {
     try {
       await remoteDataSourceImpl.loginWithPhoneNumber(phoneNumber);
-      await Auth.getUser();
+      // await Auth.getUser();
     } on ServerException catch (e) {
       print('server exception');
       ScaffoldMessenger.of(context).showSnackBar(
