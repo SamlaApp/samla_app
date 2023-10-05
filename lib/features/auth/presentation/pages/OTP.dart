@@ -13,9 +13,9 @@ import 'package:samla_app/features/auth/data/datasources/remote_data_source.dart
 import 'package:shared_preferences/shared_preferences.dart';
 
 class OTPPage extends StatefulWidget {
-  final PhoneNumber phoneNumber;
+  final String phone;
 
-  const OTPPage({Key? key, required this.phoneNumber}) : super(key: key);
+  const OTPPage({Key? key, required this.phone}) : super(key: key);
 
   @override
   _OTPPageState createState() => _OTPPageState();
@@ -35,21 +35,6 @@ class _OTPPageState extends State<OTPPage> {
   String _correctOtp = '';
   bool _wrongOtp = false;
 
-  // Future<void> sendSMS(String to, String message) async {
-  //   try {
-
-  //     await remoteDataSourceImpl.loginWithUsername(username, password);
-  //     await Auth.getUser();
-  //     Navigator.pushReplacementNamed(context, '/MainPages');
-  //   } on ServerException {
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       const SnackBar(
-  //         content: Text('something went worng'),
-  //       ),
-  //     );
-  //   }
-  // }
-
   void _startTimer() {
     _timerSeconds = 60;
     _canResendCode = false;
@@ -59,7 +44,7 @@ class _OTPPageState extends State<OTPPage> {
     _correctOtp = otpCode;
 
     // Send the OTP code via SMS
-    if (widget.phoneNumber.phoneNumber != null) {
+    if (widget.phone != null) {
       //sendSMS(widget.phoneNumber.phoneNumber!, 'Your OTP code is $otpCode');
       print('OTP code is $otpCode');
     } else {
@@ -98,11 +83,11 @@ class _OTPPageState extends State<OTPPage> {
     }
     try {
       final userModel = await remoteDataSourceImpl.sendOTP(
-          widget.phoneNumber.phoneNumber!, enteredOtp);
+          widget.phone, enteredOtp);
       await localDataSourceImpl.cacheUser(userModel);
+      await LocalAuth.init();
       // await LocalAuth.user;
       Navigator.pushReplacementNamed(context, '/');
-
     } on ServerException catch (e) {
       print('server exception');
       ScaffoldMessenger.of(context).showSnackBar(
@@ -121,11 +106,12 @@ class _OTPPageState extends State<OTPPage> {
 
     if (enteredOtp == _correctOtp) {
       print('OTP is correct');
+
       // Perform the action you want to execute when the OTP is correct
-      _loginUser(widget.phoneNumber.phoneNumber!);
+      _loginUser(widget.phone);
     } else {
       print('OTP is incorrect');
-      _wrongOtp = true;
+      setState(()=>(_wrongOtp = true));
       // Perform the action you want to execute when the OTP is incorrect
     }
   }
@@ -133,6 +119,7 @@ class _OTPPageState extends State<OTPPage> {
   void onNumberButtonPressed(String number) {
     if (number == 'C') {
       clearInput();
+      setState(() => (_wrongOtp = false));
     } else {
       int lastFilledIndex = -1;
       for (int i = 0; i < _controllers.length; i++) {
@@ -193,8 +180,8 @@ class _OTPPageState extends State<OTPPage> {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: SizedBox(
-        width: 80,
-        height: 80,
+        width: 60,
+        height: 60,
         child: OutlinedButton(
           onPressed: () => onNumberButtonPressed(number),
           style: OutlinedButton.styleFrom(
@@ -228,10 +215,6 @@ class _OTPPageState extends State<OTPPage> {
       appBar: AppBar(
         backgroundColor: primary_color,
         elevation: 0,
-        title: const Text(
-          'OTP',
-          style: TextStyle(color: Colors.black),
-        ),
         leading: IconButton(
           color: Colors.black,
           icon: const Icon(Icons.arrow_back_ios),
@@ -241,8 +224,8 @@ class _OTPPageState extends State<OTPPage> {
         ),
       ),
       body: SafeArea(
-        child: Container(
-            padding: const EdgeInsets.all(20),
+        child: SingleChildScrollView(
+            // padding: const EdgeInsets.all(20),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               mainAxisSize: MainAxisSize.max,
@@ -270,7 +253,7 @@ class _OTPPageState extends State<OTPPage> {
                           ),
                           const SizedBox(height: 6),
                           Text(
-                            'Enter the code sent to ${widget.phoneNumber.phoneNumber}',
+                            'Enter the code sent to ${widget.phone}',
                             textAlign: TextAlign.center,
                             style: const TextStyle(
                               fontSize: 14,
@@ -284,7 +267,7 @@ class _OTPPageState extends State<OTPPage> {
                     ),
 
                     // OTP Part
-                    const SizedBox(height: 30),
+                    const SizedBox(height: 20),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: _controllers
@@ -293,7 +276,8 @@ class _OTPPageState extends State<OTPPage> {
                             (index, controller) => MapEntry(
                               index,
                               SizedBox(
-                                width: 60,
+                                width: 40,
+                                height: 40,
                                 child: TextFormField(
                                   controller: controller,
                                   textAlign: TextAlign.center,
@@ -303,9 +287,12 @@ class _OTPPageState extends State<OTPPage> {
                                     LengthLimitingTextInputFormatter(1),
                                   ],
                                   decoration: const InputDecoration(
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(8),
+                                   focusedBorder: UnderlineInputBorder(
+                                      borderSide: BorderSide(
+                                        width:
+                                            2.0, // Set the border width as desired
+                                        color:
+                                            Colors.blue, // Set the border color
                                       ),
                                     ),
                                   ),
@@ -324,7 +311,7 @@ class _OTPPageState extends State<OTPPage> {
                         'Wrong OTP code',
                         style: TextStyle(color: Colors.red),
                       ),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 10),
                   ],
                 ),
 

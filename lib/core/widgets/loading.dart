@@ -39,7 +39,7 @@ class _LoadingScreenState extends State<LoadingScreen> with TickerProviderStateM
   }
 
   Future<void> _checkCachedUserAndNavigate() async {
-    await Future.delayed(Duration(seconds: 12)); // for testing
+    // await Future.delayed(Duration(seconds: 12)); // for testing
     try {
       await LocalAuth.init();
       Navigator.of(context).pushNamedAndRemoveUntil(
