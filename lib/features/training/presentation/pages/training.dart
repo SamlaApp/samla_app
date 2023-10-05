@@ -5,9 +5,11 @@ import 'new_workout.dart';
 class TrainingPage extends StatelessWidget {
   TrainingPage({Key? key});
 
-  final user = LocalAuth.user;
+  // final user = LocalAuth.user;
+  
   @override
   Widget build(BuildContext context) {
+    
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(16.0),

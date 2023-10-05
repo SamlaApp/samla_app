@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:samla_app/core/auth/User.dart';
 
 class CommunityPage extends StatelessWidget {

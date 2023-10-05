@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:flutter/foundation.dart';
 import 'package:samla_app/core/error/exceptions.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -46,67 +45,6 @@ class _User {
     };
   }
 }
-
-// class LocalAuth extends ChangeNotifier {
-//   _User _user; // User cache
-//   bool _isAuth = false;
-
-//   _User get user => _user;
-//   bool get isAuth => _isAuth;
-
-//   LocalAuth(this._user, this._isAuth);
-
-//   // Method to get the user
-//   static Future<LocalAuth> init() async {
-//     final prefs = await SharedPreferences.getInstance();
-//     final userData = prefs.getString('user');
-//     if (userData != null) {
-//       final jsonUser = json.decode(userData);
-//       final user = _User.fromJson(jsonUser);
-//       return LocalAuth(user, true);
-//     } else {
-//       throw EmptyCacheException();
-//     }
-//   }
-
-//   // Update the user data and notify listeners
-//   Future<void> updateUser({
-//     String? username,
-//     String? name,
-//     String? dateOfBirth,
-//     String? phone,
-//   }) async {
-//     // Update the user cache
-//     if (_user != null) {
-//       if (username != null) {
-//         _user.username = username;
-//       }
-//       if (name != null) {
-//         _user.name = name;
-//       }
-//       if (dateOfBirth != null) {
-//         _user.dateOfBirth = dateOfBirth;
-//       }
-//       if (phone != null) {
-//         _user.phone = phone;
-//       }
-//       // Update user data in SharedPreferences
-//       final prefs = await SharedPreferences.getInstance();
-//       await prefs.setString('user', json.encode(_user.toJson()));
-//       notifyListeners(); // Notify listeners about the change
-//     }
-//   }
-
-//   // Reset the user cache and notify listeners
-//   Future<void> resetCacheUser() async {
-//     // Remove user data from SharedPreferences
-//     final prefs = await SharedPreferences.getInstance();
-//     await prefs.remove('user');
-//     _isAuth = false;
-//     notifyListeners(); // Notify listeners about the change
-//   }
-// }
-
 
 abstract class LocalAuth {
   static late _User _user; // Static user cache

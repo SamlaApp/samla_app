@@ -15,7 +15,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   Size get preferredSize => Size.fromHeight(height);
   double sizeOficon = 27;
   Color iconColor = theme_darkblue.withOpacity(0.5);
-  
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +27,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           children: [
             // row of profile
             GestureDetector(
-              onTap: () => Navigator.pushNamed(context, '/Profile'),
+              onTap: () => Navigator.pushReplacementNamed(context, '/Profile'),
               child: Row(
                 children: [
                   CircleAvatar(
