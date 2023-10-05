@@ -27,7 +27,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           children: [
             // row of profile
             GestureDetector(
-              onTap: () => Navigator.pushReplacementNamed(context, '/Profile'),
+              onTap: () => Navigator.pushNamed(context, '/Profile'),
               child: Row(
                 children: [
                   CircleAvatar(

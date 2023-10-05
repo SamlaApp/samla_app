@@ -39,7 +39,7 @@ class _LoadingScreenState extends State<LoadingScreen> with TickerProviderStateM
   }
 
   Future<void> _checkCachedUserAndNavigate() async {
-  // await Future.delayed(Duration(seconds: 2)); // for testing
+    await Future.delayed(Duration(seconds: 12)); // for testing
     try {
       await LocalAuth.init();
       Navigator.of(context).pushNamedAndRemoveUntil(
@@ -53,7 +53,7 @@ class _LoadingScreenState extends State<LoadingScreen> with TickerProviderStateM
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(vertical:20,horizontal:100),
+      padding: EdgeInsets.symmetric(vertical:50,horizontal:100),
       color: primary_color,
       child: Column(
         children: [
