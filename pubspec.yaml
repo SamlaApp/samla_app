@@ -56,6 +56,7 @@ dependencies:
 
     io: ^1.0.4
     equatable: ^2.0.5
+    provider: ^6.0.5
 
 dev_dependencies:
     flutter_test:
