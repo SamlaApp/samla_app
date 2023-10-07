@@ -1,17 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:samla_app/config/themes/common_styles.dart';
+import 'package:samla_app/core/auth/User.dart';
+import 'package:samla_app/core/error/exceptions.dart';
+import 'package:samla_app/features/auth/data/datasources/local_data_source.dart';
+import 'package:samla_app/features/auth/data/datasources/remote_data_source.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class Register extends StatefulWidget {
-  const Register({Key? key}) : super(key: key);
+class RegisterPage extends StatefulWidget {
+  const RegisterPage({Key? key}) : super(key: key);
 
   @override
-  State<Register> createState() => _RegisterState();
+  State<RegisterPage> createState() => _RegisterState();
 }
 
-class _RegisterState extends State<Register> {
+class _RegisterState extends State<RegisterPage> {
   static const double x = 0.03;
 
   // Register form keys
@@ -19,17 +24,64 @@ class _RegisterState extends State<Register> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
-  final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _dateController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
+  PhoneNumber number = PhoneNumber(isoCode: 'SA');
+  String _phone = '';
   String? _accountType;
 
-  final List<String> _accountTypeList = ['User', 'Trainer'];
-  
-  _Register(){
-    
+  final http.Client client = http.Client();
+
+  late RemoteDataSourceImpl remoteDataSourceImpl =
+      RemoteDataSourceImpl(client: client);
+  late SharedPreferences sharedPreferences;
+
+  late LocalDataSourceImpl localDataSourceImpl =
+      LocalDataSourceImpl(sharedPreferences: sharedPreferences);
+
+  _Register() async {
+    sharedPreferences = await SharedPreferences.getInstance();
+    try {
+      // Trim the username
+      final username = _usernameController.text.trim();
+
+      // Trim the password
+      final password = _passwordController.text.trim();
+      final email = _emailController.text.trim();
+      final phone = _phone;
+      final name = _nameController.text.trim();
+      final dateOfBirth = _dateController.text.trim();
+
+      print('username: $username');
+      print('password: $password');
+      print('email: $email');
+      print('phone: $phone');
+      print('name: $name');
+      print('dateOfBirth: $dateOfBirth');
+
+      final userModel = await remoteDataSourceImpl.signup(
+        name: name,
+        email: email,
+        username: username,
+        phone: phone,
+        dateOfBirth: dateOfBirth,
+        password: password,
+      );
+
+      await localDataSourceImpl.cacheUser(userModel);
+      await LocalAuth.init();
+      // Navigator.pushReplacementNamed(context, '/');
+      Navigator.of(context).pushNamedAndRemoveUntil(
+          '/MainPages', (Route<dynamic> route) => false);
+    } on ServerException {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('something went worng'),
+        ),
+      );
+    }
   }
-  
 
   @override
   Widget build(BuildContext context) {
@@ -60,13 +112,11 @@ class _RegisterState extends State<Register> {
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
-
             children: <Widget>[
               SizedBox(height: MediaQuery.of(context).size.height * x),
 
               Padding(
                 padding: const EdgeInsets.fromLTRB(25, 0, 25, 0),
-
                 child: Material(
                   child: Column(
                     children: [
@@ -84,9 +134,7 @@ class _RegisterState extends State<Register> {
                           decoration: TextDecoration.none,
                         ),
                       ),
-
                       SizedBox(height: MediaQuery.of(context).size.height * x),
-
                       const Text(
                         'Welcome to be part of us!',
                         style: TextStyle(
@@ -96,53 +144,23 @@ class _RegisterState extends State<Register> {
                           fontWeight: FontWeight.w300,
                         ),
                       ),
-
                     ],
                   ),
-                ),),
+                ),
+              ),
 
               Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.all(25.0),
                 child: Form(
                   key: _formKey,
                   child: SingleChildScrollView(
                     child: Column(
                       children: [
                         // Name
-                        TextFormField(
+                        CustomTextField(
                           controller: _nameController,
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: const BorderSide(
-                                color: Color.fromRGBO(64, 194, 210, 1),
-                              ),
-                            ),
-                            prefixIcon: const Icon(Icons.person,
-                                color: Color.fromRGBO(64, 194, 210, 1)),
-                            hintText: 'Name',
-                            labelText: 'Name',
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: const BorderSide(
-                                color: Color.fromRGBO(64, 194, 210, 1),
-                              ),
-                            ),
-                            errorBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: const BorderSide(
-                                color: Colors.red,
-                              ),
-                            ),
-                            focusedErrorBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: const BorderSide(
-                                color: Colors.red,
-                              ),
-                            ),
-                            contentPadding: const EdgeInsets.symmetric(
-                                vertical: 15, horizontal: 20),
-                          ),
+                          iconData: Icons.person,
+                          hintText: 'Name',
                           validator: (String? value) {
                             if (value == null || value.isEmpty) {
                               return 'Please enter your name';
@@ -151,91 +169,40 @@ class _RegisterState extends State<Register> {
                           },
                         ),
 
-                        // Username
-                        SizedBox(height: MediaQuery.of(context).size.height * x),
-                        TextFormField(
+                        SizedBox(
+                          height: 10,
+                        ),
+
+                        CustomTextField(
                           controller: _usernameController,
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: const BorderSide(
-                                color: Color.fromRGBO(64, 194, 210, 1),
-                              ),
-                            ),
-                            prefixIcon: const Icon(Icons.account_circle,
-                                color: Color.fromRGBO(64, 194, 210, 1)),
-                            hintText: 'Username',
-                            labelText: 'Username',
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: const BorderSide(
-                                color: Color.fromRGBO(64, 194, 210, 1),
-                              ),
-                            ),
-                            errorBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: const BorderSide(
-                                color: Colors.red,
-                              ),
-                            ),
-                            focusedErrorBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: const BorderSide(
-                                color: Colors.red,
-                              ),
-                            ),
-                            contentPadding: const EdgeInsets.symmetric(
-                                vertical: 15, horizontal: 20),
-                          ),
+                          iconData: Icons.person,
+                          hintText: 'Username',
                           validator: (String? value) {
                             if (value == null || value.isEmpty) {
-                              return 'Please enter your name';
+                              return 'Please enter your username';
+                            }
+                            // check if there is space in the username
+                            if (value.contains(' ')) {
+                              return 'Username must not contain spaces';
                             }
                             return null;
                           },
                         ),
 
                         // Email
-                        SizedBox(height: MediaQuery.of(context).size.height * x),
-                        TextFormField(
+                        SizedBox(
+                          height: 10,
+                        ),
+
+                        CustomTextField(
+                          hintText: 'Email',
                           controller: _emailController,
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: const BorderSide(
-                                color: Color.fromRGBO(64, 194, 210, 1),
-                              ),
-                            ),
-                            prefixIcon: const Icon(Icons.email,
-                                color: Color.fromRGBO(64, 194, 210, 1)),
-                            hintText: 'Email',
-                            labelText: 'Email',
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: const BorderSide(
-                                color: Color.fromRGBO(64, 194, 210, 1),
-                              ),
-                            ),
-                            errorBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: const BorderSide(
-                                color: Colors.red,
-                              ),
-                            ),
-                            focusedErrorBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: const BorderSide(
-                                color: Colors.red,
-                              ),
-                            ),
-                            contentPadding: const EdgeInsets.symmetric(
-                                vertical: 15, horizontal: 20),
-                          ),
+                          iconData: Icons.email,
                           validator: (String? value) {
                             if (value!.isEmpty) {
                               return 'Please enter your email';
                             } else if (!RegExp(
-                                r'^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$')
+                                    r'^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$')
                                 .hasMatch(value)) {
                               return 'Please enter a valid email address';
                             }
@@ -244,40 +211,64 @@ class _RegisterState extends State<Register> {
                         ),
 
                         // Mobile
-                        SizedBox(height: MediaQuery.of(context).size.height * x),
-                        InternationalPhoneNumberInput(
-                          selectorConfig: const SelectorConfig(
-                            selectorType: PhoneInputSelectorType.BOTTOM_SHEET,
-                          ),
+                        SizedBox(
+                          height: 10,
+                        ),
+
+                        // InternationalPhoneNumberInput(
+                        //   selectorConfig: const SelectorConfig(
+                        //     selectorType: PhoneInputSelectorType.BOTTOM_SHEET,
+                        //   ),
+                        //   onInputChanged: (PhoneNumber number) {
+                        //     print(number.toString());
+                        //   },
+                        //   initialValue: PhoneNumber(isoCode: 'SA'),
+                        //   inputDecoration: InputDecoration(
+                        //     border: OutlineInputBorder(
+                        //       borderRadius: BorderRadius.all(
+                        //         Radius.circular(10),
+                        //       ),
+                        //       borderSide: BorderSide(
+                        //         color: theme_green,
+                        //       ),
+                        //     ),
+                        //     focusedBorder: OutlineInputBorder(
+                        //       borderRadius: BorderRadius.all(
+                        //         Radius.circular(10),
+                        //       ),
+                        //       borderSide: BorderSide(color: theme_green),
+                        //     ),
+                        //     labelText: 'Mobile Number',
+                        //   ),
+                        // ),
+                           InternationalPhoneNumberInput(
                           onInputChanged: (PhoneNumber number) {
-                            _phoneController.text = number.phoneNumber!;
+                            print(number.phoneNumber);
+                            _phone = number.phoneNumber!;
+                          },
+                          onInputValidated: (bool value) {
+                            print(value);
                           },
                           initialValue: PhoneNumber(isoCode: 'SA'),
-                          textFieldController: TextEditingController(),
-                          keyboardType: TextInputType.phone,
-                          inputDecoration: const InputDecoration(
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(10),
-                              ),
-                              borderSide: BorderSide(
-                                color: Color.fromRGBO(64, 194, 210, 1),
-                              ),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(10),
-                              ),
-                              borderSide: BorderSide(
-                                color: Color.fromRGBO(64, 194, 210, 1),
-                              ),
-                            ),
-                            labelText: 'Mobile Number',
+                          selectorConfig: SelectorConfig(
+                            selectorType: PhoneInputSelectorType.BOTTOM_SHEET,
                           ),
+                          ignoreBlank: true,
+                          autoValidateMode: AutovalidateMode.onUserInteraction,
+                          selectorTextStyle: TextStyle(color: Colors.black),
+                          textFieldController: _phoneController,
+                          formatInput: false,
+                          keyboardType: TextInputType.numberWithOptions(
+                              signed: true, decimal: true),
+                          inputBorder: OutlineInputBorder(),
+          
                         ),
 
                         // Date of Birth
-                        SizedBox(height: MediaQuery.of(context).size.height * x),
+                        SizedBox(
+                          height: 10,
+                        ),
+
                         // date picker
                         TextFormField(
                           controller: _dateController,
@@ -334,24 +325,25 @@ class _RegisterState extends State<Register> {
                         ),
 
                         // Password
-                        SizedBox(height: MediaQuery.of(context).size.height * x),
+                        SizedBox(
+                          height: 10,
+                        ),
                         TextFormField(
                           controller: _passwordController,
                           decoration: InputDecoration(
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10),
-                              borderSide: const BorderSide(
-                                color: Color.fromRGBO(64, 194, 210, 1),
+                              borderSide: BorderSide(
+                                color: theme_green,
                               ),
                             ),
-                            prefixIcon: const Icon(Icons.key,
-                                color: Color.fromRGBO(64, 194, 210, 1)),
+                            prefixIcon: Icon(Icons.key, color: theme_green),
                             hintText: 'Password',
                             labelText: 'Password',
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10),
-                              borderSide: const BorderSide(
-                                color: Color.fromRGBO(64, 194, 210, 1),
+                              borderSide: BorderSide(
+                                color: theme_green,
                               ),
                             ),
                             errorBorder: OutlineInputBorder(
@@ -378,62 +370,16 @@ class _RegisterState extends State<Register> {
                           },
                         ),
 
-                        // Select Account Type
-                        SizedBox(height: MediaQuery.of(context).size.height * x),
-                        DropdownButtonFormField(
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: const BorderSide(
-                                color: Color.fromRGBO(64, 194, 210, 1),
-                              ),
-                            ),
-                            prefixIcon: const Icon(Icons.group,
-                                color: Color.fromRGBO(64, 194, 210, 1)),
-                            hintText: 'Account Type',
-                            labelText: 'Account Type',
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: const BorderSide(
-                                color: Color.fromRGBO(64, 194, 210, 1),
-                              ),
-                            ),
-                            errorBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: const BorderSide(
-                                color: Colors.red,
-                              ),
-                            ),
-                            focusedErrorBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: const BorderSide(
-                                color: Colors.red,
-                              ),
-                            ),
-                            contentPadding: const EdgeInsets.symmetric(
-                                vertical: 15, horizontal: 20),
-                          ),
-                          value: _accountType,
-                          items: _accountTypeList.map((accountType) {
-                            return DropdownMenuItem(
-                              value: accountType,
-                              child: Text('$accountType'),
-                            );
-                          }).toList(),
-                          onChanged: (value) {
-                            setState(() {
-                              _accountType = value.toString();
-                            });
-                          },
+                        SizedBox(
+                          height: 40,
                         ),
 
                         // Register Button
-                        SizedBox(height: MediaQuery.of(context).size.height * x),
+
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             minimumSize: const Size(double.infinity, 50),
-                            backgroundColor:
-                            const Color.fromRGBO(64, 194, 210, 1),
+                            backgroundColor: theme_green,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10),
                             ),
@@ -452,39 +398,63 @@ class _RegisterState extends State<Register> {
               ),
               // Register as a Gym Owner
               SizedBox(height: MediaQuery.of(context).size.height * x),
-              Container(
-
-                alignment: Alignment.bottomCenter,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text(
-                      'Are you a Gym Owner? ',
-                      style: TextStyle(
-                        color: Color.fromRGBO(10, 44, 64, 1),
-                        fontWeight: FontWeight.w300,
-                      ),
-                    ),
-                    SizedBox(height: MediaQuery.of(context).size.height * x ),
-                    GestureDetector(
-                      onTap: () {},
-                      child: const Text(
-                        'Register as a Gym Owner',
-                        style: TextStyle(
-                          color: Color.fromRGBO(64, 194, 210, 1),
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: MediaQuery.of(context).size.height * x *2.5),
-
-                  ],
-                ),
-              ),
             ],
           ),
         ),
       ),
+    );
+  }
+}
+
+class CustomTextField extends StatelessWidget {
+  final String hintText;
+
+  const CustomTextField(
+      {required TextEditingController this.controller,
+      required IconData this.iconData,
+      required String this.hintText,
+      String? Function(String?)? this.validator});
+
+  final TextEditingController controller;
+  final IconData iconData;
+  final String? Function(String?)? validator;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      controller: controller,
+      decoration: InputDecoration(
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: BorderSide(
+            color: theme_green,
+          ),
+        ),
+        prefixIcon: Icon(iconData, color: Color.fromRGBO(64, 194, 210, 1)),
+        hintText: hintText,
+        labelText: hintText,
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: BorderSide(
+            color: theme_green,
+          ),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: const BorderSide(
+            color: Colors.red,
+          ),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: const BorderSide(
+            color: Colors.red,
+          ),
+        ),
+        contentPadding:
+            const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+      ),
+      validator: validator,
     );
   }
 }

@@ -52,7 +52,7 @@ class RemoteDataSourceImpl implements RemoteDataSource {
   }
 
   @override
-  Future<Unit> loginWithPhoneNumber(String phoneNumber) async{
+  Future<Unit> loginWithPhoneNumber(String phoneNumber) async {
     final data = {
       'login_method': 'phone',
       'phone': phoneNumber,
@@ -61,11 +61,8 @@ class RemoteDataSourceImpl implements RemoteDataSource {
     final responseBody = await response.stream.bytesToString();
 
     if (response.statusCode == 200) {
-      final userJson = json.decode(responseBody)['user'];
-      userJson['access_token'] = json.decode(responseBody)['access_token'];
       return Future.value(unit);
     } else {
-      print(json.decode(responseBody)['message']);
       throw ServerException();
     }
   }
@@ -137,7 +134,6 @@ class RemoteDataSourceImpl implements RemoteDataSource {
       print(json.decode(responseBody)['message']);
       throw ServerException();
     }
-    
   }
 
   Future<http.StreamedResponse> _request(

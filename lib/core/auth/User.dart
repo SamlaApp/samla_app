@@ -1,17 +1,17 @@
 import 'dart:convert';
-
+import 'package:samla_app/core/error/exceptions.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class User {
-  final int id;
-  final String name;
-  final String email;
-  final String username;
-  final String phone;
-  final String dateOfBirth;
-  final String accessToken;
+class _User {
+  int id;
+  String name;
+  String email;
+  String username;
+  String phone;
+  String dateOfBirth;
+  String accessToken;
 
-  User({
+  _User({
     required this.id,
     required this.name,
     required this.email,
@@ -21,8 +21,8 @@ class User {
     required this.accessToken,
   });
 
-  factory User.fromJson(Map<String, dynamic> json) {
-    return User(
+  factory _User.fromJson(Map<String, dynamic> json) {
+    return _User(
       id: json['id'] as int,
       name: json['name'] as String,
       email: json['email'] as String,
@@ -32,20 +32,31 @@ class User {
       accessToken: json['access_token'] as String,
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'email': email,
+      'username': username,
+      'phone': phone,
+      'date_of_birth': dateOfBirth,
+      'access_token': accessToken,
+    };
+  }
 }
 
-User? user;
-
-class Auth {
-  static User? _cachedUser; // Static user cache
+abstract class LocalAuth {
+  static late _User _user; // Static user cache
+  static bool _isAuth = false;
+  static _User get user => _user;
 
   // Method to get the user
-  static Future<User?> getUser() async {
+  static Future<_User?> init() async {
     // Check if the user is cached
-    if (_cachedUser != null) {
+    if (_isAuth) {
       print('cached user found');
-      user = _cachedUser;
-      return _cachedUser;
+      return _user;
     }
 
     // Retrieve user data from SharedPreferences
@@ -55,24 +66,50 @@ class Auth {
     if (userData != null) {
       // User data exists in SharedPreferences, parse it
       final jsonUser = json.decode(userData);
-      _cachedUser = User.fromJson(jsonUser);
+      _user = _User.fromJson(jsonUser);
       print('cached user created');
-      user = _cachedUser;
-      return _cachedUser;
+      _isAuth = true;
+      return _user;
+    }
+    // user cannot be null, so you should handle this error by redirect the user to login page
+    throw EmptyCacheException();
+  }
+
+// this only should be called after updating the remote user (in backend)!
+  static Future<void> updateUser({
+    String? username,
+    String? name,
+    String? dateOfBirth,
+    String? phone,
+  }) async{
+    // Update the user cache
+    if (username != null) {
+      _user.username = username;
+    }
+    if (name != null) {
+      _user.name = name;
+    }
+    if (dateOfBirth != null) {
+      _user.dateOfBirth = dateOfBirth;
+    }
+    if (phone != null) {
+      _user.phone = phone;
     }
 
-    // If no user data in SharedPreferences, return a static user or null
-    return _cachedUser; // You can return null or a static user here
+    // Update user data in SharedPreferences
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('user', json.encode(_user.toJson()));
   }
 
   // method to reset the user
-  static Future<void> resetUser() async {
+  // this should be called after logout!
+  static Future<void> resetCacheUser() async {
     // Reset the user cache
-    _cachedUser = null;
-    user = null;
+    print('hello world');
     // Remove user data from SharedPreferences
     final prefs = await SharedPreferences.getInstance();
-    prefs.remove('user');
+    await prefs.remove('user');
+    _isAuth = false;
     print('cached user reset');
   }
 }

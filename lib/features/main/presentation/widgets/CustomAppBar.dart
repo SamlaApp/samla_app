@@ -9,14 +9,12 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   CustomAppBar({
     this.height = kToolbarHeight,
   });
+  final user = LocalAuth.user;
 
   @override
   Size get preferredSize => Size.fromHeight(height);
   double sizeOficon = 27;
   Color iconColor = theme_darkblue.withOpacity(0.5);
-
-  String name = user!.username ?? 'not available';
-  
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +39,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                     ),
                   ),
                   SizedBox(width: 10),
-                  Text('$name',
+                  Text('${user.name}',
                       style: TextStyle(
                           fontWeight: FontWeight.w400,
                           fontSize: 17,

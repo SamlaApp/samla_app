@@ -4,10 +4,13 @@ import 'package:samla_app/features/training/presentation/widgets/routineButtons.
 import 'package:samla_app/features/training/presentation/widgets/sectionTitle.dart';
 
 class TrainingPage extends StatelessWidget {
-  const TrainingPage({Key? key});
+  TrainingPage({Key? key});
 
+  // final user = LocalAuth.user;
+  
   @override
   Widget build(BuildContext context) {
+    
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(16.0),
