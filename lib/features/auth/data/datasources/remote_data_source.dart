@@ -123,7 +123,7 @@ class RemoteDataSourceImpl implements RemoteDataSource {
       'otp': otp,
       'phone': phoneNumber,
     };
-    final response = await _request(data, '/login', 'POST');
+    final response = await _request(data, '/otp', 'POST');
     final responseBody = await response.stream.bytesToString();
 
     if (response.statusCode == 200) {
@@ -148,3 +148,4 @@ class RemoteDataSourceImpl implements RemoteDataSource {
     return response;
   }
 }
+

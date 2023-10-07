@@ -86,319 +86,334 @@ class _RegisterState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: primary_color,
-        elevation: 0,
-        title: const Text(
-          'Register',
-          style: TextStyle(color: Colors.black),
-        ),
-        leading: IconButton(
-          color: Colors.black,
-          icon: const Icon(Icons.arrow_back_ios),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.save),
-            onPressed: () {
-              // Add your save button functionality here
-            },
-          ),
-        ],
-      ),
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            children: <Widget>[
-              SizedBox(height: MediaQuery.of(context).size.height * x),
-
-              Padding(
-                padding: const EdgeInsets.fromLTRB(25, 0, 25, 0),
-                child: Material(
-                  child: Column(
-                    children: [
-                      SizedBox(height: MediaQuery.of(context).size.height * x),
-                      Image.asset(
-                        'images/Logo/2x/Icon_1@2x.png',
-                        height: 60,
-                      ),
-                      Text(
-                        'Sign Up to Samla',
-                        style: TextStyle(
-                          fontSize: 18,
-                          color: Color.fromRGBO(10, 44, 64, 1),
-                          fontWeight: FontWeight.bold,
-                          decoration: TextDecoration.none,
-                        ),
-                      ),
-                      SizedBox(height: MediaQuery.of(context).size.height * x),
-                      const Text(
-                        'Welcome to be part of us!',
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Color.fromRGBO(10, 44, 64, 1),
-                          decoration: TextDecoration.none,
-                          fontWeight: FontWeight.w300,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-
-              Padding(
-                padding: const EdgeInsets.all(25.0),
-                child: Form(
-                  key: _formKey,
-                  child: SingleChildScrollView(
+        child: Container(
+          alignment: Alignment.center ,
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                SizedBox(height: MediaQuery.of(context).size.height * x),
+        
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(25, 0, 25, 0),
+                  child: Material(
                     child: Column(
                       children: [
-                        // Name
-                        CustomTextField(
-                          controller: _nameController,
-                          iconData: Icons.person,
-                          hintText: 'Name',
-                          validator: (String? value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please enter your name';
-                            }
-                            return null;
-                          },
+                        SizedBox(height: MediaQuery.of(context).size.height * x),
+                        Image.asset(
+                          'images/Logo/2x/Icon_1@2x.png',
+                          height: 60,
                         ),
-
-                        SizedBox(
-                          height: 10,
-                        ),
-
-                        CustomTextField(
-                          controller: _usernameController,
-                          iconData: Icons.person,
-                          hintText: 'Username',
-                          validator: (String? value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please enter your username';
-                            }
-                            // check if there is space in the username
-                            if (value.contains(' ')) {
-                              return 'Username must not contain spaces';
-                            }
-                            return null;
-                          },
-                        ),
-
-                        // Email
-                        SizedBox(
-                          height: 10,
-                        ),
-
-                        CustomTextField(
-                          hintText: 'Email',
-                          controller: _emailController,
-                          iconData: Icons.email,
-                          validator: (String? value) {
-                            if (value!.isEmpty) {
-                              return 'Please enter your email';
-                            } else if (!RegExp(
-                                    r'^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$')
-                                .hasMatch(value)) {
-                              return 'Please enter a valid email address';
-                            }
-                            return null;
-                          },
-                        ),
-
-                        // Mobile
-                        SizedBox(
-                          height: 10,
-                        ),
-
-                        // InternationalPhoneNumberInput(
-                        //   selectorConfig: const SelectorConfig(
-                        //     selectorType: PhoneInputSelectorType.BOTTOM_SHEET,
-                        //   ),
-                        //   onInputChanged: (PhoneNumber number) {
-                        //     print(number.toString());
-                        //   },
-                        //   initialValue: PhoneNumber(isoCode: 'SA'),
-                        //   inputDecoration: InputDecoration(
-                        //     border: OutlineInputBorder(
-                        //       borderRadius: BorderRadius.all(
-                        //         Radius.circular(10),
-                        //       ),
-                        //       borderSide: BorderSide(
-                        //         color: theme_green,
-                        //       ),
-                        //     ),
-                        //     focusedBorder: OutlineInputBorder(
-                        //       borderRadius: BorderRadius.all(
-                        //         Radius.circular(10),
-                        //       ),
-                        //       borderSide: BorderSide(color: theme_green),
-                        //     ),
-                        //     labelText: 'Mobile Number',
-                        //   ),
-                        // ),
-                           InternationalPhoneNumberInput(
-                          onInputChanged: (PhoneNumber number) {
-                            print(number.phoneNumber);
-                            _phone = number.phoneNumber!;
-                          },
-                          onInputValidated: (bool value) {
-                            print(value);
-                          },
-                          initialValue: PhoneNumber(isoCode: 'SA'),
-                          selectorConfig: SelectorConfig(
-                            selectorType: PhoneInputSelectorType.BOTTOM_SHEET,
+                        SizedBox(height: 12,),
+                        Text(
+                          'Sign Up to Samla',
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: Color.fromRGBO(10, 44, 64, 1),
+                            fontWeight: FontWeight.bold,
+                            decoration: TextDecoration.none,
                           ),
-                          ignoreBlank: true,
-                          autoValidateMode: AutovalidateMode.onUserInteraction,
-                          selectorTextStyle: TextStyle(color: Colors.black),
-                          textFieldController: _phoneController,
-                          formatInput: false,
-                          keyboardType: TextInputType.numberWithOptions(
-                              signed: true, decimal: true),
-                          inputBorder: OutlineInputBorder(),
-          
                         ),
-
-                        // Date of Birth
-                        SizedBox(
-                          height: 10,
-                        ),
-
-                        // date picker
-                        TextFormField(
-                          controller: _dateController,
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: const BorderSide(
-                                color: Color.fromRGBO(64, 194, 210, 1),
-                              ),
-                            ),
-                            prefixIcon: const Icon(Icons.date_range,
-                                color: Color.fromRGBO(64, 194, 210, 1)),
-                            hintText: 'Date of Birth',
-                            labelText: 'Date of Birth',
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: const BorderSide(
-                                color: Color.fromRGBO(64, 194, 210, 1),
-                              ),
-                            ),
-                            errorBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: const BorderSide(
-                                color: Colors.red,
-                              ),
-                            ),
-                            focusedErrorBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: const BorderSide(
-                                color: Colors.red,
-                              ),
-                            ),
-                            contentPadding: const EdgeInsets.symmetric(
-                                vertical: 15, horizontal: 20),
+                        const SizedBox(height: 6),
+                        const Text(
+                          'Welcome to be part of us!',
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Color.fromRGBO(10, 44, 64, 1),
+                            decoration: TextDecoration.none,
+                            fontWeight: FontWeight.w300,
                           ),
-                          validator: (String? value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please enter your date of birth';
-                            }
-                            return null;
-                          },
-                          onTap: () async {
-                            final DateTime? picked = await showDatePicker(
-                              context: context,
-                              initialDate: DateTime.now(),
-                              firstDate: DateTime(1900),
-                              lastDate: DateTime(2100),
-                            );
-                            if (picked != null) {
-                              _dateController.text =
-                                  DateFormat('yyyy-MM-dd').format(picked);
-                            }
-                          },
-                        ),
-
-                        // Password
-                        SizedBox(
-                          height: 10,
-                        ),
-                        TextFormField(
-                          controller: _passwordController,
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: BorderSide(
-                                color: theme_green,
-                              ),
-                            ),
-                            prefixIcon: Icon(Icons.key, color: theme_green),
-                            hintText: 'Password',
-                            labelText: 'Password',
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: BorderSide(
-                                color: theme_green,
-                              ),
-                            ),
-                            errorBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: const BorderSide(
-                                color: Colors.red,
-                              ),
-                            ),
-                            focusedErrorBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: const BorderSide(
-                                color: Colors.red,
-                              ),
-                            ),
-                            contentPadding: const EdgeInsets.symmetric(
-                                vertical: 15, horizontal: 20),
-                          ),
-                          obscureText: true,
-                          validator: (String? value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please enter your password';
-                            }
-                            return null;
-                          },
-                        ),
-
-                        SizedBox(
-                          height: 40,
-                        ),
-
-                        // Register Button
-
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            minimumSize: const Size(double.infinity, 50),
-                            backgroundColor: theme_green,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                          ),
-                          onPressed: () {
-                            if (_formKey.currentState!.validate()) {
-                              _Register();
-                            }
-                          },
-                          child: const Text('Register'),
                         ),
                       ],
                     ),
                   ),
                 ),
-              ),
-              // Register as a Gym Owner
-              SizedBox(height: MediaQuery.of(context).size.height * x),
-            ],
+
+                SizedBox(height: 40,),
+        
+                Padding(
+                  padding: const EdgeInsets.all(25.0),
+                  child: Form(
+                    key: _formKey,
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          // Name
+                          CustomTextField(
+                            controller: _nameController,
+                            iconData: Icons.person,
+                            hintText: 'Name',
+                            validator: (String? value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter your name';
+                              }
+                              return null;
+                            },
+                          ),
+        
+                          SizedBox(
+                            height: 10,
+                          ),
+        
+                          CustomTextField(
+                            controller: _usernameController,
+                            iconData: Icons.person,
+                            hintText: 'Username',
+                            validator: (String? value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter your username';
+                              }
+                              // check if there is space in the username
+                              if (value.contains(' ')) {
+                                return 'Username must not contain spaces';
+                              }
+                              return null;
+                            },
+                          ),
+        
+                          // Email
+                          SizedBox(
+                            height: 10,
+                          ),
+        
+                          CustomTextField(
+                            hintText: 'Email',
+                            controller: _emailController,
+                            iconData: Icons.email,
+                            validator: (String? value) {
+                              if (value!.isEmpty) {
+                                return 'Please enter your email';
+                              } else if (!RegExp(
+                                      r'^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$')
+                                  .hasMatch(value)) {
+                                return 'Please enter a valid email address';
+                              }
+                              return null;
+                            },
+                          ),
+        
+                          // Mobile
+                          SizedBox(
+                            height: 10,
+                          ),
+        
+                          // InternationalPhoneNumberInput(
+                          //   selectorConfig: const SelectorConfig(
+                          //     selectorType: PhoneInputSelectorType.BOTTOM_SHEET,
+                          //   ),
+                          //   onInputChanged: (PhoneNumber number) {
+                          //     print(number.toString());
+                          //   },
+                          //   initialValue: PhoneNumber(isoCode: 'SA'),
+                          //   inputDecoration: InputDecoration(
+                          //     border: OutlineInputBorder(
+                          //       borderRadius: BorderRadius.all(
+                          //         Radius.circular(10),
+                          //       ),
+                          //       borderSide: BorderSide(
+                          //         color: theme_green,
+                          //       ),
+                          //     ),
+                          //     focusedBorder: OutlineInputBorder(
+                          //       borderRadius: BorderRadius.all(
+                          //         Radius.circular(10),
+                          //       ),
+                          //       borderSide: BorderSide(color: theme_green),
+                          //     ),
+                          //     labelText: 'Mobile Number',
+                          //   ),
+                          // ),
+                             InternationalPhoneNumberInput(
+                            onInputChanged: (PhoneNumber number) {
+                              print(number.phoneNumber);
+                              _phone = number.phoneNumber!;
+                            },
+                            onInputValidated: (bool value) {
+                              print(value);
+                            },
+                            initialValue: PhoneNumber(isoCode: 'SA'),
+                            selectorConfig: SelectorConfig(
+                              selectorType: PhoneInputSelectorType.BOTTOM_SHEET,
+                            ),
+                            ignoreBlank: true,
+                            autoValidateMode: AutovalidateMode.onUserInteraction,
+                            selectorTextStyle: TextStyle(color: Colors.black),
+                            textFieldController: _phoneController,
+                            formatInput: false,
+                            keyboardType: TextInputType.numberWithOptions(
+                                signed: true, decimal: true),
+                            inputBorder: OutlineInputBorder(),
+            
+                          ),
+        
+                          // Date of Birth
+                          SizedBox(
+                            height: 10,
+                          ),
+        
+                          // date picker
+                          TextFormField(
+                            controller: _dateController,
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: const BorderSide(
+                                  color: Color.fromRGBO(64, 194, 210, 1),
+                                ),
+                              ),
+                              prefixIcon: const Icon(Icons.date_range,
+                                  color: Color.fromRGBO(64, 194, 210, 1)),
+                              hintText: 'Date of Birth',
+                              labelText: 'Date of Birth',
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: const BorderSide(
+                                  color: Color.fromRGBO(64, 194, 210, 1),
+                                ),
+                              ),
+                              errorBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: const BorderSide(
+                                  color: Colors.red,
+                                ),
+                              ),
+                              focusedErrorBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: const BorderSide(
+                                  color: Colors.red,
+                                ),
+                              ),
+                              contentPadding: const EdgeInsets.symmetric(
+                                  vertical: 15, horizontal: 20),
+                            ),
+                            validator: (String? value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter your date of birth';
+                              }
+                              return null;
+                            },
+                            onTap: () async {
+                              final DateTime? picked = await showDatePicker(
+                                context: context,
+                                initialDate: DateTime.now(),
+                                firstDate: DateTime(1900),
+                                lastDate: DateTime(2100),
+                              );
+                              if (picked != null) {
+                                _dateController.text =
+                                    DateFormat('yyyy-MM-dd').format(picked);
+                              }
+                            },
+                          ),
+        
+                          // Password
+                          SizedBox(
+                            height: 10,
+                          ),
+                          TextFormField(
+                            controller: _passwordController,
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide(
+                                  color: theme_green,
+                                ),
+                              ),
+                              prefixIcon: Icon(Icons.key, color: theme_green),
+                              hintText: 'Password',
+                              labelText: 'Password',
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide(
+                                  color: theme_green,
+                                ),
+                              ),
+                              errorBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: const BorderSide(
+                                  color: Colors.red,
+                                ),
+                              ),
+                              focusedErrorBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: const BorderSide(
+                                  color: Colors.red,
+                                ),
+                              ),
+                              contentPadding: const EdgeInsets.symmetric(
+                                  vertical: 15, horizontal: 20),
+                            ),
+                            obscureText: true,
+                            validator: (String? value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter your password';
+                              }
+                              return null;
+                            },
+                          ),
+        
+                          SizedBox(
+                            height: 40,
+                          ),
+        
+                          // Register Button
+        
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              minimumSize: const Size(double.infinity, 50),
+                              backgroundColor: theme_green,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                            onPressed: () {
+                              if (_formKey.currentState!.validate()) {
+                                _Register();
+                              }
+                            },
+                            child: const Text('Register'),
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          Container(
+                            alignment: Alignment.bottomCenter,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Text(
+                                  'Already have an account? ',
+                                  style: TextStyle(
+                                    color: Color.fromRGBO(10, 44, 64, 1),
+                                    fontWeight: FontWeight.w300,
+                                  ),
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    Navigator.pushReplacementNamed(
+                                        context, '/login');
+                                  },
+                                  child: const Text(
+                                    'Log in',
+                                    style: TextStyle(
+                                      color: Color.fromRGBO(64, 194, 210, 1),
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                // Register as a Gym Owner
+                SizedBox(height: MediaQuery.of(context).size.height * x),
+              ],
+            ),
           ),
         ),
       ),
