@@ -1,109 +1,126 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:samla_app/config/themes/common_styles.dart';
-
+import 'package:samla_app/features/training/presentation/widgets/routineButtons.dart';
 
 class NewWorkout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('New Workout'),
-        backgroundColor: theme_green, // Assuming theme_green is a defined color
+        title: const Text('New Workout'),
+        backgroundColor: theme_green,
         actions: [
           IconButton(
             icon: SvgPicture.asset(
               'images/qrcode.svg',
-              color: Colors.white, // Assuming iconColor is a defined color
+              color: Colors.white,
             ),
             onPressed: () => Navigator.pushNamed(context, '/QRcode'),
           ),
         ],
       ),
-        body: Center(
+      body: Center(
         child: Padding(
-          padding: const EdgeInsets.only(top:100.0),
+          padding: const EdgeInsets.only(top: 100.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
-              Icon(
+              const Icon(
                 Icons.fitness_center,
                 size: 50.0,
-                color: theme_green,
               ),
-              SizedBox(height: 8.0), // Adds space between the icon and the text
-              Text(
+              const SizedBox(height: 8.0),
+              const Text(
                 'Get started',
                 style: TextStyle(
-                  fontSize: 24.0, // Adjust font size as needed
+                  fontSize: 24.0,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              SizedBox(height: 20.0), // Adds space between the texts
-              Text(
+              const SizedBox(height: 20.0),
+              const Text(
                 'Add an exercise or scan QR code or NFC tag to add an Exercise',
                 textAlign: TextAlign.center,
-                style: TextStyle( fontSize: 16.0, // Adjust font size as needed
-                ),
+                style: TextStyle(fontSize: 16.0),
               ),
-              SizedBox(height: 30.0), // Adds space between the text and the button
-              ElevatedButton.icon(
-                onPressed: () {
-                  // Handle button press
-                },
-                icon: Icon(Icons.add),
-                label: Text('Add Exercise'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: theme_green,
-                ),
-              ),
+              const SizedBox(height: 30.0),
+          ElevatedButton.icon(
+            onPressed: () {
+              _showAddExerciseSheet(context);
+            },
+            icon: const Icon(Icons.add),
+            label: const Text('Add Exercise'),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: theme_green,
+            ),
+          ),
             ],
           ),
         ),
       ),
     );
   }
-}
 
-
-class MuscleGroupCard extends StatelessWidget {
-  final String muscleGroupName;
-  final String imageUrl;
-
-  MuscleGroupCard({required this.muscleGroupName, required this.imageUrl});
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      elevation: 1,
-      child: ListTile(
-        contentPadding: EdgeInsets.symmetric(horizontal: 30.0),
-        minVerticalPadding: 50.0,
-        leading: Container(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Expanded(
-                child: Image.network(
-                  imageUrl,
-                  fit: BoxFit.fitHeight,
+  void _showAddExerciseSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,  // allows the bottom sheet to be displayed at its full height
+      builder: (BuildContext context) {
+        return FractionallySizedBox(
+          heightFactor: 0.9,  // 90% of screen height
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                TextField(
+                  decoration: const InputDecoration(
+                    labelText: 'Search',
+                    prefixIcon: Icon(Icons.search),
+                  ),
                 ),
-              ),
-            ],
+                Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          // Handle filter button 1 press
+                        },
+                        child: const Text('Filter tt1'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: theme_green,
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 16.0),  // Adds some space between the two buttons
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          // Handle filter button 2 press
+                        },
+                        child: const Text('Filtesssr 2'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: theme_green,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
-        ),
-        title: Text(
-          muscleGroupName,
-          textAlign: TextAlign.left,
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-      ),
+        );
+      },
     );
   }
+
 }
+
+
+
+
+
 // MuscleGroupCard(
 //   muscleGroupName: 'Chest',
 //   imageUrl: 'https://v2.exercisedb.io/image/mC3NaRoKzI9D-S',
@@ -124,3 +141,5 @@ class MuscleGroupCard extends StatelessWidget {
 //   muscleGroupName: 'Triceps',
 //   imageUrl: 'https://v2.exercisedb.io/image/r8nXDRpWfBw7Qu',
 // ),
+
+
