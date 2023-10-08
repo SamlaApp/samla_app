@@ -21,11 +21,11 @@ class TrainingPage extends StatelessWidget {
             children: <Widget>[
               // Quick Start and Routines section
               ExpandableBox(
-                title: "Quick Start & Routines",
+                title: "Empty workout & Routines",
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SectionTitle(title: 'Quick Start'),
+                    SectionTitle(title: 'Start Empty Workout'),
                     SizedBox(height: 8),
                     StartWorkoutButton(),
                     SizedBox(height: 16),
