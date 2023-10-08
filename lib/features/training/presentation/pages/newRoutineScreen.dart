@@ -1,14 +1,28 @@
 import 'package:flutter/material.dart';
 
-import '../../../../config/themes/common_styles.dart';
+import '../widgets/newExersice.dart';
 
-class NewRoutineScreen extends StatelessWidget {
+class NewRoutineScreen extends StatefulWidget {
+  @override
+  _NewRoutineScreenState createState() => _NewRoutineScreenState();
+}
+
+class _NewRoutineScreenState extends State<NewRoutineScreen> {
+  TextEditingController _routineNameController = TextEditingController();
+  List<Exercise> _selectedExercises = [];
+
+  @override
+  void dispose() {
+    _routineNameController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Explore Routine'),
-        backgroundColor: theme_green,
+        title: const Text('New Routine'),
+        backgroundColor: Colors.green, // Use your desired color
         actions: [
           IconButton(
             icon: Icon(Icons.qr_code),
@@ -19,159 +33,89 @@ class NewRoutineScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: ListView.builder(
-        itemCount: dummyRoutines.length,
-        itemBuilder: (BuildContext context, int index) {
-          final title = dummyRoutines[index].title;
-          final exercises = dummyRoutines[index].exercises;
-
-          return RoutineCard(
-            title: title,
-            exercises: exercises,
-          );
-        },
-      ),
-    );
-  }
-}
-class Exercise {
-  final String name;
-  final String description;
-
-  Exercise({required this.name, required this.description});
-}
-
-class Routine {
-  final String title;
-  final List<Exercise> exercises;
-
-  Routine({required this.title, required this.exercises});
-}
-
-final List<Routine> dummyRoutines = [
-  Routine(
-    title: 'Push Routine',
-    exercises: [
-      Exercise(name: 'Push-Ups', description: 'Do 15 push-ups'),
-      Exercise(name: 'Bench Press', description: 'Lift weights on a bench lkajhfldakj laskjdfhalksjf '),
-      Exercise(name: 'Dips', description: 'Do 12 dips'),
-    ],
-  ),
-  Routine(
-    title: 'Lose Weight Routine',
-    exercises: [
-      Exercise(name: 'Cardio', description: 'Run for 30 minutes'),
-      Exercise(name: 'Healthy Diet', description: 'Eat balanced meals'),
-      Exercise(name: 'Planks', description: 'Hold for 1 minute'),
-    ],
-  ),
-  Routine(
-    title: 'Gain Weight Routine',
-    exercises: [
-      Exercise(name: 'Weightlifting', description: 'Lift heavy weights'),
-      Exercise(name: 'Protein Intake', description: 'Consume more protein'),
-      Exercise(name: 'Squats', description: 'Do 10 squats'),
-    ],
-  ),
-];
-
-
-class RoutineCard extends StatefulWidget {
-  final String title;
-  final List<Exercise> exercises;
-
-  RoutineCard({required this.title, required this.exercises});
-
-  @override
-  _RoutineCardState createState() => _RoutineCardState();
-}
-
-class _RoutineCardState extends State<RoutineCard> {
-  bool _isAdded = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      margin: EdgeInsets.all(16.0),
-      color: primary_color,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      body: ListView(
+        padding: EdgeInsets.all(16.0),
         children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(10.0, 10.0, 16.0, 10.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  widget.title,
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-                InkWell(
-                  onTap: () {
-                    setState(() {
-                      _isAdded = !_isAdded;
-                    });
-                  },
-                  child: Icon(
-                    _isAdded ? Icons.check : Icons.add,
-                    color: Colors.cyan, // Set the icon color
-                    size: 24.0,
-                  ),
-                )
-              ],
+          TextFormField(
+            controller: _routineNameController,
+            decoration: InputDecoration(
+              labelText: 'Routine Name',
             ),
           ),
-          SizedBox(height: 5),
-          SizedBox(
-            height: 90,
-            child: widget.exercises != null && widget.exercises.isNotEmpty
-                ? SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: widget.exercises
-                    .map((exercise) => ExerciseCard(exercise: exercise))
-                    .toList(),
-              ),
-            )
-                : Text("No exercises available"),
+          SizedBox(height: 20.0),
+          Column(
+            children: _selectedExercises
+                .map((exercise) => ExerciseTile(exercise: exercise))
+                .toList(),
           ),
         ],
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          _openAddExerciseSheet();
+        },
+        child: Icon(Icons.add),
+        backgroundColor: Colors.green, // Use your desired color
+      ),
+    );
+  }
+
+  void _openAddExerciseSheet() {
+    showModalBottomSheet<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AddExerciseSheet(
+          onAdd: (exercises) {
+            setState(() {
+              _selectedExercises.addAll(exercises);
+            });
+            Navigator.pop(context);
+          },
+        );
+      },
     );
   }
 }
 
-
-class ExerciseCard extends StatelessWidget {
+class ExerciseTile extends StatelessWidget {
   final Exercise exercise;
 
-  ExerciseCard({required this.exercise});
+  ExerciseTile({required this.exercise});
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: 170,
-      child: Card(
-        margin: EdgeInsets.fromLTRB(8, 0, 8, 16),
-        color: Colors.grey[200],
-        child: ListTile(
-          title: Text(
-            exercise.name,
-            overflow: TextOverflow.ellipsis, // Truncate with ellipsis
-            maxLines: 1, // Limit to a single line
+    return Container(
+      margin: EdgeInsets.only(bottom: 16.0),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12.0),
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.2),
+            spreadRadius: 1,
+            blurRadius: 5,
+            offset: Offset(0, 3),
           ),
-          subtitle: Text(
-            exercise.description,
-            overflow: TextOverflow.ellipsis, // Truncate with ellipsis
-            maxLines: 1, // Limit to a single line
-          ),
-          onTap: () {
-            // Handle exercise item tap
-            // navigate to an exercise detail screen here
+        ],
+      ),
+      child: ListTile(
+        title: Text(exercise.name),
+        subtitle: exercise.description != null
+            ? Text(exercise.description!)
+            : null,
+        trailing: IconButton(
+          icon: Icon(Icons.delete),
+          onPressed: () {
+            // Handle exercise deletion
+            // You can show a confirmation dialog and then remove it from the list
+            _removeExercise(exercise);
           },
         ),
       ),
     );
   }
-}
 
+  void _removeExercise(Exercise exercise) {
+    // You can add the logic to remove the exercise from the list here
+  }
+}

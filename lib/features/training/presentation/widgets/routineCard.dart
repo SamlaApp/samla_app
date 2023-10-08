@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:samla_app/config/themes/common_styles.dart';
 import 'package:samla_app/features/training/presentation/pages/ex.dart';
+
+import '../pages/startTrainig.dart';
 class RoutineCard extends StatelessWidget {
   final String title;
   final List<Exercise> exercises;
@@ -44,12 +46,15 @@ class RoutineCard extends StatelessWidget {
             SizedBox(height: 8),
             ElevatedButton.icon(
               onPressed: () {
-                // Handle the button press
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => startTraining()),
+                );
               },
               icon: Icon(Icons.play_arrow),
               label: Text('Start Now'),
               style: ElevatedButton.styleFrom(backgroundColor: theme_green),
-            ),
+            )
           ],
         ),
       ),

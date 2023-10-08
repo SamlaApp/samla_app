@@ -16,6 +16,7 @@ class _ExpandableBoxState extends State<ExpandableBox> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      margin: EdgeInsets.fromLTRB(10, 10, 10, 10),
       decoration: BoxDecoration(
         color: primary_color,
         borderRadius: BorderRadius.all(Radius.circular(12)),

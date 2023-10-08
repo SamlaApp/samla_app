@@ -56,13 +56,11 @@ class TrainingPage extends StatelessWidget {
                       Exercise(name: 'Bench Press'),
                       Exercise(name: 'Dips'),
                     ]),
-                    SizedBox(height: 8),
                     RoutineCard(title: 'Lose Weight Routine', exercises: [
                       Exercise(name: 'Cardio'),
                       Exercise(name: 'Healthy Diet'),
                       Exercise(name: 'Planks'),
                     ]),
-                    SizedBox(height: 8),
                     RoutineCard(title: 'Gain Weight Routine', exercises: [
                       Exercise(name: 'Weightlifting'),
                       Exercise(name: 'Protein Intake'),

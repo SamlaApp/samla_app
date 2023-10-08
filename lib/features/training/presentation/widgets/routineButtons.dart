@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../config/themes/common_styles.dart';
-import 'package:samla_app/features/training/presentation/pages/new_workout.dart';
+import 'package:samla_app/features/training/presentation/pages/explorescreen.dart';
 import 'package:samla_app/features/training/presentation/pages/newRoutineScreen.dart';
 
 class StartWorkoutButton extends StatelessWidget {
@@ -10,7 +10,7 @@ class StartWorkoutButton extends StatelessWidget {
       onPressed: () {
         Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (context) => NewWorkout(),
+            builder: (context) => exploreScreen(),
           ),
         );
       },
@@ -34,7 +34,7 @@ class RoutineButtons extends StatelessWidget {
         SizedBox(width: 8),
         Expanded(child: RoutineButton(icon: Icons.search, label: 'Explore Routines', onPressed: () {
           Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => NewRoutineScreen()
+              builder: (context) => exploreScreen()
           ));
         })),
       ],
