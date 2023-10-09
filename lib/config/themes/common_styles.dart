@@ -44,3 +44,10 @@ BoxShadow boxShadow = BoxShadow(
   blurRadius: 10,
   offset: const Offset(0, 1),
 );
+
+BoxDecoration textField_decoration = BoxDecoration(
+  color: Colors.grey.shade200,
+  borderRadius: BorderRadius.all(Radius.circular(12)),
+);
+
+TextStyle inputText = TextStyle(color: Colors.black54, fontSize: 15);

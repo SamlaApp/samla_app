@@ -3,10 +3,10 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:samla_app/config/themes/common_styles.dart';
 import 'package:samla_app/core/auth/User.dart';
 
-class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
+class buildAAppBar extends StatelessWidget implements PreferredSizeWidget {
   final double height;
 
-  CustomAppBar({
+  buildAAppBar({
     this.height = kToolbarHeight,
   });
 
@@ -28,24 +28,23 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           children: [
             // row of profile
             GestureDetector(
-              onTap: () => Navigator.pushNamed(context, '/Profile'),
+              onTap: () => Navigator.pop(context),
               child: Row(
                 children: [
-                  CircleAvatar(
-                    backgroundColor: theme_green,
-                    radius: 21,
-                    child: CircleAvatar(
-                      backgroundImage: AssetImage('images/download.jpeg'),
-                      radius: 19,
+                  Container(
+                    child: Image(
+                      image: AssetImage('images/Logo/1x/Icon_1@1x.png'),
+                      height: 50,
+                      width: 50,
                     ),
                   ),
                   SizedBox(width: 10),
-                  Text('${user.name}',
+                  Text('SAMLAH',
                       style: TextStyle(
-                          fontWeight: FontWeight.w400,
+                          fontWeight: FontWeight.bold,
                           fontSize: 17,
                           decoration: TextDecoration.none,
-                          color: theme_darkblue.withOpacity(0.7))),
+                          color: theme_darkblue.withOpacity(1))),
                 ],
               ),
             ),
