@@ -1,16 +1,12 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:samla_app/core/auth/User.dart';
-import 'package:samla_app/core/error/exceptions.dart';
 import 'config/router/app_router.dart'; // Import your logical code
 
 void main(){
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  
+  const MyApp({super.key});
   // final initialRoute = '';
   @override
   Widget build(BuildContext context) {

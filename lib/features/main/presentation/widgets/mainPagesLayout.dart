@@ -4,7 +4,7 @@ import 'package:samla_app/features/chatting/presentation/pages/chat.dart';
 import 'package:samla_app/features/community/presentation/pages/community.dart';
 import 'package:samla_app/features/main/presentation/pages/home.dart';
 import 'package:samla_app/features/nutrition/presentation/pages/nutrition.dart';
-import 'package:samla_app/features/training/presentation/pages/new_workout.dart';
+// import 'package:samla_app/features/training/presentation/pages/new_workout.dart';
 
 import 'CustomAppBar.dart';
 import 'CustomNavigationBar.dart';
