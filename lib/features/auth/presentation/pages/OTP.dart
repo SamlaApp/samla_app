@@ -76,14 +76,21 @@ class _OTPPageState extends State<OTPPage> {
   late LocalDataSourceImpl localDataSourceImpl =
       LocalDataSourceImpl(sharedPreferences: sharedPreferences);
 
+  final http.Client client = http.Client();
+
+  late RemoteDataSourceImpl remoteDataSourceImpl =
+      RemoteDataSourceImpl(client: client);
+
   void _checkOtp() async {
+    sharedPreferences = await SharedPreferences.getInstance();
     String enteredOtp = '';
     for (final controller in _controllers) {
       enteredOtp += controller.text;
     }
+    print('check otp $enteredOtp');
     try {
-      final userModel = await remoteDataSourceImpl.sendOTP(
-          widget.phone, enteredOtp);
+      final userModel =
+          await remoteDataSourceImpl.sendOTP(widget.phone, enteredOtp);
       await localDataSourceImpl.cacheUser(userModel);
       await LocalAuth.init();
       // await LocalAuth.user;
@@ -102,18 +109,12 @@ class _OTPPageState extends State<OTPPage> {
           content: Text('Something went wrong'),
         ),
       );
-    }
-
-    if (enteredOtp == _correctOtp) {
-      print('OTP is correct');
-
-      // Perform the action you want to execute when the OTP is correct
-      _loginUser(widget.phone);
-    } else {
       print('OTP is incorrect');
-      setState(()=>(_wrongOtp = true));
-      // Perform the action you want to execute when the OTP is incorrect
+      setState(() => (_wrongOtp = true));
     }
+
+    
+    // Perform the action you want to execute when the OTP is incorrect
   }
 
   void onNumberButtonPressed(String number) {
@@ -148,32 +149,6 @@ class _OTPPageState extends State<OTPPage> {
   void dispose() {
     _timer?.cancel();
     super.dispose();
-  }
-
-  final http.Client client = http.Client();
-
-  late RemoteDataSourceImpl remoteDataSourceImpl =
-      RemoteDataSourceImpl(client: client);
-
-  Future<void> _loginUser(String phoneNumber) async {
-    try {
-      await remoteDataSourceImpl.loginWithPhoneNumber(phoneNumber);
-      // await Auth.getUser();
-    } on ServerException catch (e) {
-      print('server exception');
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Invalid phone number'),
-        ),
-      );
-    } catch (e) {
-      print(e.toString());
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Something went wrong'),
-        ),
-      );
-    }
   }
 
   Widget numberButton(String number) {
@@ -227,150 +202,148 @@ class _OTPPageState extends State<OTPPage> {
         child: SingleChildScrollView(
             // padding: const EdgeInsets.all(20),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            Column(
               children: [
-                Column(
-                  children: [
-                    // Logo Part
-                    Container(
-                      padding: const EdgeInsets.fromLTRB(0, 25, 0, 0),
-                      child: Column(
-                        children: <Widget>[
-                          Image.asset(
-                            'images/Logo/2x/Icon_1@2x.png',
-                            height: 60,
-                          ),
-                          const SizedBox(height: 12),
-                          const Text(
-                            'OTP Verification',
-                            style: TextStyle(
-                              fontSize: 18,
-                              color: Color.fromRGBO(10, 44, 64, 1),
-                              fontWeight: FontWeight.bold,
-                              decoration: TextDecoration.none,
-                            ),
-                          ),
-                          const SizedBox(height: 6),
-                          Text(
-                            'Enter the code sent to ${widget.phone}',
-                            textAlign: TextAlign.center,
-                            style: const TextStyle(
-                              fontSize: 14,
-                              color: Color.fromRGBO(10, 44, 64, 1),
-                              decoration: TextDecoration.none,
-                              fontWeight: FontWeight.w300,
-                            ),
-                          ),
-                        ],
+                // Logo Part
+                Container(
+                  padding: const EdgeInsets.fromLTRB(0, 25, 0, 0),
+                  child: Column(
+                    children: <Widget>[
+                      Image.asset(
+                        'images/Logo/2x/Icon_1@2x.png',
+                        height: 60,
                       ),
-                    ),
+                      const SizedBox(height: 12),
+                      const Text(
+                        'OTP Verification',
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: Color.fromRGBO(10, 44, 64, 1),
+                          fontWeight: FontWeight.bold,
+                          decoration: TextDecoration.none,
+                        ),
+                      ),
+                      const SizedBox(height: 6),
+                      Text(
+                        'Enter the code sent to ${widget.phone}',
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          fontSize: 14,
+                          color: Color.fromRGBO(10, 44, 64, 1),
+                          decoration: TextDecoration.none,
+                          fontWeight: FontWeight.w300,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
 
-                    // OTP Part
-                    const SizedBox(height: 20),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: _controllers
-                          .asMap()
-                          .map(
-                            (index, controller) => MapEntry(
-                              index,
-                              SizedBox(
-                                width: 40,
-                                height: 40,
-                                child: TextFormField(
-                                  controller: controller,
-                                  textAlign: TextAlign.center,
-                                  keyboardType: TextInputType.number,
-                                  inputFormatters: [
-                                    FilteringTextInputFormatter.digitsOnly,
-                                    LengthLimitingTextInputFormatter(1),
-                                  ],
-                                  decoration: const InputDecoration(
-                                   focusedBorder: UnderlineInputBorder(
-                                      borderSide: BorderSide(
-                                        width:
-                                            2.0, // Set the border width as desired
-                                        color:
-                                            Colors.blue, // Set the border color
-                                      ),
-                                    ),
+                // OTP Part
+                const SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: _controllers
+                      .asMap()
+                      .map(
+                        (index, controller) => MapEntry(
+                          index,
+                          SizedBox(
+                            width: 40,
+                            height: 40,
+                            child: TextFormField(
+                              controller: controller,
+                              textAlign: TextAlign.center,
+                              keyboardType: TextInputType.number,
+                              inputFormatters: [
+                                FilteringTextInputFormatter.digitsOnly,
+                                LengthLimitingTextInputFormatter(1),
+                              ],
+                              decoration: const InputDecoration(
+                                focusedBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(
+                                    width:
+                                        2.0, // Set the border width as desired
+                                    color: Colors.blue, // Set the border color
                                   ),
                                 ),
                               ),
                             ),
-                          )
-                          .values
-                          .toList(),
-                    ),
-
-                    // Show error message if the OTP is wrong stateful
-                    const SizedBox(height: 20),
-                    if (_wrongOtp)
-                      const Text(
-                        'Wrong OTP code',
-                        style: TextStyle(color: Colors.red),
-                      ),
-                    const SizedBox(height: 10),
-                  ],
-                ),
-
-                // button part
-                Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        if (_resendAttempts == 3)
-                          // confirm this number for the user
-                          const Text('This number for you?'),
-                        TextButton(
-                          onPressed: _canResendCode
-                              ? () {
-                                  setState(() {
-                                    _startTimer();
-                                  });
-                                }
-                              : null,
-                          child: Text(
-                            (_resendAttempts > 0)
-                                ? _displayText
-                                : 'No more attempts',
-                            style: TextStyle(
-                                color:
-                                    _canResendCode ? Colors.blue : Colors.grey),
                           ),
                         ),
-                      ],
-                    ),
-                    ...List.generate(3, (index) {
-                      return Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: List.generate(3, (subIndex) {
-                          final number = index * 3 + subIndex + 1;
-                          return numberButton(number.toString());
-                        }),
-                      );
-                    }),
+                      )
+                      .values
+                      .toList(),
+                ),
 
-                    // button part
-                    const SizedBox(height: 5),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        // c button as clear icon
-                        numberButton('C'),
-                        numberButton('0'),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: const SizedBox(width: 80, height: 80),
-                        ),
-                      ],
+                // Show error message if the OTP is wrong stateful
+                const SizedBox(height: 20),
+                if (_wrongOtp)
+                  const Text(
+                    'Wrong OTP code',
+                    style: TextStyle(color: Colors.red),
+                  ),
+                const SizedBox(height: 10),
+              ],
+            ),
+
+            // button part
+            Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    if (_resendAttempts == 3)
+                      // confirm this number for the user
+                      const Text('This number for you?'),
+                    TextButton(
+                      onPressed: _canResendCode
+                          ? () {
+                              setState(() {
+                                _startTimer();
+                              });
+                            }
+                          : null,
+                      child: Text(
+                        (_resendAttempts > 0)
+                            ? _displayText
+                            : 'No more attempts',
+                        style: TextStyle(
+                            color: _canResendCode ? Colors.blue : Colors.grey),
+                      ),
+                    ),
+                  ],
+                ),
+                ...List.generate(3, (index) {
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: List.generate(3, (subIndex) {
+                      final number = index * 3 + subIndex + 1;
+                      return numberButton(number.toString());
+                    }),
+                  );
+                }),
+
+                // button part
+                const SizedBox(height: 5),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    // c button as clear icon
+                    numberButton('C'),
+                    numberButton('0'),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: const SizedBox(width: 80, height: 80),
                     ),
                   ],
                 ),
               ],
-            )),
+            ),
+          ],
+        )),
       ),
     );
   }
