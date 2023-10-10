@@ -50,6 +50,7 @@ dependencies:
     fl_chart: ^0.63.0
     dartz: ^0.10.1
     internet_connection_checker: ^1.0.0+1
+    image_picker: ^0.8.4+4 #added by adhm to test the photo profile changer
 
     # The following adds the Cupertino Icons font to your application.
     # Use with the CupertinoIcons class for iOS style icons.

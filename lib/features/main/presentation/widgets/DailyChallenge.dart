@@ -26,7 +26,7 @@ class _DailyChallengeState extends State<DailyChallenge> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.fromLTRB(20,15,20,15),
+      padding: EdgeInsets.fromLTRB(20, 15, 20, 15),
       // width: double.infinity,
       decoration: primary_decoration,
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -50,8 +50,7 @@ class _DailyChallengeState extends State<DailyChallenge> {
                         fontSize: 14,
                         fontWeight: FontWeight.bold,
                         color: theme_darkblue.withOpacity(0.5))),
-                                SizedBox(height: 3),
-
+                SizedBox(height: 3),
                 Text(widget.challengeProgress,
                     style: textStyle.copyWith(
                         fontSize: 12,
@@ -70,7 +69,6 @@ class _DailyChallengeState extends State<DailyChallenge> {
                 style: ButtonStyle(
                   backgroundColor:
                       MaterialStateProperty.all<Color>(theme_green),
-    
                 ),
                 child: Text("DONE",
                     style: textStyle.copyWith(
