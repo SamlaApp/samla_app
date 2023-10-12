@@ -58,7 +58,7 @@ dependencies:
     io: ^1.0.4
     equatable: ^2.0.5
     provider: ^6.0.5
-    libphonenumber: ^2.0.2
+    flutter_libphonenumber: ^2.1.5
 
 dev_dependencies:
     flutter_test:
