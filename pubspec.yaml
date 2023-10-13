@@ -60,6 +60,7 @@ dependencies:
     equatable: ^2.0.5
     provider: ^6.0.5
     flutter_libphonenumber: ^2.1.5
+    firebase_in_app_messaging: ^0.7.3+7
 
 dev_dependencies:
     flutter_test:
