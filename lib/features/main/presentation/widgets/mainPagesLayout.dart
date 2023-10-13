@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:samla_app/config/themes/common_styles.dart';
 import 'package:samla_app/features/chatting/presentation/pages/chat.dart';
-import 'package:samla_app/features/community/presentation/pages/community.dart';
+import 'package:samla_app/features/community/presentation/pages/communities.dart';
 import 'package:samla_app/features/main/presentation/pages/home.dart';
 import 'package:samla_app/features/nutrition/presentation/pages/nutrition.dart';
-// import 'package:samla_app/features/training/presentation/pages/new_workout.dart';
+import 'package:samla_app/features/training/presentation/pages/newRoutineScreen.dart';
 
 import 'CustomAppBar.dart';
 import 'CustomNavigationBar.dart';
@@ -20,10 +20,10 @@ class _MainPagesState extends State<MainPages> {
   int _currentIndex = 2;
   final screens = [
     // for only navigation bar screens
-    NewWorkout(),
+    NewRoutineScreen(),
     NutritionPage(),
     HomePage(),
-    CommunityPage(),
+    CommunitiesPage(),
     ChattingPage(),
   ];
 
