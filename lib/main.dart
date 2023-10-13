@@ -7,16 +7,17 @@ import 'package:samla_app/core/error/exceptions.dart';
 import 'config/router/app_router.dart';
 import 'firebase_options.dart'; // Import your logical code
 
-Future<void> main() async {
-
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   
   // final initialRoute = '';
   @override
