@@ -1,11 +1,18 @@
 import 'dart:io';
 
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:samla_app/core/auth/User.dart';
 import 'package:samla_app/core/error/exceptions.dart';
-import 'config/router/app_router.dart'; // Import your logical code
+import 'config/router/app_router.dart';
+import 'firebase_options.dart'; // Import your logical code
 
-void main(){
+Future<void> main() async {
+
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
   runApp(MyApp());
 }
 
