@@ -1,74 +1,77 @@
-// part of 'auth_bloc.dart';
+part of 'auth_bloc.dart';
 
-// abstract class AuthEvent extends Equatable {
-//   const AuthEvent();
+abstract class AuthEvent extends Equatable {
+  const AuthEvent();
 
-//   @override
-//   List<Object> get props => [];
-// }
+  @override
+  List<Object> get props => [];
+}
 
-// class LoginWithEmailEvent extends AuthEvent {
-//   final String email;
-//   final String password;
+class LoginWithEmailEvent extends AuthEvent {
+  final String email;
+  final String password;
 
-//   LoginWithEmailEvent({required this.email, required this.password});
+  LoginWithEmailEvent({required this.email, required this.password});
 
-//   @override
-//   List<Object> get props => [email, password];
-// }
+  @override
+  List<Object> get props => [email, password];
+}
 
-// class LoginWithUsernameEvent extends AuthEvent {
-//   final String username;
-//   final String password;
+class LoginWithUsernameEvent extends AuthEvent {
+  final String username;
+  final String password;
 
-//   LoginWithUsernameEvent({required this.username, required this.password});
+  LoginWithUsernameEvent({required this.username, required this.password});
 
-//   @override
-//   List<Object> get props => [username, password];
-// }
+  @override
+  List<Object> get props => [username, password];
+}
 
-// class LoginWithPhoneEvent extends AuthEvent {
-//   final String phone;
+class LoginWithPhoneEvent extends AuthEvent {
+  final String phone;
 
-//   LoginWithPhoneEvent({required this.phone});
+  LoginWithPhoneEvent({required this.phone});
 
-//   @override
-//   List<Object> get props => [phone];
-// }
+  @override
+  List<Object> get props => [phone];
+}
 
-// class CheckOTPEvent extends AuthEvent {
-//   final String otp;
+class CheckOTPEvent extends AuthEvent {
+  final String otp;
+  final String phone;
 
-//   CheckOTPEvent({required this.otp});
+  CheckOTPEvent({required this.phone, required this.otp});
 
-//   @override
-//   List<Object> get props => [otp];
-// }
+  @override
+  List<Object> get props => [otp, phone];
+}
 
-// class ResendOTPEvent extends AuthEvent {
-//   final String phone;
+class ResendOTPEvent extends AuthEvent {
+  final String phone;
 
-//   ResendOTPEvent({required this.phone});
+  ResendOTPEvent({required this.phone});
 
-//   @override
-//   List<Object> get props => [phone];
-// }
+  @override
+  List<Object> get props => [phone];
+}
 
-// class SignUpEvent extends AuthEvent {
-//   final String email;
-//   final String password;
-//   final String username;
-//   final String phone;
-//   final String dateOfBirth;
+class SignUpEvent extends AuthEvent {
+  final String name;
+  final String email;
+  final String password;
+  final String username;
+  final String phone;
+  final String dateOfBirth;
 
-//   SignUpEvent({
-//     required this.email,
-//     required this.password,
-//     required this.username,
-//     required this.phone,
-//     required this.dateOfBirth,
-//   });
+  const SignUpEvent({
+    required this.name,
+    required this.email,
+    required this.password,
+    required this.username,
+    required this.phone,
+    required this.dateOfBirth,
+  });
 
-//   @override
-//   List<Object> get props => [email, password, username, phone, dateOfBirth];
-// }
+  @override
+  List<Object> get props => [email, password, username, phone, dateOfBirth];
+}

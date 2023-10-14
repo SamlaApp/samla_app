@@ -3,10 +3,10 @@ import 'package:samla_app/core/error/failures.dart';
 import 'package:samla_app/features/auth/domain/entities/user.dart';
 import 'package:samla_app/features/auth/domain/repositories/auth_repository.dart';
 
-class SendOTP {
+class CheckOTP {
   final AuthRepository repository;
 
-  SendOTP({required this.repository});
+  CheckOTP({required this.repository});
 
   Future<Either<Failure, User>> call(
     String phoneNumber,

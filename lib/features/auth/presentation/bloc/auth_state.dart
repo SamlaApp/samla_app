@@ -1,31 +1,39 @@
-// part of 'auth_bloc.dart';
+part of 'auth_bloc.dart';
 
-// abstract class AuthState extends Equatable {
-//   const AuthState();
+abstract class AuthState extends Equatable {
+  const AuthState();
 
-//   @override
-//   List<Object> get props => [];
-// }
+  @override
+  List<Object> get props => [];
+}
 
-// final class AuthInitial extends AuthState {}
+final class AuthInitial extends AuthState {}
 
-// class LoadingAuthState extends AuthState {}
+class LoadingAuthState extends AuthState {}
 
-// class AuthenticatedState extends AuthState {
-//   final User user;
+class OTPSentState extends AuthState {
+  final String phone;
 
-//   AuthenticatedState({required this.user});
+  OTPSentState({required this.phone});
 
-//   @override
-//   List<Object> get props => [user];
-// }
+  @override
+  List<Object> get props => [phone];
+}
 
-// class ErrorAuthState extends AuthState {
-//   final String message;
+class AuthenticatedState extends AuthState {
+  final User user;
 
-//   ErrorAuthState({required this.message});
+  AuthenticatedState({required this.user});
 
-//   @override
-//   List<Object> get props => [message];
-// }
+  @override
+  List<Object> get props => [user];
+}
 
+class ErrorAuthState extends AuthState {
+  final String message;
+
+  ErrorAuthState({required this.message});
+
+  @override
+  List<Object> get props => [message];
+}

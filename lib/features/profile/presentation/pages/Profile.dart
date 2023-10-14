@@ -10,22 +10,29 @@ import 'package:samla_app/features/profile/presentation/widgets/Achievments.dart
 
 import '../widgets/numbers.dart';
 
-class ProfilePage extends StatelessWidget {
+class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
 
+  @override
+  State<ProfilePage> createState() => _ProfilePageState();
+}
+
+class _ProfilePageState extends State<ProfilePage> {
+
+  int _selectedIndex = 0; // 0: info, 1: achievements, 2: settings
   final String imagePath = 'images/download.jpeg';
 
   @override
   Widget build(BuildContext context) {
     final user = LocalAuth.user;
-    print('rebuild profile page');
+
     return Scaffold(
         appBar: buildAAppBar(),
         body: ListView(
           physics: BouncingScrollPhysics(),
           children: [
             SizedBox(
-              height: 40,
+              height: 10,
             ),
             ProfileWidget(
               imgPath: imagePath,
@@ -35,17 +42,139 @@ class ProfilePage extends StatelessWidget {
               height: 20,
             ),
             buildName_email(user),
+            // NumbersWidget(), => Not needed
             SizedBox(
-              height: 25,
+              height: 20,
             ),
-            NumbersWidget(),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 20),
+              child: Column(
+                children: <Widget>[
+                  Row(
+                    children: [
+                      // Info Button
+                      Expanded(
+                        child: Container(
+                          decoration: BoxDecoration(
+                            border: Border(
+                              bottom: BorderSide(
+                                color: (_selectedIndex == 0)
+                                    ? const Color.fromRGBO(64, 194, 210, 1)
+                                    : Colors.grey,
+                                width: 3,
+                                style: BorderStyle.solid,
+                              ),
+                            ),
+                          ),
+                          child: TextButton(
+                            onPressed: () {
+                              setState(() {
+                                _selectedIndex = 0;
+                              });
+                            },
+                            child: const Text(
+                              'Info',
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Color.fromRGBO(10, 44, 64, 1),
+                                fontWeight: FontWeight.bold,
+                                decoration: TextDecoration.none,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+
+                      // Achievements Button
+                      Expanded(
+                        child: Container(
+                          decoration: BoxDecoration(
+                            border: Border(
+                              bottom: BorderSide(
+                                color: (_selectedIndex == 1)
+                                    ? const Color.fromRGBO(64, 194, 210, 1)
+                                    : Colors.grey,
+                                width: 3,
+                                style: BorderStyle.solid,
+                              ),
+                            ),
+                          ),
+                          child: TextButton(
+                            onPressed: () {
+                              setState(() {
+                                _selectedIndex = 1;
+                              });
+                            },
+                            child: const Text(
+                              'Achievements',
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Color.fromRGBO(10, 44, 64, 1),
+                                fontWeight: FontWeight.bold,
+                                decoration: TextDecoration.none,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+
+                      // Phone Button
+                      Expanded(
+                        child: Container(
+                          decoration: BoxDecoration(
+                            border: Border(
+                              bottom: BorderSide(
+                                color: (_selectedIndex == 2)
+                                    ? const Color.fromRGBO(64, 194, 210, 1)
+                                    : Colors.grey,
+                                width: 3,
+                                style: BorderStyle.solid,
+                              ),
+                            ),
+                          ),
+                          child: TextButton(
+                            onPressed: () {
+                              setState(() {
+                                _selectedIndex = 2;
+                              });
+                            },
+                            child: const Text(
+                              'Settings',
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Color.fromRGBO(10, 44, 64, 1),
+                                fontWeight: FontWeight.bold,
+                                decoration: TextDecoration.none,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
             SizedBox(
-              height: 5,
+              height: 20,
             ),
-            Achievments(
-              challengeName: '',
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 20),
+              child: Column(
+                children: <Widget>[
+                  if (_selectedIndex == 0) ...[
+                    // Info
+                    InfoWidget(),
+                  ] else if (_selectedIndex == 1) ...[
+                    // Achievements
+                    AchievementsWidget(),
+                  ] else if (_selectedIndex == 2) ...[
+                    // Settings
+                    SettingsWidget(),
+                  ],
+                ],
+              ),
             ),
-            Center(child: updateInfo(user, context)),
           ],
         ));
   }
@@ -66,7 +195,6 @@ class ProfilePage extends StatelessWidget {
           style: TextStyle(),
         ),
       ]);
-
   Widget updateInfo(user, context) => Center(
           child: Column(
         children: [
@@ -115,3 +243,84 @@ class ProfilePage extends StatelessWidget {
         ],
       ));
 }
+
+
+
+
+// Info Widget
+/// TODO: Display & Update Info, Update User Goals
+class InfoWidget extends StatefulWidget {
+  const InfoWidget({super.key});
+
+  @override
+  State<InfoWidget> createState() => _InfoWidgetState();
+}
+class _InfoWidgetState extends State<InfoWidget>{
+
+
+  @override
+  Widget build(BuildContext context) {
+    final user = LocalAuth.user;
+    return Container(
+        padding: EdgeInsets.symmetric(horizontal: 20),
+        child: Center(
+          child: Text(
+              "Name: ${user.name}\n"
+          ),
+        )
+    );
+  }
+}
+
+// Achievements Widget
+/// TODO: Display Achievements
+class AchievementsWidget extends StatefulWidget {
+  const AchievementsWidget({super.key});
+
+  @override
+  State<AchievementsWidget> createState() => _AchievementsWidgetState();
+}
+class _AchievementsWidgetState extends State<AchievementsWidget> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 20),
+      child: Center(
+        child: Text(
+          "Achievements",
+          style: TextStyle(
+            fontSize: 20,
+            color: Color.fromRGBO(10, 44, 64, 1),
+            fontWeight: FontWeight.bold,
+            decoration: TextDecoration.none,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// Settings Widget
+/// TODO: update Password, Delete Account
+class SettingsWidget  extends StatefulWidget {
+  const SettingsWidget({super.key});
+
+  @override
+  State<SettingsWidget> createState() => _SettingsWidgetState();
+}
+class _SettingsWidgetState extends State<SettingsWidget> {
+  @override
+  Widget build(BuildContext context) {
+    final user = LocalAuth.user;
+    return Container(
+        padding: EdgeInsets.symmetric(horizontal: 20),
+        child: Center(
+          child: Text(
+              "Settings"
+          ),
+        )
+    );
+  }
+}
+
+

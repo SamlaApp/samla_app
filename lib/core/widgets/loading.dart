@@ -1,7 +1,12 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_in_app_messaging/firebase_in_app_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:samla_app/config/themes/common_styles.dart';
 import 'package:samla_app/core/auth/User.dart';
 import 'package:samla_app/core/error/exceptions.dart';
+import 'package:samla_app/firebase_options.dart';
+import 'package:samla_app/features/auth/injection_container.dart' as di;
+
 
 class LoadingScreen extends StatefulWidget {
   String? nextRoute = 'auth';
@@ -14,37 +19,52 @@ class LoadingScreen extends StatefulWidget {
   _LoadingScreenState createState() => _LoadingScreenState();
 }
 
-class _LoadingScreenState extends State<LoadingScreen> with TickerProviderStateMixin {
+class _LoadingScreenState extends State<LoadingScreen>
+    with TickerProviderStateMixin {
   late AnimationController controller;
 
   @override
   void initState() {
-        super.initState();
+    super.initState();
 
     controller = AnimationController(
-  
       vsync: this,
       duration: const Duration(seconds: 1),
     )..addListener(() {
         setState(() {});
       });
     controller.repeat(reverse: true);
-    _checkCachedUserAndNavigate();
-
+    _dependecyInjection();
   }
+
   @override
   void dispose() {
     controller.dispose();
     super.dispose();
   }
 
+  Future<void> _dependecyInjection() async {
+    /* put here every thing need to be initialized before the app starts
+    the process here will be excuting while the loading screen is showing
+    ! make sure to add await keyword if the process is async in order to finish it 
+    before handling the authentication
+    */
+
+   
+
+    // authentication handling
+    await _checkCachedUserAndNavigate();
+  }
+
   Future<void> _checkCachedUserAndNavigate() async {
     // await Future.delayed(Duration(seconds: 12)); // for testing
     try {
-      await LocalAuth.init();
+      await LocalAuth.init(); // if there is cached user then it will fo to main pages
       Navigator.of(context).pushNamedAndRemoveUntil(
           '/MainPages', (Route<dynamic> route) => false);
     } on EmptyCacheException {
+      // if there is no cached user then it will go to login page
+      await di.AuthInit();
       Navigator.of(context)
           .pushNamedAndRemoveUntil('/login', (Route<dynamic> route) => false);
     }
@@ -53,7 +73,7 @@ class _LoadingScreenState extends State<LoadingScreen> with TickerProviderStateM
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(vertical:50,horizontal:100),
+      padding: EdgeInsets.symmetric(vertical: 50, horizontal: 100),
       color: primary_color,
       child: Column(
         children: [
@@ -76,7 +96,7 @@ class _LoadingScreenState extends State<LoadingScreen> with TickerProviderStateM
               ],
             ),
           ),
-           Align(
+          Align(
             alignment: AlignmentDirectional.bottomCenter,
             child: Text(
               'Samla   |   صملة',

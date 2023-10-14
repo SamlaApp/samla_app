@@ -37,8 +37,8 @@ class AuthRepositoryImpl implements AuthRepository {
         //cache user
         await localDataSource.cacheUser(user);
         return Right(user);
-      } on ServerException {
-        return Left(ServerFailure());
+      } on ServerException catch (e) {
+        return Left(ServerFailure(message:e.message));
       }
     } else {
       return Left(OfflineFailure());
@@ -54,8 +54,8 @@ class AuthRepositoryImpl implements AuthRepository {
         //cache user
         await localDataSource.cacheUser(user);
         return Right(user);
-      } on ServerException {
-        return Left(ServerFailure());
+      } on ServerException catch (e) {
+        return Left(ServerFailure(message: e.message));
       }
     } else {
       return Left(OfflineFailure());
@@ -68,8 +68,8 @@ class AuthRepositoryImpl implements AuthRepository {
       try {
         await remoteDataSource.loginWithPhoneNumber(phoneNumber);
         return Right(unit);
-      } on ServerException {
-        return Left(ServerFailure());
+      } on ServerException catch (e) {
+        return Left(ServerFailure(message: e.message));
       }
     } else {
       return Left(OfflineFailure());
@@ -86,8 +86,8 @@ class AuthRepositoryImpl implements AuthRepository {
         //cache user
         await localDataSource.cacheUser(user);
         return Right(user);
-      } on ServerException {
-        return Left(ServerFailure());
+      } on ServerException catch (e) {
+        return Left(ServerFailure(message: e.message));
       }
     } else {
       return Left(OfflineFailure());
@@ -102,8 +102,8 @@ class AuthRepositoryImpl implements AuthRepository {
         //cache user
         await localDataSource.cacheUser(user);
         return Right(user);
-      } on ServerException {
-        return Left(ServerFailure());
+      } on ServerException catch (e) {
+        return Left(ServerFailure(message: e.message));
       }
     } else {
       return Left(OfflineFailure());

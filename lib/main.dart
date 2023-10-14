@@ -1,12 +1,31 @@
+import 'dart:io';
+import 'dart:async';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'config/router/app_router.dart'; // Import your logical code
+import 'package:flutter/services.dart';
+import 'package:samla_app/core/auth/User.dart';
+import 'package:samla_app/core/error/exceptions.dart';
+import 'package:firebase_in_app_messaging/firebase_in_app_messaging.dart';
+import 'config/router/app_router.dart';
+import 'firebase_options.dart'; // Import your logical code
+import 'features/auth/injection_container.dart' as di;
 
-void main(){
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  // dependency injection/initalization could be putted in core/widgets/loading.dart file
+  // in order to be excuted while the splash loading screen is showing
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  FirebaseInAppMessaging.instance.setAutomaticDataCollectionEnabled(true);
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({Key? key}) : super(key: key);
+
+
+  
   // final initialRoute = '';
   @override
   Widget build(BuildContext context) {
@@ -19,6 +38,13 @@ class MyApp extends StatelessWidget {
           final mediaQueryData = MediaQuery.of(context);
           final scale = mediaQueryData.textScaleFactor
               .clamp(1.0, 1.4); // choose your max and min font sizes here
+          // disable rotation
+          if (mediaQueryData.orientation == Orientation.landscape) {
+            SystemChrome.setPreferredOrientations([
+              DeviceOrientation.portraitUp,
+              DeviceOrientation.portraitDown,
+            ]);
+          }
           return MediaQuery(
               data: MediaQuery.of(context).copyWith(textScaleFactor: scale),
               child: child!);

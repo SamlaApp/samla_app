@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "589598708972",
+    "project_id": "samla-ceab0",
+    "storage_bucket": "samla-ceab0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:589598708972:android:0604fc4958f35b5d8841c9",
+        "android_client_info": {
+          "package_name": "com.example.samla_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "589598708972-numej6m8a6sk7un8mjkpf3ppdf9c7q4n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBP-gaY-MIwRaCTrW5IARVUYJWxpB4Oq30"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "589598708972-numej6m8a6sk7un8mjkpf3ppdf9c7q4n.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "589598708972-tt8hlchv185vp69gg7daut4tro4pgrqm.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.samlaApp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

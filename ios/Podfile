@@ -39,3 +39,11 @@ post_install do |installer|
     flutter_additional_ios_build_settings(target)
   end
 end
+
+pod 'Firebase', :modular_headers => true
+pod 'FirebaseCoreInternal', :modular_headers => true
+pod 'GoogleUtilities', :modular_headers => true
+pod 'FirebaseCore', :modular_headers => true
+pod 'FirebaseInAppMessaging', :modular_headers => true
+pod 'FirebaseInAppMessagingDisplay', :modular_headers => true
+

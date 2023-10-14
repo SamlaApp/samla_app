@@ -3,6 +3,8 @@ import '../../../../config/themes/common_styles.dart';
 import 'package:samla_app/features/training/presentation/pages/explorescreen.dart';
 import 'package:samla_app/features/training/presentation/pages/newRoutineScreen.dart';
 
+import '../pages/emptyworkout.dart';
+
 class StartWorkoutButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -10,12 +12,12 @@ class StartWorkoutButton extends StatelessWidget {
       onPressed: () {
         Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (context) => exploreScreen(),
+            builder: (context) => NewWorkout(),
           ),
         );
       },
       icon: Icon(Icons.add),
-      label: Text('Start New Workout', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+      label: Text('Start Now', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
       style: ElevatedButton.styleFrom(minimumSize: Size(double.infinity, 40), backgroundColor: theme_green),
     );
   }

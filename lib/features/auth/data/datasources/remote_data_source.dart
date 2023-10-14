@@ -47,7 +47,7 @@ class RemoteDataSourceImpl implements RemoteDataSource {
       return UserModel.fromJson(userJson);
     } else {
       print(json.decode(responseBody)['message']);
-      throw ServerException();
+      throw ServerException(message: json.decode(responseBody)['message']);
     }
   }
 
@@ -63,7 +63,7 @@ class RemoteDataSourceImpl implements RemoteDataSource {
     if (response.statusCode == 200) {
       return Future.value(unit);
     } else {
-      throw ServerException();
+      throw ServerException(message: json.decode(responseBody)['message']);
     }
   }
 
@@ -83,7 +83,7 @@ class RemoteDataSourceImpl implements RemoteDataSource {
       return UserModel.fromJson(userJson);
     } else {
       print(json.decode(responseBody)['message']);
-      throw ServerException();
+      throw ServerException(message: json.decode(responseBody)['message']);
     }
   }
 
@@ -113,7 +113,7 @@ class RemoteDataSourceImpl implements RemoteDataSource {
       return UserModel.fromJson(userJson);
     } else {
       print(json.decode(responseBody));
-      throw ServerException();
+      throw ServerException(message: json.decode(responseBody)['message']);
     }
   }
 
@@ -132,7 +132,7 @@ class RemoteDataSourceImpl implements RemoteDataSource {
       return UserModel.fromJson(userJson);
     } else {
       print(json.decode(responseBody)['message']);
-      throw ServerException();
+      throw ServerException(message: json.decode(responseBody)['message']);
     }
   }
 
