@@ -12,7 +12,7 @@ import 'features/auth/injection_container.dart' as di;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // dependency injection/initalization could be putted in core/widgets/loading.dart file
+  // dependency injection/initalization could be putted in core/widgets/splash_screen.dart file
   // in order to be excuted while the splash loading screen is showing
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,

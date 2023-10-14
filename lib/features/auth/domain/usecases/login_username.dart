@@ -9,9 +9,9 @@ class LoginWithUsername {
   LoginWithUsername({required this.repository});
 
   Future<Either<Failure, User>> call(
-    String email,
+    String username,
     String password,
   ) {
-    return repository.loginWithUsername(email, password);
+    return repository.loginWithUsername(username, password);
   }
 }

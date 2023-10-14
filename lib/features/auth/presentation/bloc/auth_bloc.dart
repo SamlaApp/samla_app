@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:samla_app/core/auth/User.dart';
 import 'package:samla_app/features/auth/domain/entities/user.dart';
 import 'package:samla_app/features/auth/domain/usecases/login_email.dart';
 import 'package:samla_app/features/auth/domain/usecases/login_phone.dart';
@@ -26,16 +27,21 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       required this.loginWithEmail})
       : super(AuthInitial()) {
     on<AuthEvent>((event, emit) async {
+      if (event is ClearAuthEvent){
+        emit(AuthInitial());
+      }
+
       // login with email
       if (event is LoginWithEmailEvent) {
         emit(LoadingAuthState());
         final failuredOrDone =
-            await loginWithEmail(event.email, event.password);
-        failuredOrDone.fold((failure) {
+            await loginWithEmail.call(event.email, event.password);
+        await failuredOrDone.fold((failure) {
           emit(ErrorAuthState(message: failure.message));
-        }, (returnedUser) {
+        }, (returnedUser) async {
           user = returnedUser;
-          emit(AuthenticatedState(user: returnedUser));
+          await LocalAuth.init()
+              .whenComplete(() => emit(AuthenticatedState(user: returnedUser)));
         });
       }
 
@@ -43,12 +49,14 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       else if (event is LoginWithUsernameEvent) {
         emit(LoadingAuthState());
         final failuredOrDone =
-            await loginWithUsername(event.username, event.password);
-        failuredOrDone.fold((failure) {
+            await loginWithUsername.call(event.username, event.password);
+
+        await failuredOrDone.fold((failure) {
           emit(ErrorAuthState(message: failure.message));
-        }, (returnedUser) {
+        }, (returnedUser) async {
           user = returnedUser;
-          emit(AuthenticatedState(user: returnedUser));
+          await LocalAuth.init()
+              .whenComplete(() => emit(AuthenticatedState(user: returnedUser)));
         });
       }
 
@@ -66,19 +74,22 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       // check OTP
       else if (event is CheckOTPEvent) {
         emit(LoadingAuthState());
-        final failuredOrDone = await checkOTP(event.phone, event.otp);
-        failuredOrDone.fold((failure) {
+        final failuredOrDone = await checkOTP.call(event.phone, event.otp);
+
+        await failuredOrDone.fold((failure) {
           emit(ErrorAuthState(message: failure.message));
-        }, (returnedUser) {
+        }, (returnedUser) async {
           user = returnedUser;
-          emit(AuthenticatedState(user: returnedUser));
+          await LocalAuth.init()
+              .whenComplete(() => emit(AuthenticatedState(user: returnedUser)));
         });
       }
 
       // resend OTP
       else if (event is ResendOTPEvent) {
         emit(LoadingAuthState());
-        final failuredOrDone = await loginWithPhone(event.phone);
+        final failuredOrDone = await loginWithPhone.call(event.phone);
+
         failuredOrDone.fold((failure) {
           emit(ErrorAuthState(message: failure.message));
         }, (_) {
@@ -91,10 +102,14 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         emit(LoadingAuthState());
         final failuredOrDone = await signUp.call(event.name, event.email,
             event.username, event.phone, event.dateOfBirth, event.password);
-        failuredOrDone.fold((failure) {
+        await LocalAuth.init();
+
+        await failuredOrDone.fold((failure) {
           emit(ErrorAuthState(message: failure.message));
-        }, (returnedUser) {
-          emit(AuthenticatedState(user: returnedUser));
+        }, (returnedUser) async {
+          user = returnedUser;
+          await LocalAuth.init()
+              .whenComplete(() => emit(AuthenticatedState(user: returnedUser)));
         });
       }
     });

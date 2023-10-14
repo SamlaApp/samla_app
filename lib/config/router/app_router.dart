@@ -3,7 +3,7 @@
 // import 'dart:js';
 
 import 'package:flutter/material.dart';
-import 'package:samla_app/core/widgets/loading.dart';
+import 'package:samla_app/core/widgets/splash_screen.dart';
 import 'package:samla_app/features/auth/presentation/pages/Login.dart';
 import 'package:samla_app/features/auth/presentation/pages/OTP.dart';
 import 'package:samla_app/features/auth/presentation/pages/Register.dart';
@@ -24,7 +24,7 @@ Map<String, Widget Function(BuildContext)> routes = {
   '/Profile': (context) => ProfilePage(),
   '/QRcode': (context) => QRPage(),
   '/login': (context) => Login(),
-  '/': (context) => LoadingScreen(),
+  '/': (context) => SplashScreen(),
   '/Register': (context) => RegisterPage(),
   '/PersonalInfo': (context) => PersonalInfoPage(),
 

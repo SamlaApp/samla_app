@@ -11,7 +11,8 @@ class LoginWithEmail {
   Future<Either<Failure, User>> call(
     String email,
     String password,
-  ){
+  )async{
+    
     return repository.loginWithEmail(email, password);
   }
 

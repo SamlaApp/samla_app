@@ -6,6 +6,8 @@ abstract class AuthEvent extends Equatable {
   @override
   List<Object> get props => [];
 }
+// called to clear error state
+class ClearAuthEvent extends AuthEvent {}
 
 class LoginWithEmailEvent extends AuthEvent {
   final String email;
