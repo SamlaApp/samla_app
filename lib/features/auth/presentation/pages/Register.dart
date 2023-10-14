@@ -1,13 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:samla_app/config/themes/common_styles.dart';
 import 'package:samla_app/core/auth/User.dart';
 import 'package:samla_app/core/error/exceptions.dart';
+import 'package:samla_app/core/widgets/loading.dart';
 import 'package:samla_app/features/auth/data/datasources/local_data_source.dart';
 import 'package:samla_app/features/auth/data/datasources/remote_data_source.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:samla_app/features/auth/injection_container.dart' as di;
+
+import '../bloc/auth_bloc.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({Key? key}) : super(key: key);
@@ -40,72 +46,131 @@ class _RegisterState extends State<RegisterPage> {
   late LocalDataSourceImpl localDataSourceImpl =
       LocalDataSourceImpl(sharedPreferences: sharedPreferences);
 
-  _Register() async {
-    sharedPreferences = await SharedPreferences.getInstance();
-    try {
-      // Trim the username
-      final username = _usernameController.text.trim();
+  // _Register() async {
+  //   sharedPreferences = await SharedPreferences.getInstance();
+  //   try {
+  //     // Trim the username
+  //     final username = _usernameController.text.trim();
 
-      // Trim the password
-      final password = _passwordController.text.trim();
-      final email = _emailController.text.trim();
-      final phone = _phone;
-      final name = _nameController.text.trim();
-      final dateOfBirth = _dateController.text.trim();
+  //     // Trim the password
+  //     final password = _passwordController.text.trim();
+  //     final email = _emailController.text.trim();
+  //     final phone = _phone;
+  //     final name = _nameController.text.trim();
+  //     final dateOfBirth = _dateController.text.trim();
 
-      print('username: $username');
-      print('password: $password');
-      print('email: $email');
-      print('phone: $phone');
-      print('name: $name');
-      print('dateOfBirth: $dateOfBirth');
+  //     print('username: $username');
+  //     print('password: $password');
+  //     print('email: $email');
+  //     print('phone: $phone');
+  //     print('name: $name');
+  //     print('dateOfBirth: $dateOfBirth');
 
-      final userModel = await remoteDataSourceImpl.signup(
-        name: name,
-        email: email,
-        username: username,
-        phone: phone,
-        dateOfBirth: dateOfBirth,
-        password: password,
-      );
+  //     final userModel = await remoteDataSourceImpl.signup(
+  //       name: name,
+  //       email: email,
+  //       username: username,
+  //       phone: phone,
+  //       dateOfBirth: dateOfBirth,
+  //       password: password,
+  //     );
 
-      await localDataSourceImpl.cacheUser(userModel);
-      await LocalAuth.init();
-      // Navigator.pushReplacementNamed(context, '/');
-      Navigator.of(context).pushNamedAndRemoveUntil(
-          '/MainPages', (Route<dynamic> route) => false);
-    } on ServerException {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('something went worng'),
-        ),
-      );
-    }
+  //     await localDataSourceImpl.cacheUser(userModel);
+  //     await LocalAuth.init();
+  //     // Navigator.pushReplacementNamed(context, '/');
+  //     Navigator.of(context).pushNamedAndRemoveUntil(
+  //         '/MainPages', (Route<dynamic> route) => false);
+  //   } on ServerException {
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       const SnackBar(
+  //         content: Text('something went worng'),
+  //       ),
+  //     );
+  //   }
+  // }
+
+  final authBloc = di.sl<AuthBloc>();
+
+  _Register() {
+    authBloc.add(
+      SignUpEvent(
+        name: _nameController.text.trim(),
+        email: _emailController.text.trim(),
+        username: _usernameController.text.trim(),
+        phone: _phone,
+        dateOfBirth: _dateController.text.trim(),
+        password: _passwordController.text.trim(),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => authBloc,
+      child: BlocBuilder<AuthBloc, AuthState>(
+        builder: (context, state) {
+          if (state is LoadingAuthState) {
+            // Show the loading widget on top of your main widget.
+            return Stack(
+              children: [
+                RegisterWidget(context), // Your main content widget
+                Positioned.fill(
+                  child: Center(
+                    child: LoadingWidget(), // Loading widget
+                  ),
+                ),
+              ],
+            );
+          }
+          if (state is ErrorAuthState) {
+            SchedulerBinding.instance.addPostFrameCallback((_) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(state.message),
+                ),
+              );
+            });
+            // clear the state
+            authBloc.add(ClearAuthEvent());
+          }
+          if (state is AuthenticatedState) {
+            SchedulerBinding.instance.addPostFrameCallback((_) {
+              Navigator.of(context).pushNamedAndRemoveUntil(
+                  '/MainPages', (Route<dynamic> route) => false);
+            });
+          }
+          return RegisterWidget(context);
+        },
+      ),
+    );
+  }
+
+  Scaffold RegisterWidget(BuildContext context) {
     return Scaffold(
       body: SafeArea(
         child: Container(
-          alignment: Alignment.center ,
+          alignment: Alignment.center,
           child: SingleChildScrollView(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 SizedBox(height: MediaQuery.of(context).size.height * x),
-        
+
                 Padding(
                   padding: const EdgeInsets.fromLTRB(25, 0, 25, 0),
                   child: Material(
                     child: Column(
                       children: [
-                        SizedBox(height: MediaQuery.of(context).size.height * x),
+                        SizedBox(
+                            height: MediaQuery.of(context).size.height * x),
                         Image.asset(
                           'images/Logo/2x/Icon_1@2x.png',
                           height: 60,
                         ),
-                        SizedBox(height: 12,),
+                        SizedBox(
+                          height: 12,
+                        ),
                         Text(
                           'Sign Up to Samla',
                           style: TextStyle(
@@ -130,8 +195,10 @@ class _RegisterState extends State<RegisterPage> {
                   ),
                 ),
 
-                SizedBox(height: 40,),
-        
+                SizedBox(
+                  height: 40,
+                ),
+
                 Padding(
                   padding: const EdgeInsets.all(25.0),
                   child: Form(
@@ -151,11 +218,11 @@ class _RegisterState extends State<RegisterPage> {
                               return null;
                             },
                           ),
-        
+
                           SizedBox(
                             height: 10,
                           ),
-        
+
                           CustomTextField(
                             controller: _usernameController,
                             iconData: Icons.person,
@@ -171,12 +238,12 @@ class _RegisterState extends State<RegisterPage> {
                               return null;
                             },
                           ),
-        
+
                           // Email
                           SizedBox(
                             height: 10,
                           ),
-        
+
                           CustomTextField(
                             hintText: 'Email',
                             controller: _emailController,
@@ -192,12 +259,12 @@ class _RegisterState extends State<RegisterPage> {
                               return null;
                             },
                           ),
-        
+
                           // Mobile
                           SizedBox(
                             height: 10,
                           ),
-        
+
                           // InternationalPhoneNumberInput(
                           //   selectorConfig: const SelectorConfig(
                           //     selectorType: PhoneInputSelectorType.BOTTOM_SHEET,
@@ -224,7 +291,7 @@ class _RegisterState extends State<RegisterPage> {
                           //     labelText: 'Mobile Number',
                           //   ),
                           // ),
-                             InternationalPhoneNumberInput(
+                          InternationalPhoneNumberInput(
                             onInputChanged: (PhoneNumber number) {
                               print(number.phoneNumber);
                               _phone = number.phoneNumber!;
@@ -237,21 +304,21 @@ class _RegisterState extends State<RegisterPage> {
                               selectorType: PhoneInputSelectorType.BOTTOM_SHEET,
                             ),
                             ignoreBlank: true,
-                            autoValidateMode: AutovalidateMode.onUserInteraction,
+                            autoValidateMode:
+                                AutovalidateMode.onUserInteraction,
                             selectorTextStyle: TextStyle(color: Colors.black),
                             textFieldController: _phoneController,
                             formatInput: false,
                             keyboardType: TextInputType.numberWithOptions(
                                 signed: true, decimal: true),
                             inputBorder: OutlineInputBorder(),
-            
                           ),
-        
+
                           // Date of Birth
                           SizedBox(
                             height: 10,
                           ),
-        
+
                           // date picker
                           TextFormField(
                             controller: _dateController,
@@ -306,7 +373,7 @@ class _RegisterState extends State<RegisterPage> {
                               }
                             },
                           ),
-        
+
                           // Password
                           SizedBox(
                             height: 10,
@@ -352,13 +419,13 @@ class _RegisterState extends State<RegisterPage> {
                               return null;
                             },
                           ),
-        
+
                           SizedBox(
                             height: 40,
                           ),
-        
+
                           // Register Button
-        
+
                           ElevatedButton(
                             style: ElevatedButton.styleFrom(
                               minimumSize: const Size(double.infinity, 50),

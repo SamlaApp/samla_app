@@ -102,7 +102,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         emit(LoadingAuthState());
         final failuredOrDone = await signUp.call(event.name, event.email,
             event.username, event.phone, event.dateOfBirth, event.password);
-        await LocalAuth.init();
 
         await failuredOrDone.fold((failure) {
           emit(ErrorAuthState(message: failure.message));
