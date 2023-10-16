@@ -3,6 +3,8 @@ import 'package:samla_app/core/error/failures.dart';
 import '../entities/user.dart';
 
 abstract class AuthRepository {
+  Future<Either<Failure, User>> getCachedUser();
+
   Future<Either<Failure, User>> loginWithEmail(
     String email,
     String password,

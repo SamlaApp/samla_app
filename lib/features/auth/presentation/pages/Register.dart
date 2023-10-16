@@ -1,17 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:samla_app/config/themes/common_styles.dart';
-import 'package:samla_app/core/auth/User.dart';
-import 'package:samla_app/core/error/exceptions.dart';
 import 'package:samla_app/core/widgets/loading.dart';
-import 'package:samla_app/features/auth/data/datasources/local_data_source.dart';
-import 'package:samla_app/features/auth/data/datasources/remote_data_source.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:samla_app/features/auth/injection_container.dart' as di;
+import 'package:samla_app/features/auth/auth_injection_container.dart' as di;
 
 import '../bloc/auth_bloc.dart';
 
@@ -37,57 +31,7 @@ class _RegisterState extends State<RegisterPage> {
   String _phone = '';
   String? _accountType;
 
-  final http.Client client = http.Client();
-
-  late RemoteDataSourceImpl remoteDataSourceImpl =
-      RemoteDataSourceImpl(client: client);
-  late SharedPreferences sharedPreferences;
-
-  late LocalDataSourceImpl localDataSourceImpl =
-      LocalDataSourceImpl(sharedPreferences: sharedPreferences);
-
-  // _Register() async {
-  //   sharedPreferences = await SharedPreferences.getInstance();
-  //   try {
-  //     // Trim the username
-  //     final username = _usernameController.text.trim();
-
-  //     // Trim the password
-  //     final password = _passwordController.text.trim();
-  //     final email = _emailController.text.trim();
-  //     final phone = _phone;
-  //     final name = _nameController.text.trim();
-  //     final dateOfBirth = _dateController.text.trim();
-
-  //     print('username: $username');
-  //     print('password: $password');
-  //     print('email: $email');
-  //     print('phone: $phone');
-  //     print('name: $name');
-  //     print('dateOfBirth: $dateOfBirth');
-
-  //     final userModel = await remoteDataSourceImpl.signup(
-  //       name: name,
-  //       email: email,
-  //       username: username,
-  //       phone: phone,
-  //       dateOfBirth: dateOfBirth,
-  //       password: password,
-  //     );
-
-  //     await localDataSourceImpl.cacheUser(userModel);
-  //     await LocalAuth.init();
-  //     // Navigator.pushReplacementNamed(context, '/');
-  //     Navigator.of(context).pushNamedAndRemoveUntil(
-  //         '/MainPages', (Route<dynamic> route) => false);
-  //   } on ServerException {
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       const SnackBar(
-  //         content: Text('something went worng'),
-  //       ),
-  //     );
-  //   }
-  // }
+ 
 
   final authBloc = di.sl<AuthBloc>();
 

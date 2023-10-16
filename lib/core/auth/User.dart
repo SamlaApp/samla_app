@@ -45,6 +45,11 @@ class _User {
     };
   }
 }
+void main(List<String> args) {
+  
+ 
+
+}
 
 abstract class LocalAuth {
   static late _User _user; // Static user cache

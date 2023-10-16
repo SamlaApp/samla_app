@@ -13,7 +13,7 @@ class LoginWithEmail {
     String password,
   )async{
     
-    return repository.loginWithEmail(email, password);
+    return await repository.loginWithEmail(email, password);
   }
 
 }

@@ -2,6 +2,7 @@ import 'package:get_it/get_it.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:samla_app/features/auth/data/datasources/remote_data_source.dart';
 import 'package:samla_app/features/auth/domain/repositories/auth_repository.dart';
+import 'package:samla_app/features/auth/domain/usecases/getChachedUser.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../core/network/network_info.dart';
 import 'data/datasources/local_data_source.dart';
@@ -28,12 +29,13 @@ Future<void> AuthInit() async {
 
   // Bloc
 
-  sl.registerFactory(() => AuthBloc(
+  sl.registerLazySingleton(() => AuthBloc(
       loginWithEmail: sl(),
       loginWithPhone: sl(),
       checkOTP: sl(),
       signUp: sl(),
-      loginWithUsername: sl()));
+      loginWithUsername: sl(),
+      getCachedUser: sl()));
 
   // Use cases
   sl.registerLazySingleton(() => LoginWithEmail(repository: sl()));
@@ -41,6 +43,8 @@ Future<void> AuthInit() async {
   sl.registerLazySingleton(() => LoginWithPhoneNumber(repository: sl()));
   sl.registerLazySingleton(() => CheckOTP(repository: sl()));
   sl.registerLazySingleton(() => Signup(repository: sl()));
+    sl.registerLazySingleton(() => GetCachedUser(repository: sl()));
+
 
   // Repository
 

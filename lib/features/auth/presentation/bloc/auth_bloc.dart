@@ -2,6 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:samla_app/core/auth/User.dart';
 import 'package:samla_app/features/auth/domain/entities/user.dart';
+import 'package:samla_app/features/auth/domain/usecases/getChachedUser.dart';
 import 'package:samla_app/features/auth/domain/usecases/login_email.dart';
 import 'package:samla_app/features/auth/domain/usecases/login_phone.dart';
 import 'package:samla_app/features/auth/domain/usecases/login_username.dart';
@@ -17,18 +18,33 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final LoginWithPhoneNumber loginWithPhone;
   final CheckOTP checkOTP;
   final Signup signUp;
-  User? user;
+  final GetCachedUser getCachedUser;
+  late User user;
 
   AuthBloc(
       {required this.loginWithUsername,
       required this.loginWithPhone,
       required this.checkOTP,
       required this.signUp,
+      required this.getCachedUser,
       required this.loginWithEmail})
       : super(AuthInitial()) {
+    //check cached user
+
     on<AuthEvent>((event, emit) async {
-      if (event is ClearAuthEvent){
+      if (event is ClearAuthEvent) {
         emit(AuthInitial());
+      }
+
+      if (event is CheckCachedUserEvent) {
+        emit(LoadingAuthState());
+        final failuredOrDone = await getCachedUser.call();
+        await failuredOrDone.fold((failure) {
+          event.callBackFunction(false);
+        }, (returnedUser) {
+          user = returnedUser;
+          event.callBackFunction(true);
+        });
       }
 
       // login with email

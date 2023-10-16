@@ -57,6 +57,12 @@ class ResendOTPEvent extends AuthEvent {
   List<Object> get props => [phone];
 }
 
+class CheckCachedUserEvent extends AuthEvent {
+  final Function(bool) callBackFunction;
+
+  const CheckCachedUserEvent({required this.callBackFunction});
+}
+
 class SignUpEvent extends AuthEvent {
   final String name;
   final String email;

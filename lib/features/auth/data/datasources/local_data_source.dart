@@ -1,11 +1,13 @@
 import 'dart:convert';
 
 import 'package:dartz/dartz.dart';
+import 'package:samla_app/core/error/exceptions.dart';
 import 'package:samla_app/features/auth/data/models/user_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class LocalDataSource {
   Future<Unit> cacheUser(UserModel userToCache);
+  Future<UserModel> getCachedUser();
 }
 
 class LocalDataSourceImpl implements LocalDataSource {
@@ -18,5 +20,16 @@ class LocalDataSourceImpl implements LocalDataSource {
     final jsonUser = userToCache.toJson();
     sharedPreferences.setString('user', json.encode(jsonUser));
     return Future.value(unit);
+  }
+
+  @override
+  Future<UserModel> getCachedUser() {
+    final jsonUser = sharedPreferences.getString('user');
+    if (jsonUser != null) {
+      final user = UserModel.fromJson(json.decode(jsonUser));
+      return Future.value(user);
+    } else {
+      throw EmptyCacheException(message: 'no cached user found');
+    }
   }
 }

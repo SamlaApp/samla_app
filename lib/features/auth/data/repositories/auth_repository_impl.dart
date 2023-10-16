@@ -109,4 +109,14 @@ class AuthRepositoryImpl implements AuthRepository {
       return Left(OfflineFailure());
     }
   }
+  
+  @override
+  Future<Either<Failure, User>> getCachedUser() async {
+    try {
+      final user = await localDataSource.getCachedUser();
+      return Right(user);
+    } on EmptyCacheException catch (e) {
+      return Left(EmptyCacheFailure(message: e.message));
+    }
+  }
 }

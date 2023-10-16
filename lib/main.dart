@@ -8,7 +8,7 @@ import 'package:samla_app/core/error/exceptions.dart';
 import 'package:firebase_in_app_messaging/firebase_in_app_messaging.dart';
 import 'config/router/app_router.dart';
 import 'firebase_options.dart'; // Import your logical code
-import 'features/auth/injection_container.dart' as di;
+import 'features/auth/auth_injection_container.dart' as di;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

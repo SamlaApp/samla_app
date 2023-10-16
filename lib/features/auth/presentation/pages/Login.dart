@@ -4,7 +4,7 @@ import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:samla_app/core/widgets/loading.dart';
 import 'package:samla_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:samla_app/features/auth/presentation/pages/OTP.dart';
-import 'package:samla_app/features/auth/injection_container.dart' as di;
+import 'package:samla_app/features/auth/auth_injection_container.dart' as di;
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class Login extends StatefulWidget {
