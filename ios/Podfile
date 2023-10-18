@@ -44,6 +44,7 @@ pod 'Firebase', :modular_headers => true
 pod 'FirebaseCoreInternal', :modular_headers => true
 pod 'GoogleUtilities', :modular_headers => true
 pod 'FirebaseCore', :modular_headers => true
-pod 'FirebaseInAppMessaging', :modular_headers => true
-pod 'FirebaseInAppMessagingDisplay', :modular_headers => true
+# pod 'FirebaseInAppMessaging', :modular_headers => true
+# pod 'FirebaseInAppMessagingDisplay', :modular_headers => true
+pod 'FirebaseMessaging', :modular_headers => true
 

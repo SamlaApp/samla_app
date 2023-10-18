@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:samla_app/core/error/exceptions.dart';
 import 'package:samla_app/core/error/failures.dart';
 import 'package:samla_app/core/network/network_info.dart';
@@ -11,6 +12,7 @@ class AuthRepositoryImpl implements AuthRepository {
   final RemoteDataSource remoteDataSource;
   final LocalDataSource localDataSource;
   final NetworkInfo networkInfo;
+
 
   AuthRepositoryImpl(
       {required this.networkInfo,
@@ -36,6 +38,16 @@ class AuthRepositoryImpl implements AuthRepository {
             password: password);
         //cache user
         await localDataSource.cacheUser(user);
+
+        // cache device token
+        String? deviceToken = await FirebaseMessaging.instance.getToken();
+        await localDataSource.cacheDeviceToken(deviceToken!);
+
+        // user access token
+        String? accessToken = user.accessToken;
+        await remoteDataSource.update_device_token(deviceToken, accessToken!);
+
+
         return Right(user);
       } on ServerException catch (e) {
         return Left(ServerFailure(message:e.message));
@@ -53,6 +65,15 @@ class AuthRepositoryImpl implements AuthRepository {
         final user = await remoteDataSource.loginWithEmail(email, password);
         //cache user
         await localDataSource.cacheUser(user);
+
+        // cache device token
+        String? deviceToken = await FirebaseMessaging.instance.getToken();
+        await localDataSource.cacheDeviceToken(deviceToken!);
+
+        // user access token
+        String? accessToken = user.accessToken;
+        await remoteDataSource.update_device_token(deviceToken, accessToken!);
+
         return Right(user);
       } on ServerException catch (e) {
         return Left(ServerFailure(message: e.message));
@@ -85,6 +106,15 @@ class AuthRepositoryImpl implements AuthRepository {
             await remoteDataSource.loginWithUsername(username, password);
         //cache user
         await localDataSource.cacheUser(user);
+
+        // cache device token
+        String? deviceToken = await FirebaseMessaging.instance.getToken();
+        await localDataSource.cacheDeviceToken(deviceToken!);
+
+        // user access token
+        String? accessToken = user.accessToken;
+        await remoteDataSource.update_device_token(deviceToken, accessToken!);
+
         return Right(user);
       } on ServerException catch (e) {
         return Left(ServerFailure(message: e.message));
@@ -101,6 +131,15 @@ class AuthRepositoryImpl implements AuthRepository {
         final user = await remoteDataSource.sendOTP(phoneNumber, otp);
         //cache user
         await localDataSource.cacheUser(user);
+
+        // cache device token
+        String? deviceToken = await FirebaseMessaging.instance.getToken();
+        await localDataSource.cacheDeviceToken(deviceToken!);
+
+        // user access token
+        String? accessToken = user.accessToken;
+        await remoteDataSource.update_device_token(deviceToken, accessToken!);
+
         return Right(user);
       } on ServerException catch (e) {
         return Left(ServerFailure(message: e.message));

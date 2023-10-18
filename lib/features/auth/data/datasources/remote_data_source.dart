@@ -24,6 +24,8 @@ abstract class RemoteDataSource {
   });
 
   Future<UserModel> sendOTP(String phoneNumber, String otp);
+
+  Future<Unit> update_device_token(String deviceToken, String accessToken);
 }
 
 class RemoteDataSourceImpl implements RemoteDataSource {
@@ -134,6 +136,31 @@ class RemoteDataSourceImpl implements RemoteDataSource {
       print(json.decode(responseBody)['message']);
       throw ServerException(message: json.decode(responseBody)['message']);
     }
+  }
+
+  @override
+  Future<Unit> update_device_token(String deviceToken, String accessToken) async {
+    var headers = {'Accept': 'application/json',
+    'Authorization': 'Bearer $accessToken'
+    };
+
+    final data = {
+      'device_token': deviceToken,
+    };
+
+    final request = http.MultipartRequest('POST', Uri.parse(BASE_URL + '/user/update_device_token'));
+    request.fields.addAll(data);
+
+    request.headers.addAll(headers);
+
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200) {
+      return Future.value(unit);
+    } else {
+      throw ServerException(message: 'Failed to update device token');
+    }
+
   }
 
   Future<http.StreamedResponse> _request(

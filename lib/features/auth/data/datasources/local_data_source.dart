@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class LocalDataSource {
   Future<Unit> cacheUser(UserModel userToCache);
+  Future<Unit> cacheDeviceToken(String token);
 }
 
 class LocalDataSourceImpl implements LocalDataSource {
@@ -17,6 +18,12 @@ class LocalDataSourceImpl implements LocalDataSource {
   Future<Unit> cacheUser(UserModel userToCache) {
     final jsonUser = userToCache.toJson();
     sharedPreferences.setString('user', json.encode(jsonUser));
+    return Future.value(unit);
+  }
+
+  @override
+  Future<Unit> cacheDeviceToken(String token) {
+    sharedPreferences.setString('deviceToken', token);
     return Future.value(unit);
   }
 }
