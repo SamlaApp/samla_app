@@ -73,6 +73,7 @@ Future<void> AuthInit() async {
   sl.registerLazySingleton(() => InternetConnectionChecker());
 }
 
+
 User getUser() {
   return sl.get<AuthBloc>().user;
 }

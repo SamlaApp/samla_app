@@ -1,10 +1,11 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:samla_app/features/auth/auth_injection_container.dart' as di;
-import 'package:samla_app/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:samla_app/config/themes/common_styles.dart';
+import 'package:samla_app/features/notifications/domain/entities/notification.dart';
+import 'package:samla_app/features/notifications/notification_injection_container.dart'
+    as di;
+import 'package:samla_app/features/notifications/presentation/bloc/notification_bloc.dart';
 
 class NotificationsPage extends StatefulWidget {
   NotificationsPage({super.key});
@@ -14,65 +15,68 @@ class NotificationsPage extends StatefulWidget {
 }
 
 class _NotificationsPageState extends State<NotificationsPage> {
-  final authBloc = di.sl.get<AuthBloc>();
+  final notifiBloc = di.sl.get<NotificationBloc>();
 
-  final user = di.sl.get<AuthBloc>().user;
+  // final user = di.sl.get<AuthBloc>().user;
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<AuthBloc, AuthState>(
-      builder: (context, state) {
-        if (state is LoadingAuthState) {
-          return const Scaffold(
-            body: Center(
+    notifiBloc.add(GetNotificationEvent());
+
+    // return Scaffold NotificationWidget(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(
+          title: const Text('Notifications'),
+          centerTitle: true,
+          backgroundColor: theme_darkblue,
+        ),
+        body: BlocBuilder<NotificationBloc, NotificationState>(
+            builder: (context, state) {
+          // state management is here
+
+          // if lodaing state
+          if (state is NotificationLoadingState) {
+            return const Center(
               // shows loading indicator while state is Loading
               child: CircularProgressIndicator(),
-            ),
-          );
-        } else if (state is ErrorAuthState) {
-          SchedulerBinding.instance.addPostFrameCallback((_) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(state.message),
-              ),
             );
-            authBloc.add(ClearAuthEvent());
-          });
-        }
-        // else return the widget
-        return NotificationWidget(context);
-      },
-    );
-  }
+          }
 
-//TODO: it just for testing, delete all this shit 😊
+          // if error state
+          else if (state is NotificationErrorState) {
+            SchedulerBinding.instance.addPostFrameCallback((_) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(state.message),
+                ),
+              );
+              notifiBloc.add(ClearNotificationEvent());
+            });
+          }
 
-  Scaffold NotificationWidget(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text('Notifications ${user.name}'),
-            FloatingActionButton(
-              onPressed: () {
-                authBloc.add(LogOutEvent(context));
-              },
-              child: const Text('Logout'),
-            ),
-            TextButton(
-              onPressed: () {
-                authBloc.add(UpdateUserEvent(
-                  name: 'Laru',
-                  email: 'ridha@samla.com',
-                ));
-              },
-              child: const Text('update name'),
-            ),
-          ],
-        ),
-      ),
-    );
+          // else return the widget
+          // return Center(
+          //   child: Column(
+          //       mainAxisAlignment: MainAxisAlignment.center,
+          //       children: notifiBloc.notifications.map((notification) {
+          //         return Text(notification.title);
+          //       }).toList()),
+          // );
+          List<Notification_> notifications = notifiBloc.notifications;
+          return ListView.builder(
+            itemCount: notifications.length,
+            itemBuilder: (context, index) {
+              final notification = notifications[index];
+              final title = notification.title;
+              final message = notification.message;
+
+              return ListTile(
+                title: Text(title),
+                subtitle: Text(message),
+                // You can add more styling or actions here as needed.
+              );
+            },
+          );
+        }));
   }
 }
