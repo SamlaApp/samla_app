@@ -23,10 +23,21 @@ class _LoginState extends State<Login> {
   final _usernamePasswordController = TextEditingController();
   final _phoneController = TextEditingController();
 
+  // map to valid fields in the form
+  Map<String, bool> _validFieldsEmail = {
+    'email': false,
+    'password': false,
+  };
+
+  Map<String, bool> _validFieldsUsername = {
+    'username': false,
+    'password': false,
+  };
+
   String _phone = '';
   bool _isPhoneLoginEnable = false;
 
-  final authBloc = di.sl<AuthBloc>();
+  final authBloc = di.sl.get<AuthBloc>();
 
   _loginViaEmail() {
     authBloc.add(LoginWithEmailEvent(
@@ -48,57 +59,53 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => authBloc,
-      child: BlocBuilder<AuthBloc, AuthState>(
-        builder: (context, state) {
-          // states handler
-          if (state is LoadingAuthState) {
-            // Show the loading widget on top of your main widget.
-            return Stack(
-              children: [
-                LoginWidget(context), // Your main content widget
-                Positioned.fill(
-                  child: Center(
-                    child: LoadingWidget(), // Loading widget
-                  ),
+    return BlocBuilder<AuthBloc, AuthState>(
+      builder: (context, state) {
+        // states handler
+        if (state is LoadingAuthState) {
+          // Show the loading widget on top of your main widget.
+          return Stack(
+            children: [
+              LoginWidget(context), // Your main content widget
+              Positioned.fill(
+                child: Center(
+                  child: LoadingWidget(), // Loading widget
                 ),
-              ],
-            );
-          }
+              ),
+            ],
+          );
+        }
 
-          if (state is ErrorAuthState) {
-            SchedulerBinding.instance.addPostFrameCallback((_) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(state.message),
+        if (state is ErrorAuthState) {
+          SchedulerBinding.instance.addPostFrameCallback((_) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(state.message),
+              ),
+            );
+          });
+          authBloc.add(ClearAuthEvent());
+        }
+        if (state is AuthenticatedState) {
+          SchedulerBinding.instance.addPostFrameCallback((_) {
+            Navigator.of(context).pushNamedAndRemoveUntil(
+                '/MainPages', (Route<dynamic> route) => false);
+          });
+        }
+        if (state is OTPSentState) {
+          SchedulerBinding.instance.addPostFrameCallback((_) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => OTPPage(
+                  phone: _phone,
                 ),
-              );
-            });
-            // clear the state
-            authBloc.add(ClearAuthEvent());
-          }
-          if (state is AuthenticatedState) {
-            SchedulerBinding.instance.addPostFrameCallback((_) {
-              Navigator.of(context).pushNamedAndRemoveUntil(
-                  '/MainPages', (Route<dynamic> route) => false);
-            });
-          }
-          if (state is OTPSentState) {
-            SchedulerBinding.instance.addPostFrameCallback((_) {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => OTPPage(
-                    phone: _phone,
-                  ),
-                ),
-              );
-            });
-          }
-          return LoginWidget(context);
-        },
-      ),
+              ),
+            );
+          });
+        }
+        return LoginWidget(context);
+      },
     );
   }
 
@@ -264,55 +271,63 @@ class _LoginState extends State<Login> {
                   if (_selectedIndex == 0) // Email Login
                     Column(
                       children: [
-                        TextFormField(
-                          controller: _emailController,
-                          keyboardType: TextInputType.emailAddress,
-                          validator: (value) {
-                            if (value!.isEmpty) {
-                              return 'Please enter your email';
-                            } else if (!RegExp(
-                                    r'^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$')
-                                .hasMatch(value)) {
-                              return 'Please enter a valid email address';
-                            }
-                            return null;
-                          },
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: const BorderSide(
-                                color: Color.fromRGBO(64, 194, 210, 1),
+                        Form(
+                          key: GlobalKey<FormState>(),
+                          child: TextFormField(
+                            controller: _emailController,
+                            keyboardType: TextInputType.emailAddress,
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                _validFieldsEmail['email'] = false;
+                                return 'Please enter your email';
+                              } else if (!RegExp(
+                                      r'^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$')
+                                  .hasMatch(value)) {
+                                _validFieldsEmail['email'] = false;
+                                return 'Please enter a valid email address';
+                              }
+                              _validFieldsEmail['email'] = true;
+                              return null;
+                            },
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: const BorderSide(
+                                  color: Color.fromRGBO(64, 194, 210, 1),
+                                ),
                               ),
-                            ),
-                            prefixIcon: const Icon(Icons.email,
-                                color: Color.fromRGBO(64, 194, 210, 1)),
-                            hintText: 'Email',
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: const BorderSide(
-                                color: Color.fromRGBO(64, 194, 210, 1),
+                              prefixIcon: const Icon(Icons.email,
+                                  color: Color.fromRGBO(64, 194, 210, 1)),
+                              hintText: 'Email',
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: const BorderSide(
+                                  color: Color.fromRGBO(64, 194, 210, 1),
+                                ),
                               ),
-                            ),
-                            errorBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: const BorderSide(
-                                color: Colors.red,
+                              errorBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: const BorderSide(
+                                  color: Colors.red,
+                                ),
                               ),
-                            ),
-                            focusedErrorBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: const BorderSide(
-                                color: Colors.red,
+                              focusedErrorBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: const BorderSide(
+                                  color: Colors.red,
+                                ),
                               ),
+                              contentPadding: const EdgeInsets.symmetric(
+                                  vertical: 15, horizontal: 20),
                             ),
-                            contentPadding: const EdgeInsets.symmetric(
-                                vertical: 15, horizontal: 20),
-                          ),
-                          style: const TextStyle(
-                            fontSize: 16,
-                            color: Color.fromRGBO(10, 44, 64, 1),
-                            fontWeight: FontWeight.w300,
-                            decoration: TextDecoration.none,
+                            style: const TextStyle(
+                              fontSize: 16,
+                              color: Color.fromRGBO(10, 44, 64, 1),
+                              fontWeight: FontWeight.w300,
+                              decoration: TextDecoration.none,
+                            ),
                           ),
                         ),
                         const SizedBox(
@@ -320,11 +335,15 @@ class _LoginState extends State<Login> {
                         ),
                         TextFormField(
                           controller: _emailPasswordController,
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
                           obscureText: true,
                           validator: (value) {
                             if (value!.isEmpty) {
+                              _validFieldsEmail['password'] = false;
                               return 'Please enter your password';
                             }
+                            _validFieldsEmail['password'] = true;
+
                             return null;
                           },
                           decoration: InputDecoration(
@@ -395,7 +414,11 @@ class _LoginState extends State<Login> {
                             ),
                           ),
                           onPressed: () {
-                            _loginViaEmail();
+                            print(_validFieldsEmail);
+                            if (_validFieldsEmail['email']! &&
+                                _validFieldsEmail['password']!) {
+                              _loginViaEmail();
+                            }
                           },
                           child: const Text('Login'),
                         ),
@@ -406,11 +429,14 @@ class _LoginState extends State<Login> {
                       children: [
                         TextFormField(
                           controller: _usernameController,
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
                           keyboardType: TextInputType.emailAddress,
                           validator: (value) {
                             if (value!.isEmpty) {
+                              _validFieldsUsername['username'] = false;
                               return 'Please enter your username';
                             } else {
+                              _validFieldsEmail['username'] = true;
                               return null;
                             }
                           },
@@ -457,11 +483,16 @@ class _LoginState extends State<Login> {
                         ),
                         TextFormField(
                           controller: _usernamePasswordController,
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
                           obscureText: true,
                           validator: (value) {
                             if (value!.isEmpty) {
+                              _validFieldsUsername['password'] = false;
+
                               return 'Please enter your password';
                             }
+                            _validFieldsUsername['password'] = true;
+
                             return null;
                           },
                           decoration: InputDecoration(
@@ -532,7 +563,10 @@ class _LoginState extends State<Login> {
                             ),
                           ),
                           onPressed: () {
-                            _loginViaUsername();
+                            if (_validFieldsUsername['username']! &&
+                                _validFieldsUsername['password']!) {
+                              _loginViaUsername();
+                            }
                           },
                           child: const Text('Login'),
                         ),

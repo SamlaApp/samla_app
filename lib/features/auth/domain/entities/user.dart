@@ -1,11 +1,13 @@
-class User {
-  final int? id;
-  final String name;
-  final String email;
-  final String username;
-  final String phone;
-  final String dateOfBirth;
-  final String? accessToken;
+import 'package:equatable/equatable.dart';
+
+class User extends Equatable {
+  String? id;
+  String name;
+  String email;
+  String username;
+  String phone;
+  String dateOfBirth;
+  String? accessToken;
 
   User({
     this.id,
@@ -16,5 +18,10 @@ class User {
     required this.dateOfBirth,
     this.accessToken,
   });
-}
 
+
+
+  @override
+  List<Object?> get props =>
+      [id, name, email, username, phone, dateOfBirth, accessToken];
+}

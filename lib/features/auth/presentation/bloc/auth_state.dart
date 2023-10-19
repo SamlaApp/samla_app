@@ -7,9 +7,11 @@ abstract class AuthState extends Equatable {
   List<Object> get props => [];
 }
 
-final class AuthInitial extends AuthState {}
+final class UnauthenticatedState extends AuthState {}
 
 class LoadingAuthState extends AuthState {}
+
+
 
 class OTPSentState extends AuthState {
   final String phone;

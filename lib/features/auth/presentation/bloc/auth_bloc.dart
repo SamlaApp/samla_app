@@ -1,13 +1,16 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:samla_app/core/auth/User.dart';
 import 'package:samla_app/features/auth/domain/entities/user.dart';
-import 'package:samla_app/features/auth/domain/usecases/getChachedUser.dart';
+import 'package:samla_app/features/auth/domain/usecases/get_cached_user.dart';
 import 'package:samla_app/features/auth/domain/usecases/login_email.dart';
 import 'package:samla_app/features/auth/domain/usecases/login_phone.dart';
 import 'package:samla_app/features/auth/domain/usecases/login_username.dart';
+import 'package:samla_app/features/auth/domain/usecases/logout.dart';
 import 'package:samla_app/features/auth/domain/usecases/send_OTP.dart';
 import 'package:samla_app/features/auth/domain/usecases/signup.dart';
+import 'package:samla_app/features/auth/domain/usecases/update_user_usecase.dart';
 
 part 'auth_event.dart';
 part 'auth_state.dart';
@@ -19,36 +22,77 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final CheckOTP checkOTP;
   final Signup signUp;
   final GetCachedUser getCachedUser;
+  final LogOutUsecase logout;
+  final UpdateUsecase update;
   late User user;
 
   AuthBloc(
-      {required this.loginWithUsername,
+      {required this.logout,
+      required this.update,
+      required this.loginWithUsername,
       required this.loginWithPhone,
       required this.checkOTP,
       required this.signUp,
       required this.getCachedUser,
       required this.loginWithEmail})
-      : super(AuthInitial()) {
+      : super(UnauthenticatedState()) {
     //check cached user
 
     on<AuthEvent>((event, emit) async {
       if (event is ClearAuthEvent) {
-        emit(AuthInitial());
+        emit(UnauthenticatedState());
       }
 
-      if (event is CheckCachedUserEvent) {
+      // update user
+      else if (event is UpdateUserEvent) {
+        emit(LoadingAuthState());
+        final failuredOrDone = await update.call(
+            name: event.name,
+            email: event.email,
+            username: event.username,
+            phone: event.phone,
+            dateOfBirth: event.dateOfBirth,
+            password: event.password,
+            currentUser: user);
+
+        failuredOrDone.fold((failure) {
+          emit(ErrorAuthState(message: failure.message));
+        }, (returnedUser) {
+          emit(AuthenticatedState(user: returnedUser));
+          _updateUser(returnedUser);
+        });
+      }
+
+      // check whether there is a cached user
+      else if (event is CheckCachedUserEvent) {
         emit(LoadingAuthState());
         final failuredOrDone = await getCachedUser.call();
-        await failuredOrDone.fold((failure) {
+        failuredOrDone.fold((failure) {
+          emit(UnauthenticatedState());
           event.callBackFunction(false);
         }, (returnedUser) {
           user = returnedUser;
+          emit(AuthenticatedState(user: returnedUser));
           event.callBackFunction(true);
         });
       }
 
+      // logout
+      else if (event is LogOutEvent) {
+        emit(LoadingAuthState());
+        final failuredOrDone = await logout.call(token: user.accessToken!);
+        failuredOrDone.fold((failure) {
+          print('failded to logout ${failure.message}');
+          emit(ErrorAuthState(message: failure.message));
+        }, (_) {
+          emit(UnauthenticatedState());
+          Navigator.of(event.context).pushNamedAndRemoveUntil(
+              '/login', (Route<dynamic> route) => false);
+        });
+      }
+
       // login with email
-      if (event is LoginWithEmailEvent) {
+      else if (event is LoginWithEmailEvent) {
         emit(LoadingAuthState());
         final failuredOrDone =
             await loginWithEmail.call(event.email, event.password);
@@ -56,8 +100,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           emit(ErrorAuthState(message: failure.message));
         }, (returnedUser) async {
           user = returnedUser;
-          await LocalAuth.init()
-              .whenComplete(() => emit(AuthenticatedState(user: returnedUser)));
+          emit(AuthenticatedState(user: returnedUser));
         });
       }
 
@@ -71,8 +114,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           emit(ErrorAuthState(message: failure.message));
         }, (returnedUser) async {
           user = returnedUser;
-          await LocalAuth.init()
-              .whenComplete(() => emit(AuthenticatedState(user: returnedUser)));
+          emit(AuthenticatedState(user: returnedUser));
         });
       }
 
@@ -92,12 +134,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         emit(LoadingAuthState());
         final failuredOrDone = await checkOTP.call(event.phone, event.otp);
 
-        await failuredOrDone.fold((failure) {
+        failuredOrDone.fold((failure) {
           emit(ErrorAuthState(message: failure.message));
-        }, (returnedUser) async {
+        }, (returnedUser) {
           user = returnedUser;
-          await LocalAuth.init()
-              .whenComplete(() => emit(AuthenticatedState(user: returnedUser)));
+          emit(AuthenticatedState(user: returnedUser));
         });
       }
 
@@ -123,10 +164,18 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           emit(ErrorAuthState(message: failure.message));
         }, (returnedUser) async {
           user = returnedUser;
-          await LocalAuth.init()
-              .whenComplete(() => emit(AuthenticatedState(user: returnedUser)));
+          emit(AuthenticatedState(user: returnedUser));
         });
       }
     });
+  }
+  // update user without change its reference
+  void _updateUser(User newUser) {
+    user.name = newUser.name;
+    user.email = newUser.email;
+    user.username = newUser.username;
+    user.phone = newUser.phone;
+    user.dateOfBirth = newUser.dateOfBirth;
+    user.accessToken = newUser.accessToken;
   }
 }

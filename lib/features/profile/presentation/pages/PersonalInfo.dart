@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:samla_app/config/router/app_router.dart';
 import 'package:samla_app/config/themes/common_styles.dart';
+import 'package:samla_app/features/auth/auth_injection_container.dart';
 import 'package:samla_app/features/profile/presentation/widgets/profile_widget.dart';
 
 void main() {
@@ -20,6 +21,7 @@ class PersonalInfoPage extends StatefulWidget {
   @override
   _PersonalInfoPageState createState() => _PersonalInfoPageState();
 }
+final user = getUser();
 
 class _PersonalInfoPageState extends State<PersonalInfoPage> {
   // Sample user data

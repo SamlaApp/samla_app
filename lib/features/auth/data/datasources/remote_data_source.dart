@@ -24,6 +24,10 @@ abstract class RemoteDataSource {
   });
 
   Future<UserModel> sendOTP(String phoneNumber, String otp);
+
+  Future<Unit> logout(String token);
+
+  Future<UserModel> update(UserModel newUser);
 }
 
 class RemoteDataSourceImpl implements RemoteDataSource {
@@ -147,5 +151,50 @@ class RemoteDataSourceImpl implements RemoteDataSource {
     http.StreamedResponse response = await request.send();
     return response;
   }
-}
 
+  @override
+  Future<Unit> logout(String token) async {
+    var headers = {
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token',
+    };
+    var request = http.MultipartRequest(
+        'POST', Uri.parse('$BASE_URL/user/logout'));
+
+    request.headers.addAll(headers);
+
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200 || response.statusCode == 401) {
+      return Future.value(unit);
+    } else {
+      throw ServerException(message: 'logout failed');
+    }
+  }
+
+  @override
+  Future<UserModel> update(UserModel newUser) async {
+    var headers = {
+      'Accept': 'application/json',
+      'Authorization': 'Bearer ${newUser.accessToken}',
+    };
+    var request = http.MultipartRequest(
+        'POST', Uri.parse(BASE_URL + '/user/update_profile'));
+    request.fields.addAll(newUser.toJson());
+
+    request.headers.addAll(headers);
+
+    http.StreamedResponse response = await request.send();
+    final responseBody = await response.stream.bytesToString();
+    if (response.statusCode == 200) {
+      // convert json to UserModel object
+      final userJson = json.decode(responseBody)['user'];
+      // keep the same access token
+      userJson['access_token'] = newUser.accessToken;
+      return UserModel.fromJson(userJson);
+    } else {
+      print(json.decode(responseBody)['message']);
+      throw ServerException(message: json.decode(responseBody)['message']);
+    }
+  }
+}

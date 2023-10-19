@@ -1,8 +1,11 @@
 import 'package:get_it/get_it.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:samla_app/features/auth/data/datasources/remote_data_source.dart';
+import 'package:samla_app/features/auth/domain/entities/user.dart';
 import 'package:samla_app/features/auth/domain/repositories/auth_repository.dart';
-import 'package:samla_app/features/auth/domain/usecases/getChachedUser.dart';
+import 'package:samla_app/features/auth/domain/usecases/get_cached_user.dart';
+import 'package:samla_app/features/auth/domain/usecases/logout.dart';
+import 'package:samla_app/features/auth/domain/usecases/update_user_usecase.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../core/network/network_info.dart';
 import 'data/datasources/local_data_source.dart';
@@ -35,7 +38,9 @@ Future<void> AuthInit() async {
       checkOTP: sl(),
       signUp: sl(),
       loginWithUsername: sl(),
-      getCachedUser: sl()));
+      getCachedUser: sl(),
+      logout: sl(),
+      update: sl()));
 
   // Use cases
   sl.registerLazySingleton(() => LoginWithEmail(repository: sl()));
@@ -43,8 +48,9 @@ Future<void> AuthInit() async {
   sl.registerLazySingleton(() => LoginWithPhoneNumber(repository: sl()));
   sl.registerLazySingleton(() => CheckOTP(repository: sl()));
   sl.registerLazySingleton(() => Signup(repository: sl()));
-    sl.registerLazySingleton(() => GetCachedUser(repository: sl()));
-
+  sl.registerLazySingleton(() => GetCachedUser(repository: sl()));
+  sl.registerLazySingleton(() => LogOutUsecase(repository: sl()));
+  sl.registerLazySingleton(() => UpdateUsecase(repository: sl()));
 
   // Repository
 
@@ -67,4 +73,8 @@ Future<void> AuthInit() async {
   sl.registerLazySingleton(() => sharedPreferences);
   sl.registerLazySingleton(() => http.Client());
   sl.registerLazySingleton(() => InternetConnectionChecker());
+}
+
+User getUser() {
+  return sl.get<AuthBloc>().user;
 }

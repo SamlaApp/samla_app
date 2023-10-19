@@ -3,9 +3,11 @@ import 'dart:async';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:samla_app/core/auth/User.dart';
 import 'package:samla_app/core/error/exceptions.dart';
 import 'package:firebase_in_app_messaging/firebase_in_app_messaging.dart';
+import 'package:samla_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'config/router/app_router.dart';
 import 'firebase_options.dart'; // Import your logical code
 import 'features/auth/auth_injection_container.dart' as di;
@@ -23,31 +25,30 @@ Future<void> main() async {
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
-
-
-  
-  // final initialRoute = '';
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-        title: 'Samla App',
-        initialRoute: '/',
-        routes: routes,
-        builder: (context, child) {
-          final mediaQueryData = MediaQuery.of(context);
-          final scale = mediaQueryData.textScaleFactor
-              .clamp(1.0, 1.4); // choose your max and min font sizes here
-          // disable rotation
-          if (mediaQueryData.orientation == Orientation.landscape) {
-            SystemChrome.setPreferredOrientations([
-              DeviceOrientation.portraitUp,
-              DeviceOrientation.portraitDown,
-            ]);
-          }
-          return MediaQuery(
-              data: MediaQuery.of(context).copyWith(textScaleFactor: scale),
-              child: child!);
-        });
+    return BlocProvider(
+      create: (context) => di.sl<AuthBloc>(),
+      child: MaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: 'Samla App',
+          initialRoute: '/',
+          routes: routes,
+          builder: (context, child) {
+            final mediaQueryData = MediaQuery.of(context);
+            final scale = mediaQueryData.textScaleFactor
+                .clamp(1.0, 1.4); // choose your max and min font sizes here
+            // disable rotation
+            if (mediaQueryData.orientation == Orientation.landscape) {
+              SystemChrome.setPreferredOrientations([
+                DeviceOrientation.portraitUp,
+                DeviceOrientation.portraitDown,
+              ]);
+            }
+            return MediaQuery(
+                data: MediaQuery.of(context).copyWith(textScaleFactor: scale),
+                child: child!);
+          }),
+    );
   }
 }

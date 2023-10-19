@@ -6,8 +6,35 @@ abstract class AuthEvent extends Equatable {
   @override
   List<Object> get props => [];
 }
+
 // called to clear error state
 class ClearAuthEvent extends AuthEvent {}
+
+class LogOutEvent extends AuthEvent {
+  final BuildContext context;
+
+  LogOutEvent(this.context);
+  
+}
+
+class UpdateUserEvent extends AuthEvent {
+  String? name;
+  String? email;
+  String? username;
+  String? phone;
+  String? dateOfBirth;
+  String? password;
+
+  UpdateUserEvent({String? this.name,
+      String? this.email,
+      String? this.username,
+      String? this.phone,
+      String? this.dateOfBirth,
+      String? this.password});
+
+  @override
+  List<Object> get props => [name!, email!, username!, phone!, dateOfBirth!, password!];
+}
 
 class LoginWithEmailEvent extends AuthEvent {
   final String email;

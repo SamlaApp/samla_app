@@ -15,7 +15,7 @@ import 'package:samla_app/features/profile/presentation/pages/Profile.dart';
 import 'package:samla_app/features/profile/presentation/widgets/UpdateInfo.dart';
 import 'package:samla_app/core/auth/User.dart';
 
-final user = LocalAuth.user;
+// final user = LocalAuth.user;
 
 Map<String, Widget Function(BuildContext)> routes = {
   '/MainPages': (context) => MainPages(),

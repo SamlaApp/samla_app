@@ -2,15 +2,20 @@ import 'dart:async';
 import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:http/http.dart' as http;
 import 'package:samla_app/config/themes/common_styles.dart';
 import 'package:samla_app/core/auth/User.dart';
 import 'package:samla_app/core/error/exceptions.dart';
+import 'package:samla_app/core/widgets/loading.dart';
 import 'package:samla_app/features/auth/data/datasources/local_data_source.dart';
 import 'package:samla_app/features/auth/data/datasources/remote_data_source.dart';
+import 'package:samla_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:samla_app/features/auth/auth_injection_container.dart' as di;
 
 class OTPPage extends StatefulWidget {
   final String phone;
@@ -81,40 +86,49 @@ class _OTPPageState extends State<OTPPage> {
   late RemoteDataSourceImpl remoteDataSourceImpl =
       RemoteDataSourceImpl(client: client);
 
-  void _checkOtp() async {
-    sharedPreferences = await SharedPreferences.getInstance();
+  final authBloc = di.sl.get<AuthBloc>();
+
+  // void _checkOtp() async {
+  //   sharedPreferences = await SharedPreferences.getInstance();
+  //   String enteredOtp = '';
+  // for (final controller in _controllers) {
+  //   enteredOtp += controller.text;
+  // }
+  //   print('check otp $enteredOtp');
+  //   try {
+  //     final userModel =
+  //         await remoteDataSourceImpl.sendOTP(widget.phone, enteredOtp);
+  //     await localDataSourceImpl.cacheUser(userModel);
+  //     await LocalAuth.init();
+  //     // await LocalAuth.user;
+  //     Navigator.pushReplacementNamed(context, '/');
+  //   } on ServerException catch (e) {
+  //     print('server exception');
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       const SnackBar(
+  //         content: Text('wrong code'),
+  //       ),
+  //     );
+  //   } catch (e) {
+  //     print(e.toString());
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       const SnackBar(
+  //         content: Text('Something went wrong'),
+  //       ),
+  //     );
+  //     print('OTP is incorrect');
+  //     setState(() => (_wrongOtp = true));
+  //   }
+
+  //   // Perform the action you want to execute when the OTP is incorrect
+  // }
+
+  _checkOtp() {
     String enteredOtp = '';
     for (final controller in _controllers) {
       enteredOtp += controller.text;
     }
-    print('check otp $enteredOtp');
-    try {
-      final userModel =
-          await remoteDataSourceImpl.sendOTP(widget.phone, enteredOtp);
-      await localDataSourceImpl.cacheUser(userModel);
-      await LocalAuth.init();
-      // await LocalAuth.user;
-      Navigator.pushReplacementNamed(context, '/');
-    } on ServerException catch (e) {
-      print('server exception');
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('wrong code'),
-        ),
-      );
-    } catch (e) {
-      print(e.toString());
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Something went wrong'),
-        ),
-      );
-      print('OTP is incorrect');
-      setState(() => (_wrongOtp = true));
-    }
-
-    
-    // Perform the action you want to execute when the OTP is incorrect
+    authBloc.add(CheckOTPEvent(phone: widget.phone, otp: enteredOtp));
   }
 
   void onNumberButtonPressed(String number) {
@@ -185,7 +199,44 @@ class _OTPPageState extends State<OTPPage> {
   Widget build(BuildContext context) {
     // Hide the keyboard
     FocusScope.of(context).unfocus();
+    return BlocBuilder<AuthBloc, AuthState>(
+      builder: (context, state) {
+        // states handler
+        if (state is LoadingAuthState) {
+          // Show the loading widget on top of your main widget.
+          return Stack(
+            children: [
+              OTPWidget(context), // Your main content widget
+              Positioned.fill(
+                child: Center(
+                  child: LoadingWidget(), // Loading widget
+                ),
+              ),
+            ],
+          );
+        }
 
+        if (state is ErrorAuthState) {
+          SchedulerBinding.instance.addPostFrameCallback((_) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(state.message),
+              ),
+            );
+          });
+        }
+        if (state is AuthenticatedState) {
+          SchedulerBinding.instance.addPostFrameCallback((_) {
+            Navigator.of(context).pushNamedAndRemoveUntil(
+                '/MainPages', (Route<dynamic> route) => false);
+          });
+        }
+        return OTPWidget(context);
+      },
+    );
+  }
+
+  Scaffold OTPWidget(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: primary_color,

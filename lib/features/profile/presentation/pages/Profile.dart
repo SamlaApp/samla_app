@@ -3,6 +3,9 @@
 import 'package:flutter/material.dart';
 import 'package:samla_app/config/themes/common_styles.dart';
 import 'package:samla_app/core/auth/User.dart';
+import 'package:samla_app/features/auth/auth_injection_container.dart'
+    as authDI;
+import 'package:samla_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:samla_app/features/profile/presentation/widgets/AppBar_Widget01.dart';
 import 'package:samla_app/features/profile/presentation/widgets/appBar_widget.dart';
 import 'package:samla_app/features/profile/presentation/widgets/profile_widget.dart';
@@ -18,13 +21,12 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-
   int _selectedIndex = 0; // 0: info, 1: achievements, 2: settings
   final String imagePath = 'images/download.jpeg';
 
   @override
   Widget build(BuildContext context) {
-    final user = LocalAuth.user;
+    final user = authDI.getUser();
 
     return Scaffold(
         appBar: buildAAppBar(),
@@ -213,8 +215,9 @@ class _ProfilePageState extends State<ProfilePage> {
 // if backend return success, update the user in the local storage
 // dummy update for testing
               String newName = 'user ${DateTime.now().millisecondsSinceEpoch}';
-              await LocalAuth.updateUser(name: newName);
-              Navigator.pushNamed(context, '/PersonalInfo');
+              authDI.sl.get<AuthBloc>().add(UpdateUserEvent(name: newName));
+
+              // Navigator.pushNamed(context, '/PersonalInfo');
               // await Navigator.pushNamedAndRemoveUntil(
               //     context, '/UpdateInfo', (route) => false);
             },
@@ -236,16 +239,13 @@ class _ProfilePageState extends State<ProfilePage> {
 // TODO:put the backend request here
 
 // if backend return success, remove the user from the local storage
-                await LocalAuth.resetCacheUser();
+                // await .logout();
                 await Navigator.pushNamedAndRemoveUntil(
                     context, '/login', (route) => false);
               }),
         ],
       ));
 }
-
-
-
 
 // Info Widget
 /// TODO: Display & Update Info, Update User Goals
@@ -255,20 +255,15 @@ class InfoWidget extends StatefulWidget {
   @override
   State<InfoWidget> createState() => _InfoWidgetState();
 }
-class _InfoWidgetState extends State<InfoWidget>{
 
-
+class _InfoWidgetState extends State<InfoWidget> {
   @override
   Widget build(BuildContext context) {
-    final user = LocalAuth.user;
     return Container(
         padding: EdgeInsets.symmetric(horizontal: 20),
         child: Center(
-          child: Text(
-              "Name: ${user.name}\n"
-          ),
-        )
-    );
+          // child: Text("Name: ${user.name}\n"),
+        ));
   }
 }
 
@@ -280,6 +275,7 @@ class AchievementsWidget extends StatefulWidget {
   @override
   State<AchievementsWidget> createState() => _AchievementsWidgetState();
 }
+
 class _AchievementsWidgetState extends State<AchievementsWidget> {
   @override
   Widget build(BuildContext context) {
@@ -302,25 +298,20 @@ class _AchievementsWidgetState extends State<AchievementsWidget> {
 
 // Settings Widget
 /// TODO: update Password, Delete Account
-class SettingsWidget  extends StatefulWidget {
+class SettingsWidget extends StatefulWidget {
   const SettingsWidget({super.key});
 
   @override
   State<SettingsWidget> createState() => _SettingsWidgetState();
 }
+
 class _SettingsWidgetState extends State<SettingsWidget> {
   @override
   Widget build(BuildContext context) {
-    final user = LocalAuth.user;
     return Container(
         padding: EdgeInsets.symmetric(horizontal: 20),
         child: Center(
-          child: Text(
-              "Settings"
-          ),
-        )
-    );
+          child: Text("Settings"),
+        ));
   }
 }
-
-

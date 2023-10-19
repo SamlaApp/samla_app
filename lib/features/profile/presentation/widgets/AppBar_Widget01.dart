@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:samla_app/config/themes/common_styles.dart';
 import 'package:samla_app/core/auth/User.dart';
+import 'package:samla_app/features/auth/auth_injection_container.dart';
 
 class buildAAppBar extends StatelessWidget implements PreferredSizeWidget {
   final double height;
@@ -10,7 +11,7 @@ class buildAAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.height = kToolbarHeight,
   });
 
-  final user = LocalAuth.user;
+  final user = getUser();
 
   @override
   Size get preferredSize => Size.fromHeight(height);

@@ -54,30 +54,12 @@ class _SplashScreenState extends State<SplashScreen>
     await _checkCachedUserAndNavigate();
   }
 
-  // Future<void> _checkCachedUserAndNavigate() async {
-  //   await di.AuthInit();
-
-  //   // await Future.delayed(Duration(seconds: 12)); // for testing
-  //   try {
-  //     await LocalAuth
-  //         .init(); // if there is cached user then it will fo to main pages
-  //     Navigator.of(context).pushNamedAndRemoveUntil(
-  //         '/MainPages', (Route<dynamic> route) => false);
-  //   } on EmptyCacheException {
-  //     // if there is no cached user then it will go to login page
-  //     Navigator.of(context)
-  //         .pushNamedAndRemoveUntil('/login', (Route<dynamic> route) => false);
-  //   }
-  // }
-
   Future<void> _checkCachedUserAndNavigate() async {
     await di.AuthInit();
 
     final authBloc = di.sl.get<AuthBloc>();
     authBloc.add(CheckCachedUserEvent(callBackFunction: (isAuth) {
       if (isAuth) {
-        print(di.sl.get<AuthBloc>().user.name);
-
         Navigator.of(context).pushNamedAndRemoveUntil(
             '/MainPages', (Route<dynamic> route) => false);
       } else {

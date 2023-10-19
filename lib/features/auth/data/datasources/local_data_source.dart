@@ -8,6 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 abstract class LocalDataSource {
   Future<Unit> cacheUser(UserModel userToCache);
   Future<UserModel> getCachedUser();
+  void clearCache();
 }
 
 class LocalDataSourceImpl implements LocalDataSource {
@@ -32,4 +33,11 @@ class LocalDataSourceImpl implements LocalDataSource {
       throw EmptyCacheException(message: 'no cached user found');
     }
   }
+  
+  @override
+  void clearCache() {
+    sharedPreferences.remove('user');
+  }
+
+  
 }

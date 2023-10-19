@@ -4,6 +4,7 @@ import 'package:samla_app/core/error/failures.dart';
 import 'package:samla_app/core/network/network_info.dart';
 import 'package:samla_app/features/auth/data/datasources/local_data_source.dart';
 import 'package:samla_app/features/auth/data/datasources/remote_data_source.dart';
+import 'package:samla_app/features/auth/data/models/user_model.dart';
 import 'package:samla_app/features/auth/domain/entities/user.dart';
 import 'package:samla_app/features/auth/domain/repositories/auth_repository.dart';
 
@@ -117,6 +118,36 @@ class AuthRepositoryImpl implements AuthRepository {
       return Right(user);
     } on EmptyCacheException catch (e) {
       return Left(EmptyCacheFailure(message: e.message));
+    }
+  }
+  
+  @override
+  Future<Either<Failure, Unit>> logout(String token)async {
+    try {
+      await remoteDataSource.logout(token);
+      localDataSource.clearCache();
+      return const Right(unit);
+    } on EmptyCacheException catch (e) {
+      return Left(EmptyCacheFailure(message: e.message));
+    } catch (e) {
+      return Left(ServerFailure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, User>> update(User newUser) async {
+    if (await networkInfo.isConnected) {
+      try {
+    
+        final user = await remoteDataSource.update(UserModel.fromEntity(newUser));
+        //cache user
+        await localDataSource.cacheUser(user);
+        return Right(user);
+      } on ServerException catch (e) {
+        return Left(ServerFailure(message: e.message));
+      }
+    } else {
+      return Left(OfflineFailure());
     }
   }
 }

@@ -27,4 +27,10 @@ abstract class AuthRepository {
   );
 
   Future<Either<Failure, User>> sendOTP(String phoneNumber, String otp);
+
+  Future<Either<Failure, Unit>> logout(String token);
+
+  Future<Either<Failure, User>> update(User newUser);
+
+  
 }

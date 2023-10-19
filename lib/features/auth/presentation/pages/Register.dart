@@ -31,9 +31,7 @@ class _RegisterState extends State<RegisterPage> {
   String _phone = '';
   String? _accountType;
 
- 
-
-  final authBloc = di.sl<AuthBloc>();
+  final authBloc = di.sl.get<AuthBloc>();
 
   _Register() {
     authBloc.add(
@@ -50,43 +48,38 @@ class _RegisterState extends State<RegisterPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => authBloc,
-      child: BlocBuilder<AuthBloc, AuthState>(
-        builder: (context, state) {
-          if (state is LoadingAuthState) {
-            // Show the loading widget on top of your main widget.
-            return Stack(
-              children: [
-                RegisterWidget(context), // Your main content widget
-                Positioned.fill(
-                  child: Center(
-                    child: LoadingWidget(), // Loading widget
-                  ),
+    return BlocBuilder<AuthBloc, AuthState>(
+      builder: (context, state) {
+        if (state is LoadingAuthState) {
+          // Show the loading widget on top of your main widget.
+          return Stack(
+            children: [
+              RegisterWidget(context), // Your main content widget
+              Positioned.fill(
+                child: Center(
+                  child: LoadingWidget(), // Loading widget
                 ),
-              ],
+              ),
+            ],
+          );
+        }
+        if (state is ErrorAuthState) {
+          SchedulerBinding.instance.addPostFrameCallback((_) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(state.message),
+              ),
             );
-          }
-          if (state is ErrorAuthState) {
-            SchedulerBinding.instance.addPostFrameCallback((_) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(state.message),
-                ),
-              );
-            });
-            // clear the state
-            authBloc.add(ClearAuthEvent());
-          }
-          if (state is AuthenticatedState) {
-            SchedulerBinding.instance.addPostFrameCallback((_) {
-              Navigator.of(context).pushNamedAndRemoveUntil(
-                  '/MainPages', (Route<dynamic> route) => false);
-            });
-          }
-          return RegisterWidget(context);
-        },
-      ),
+          });
+        }
+        if (state is AuthenticatedState) {
+          SchedulerBinding.instance.addPostFrameCallback((_) {
+            Navigator.of(context).pushNamedAndRemoveUntil(
+                '/MainPages', (Route<dynamic> route) => false);
+          });
+        }
+        return RegisterWidget(context);
+      },
     );
   }
 
