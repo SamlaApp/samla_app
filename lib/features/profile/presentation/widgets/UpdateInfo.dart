@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:samla_app/core/auth/User.dart';
 import 'package:samla_app/features/profile/presentation/widgets/AppBar_Widget01.dart';
 import 'package:samla_app/features/profile/presentation/widgets/appBar_widget.dart';
 

@@ -2,7 +2,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_in_app_messaging/firebase_in_app_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:samla_app/config/themes/common_styles.dart';
-import 'package:samla_app/core/auth/User.dart';
 import 'package:samla_app/core/error/exceptions.dart';
 import 'package:samla_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:samla_app/firebase_options.dart';

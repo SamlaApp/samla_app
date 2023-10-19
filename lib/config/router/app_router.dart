@@ -13,7 +13,6 @@ import 'package:samla_app/features/notifications/presentation/pages/notification
 import 'package:samla_app/features/profile/presentation/pages/PersonalInfo.dart';
 import 'package:samla_app/features/profile/presentation/pages/Profile.dart';
 import 'package:samla_app/features/profile/presentation/widgets/UpdateInfo.dart';
-import 'package:samla_app/core/auth/User.dart';
 
 // final user = LocalAuth.user;
 

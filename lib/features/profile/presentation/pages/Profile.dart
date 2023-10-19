@@ -2,7 +2,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:samla_app/config/themes/common_styles.dart';
-import 'package:samla_app/core/auth/User.dart';
 import 'package:samla_app/features/auth/auth_injection_container.dart'
     as authDI;
 import 'package:samla_app/features/auth/presentation/bloc/auth_bloc.dart';

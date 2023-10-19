@@ -33,6 +33,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
     );
   }
 
+//TODO: it just for testing, delete all this shit 😊
   Scaffold NotificationWidget(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),

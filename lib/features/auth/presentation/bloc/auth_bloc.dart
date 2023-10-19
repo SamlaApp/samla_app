@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:samla_app/core/auth/User.dart';
 import 'package:samla_app/features/auth/domain/entities/user.dart';
 import 'package:samla_app/features/auth/domain/usecases/get_cached_user.dart';
 import 'package:samla_app/features/auth/domain/usecases/login_email.dart';

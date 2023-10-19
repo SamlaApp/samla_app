@@ -9,6 +9,7 @@ abstract class LocalDataSource {
   Future<Unit> cacheUser(UserModel userToCache);
   Future<UserModel> getCachedUser();
   void clearCache();
+  Future<Unit> cacheDeviceToken(String token);
 }
 
 class LocalDataSourceImpl implements LocalDataSource {
@@ -40,4 +41,8 @@ class LocalDataSourceImpl implements LocalDataSource {
   }
 
   
+  Future<Unit> cacheDeviceToken(String token) {
+    sharedPreferences.setString('deviceToken', token);
+    return Future.value(unit);
+  }
 }

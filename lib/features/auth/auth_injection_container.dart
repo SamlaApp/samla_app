@@ -21,11 +21,9 @@ import 'package:http/http.dart' as http;
 final sl = GetIt.instance;
 
 /*
-this fucntion will initilize all the dependencies for the auth feature,
-however it should not be called if the user already logged in.
-
+this fucntion will initilize all the dependencies for the auth feature.
 since most if you guys will not follow the clean architecure,
-some of the objects may be dublocated throught the app.
+some of the objects may be dublecated throught the app.
 */
 Future<void> AuthInit() async {
   //! Features - Auth

@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:samla_app/config/themes/common_styles.dart';
-import 'package:samla_app/core/auth/User.dart';
 
 // import 'package:image_picker/image_picker.dart';
 import '../../../auth/domain/entities/user.dart';
