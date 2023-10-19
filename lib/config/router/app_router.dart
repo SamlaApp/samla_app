@@ -9,7 +9,7 @@ import 'package:samla_app/features/auth/presentation/pages/OTP.dart';
 import 'package:samla_app/features/auth/presentation/pages/Register.dart';
 import 'package:samla_app/features/machines/presentation/pages/QRpage.dart';
 import 'package:samla_app/features/main/presentation/widgets/mainPagesLayout.dart';
-import 'package:samla_app/features/notifications/presentation/pages/notification.dart';
+import 'package:samla_app/features/notifications/presentation/pages/notification_page.dart';
 import 'package:samla_app/features/profile/presentation/pages/PersonalInfo.dart';
 import 'package:samla_app/features/profile/presentation/pages/Profile.dart';
 import 'package:samla_app/features/profile/presentation/widgets/UpdateInfo.dart';
