@@ -17,11 +17,12 @@ class NotificationsPage extends StatefulWidget {
 class _NotificationsPageState extends State<NotificationsPage> {
   final notifiBloc = di.sl.get<NotificationBloc>();
 
-  // final user = di.sl.get<AuthBloc>().user;
 
   @override
   Widget build(BuildContext context) {
+
     notifiBloc.add(GetNotificationEvent());
+    notifiBloc.add(GetCachedNotificationEvent());
 
     // return Scaffold NotificationWidget(BuildContext context) {
     return Scaffold(
@@ -32,6 +33,8 @@ class _NotificationsPageState extends State<NotificationsPage> {
         ),
         body: BlocBuilder<NotificationBloc, NotificationState>(
             builder: (context, state) {
+
+              
           // state management is here
 
           // if lodaing state
@@ -55,13 +58,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
           }
 
           // else return the widget
-          // return Center(
-          //   child: Column(
-          //       mainAxisAlignment: MainAxisAlignment.center,
-          //       children: notifiBloc.notifications.map((notification) {
-          //         return Text(notification.title);
-          //       }).toList()),
-          // );
+      
           List<Notification_> notifications = notifiBloc.notifications;
           return ListView.builder(
             itemCount: notifications.length,

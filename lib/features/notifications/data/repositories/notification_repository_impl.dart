@@ -24,7 +24,9 @@ class NotificationRepositoryImpl implements NotificationRepository {
       try {
         final notifications = await remoteDataSource.getNotifications();
         //cache notifications
-        await localDataSource.cacheNotifications(notifications);
+        if (notifications.isNotEmpty) {
+          await localDataSource.cacheNotifications(notifications);
+        }
 
         return Right(notifications);
       } on ServerException catch (e) {

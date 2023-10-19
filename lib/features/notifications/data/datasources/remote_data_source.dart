@@ -41,7 +41,7 @@ class NotificationRemoteDataSourceImpl implements NotificationRemoteDataSource {
   Future<List<NotificationModel>> getNotifications() async {
     final response = await _request({}, '/get', 'GET');
     final responseBody = await response.stream.bytesToString();
-    print(responseBody);
+    // print(responseBody);
 
     if (response.statusCode == 200) {
       final notificationsJson = json.decode(responseBody)['notifications'];

@@ -13,15 +13,15 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
   final GetCachedNotification getCachedNotification;
   List<Notification_> notifications = [];
 
-  NotificationBloc({required this.getNotifications, required this.getCachedNotification})
+  NotificationBloc(
+      {required this.getNotifications, required this.getCachedNotification})
       : super(NotificationInitial()) {
     //check cached notification
 
     on<NotificationEvent>((event, emit) async {
-      if (event is ClearNotificationEvent){
+      if (event is ClearNotificationEvent) {
         emit(NotificationInitial());
       }
-
 
       // get notification
       else if (event is GetNotificationEvent) {
@@ -31,7 +31,7 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
         failuredOrDone.fold((failure) {
           emit(NotificationErrorState(message: failure.message));
         }, (returnedNotification) {
-          notifications.addAll(returnedNotification);
+          addNewNotifications(notifications, returnedNotification);
           emit(NotificationLoadedState(notifications: returnedNotification));
         });
       }
@@ -44,10 +44,21 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
         failuredOrDone.fold((failure) {
           emit(NotificationErrorState(message: failure.message));
         }, (returnedNotification) {
-          notifications.addAll(returnedNotification);
+          print('following are the cached notification founded');
+          print(returnedNotification);
+          addNewNotifications(notifications ,returnedNotification);
           emit(NotificationLoadedState(notifications: returnedNotification));
         });
       }
     });
+  }
+}
+// prevent duplicate notification
+void addNewNotifications(
+    List<Notification_> notificationList, List<Notification_> newNotifications) {
+  for (var newNotification in newNotifications) {
+    if (!notificationList.contains(newNotification)) {
+      notificationList.add(newNotification);
+    }
   }
 }
