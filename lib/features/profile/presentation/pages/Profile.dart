@@ -23,6 +23,8 @@ class _ProfilePageState extends State<ProfilePage> {
   int _selectedIndex = 0; // 0: info, 1: achievements, 2: settings
   final String imagePath = 'images/download.jpeg';
 
+  final authBloc = authDI.sl.get<AuthBloc>();
+
   @override
   Widget build(BuildContext context) {
     final user = authDI.getUser();
@@ -46,6 +48,12 @@ class _ProfilePageState extends State<ProfilePage> {
             // NumbersWidget(), => Not needed
             SizedBox(
               height: 20,
+            ),
+            FloatingActionButton(
+              onPressed: () {
+                authBloc.add(LogOutEvent(context));
+              },
+              child: const Text('Logout'),
             ),
             Container(
               padding: EdgeInsets.symmetric(horizontal: 20),
