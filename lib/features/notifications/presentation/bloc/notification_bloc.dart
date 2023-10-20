@@ -44,8 +44,6 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
         failuredOrDone.fold((failure) {
           emit(NotificationErrorState(message: failure.message));
         }, (returnedNotification) {
-          print('following are the cached notification founded');
-          print(returnedNotification);
           addNewNotifications(notifications ,returnedNotification);
           emit(NotificationLoadedState(notifications: returnedNotification));
         });
