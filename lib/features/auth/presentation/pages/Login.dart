@@ -440,7 +440,7 @@ class _LoginState extends State<Login> {
                               _validFieldsUsername['username'] = false;
                               return 'Please enter your username';
                             } else {
-                              _validFieldsEmail['username'] = true;
+                              _validFieldsUsername['username'] = true;
                               return null;
                             }
                           },

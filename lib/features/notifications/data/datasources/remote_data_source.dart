@@ -3,12 +3,12 @@ import 'package:dartz/dartz.dart';
 import 'package:http/http.dart' as http;
 import 'package:samla_app/core/error/exceptions.dart';
 import 'package:samla_app/features/auth/auth_injection_container.dart';
+import 'package:samla_app/features/auth/presentation/bloc/auth_bloc.dart';
 import '../models/notification_model.dart';
 // import 'package:samla_app/features/auth/auth_injection_container.dart';
 
 const BASE_URL = 'https://samla.mohsowa.com/api/notification';
 
-final user = getUser();
 
 abstract class NotificationRemoteDataSource {
   Future<List<NotificationModel>> getNotifications();
@@ -22,8 +22,9 @@ class NotificationRemoteDataSourceImpl implements NotificationRemoteDataSource {
   Future<http.StreamedResponse> _request(
       Map<String, String> data, String endPoint, String method) async {
     // get token from user
-
+    final user = sl.get<AuthBloc>().user;
     var token = user.accessToken;
+    print(token);
     var headers = {
       'Accept': 'application/json',
       'Authorization': 'Bearer $token',
