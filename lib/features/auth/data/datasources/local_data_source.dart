@@ -40,7 +40,7 @@ class LocalDataSourceImpl implements LocalDataSource {
     sharedPreferences.remove('user');
   }
 
-  
+  @override
   Future<Unit> cacheDeviceToken(String token) {
     sharedPreferences.setString('deviceToken', token);
     return Future.value(unit);
