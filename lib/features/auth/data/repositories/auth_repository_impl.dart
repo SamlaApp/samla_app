@@ -154,9 +154,12 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<Either<Failure, User>> getCachedUser() async {
     try {
       final user = await localDataSource.getCachedUser();
-      return Right(user);
+      final tokenIsValid = await remoteDataSource.checkTokenValidity(user.accessToken!);
+      return tokenIsValid? Right(user) : Left(ServerFailure(message: 'Token is not valid'));
     } on EmptyCacheException catch (e) {
       return Left(EmptyCacheFailure(message: e.message));
+    } catch (e) {
+      return Left(ServerFailure(message: e.toString()));
     }
   }
   

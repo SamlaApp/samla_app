@@ -23,6 +23,8 @@ abstract class RemoteDataSource {
     required String password,
   });
 
+  Future<bool> checkTokenValidity(String token);
+
   Future<UserModel> sendOTP(String phoneNumber, String otp);
 
   Future<Unit> logout(String token);
@@ -198,6 +200,8 @@ class RemoteDataSourceImpl implements RemoteDataSource {
     }
   }
 
+  
+
   @override
   Future<UserModel> update(UserModel newUser) async {
     var headers = {
@@ -223,4 +227,29 @@ class RemoteDataSourceImpl implements RemoteDataSource {
       throw ServerException(message: json.decode(responseBody)['message']);
     }
   }
+  
+  @override
+  Future<bool> checkTokenValidity(String token) async {
+      var headers = {
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token',
+    };
+    var request = http.MultipartRequest(
+        'POST', Uri.parse('$BASE_URL/user/verify'));
+
+    request.headers.addAll(headers);
+
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200) {
+      return Future.value(true);
+    } else if (response.statusCode == 401){
+      return Future.value(false);
+    }
+     else {
+      throw ServerException(message: 'logout failed');
+    }
+  }
+
+
 }

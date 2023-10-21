@@ -37,7 +37,7 @@ class LocalDataSourceImpl implements LocalDataSource {
   
   @override
   void clearCache() {
-    sharedPreferences.remove('user');
+    sharedPreferences.clear();
   }
 
   @override
