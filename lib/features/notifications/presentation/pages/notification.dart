@@ -63,6 +63,10 @@ class _NotificationsPageState extends State<NotificationsPage> {
           List<Notification_> notifications = notifiBloc.notifications;
           notifications = notifications.reversed.toList(); // Reverse the list
 
+          final now = DateTime.now();
+          final yesterday = now.subtract(Duration(days: 1));
+          final dateFormat = DateFormat.yMd().add_jm();
+
 
           return ListView.builder(
             itemCount: notifications.length,
@@ -79,11 +83,16 @@ class _NotificationsPageState extends State<NotificationsPage> {
                 // Add 3 hours to the 'date' variable
                 date = date.add(const Duration(hours: 3));
 
-                // Create a DateFormat instance with the user's locale.
-                final userDateFormat = DateFormat.yMd().add_jm();
-
-                // Format the date and time according to the user's device settings.
-                createdAt = userDateFormat.format(date);
+                if (date.year == now.year && date.month == now.month && date.day == now.day) {
+                  // If it's today, only show the time
+                  createdAt = DateFormat.jm().format(date);
+                } else if (date.year == yesterday.year && date.month == yesterday.month && date.day == yesterday.day) {
+                  // If it's yesterday, display "Yesterday"
+                  createdAt = "Yesterday";
+                } else {
+                  // For all other days, show the full date
+                  createdAt = dateFormat.format(date);
+                }
               }
 
 
