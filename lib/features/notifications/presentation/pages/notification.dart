@@ -61,8 +61,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
           // else return the widget
       
           List<Notification_> notifications = notifiBloc.notifications;
-          // reverse the list to show latest notification first
-          notifications = notifications.reversed.toList();
+          notifications = notifications.reversed.toList(); // Reverse the list
 
 
           return ListView.builder(
@@ -72,28 +71,29 @@ class _NotificationsPageState extends State<NotificationsPage> {
               final title = notification.title;
               final message = notification.message;
               var createdAt = notification.createdAt;
+
                // edit date format
               if (createdAt != null) {
-                final date = DateTime.parse(createdAt);
+                var date = DateTime.parse(createdAt);
 
-                // if date is today show time only other wise show date
-                if (date.day == DateTime.now().day &&
-                    date.month == DateTime.now().month &&
-                    date.year == DateTime.now().year) {
-                  createdAt = DateFormat.jm().format(date);
-                } else {
-                  createdAt = DateFormat.yMd().format(date);
-                }
+                // Add 3 hours to the 'date' variable
+                date = date.add(const Duration(hours: 3));
+
+                // Create a DateFormat instance with the user's locale.
+                final userDateFormat = DateFormat.yMd().add_jm();
+
+                // Format the date and time according to the user's device settings.
+                createdAt = userDateFormat.format(date);
               }
 
 
               // Icon, title, message, date
               return Card(
                 child: ListTile(
-                  leading: Icon(Icons.notifications),
+                  leading: const Icon(Icons.notifications),
                   title: Text(title),
                   subtitle: Text(message),
-                  trailing: Text(createdAt!, style: const TextStyle(color: Colors.grey)), // date
+                  trailing: Text(createdAt!, style: const TextStyle(color: Colors.grey)),
                 ),
               );
 
