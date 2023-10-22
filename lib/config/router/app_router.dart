@@ -13,7 +13,7 @@ import 'package:samla_app/features/notifications/presentation/pages/notification
 import 'package:samla_app/features/profile/presentation/pages/PersonalInfo.dart';
 import 'package:samla_app/features/profile/presentation/pages/Profile.dart';
 import 'package:samla_app/features/profile/presentation/widgets/UpdateInfo.dart';
-
+import '../../features/nutrition/presentation/pages/NutritionPlan.dart';
 // final user = LocalAuth.user;
 
 Map<String, Widget Function(BuildContext)> routes = {
@@ -26,10 +26,6 @@ Map<String, Widget Function(BuildContext)> routes = {
   '/': (context) => SplashScreen(),
   '/Register': (context) => RegisterPage(),
   '/PersonalInfo': (context) => PersonalInfoPage(),
+  '/NutritionPlan': (context) => NutritionPlan(),
 
-  // '/UpdateInfo': (context) => UpdateInfo(
-  //     name: user.name,
-  //     email: user.email,
-  //     username: user.username,
-  //     phone: user.phone),
 };
