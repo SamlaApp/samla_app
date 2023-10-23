@@ -12,6 +12,7 @@ class UserModel extends User {
 
 // coming from server
   factory UserModel.fromJson(Map<String, dynamic> json) {
+
     return UserModel(
       id: json['id'].toString(),
       name: json['name'],
@@ -24,7 +25,6 @@ class UserModel extends User {
   }
 
   factory UserModel.fromEntity(User user) {
-    print(user.name);
     return UserModel(
       id: user.id ?? '',
       name: user.name,

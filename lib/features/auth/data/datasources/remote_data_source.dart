@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:dartz/dartz.dart';
+import 'package:dartz/dartz_unsafe.dart';
 import 'package:http/http.dart' as http;
 import 'package:samla_app/core/error/exceptions.dart';
 import 'package:samla_app/features/auth/data/models/user_model.dart';
@@ -74,10 +75,6 @@ class RemoteDataSourceImpl implements RemoteDataSource {
     }
   }
 
-  
-
-
-
   @override
   Future<UserModel> loginWithUsername(String username, String password) async {
     final data = {
@@ -86,13 +83,14 @@ class RemoteDataSourceImpl implements RemoteDataSource {
       'password': password,
     };
 
-    
     final response = await _request(data, '/login', 'POST');
     final responseBody = await response.stream.bytesToString();
 
     if (response.statusCode == 200) {
       final userJson = json.decode(responseBody)['user'];
       userJson['access_token'] = json.decode(responseBody)['access_token'];
+      // userJson['access_token'] = 'hello world';
+
       return UserModel.fromJson(userJson);
     } else {
       print(json.decode(responseBody)['message']);
@@ -150,16 +148,20 @@ class RemoteDataSourceImpl implements RemoteDataSource {
   }
 
   @override
-  Future<Unit> update_device_token(String deviceToken, String accessToken) async {
-    var headers = {'Accept': 'application/json',
-    'Authorization': 'Bearer $accessToken'
+  Future<Unit> update_device_token(
+      String deviceToken, String accessToken) async {
+    var headers = {
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $accessToken'
     };
-
+    print(accessToken);
+    print(deviceToken);
     final data = {
       'device_token': deviceToken,
     };
 
-    final request = http.MultipartRequest('POST', Uri.parse(BASE_URL + '/user/update_device_token'));
+    final request = http.MultipartRequest(
+        'POST', Uri.parse(BASE_URL + '/user/update_device_token'));
     request.fields.addAll(data);
 
     request.headers.addAll(headers);
@@ -169,15 +171,16 @@ class RemoteDataSourceImpl implements RemoteDataSource {
     if (response.statusCode == 200) {
       return Future.value(unit);
     } else {
+      print(response.reasonPhrase);
       throw ServerException(message: 'Failed to update device token');
     }
-
   }
 
   Future<http.StreamedResponse> _request(
       Map<String, String> data, String endPoint, String method) async {
     var headers = {'Accept': 'application/json'};
     var request = http.MultipartRequest(method, Uri.parse(BASE_URL + endPoint));
+
     request.fields.addAll(data);
 
     request.headers.addAll(headers);
@@ -192,8 +195,8 @@ class RemoteDataSourceImpl implements RemoteDataSource {
       'Accept': 'application/json',
       'Authorization': 'Bearer $token',
     };
-    var request = http.MultipartRequest(
-        'POST', Uri.parse('$BASE_URL/user/logout'));
+    var request =
+        http.MultipartRequest('POST', Uri.parse('$BASE_URL/user/logout'));
 
     request.headers.addAll(headers);
 
@@ -205,8 +208,6 @@ class RemoteDataSourceImpl implements RemoteDataSource {
       throw ServerException(message: 'logout failed');
     }
   }
-
-  
 
   @override
   Future<UserModel> update(UserModel newUser) async {
@@ -233,15 +234,15 @@ class RemoteDataSourceImpl implements RemoteDataSource {
       throw ServerException(message: json.decode(responseBody)['message']);
     }
   }
-  
+
   @override
   Future<bool> checkTokenValidity(String token) async {
-      var headers = {
+    var headers = {
       'Accept': 'application/json',
       'Authorization': 'Bearer $token',
     };
-    var request = http.MultipartRequest(
-        'GET', Uri.parse('$BASE_URL/user/verify'));
+    var request =
+        http.MultipartRequest('GET', Uri.parse('$BASE_URL/user/verify'));
 
     request.headers.addAll(headers);
 
@@ -250,13 +251,10 @@ class RemoteDataSourceImpl implements RemoteDataSource {
 
     if (response.statusCode == 200) {
       return Future.value(true);
-    } else if (response.statusCode == 401){
+    } else if (response.statusCode == 401) {
       return Future.value(false);
-    }
-     else {
+    } else {
       throw ServerException(message: 'Failed to check token validity');
     }
   }
-
-
 }
