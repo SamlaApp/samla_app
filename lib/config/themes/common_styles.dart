@@ -15,7 +15,7 @@ Color theme_red = Color.fromRGBO(165, 30, 34, 1);
 Color theme_orange = Color.fromRGBO(217, 157, 42, 1);
 Color primary_color = Color.fromRGBO(252, 252, 252, 1);
 Color inputField_color = theme_darkblue.withOpacity(0.05);
-
+Color theme_grey = Color.fromRGBO(0, 0, 0, 0.5);
 // styles
 
 BoxDecoration primary_decoration = BoxDecoration(
