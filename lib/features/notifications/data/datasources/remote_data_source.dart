@@ -24,7 +24,6 @@ class NotificationRemoteDataSourceImpl implements NotificationRemoteDataSource {
     // get token from user
     final user = sl.get<AuthBloc>().user;
     var token = user.accessToken;
-    print(token);
     var headers = {
       'Accept': 'application/json',
       'Authorization': 'Bearer $token',

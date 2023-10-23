@@ -11,8 +11,8 @@ class Community extends Equatable{
   //these are depend on the direction of transfer
   //whether it coming from backend, or going to backend
   final String? id;
-  final File? avatar;
-  final String? imageURL;
+  final File? avatar; //image name in the backend
+  final String? imageURL; //full link that include image name in the backend
 
   const Community( 
       {required this.name,

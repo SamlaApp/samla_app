@@ -7,3 +7,5 @@ class ServerException implements Exception{
   ServerException({required this.message});
 }
 class OfflineException implements Exception{}
+
+class UnauthorizedException implements Exception{}

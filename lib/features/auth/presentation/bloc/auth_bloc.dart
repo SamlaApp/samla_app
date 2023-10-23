@@ -68,9 +68,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         final failuredOrDone = await getCachedUser.call();
         failuredOrDone.fold((failure) {
           emit(UnauthenticatedState());
+          print(failure.message);
           event.callBackFunction(false);
         }, (returnedUser) {
           user = returnedUser;
+          print('user is $user.name');
           emit(AuthenticatedState(user: returnedUser));
           event.callBackFunction(true);
         });

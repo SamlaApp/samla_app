@@ -14,7 +14,6 @@ class AuthRepositoryImpl implements AuthRepository {
   final LocalDataSource localDataSource;
   final NetworkInfo networkInfo;
 
-
   AuthRepositoryImpl(
       {required this.networkInfo,
       required this.remoteDataSource,
@@ -48,10 +47,11 @@ class AuthRepositoryImpl implements AuthRepository {
         String? accessToken = user.accessToken;
         await remoteDataSource.update_device_token(deviceToken, accessToken!);
 
-
         return Right(user);
       } on ServerException catch (e) {
-        return Left(ServerFailure(message:e.message));
+        return Left(ServerFailure(message: e.message));
+      } catch (e) {
+        return Left(ServerFailure(message: 'Something went wrong'));
       }
     } else {
       return Left(OfflineFailure());
@@ -78,6 +78,8 @@ class AuthRepositoryImpl implements AuthRepository {
         return Right(user);
       } on ServerException catch (e) {
         return Left(ServerFailure(message: e.message));
+      } catch (e) {
+        return Left(ServerFailure(message: 'Something went wrong'));
       }
     } else {
       return Left(OfflineFailure());
@@ -92,6 +94,8 @@ class AuthRepositoryImpl implements AuthRepository {
         return Right(unit);
       } on ServerException catch (e) {
         return Left(ServerFailure(message: e.message));
+      } catch (e) {
+        return Left(ServerFailure(message: 'Something went wrong'));
       }
     } else {
       return Left(OfflineFailure());
@@ -119,6 +123,9 @@ class AuthRepositoryImpl implements AuthRepository {
         return Right(user);
       } on ServerException catch (e) {
         return Left(ServerFailure(message: e.message));
+      } catch (e) {
+        print(e.toString());
+        return Left(ServerFailure(message: 'Something went wrong'));
       }
     } else {
       return Left(OfflineFailure());
@@ -144,27 +151,34 @@ class AuthRepositoryImpl implements AuthRepository {
         return Right(user);
       } on ServerException catch (e) {
         return Left(ServerFailure(message: e.message));
+      } catch (e) {
+        return Left(ServerFailure(message: 'Something went wrong'));
       }
     } else {
       return Left(OfflineFailure());
     }
   }
-  
+
   @override
   Future<Either<Failure, User>> getCachedUser() async {
     try {
       final user = await localDataSource.getCachedUser();
-      final tokenIsValid = await remoteDataSource.checkTokenValidity(user.accessToken!);
-      return tokenIsValid? Right(user) : Left(ServerFailure(message: 'Token is not valid'));
+      final tokenIsValid =
+          await remoteDataSource.checkTokenValidity(user.accessToken!);
+      return tokenIsValid
+          ? Right(user)
+          : Left(ServerFailure(message: 'Token is not valid'));
     } on EmptyCacheException catch (e) {
       return Left(EmptyCacheFailure(message: e.message));
+    } on ServerException catch (e) {
+      return Left(ServerFailure(message: e.message));
     } catch (e) {
-      return Left(ServerFailure(message: e.toString()));
+      return Left(ServerFailure(message: 'Something went wrong'));
     }
   }
-  
+
   @override
-  Future<Either<Failure, Unit>> logout(String token)async {
+  Future<Either<Failure, Unit>> logout(String token) async {
     try {
       await remoteDataSource.logout(token);
       localDataSource.clearCache();
@@ -180,13 +194,15 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<Either<Failure, User>> update(User newUser) async {
     if (await networkInfo.isConnected) {
       try {
-    
-        final user = await remoteDataSource.update(UserModel.fromEntity(newUser));
+        final user =
+            await remoteDataSource.update(UserModel.fromEntity(newUser));
         //cache user
         await localDataSource.cacheUser(user);
         return Right(user);
       } on ServerException catch (e) {
         return Left(ServerFailure(message: e.message));
+      } catch (e) {
+        return Left(ServerFailure(message: 'Something went wrong'));
       }
     } else {
       return Left(OfflineFailure());

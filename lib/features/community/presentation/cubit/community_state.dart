@@ -8,3 +8,15 @@ abstract class CommunityState extends Equatable {
 }
 
 class CommunityInitial extends CommunityState {}
+
+class CommunitiesLoaded extends CommunityState {
+  final List<Community> communities;
+
+  CommunitiesLoaded(this.communities);
+}
+
+class CommunityError extends CommunityState {
+  final String message;
+
+  CommunityError(this.message);
+}

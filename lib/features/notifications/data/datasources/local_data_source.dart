@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:dartz/dartz.dart';
-import 'package:dartz/dartz_unsafe.dart';
 import 'package:samla_app/core/error/exceptions.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:samla_app/features/notifications/data/models/notification_model.dart';

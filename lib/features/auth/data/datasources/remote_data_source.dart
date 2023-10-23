@@ -74,6 +74,10 @@ class RemoteDataSourceImpl implements RemoteDataSource {
     }
   }
 
+  
+
+
+
   @override
   Future<UserModel> loginWithUsername(String username, String password) async {
     final data = {
@@ -81,6 +85,8 @@ class RemoteDataSourceImpl implements RemoteDataSource {
       'username': username,
       'password': password,
     };
+
+    
     final response = await _request(data, '/login', 'POST');
     final responseBody = await response.stream.bytesToString();
 
@@ -235,11 +241,12 @@ class RemoteDataSourceImpl implements RemoteDataSource {
       'Authorization': 'Bearer $token',
     };
     var request = http.MultipartRequest(
-        'POST', Uri.parse('$BASE_URL/user/verify'));
+        'GET', Uri.parse('$BASE_URL/user/verify'));
 
     request.headers.addAll(headers);
 
     http.StreamedResponse response = await request.send();
+    final responseBody = await response.stream.bytesToString();
 
     if (response.statusCode == 200) {
       return Future.value(true);
@@ -247,7 +254,7 @@ class RemoteDataSourceImpl implements RemoteDataSource {
       return Future.value(false);
     }
      else {
-      throw ServerException(message: 'logout failed');
+      throw ServerException(message: 'Failed to check token validity');
     }
   }
 
