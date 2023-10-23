@@ -114,30 +114,8 @@ class NewWorkout extends StatelessWidget {
       },
     );
   }
-
 }
 
 
 
 
-
-// MuscleGroupCard(
-//   muscleGroupName: 'Chest',
-//   imageUrl: 'https://v2.exercisedb.io/image/mC3NaRoKzI9D-S',
-// ),
-// MuscleGroupCard(
-//   muscleGroupName: 'Back',
-//   imageUrl: 'https://v2.exercisedb.io/image/Df5zu4OmWB97T8',
-// ),
-// MuscleGroupCard(
-//   muscleGroupName: 'Shoulders',
-//   imageUrl: 'https://v2.exercisedb.io/image/rJaV3eeqGfGiIl',
-// ),
-// MuscleGroupCard(
-//   muscleGroupName: 'Biceps',
-//   imageUrl: 'https://v2.exercisedb.io/image/motQtaEI1aag0C',
-// ),
-// MuscleGroupCard(
-//   muscleGroupName: 'Triceps',
-//   imageUrl: 'https://v2.exercisedb.io/image/r8nXDRpWfBw7Qu',
-// ),
