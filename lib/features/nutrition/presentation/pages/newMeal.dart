@@ -154,5 +154,5 @@ class _NewMealState extends State<NewMeal> {
       ),
     );
   }
-}String? selectedReminder;
+}
 
