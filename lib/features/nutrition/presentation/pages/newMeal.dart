@@ -1,113 +1,158 @@
 import 'package:flutter/material.dart';
+import 'package:samla_app/config/themes/common_styles.dart';
 
-class NewMeal extends StatelessWidget {
+import '../widgets/ConfirmButton.dart';
+import '../widgets/InputField.dart';
+import '../widgets/MealTypeButton.dart';
+import '../widgets/ReminderButton.dart';
+
+class NewMeal extends StatefulWidget {
+  @override
+  _NewMealState createState() => _NewMealState();
+}
+
+class _NewMealState extends State<NewMeal> {
+  String? selectedReminder;
+
+  void _updateReminder(String label) {
+    setState(() {
+      selectedReminder = label;
+    });
+  }
+
+  String? selectedMealType;
+
+  void _updateMealType(String label) {
+    setState(() {
+      selectedMealType = label;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: theme_darkblue,
       appBar: AppBar(
+        toolbarHeight: 150.0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        backgroundColor: Colors.grey[850],
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
+        title: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Container(
-              padding: EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Center(
-                    child: Text(
-                      'New Meal',
-                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  SizedBox(height: 20),
-                  Text('Meal Name'),
-                  TextFormField(
-                    decoration: InputDecoration(
-                      hintText: 'Enter meal name',
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text('Time Start'),
-                      DropdownButton<String>(
-                        value: '05:00am',
-                        items: <String>['05:00am', '06:00am', '07:00am'].map((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value),
-                          );
-                        }).toList(),
-                        onChanged: (_) {},
-                      ),
-                      Text('Time End'),
-                      DropdownButton<String>(
-                        value: '09:00am',
-                        items: <String>['09:00am', '10:00am', '11:00am'].map((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value),
-                          );
-                        }).toList(),
-                        onChanged: (_) {},
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 10),
-                  Text('Calories'),
-                  TextFormField(
-                    decoration: InputDecoration(
-                      hintText: '320 Calo',
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  Text('Set Reminder'),
-                  Row(
-                    children: [
-                      Radio(
-                        value: true,
-                        groupValue: true,
-                        onChanged: (bool? value) {},
-                      ),
-                      Text('Yes'),
-                      SizedBox(width: 20),
-                      Radio(
-                        value: false,
-                        groupValue: true,
-                        onChanged: (bool? value) {},
-                      ),
-                      Text('No'),
-                    ],
-                  ),
-                  SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: () {},
-                    child: Text('Confirm'),
-                    style: ElevatedButton.styleFrom(
-                      primary: Colors.teal,
-                      onPrimary: Colors.white,
-                      padding: EdgeInsets.symmetric(horizontal: 100, vertical: 15),
-                    ),
-                  ),
-                ],
+            Image.asset(
+              'images/Logo/2x/Icon_1@2x.png',
+              height: 100,
+            ),
+          ],
+        ),
+        centerTitle: true,
+        backgroundColor: theme_darkblue,
+        elevation: 0,  // Remove shadow for cleaner look
+      ),
+
+      body: Container(
+
+        padding: EdgeInsets.all(30.0),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(30),
+            topRight: Radius.circular(30),
+          ),
+        ),
+
+        child: Column(
+
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(height: 25),
+
+            Center(
+              child: Text(
+                "New Meal",
+                style: TextStyle(color: Colors.grey[700], fontWeight: FontWeight.bold, fontSize: 30),
               ),
             ),
+
+            SizedBox(height: 16),
+            InputField(label: 'Meal Name', hint: 'Enter meal name'),
+
+
+            SizedBox(height: 16),
+            Text("Meal time/type", style: TextStyle(color: Colors.grey[700])),
+
+
+            SizedBox(height: 8),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [MealTypeButton(
+                label: "Break Fast",
+                isSelected: selectedMealType == "Break Fast",
+                onSelected: _updateMealType,
+              ),
+                MealTypeButton(
+                  label: "Lunch",
+                  isSelected: selectedMealType == "Lunch",
+                  onSelected: _updateMealType,
+                ),
+                MealTypeButton(
+                  label: "Dinner",
+                  isSelected: selectedMealType == "Dinner",
+                  onSelected: _updateMealType,
+                ),
+                MealTypeButton(
+                  label: "Snack",
+                  isSelected: selectedMealType == "Snack",
+                  onSelected: _updateMealType,
+                ),
+              ],
+            ),
+
+
+            SizedBox(height: 16),
+            InputField(label: 'Calories', hint: 'eg. 320 Calo'),
+
+
+            SizedBox(height: 16),
+            Text("Set Reminder", style: TextStyle(color: Colors.grey[700])),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                ReminderButton(
+                  "Yes",
+                  isSelected: selectedReminder == "Yes",
+                  onSelected: (label) {
+                    setState(() {
+                      selectedReminder = label;
+                    });
+                  },
+                ),
+                SizedBox(width: 10),
+                ReminderButton(
+                  "No",
+                  isSelected: selectedReminder == "No",
+                  onSelected: (label) {
+                    setState(() {
+                      selectedReminder = label;
+                    });
+                  },
+                ),
+              ],
+            ),
+
+
+
+
+            SizedBox(height: 35),
+
+            ConfirmButton('Confirm')
           ],
         ),
       ),
     );
   }
-}
+}String? selectedReminder;
 
