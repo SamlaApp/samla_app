@@ -42,6 +42,3 @@ class NutritionPage extends StatelessWidget {
     );
   }
 }
- void main() => runApp(MyApp());
-
-
