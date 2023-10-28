@@ -51,7 +51,6 @@ class AuthRepositoryImpl implements AuthRepository {
       } on ServerException catch (e) {
         return Left(ServerFailure(message: e.message));
       } catch (e) {
-        print(e.toString());
         return Left(ServerFailure(message: 'Something went wrong'));
       }
     } else {
@@ -80,6 +79,8 @@ class AuthRepositoryImpl implements AuthRepository {
       } on ServerException catch (e) {
         return Left(ServerFailure(message: e.message));
       } catch (e) {
+                print(e.toString());
+
         return Left(ServerFailure(message: 'Something went wrong'));
       }
     } else {

@@ -22,14 +22,6 @@ class CommunityCubit extends Cubit<CommunityState> {
     });
   }
 
-  Future<void> createCommunity(Community community) async {
-    final result = await repository.createCommunity(community: community);
-    result.fold(
-      (failure) => emit(CommunityError('Failed to create community')),
-      (_) => getMyCommunities(), // Refresh the list of communities
-    );
-  }
-
   Future<void> leaveCommunity(int communityID, Function([String? err]) callback) async {
     final result = await repository.leaveCommunity(communityID: communityID);
      result.fold((failure) {

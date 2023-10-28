@@ -1,17 +1,18 @@
 import 'dart:convert';
 import 'package:samla_app/core/error/exceptions.dart';
-import 'package:samla_app/core/error/failures.dart';
-// import 'package:samla_app/features/auth/auth_injection_container.dart';
-// import 'package:samla_app/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:samla_app/features/auth/auth_injection_container.dart';
+import 'package:samla_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:samla_app/features/community/data/models/Community.dart';
 import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
+import 'package:samla_app/features/community/domain/entities/Community.dart'; // Import MediaType
 
 abstract class CommunityRemoteDataSource {
   Future<List<CommunityModel>> getAllCommunities();
 
   Future<List<List<CommunityModel>>> getMyCommunities();
 
-  Future<CommunityModel> createCommunity(CommunityModel community);
+  Future<CommunityModel> createCommunity(Community community);
 
   Future<CommunityModel> updateCommunity(CommunityModel community);
 
@@ -46,9 +47,10 @@ class CommunityRemoteDataSourceImpl implements CommunityRemoteDataSource {
     final resBody = await res.stream.bytesToString();
     if (res.statusCode == 200) {
       final communitiesJson = json.decode(resBody)['communities'];
-      final communities = communitiesJson.where((community) {
-        return !community['is_member'];
-      })
+      final communities = communitiesJson
+          .where((community) {
+            return !community['is_member'];
+          })
           .map<CommunityModel>(
               (community) => CommunityModel.fromJson(community))
           .toList();
@@ -69,7 +71,7 @@ class CommunityRemoteDataSourceImpl implements CommunityRemoteDataSource {
       communitiesJsonList.forEach((communityRequest) {
         if (communityRequest['community']['is_public'] == 1 ||
             communityRequest['accepted'] == 1) {
-              // since API will not provide is_member field for getMyCommunities
+          // since API will not provide is_member field for getMyCommunities
           communityRequest['community']['is_member'] = true;
 
           communities
@@ -119,33 +121,46 @@ class CommunityRemoteDataSourceImpl implements CommunityRemoteDataSource {
   }
 
   @override
-  Future<CommunityModel> createCommunity(CommunityModel community) async {
-    var request =
-        http.MultipartRequest('POST', Uri.parse('your_upload_url_here'));
+  Future<CommunityModel> createCommunity(Community community_) async {
+    final community = CommunityModel.fromEntity(community_);
+    http.MultipartFile? multipartFile = null;
 
-    // Add the image file
-    // request.files.add(await http.MultipartFile('image', community.avatar));
+    if (community.avatar != null) {
+      multipartFile = http.MultipartFile(
+        'avatar', // The field name in the multipart request
+        http.ByteStream(community.avatar!.openRead()),
+        await community.avatar!.length(),
+        filename: 'avatar.jpg',
+        contentType: MediaType('image', 'jpeg'),
+      );
+    }
 
-    // Add JSON data as a field
-    request.fields.addAll(community.toJson());
-
-    var response = await request.send();
-    throw UnimplementedError();
+    final response = await _request(
+        data: community.toJson(),
+        endPoint: '/create',
+        method: 'POST',
+        file: multipartFile);
+    final resBody = await response.stream.bytesToString();
 
     if (response.statusCode == 200) {
-      print('Image uploaded successfully');
+      final communityJson = json.decode(resBody)['community'];
+      final community = CommunityModel.fromJson(communityJson);
+      return community;
     } else {
-      print('Image upload failed with status code: ${response.statusCode}');
+      print(resBody);
+      print(json.decode(resBody)['message']);
+      throw ServerException(message: json.decode(resBody)['message']);
     }
   }
 
   Future<http.StreamedResponse> _request(
       {Map<String, String>? data,
+      http.MultipartFile? file,
       required String endPoint,
       required String method}) async {
-    // final token = sl.get<AuthBloc>().user.accessToken;
-    final token =
-        'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiMWM1MmY3MzE4YTU4ZGM0YTk0N2ZhNzNmMDE3MDA2ZWFkNDBiYWI5YjYxNDFkYTg4ZmVmMGNjNzI0YjQ0ZTQ0ZjA5OTQxYjI0ZTA1NzdiMWIiLCJpYXQiOjE2OTgyNzA2MzQuMjcwOTg2LCJuYmYiOjE2OTgyNzA2MzQuMjcwOTksImV4cCI6MTcyOTg5MzAzNC4yNjExNywic3ViIjoiMiIsInNjb3BlcyI6W119.XLyod1nGrbfBwN1QOPo1ns5gIo9qPiPwGXtw_nzlJjL6ZjNiijTPPQUEwV5ffrWARfefq0o956AZKexEyVP5ngYWx39R9mo6NSWi1pvbZVJ0Jy8mJR2MeFCkNcYbKrlSSWZsWVl3UYJg3H_INSJOxgSGcRBaIrQQBUF-HsGWSO8rX5rLTfUYB76au3-JEEB4O_68MDKHs1skoaAlLxX3VRvRV9DcL1beGLAN9h0jjZRP7oByOMKUZl_oj1__QmcYC_XtvaKCflWZrfNYQ2bm1WVsmTvdPfxrS6g7lakBZjUFPWbYZfhjK9ZCu5pvngfDB1DwyJ899VPZmi0AqaiBAES6VC78hF_Eci26wQsCexeGCTOl1di8iSSdVa3sUe5QynjS0VF-DJ1EVBlFxY59N9z-KFy89Zkz-OHsplR2SujZIgyGq3QsIEDxz0Qr9iWJau6DaO3U9h-ZuEFm56Ugs6nIVfXzXOqg4C45mfFZFmWnmw96PRE1myfKJc6wwSn07I5uSL9WQzTC-zUU77HzhrGUiP5hjNxmwTTXIZ-8FKpI3me0jmMgG_RT46RcIyqxXyQXV42ZohXVmPGsWC4ZOfg4brEfJaM_tale8GwXqASKKN3OnirNWHjqkUvki_wRtK5jfbDzanKNoqwPe2puqry1npE2vGeLv0GnzJHujEE';
+    final token = sl.get<AuthBloc>().user.accessToken;
+    // final token =
+    // 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiMWM1MmY3MzE4YTU4ZGM0YTk0N2ZhNzNmMDE3MDA2ZWFkNDBiYWI5YjYxNDFkYTg4ZmVmMGNjNzI0YjQ0ZTQ0ZjA5OTQxYjI0ZTA1NzdiMWIiLCJpYXQiOjE2OTgyNzA2MzQuMjcwOTg2LCJuYmYiOjE2OTgyNzA2MzQuMjcwOTksImV4cCI6MTcyOTg5MzAzNC4yNjExNywic3ViIjoiMiIsInNjb3BlcyI6W119.XLyod1nGrbfBwN1QOPo1ns5gIo9qPiPwGXtw_nzlJjL6ZjNiijTPPQUEwV5ffrWARfefq0o956AZKexEyVP5ngYWx39R9mo6NSWi1pvbZVJ0Jy8mJR2MeFCkNcYbKrlSSWZsWVl3UYJg3H_INSJOxgSGcRBaIrQQBUF-HsGWSO8rX5rLTfUYB76au3-JEEB4O_68MDKHs1skoaAlLxX3VRvRV9DcL1beGLAN9h0jjZRP7oByOMKUZl_oj1__QmcYC_XtvaKCflWZrfNYQ2bm1WVsmTvdPfxrS6g7lakBZjUFPWbYZfhjK9ZCu5pvngfDB1DwyJ899VPZmi0AqaiBAES6VC78hF_Eci26wQsCexeGCTOl1di8iSSdVa3sUe5QynjS0VF-DJ1EVBlFxY59N9z-KFy89Zkz-OHsplR2SujZIgyGq3QsIEDxz0Qr9iWJau6DaO3U9h-ZuEFm56Ugs6nIVfXzXOqg4C45mfFZFmWnmw96PRE1myfKJc6wwSn07I5uSL9WQzTC-zUU77HzhrGUiP5hjNxmwTTXIZ-8FKpI3me0jmMgG_RT46RcIyqxXyQXV42ZohXVmPGsWC4ZOfg4brEfJaM_tale8GwXqASKKN3OnirNWHjqkUvki_wRtK5jfbDzanKNoqwPe2puqry1npE2vGeLv0GnzJHujEE';
 
     var headers = {
       'Accept': 'application/json',
@@ -155,6 +170,10 @@ class CommunityRemoteDataSourceImpl implements CommunityRemoteDataSource {
 
     if (data != null) {
       request.fields.addAll(data);
+    }
+
+    if (file != null) {
+      request.files.add(file);
     }
 
     request.headers.addAll(headers);
