@@ -91,32 +91,25 @@ class MealAdapt extends StatelessWidget {
                   'Sunday'
                 ],
                 initialValue: 'Saturday',
-                // This is optional, remove if you want the first item in the list to be default
                 onChanged: (value) {
-                  // Do something when the day changes, for example:
                   print("Selected day: $value");
                 },
               ),
 
 
               SizedBox(height: 20),
-              FoodItem(foodName: 'Egg', kcal: 100, onRemove: () {
-                // Logic for removing the food item goes here
+              FoodItem(foodName: 'شاي حليب', kcal: 22, onRemove: () {
               }),
-              FoodItem(foodName: 'Egg', kcal: 100, onRemove: () {
-                // Logic for removing the food item goes here
+              FoodItem(foodName: 'كبدة', kcal: 213, onRemove: () {
               }),
-              FoodItem(foodName: 'Egg', kcal: 100, onRemove: () {
-                // Logic for removing the food item goes here
+              FoodItem(foodName: 'لحم بالطماط', kcal: 234, onRemove: () {
               }),
-              FoodItem(foodName: 'Egg', kcal: 100, onRemove: () {
-                // Logic for removing the food item goes here
+              FoodItem(foodName: 'بيض بالجبن', kcal: 187, onRemove: () {
               }),
               SizedBox(height: 30),
 
               AddMealButton(
                 onButtonPressed: (context) {
-                  // Your custom navigation action here.
                   Navigator.of(context).push(
                     MaterialPageRoute(
 

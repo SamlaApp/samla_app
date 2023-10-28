@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart';
 import 'package:samla_app/config/themes/common_styles.dart';
 
 class FoodItem extends StatelessWidget {
