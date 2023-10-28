@@ -7,47 +7,44 @@ part 'community_state.dart';
 
 class CommunityCubit extends Cubit<CommunityState> {
   final CommunityRepository repository;
+  List<Community> allCommunities = [];
+  List<Community> myCommunities = [];
 
   CommunityCubit(this.repository) : super(CommunityInitial());
 
-  Future<void> getAllCommunities() async {
-    emit(CommunityInitial()); // Show loading state
-    final result = await repository.getAllCommunities();
-    result.fold(
-      (failure) => emit(CommunityError('Failed to fetch communities')),
-      (communities) => emit(CommunitiesLoaded(communities)),
-    );
+  Future<void> getMyCommunities() async {
+    emit(CommunityLoading()); // Show loading state
+    final result = await repository.getMyCommunities();
+    result
+        .fold((failure) => emit(CommunityError('Failed to fetch communities')),
+            (communities) {
+      emit(CommunitiesLoaded(communities));
+    });
   }
 
   Future<void> createCommunity(Community community) async {
     final result = await repository.createCommunity(community: community);
     result.fold(
       (failure) => emit(CommunityError('Failed to create community')),
-      (_) => getAllCommunities(), // Refresh the list of communities
+      (_) => getMyCommunities(), // Refresh the list of communities
     );
   }
 
-  Future<void> joinCommunity(int communityID) async {
-    final result = await repository.joinCommunity(communityID: communityID);
-    result.fold(
-      (failure) => emit(CommunityError('Failed to join community')),
-      (_) => getAllCommunities(), // Refresh the list of communities
-    );
-  }
-
-  Future<void> leaveCommunity(int communityID) async {
+  Future<void> leaveCommunity(int communityID, Function([String? err]) callback) async {
     final result = await repository.leaveCommunity(communityID: communityID);
-    result.fold(
-      (failure) => emit(CommunityError('Failed to leave community')),
-      (_) => getAllCommunities(), // Refresh the list of communities
-    );
+     result.fold((failure) {
+      callback(failure.message);
+    }, (_) {
+      getMyCommunities();
+      callback();
+    }); // R
   }
 
   Future<void> deleteCommunity(int communityID) async {
     final result = await repository.deleteCommunity(communityID: communityID);
     result.fold(
       (failure) => emit(CommunityError('Failed to delete community')),
-      (_) => getAllCommunities(), // Refresh the list of communities
+      (_) => getMyCommunities(), // Refresh the list of communities
     );
   }
 
@@ -55,7 +52,7 @@ class CommunityCubit extends Cubit<CommunityState> {
     final result = await repository.updateCommunity(communityID: communityID);
     result.fold(
       (failure) => emit(CommunityError('Failed to update community')),
-      (_) => getAllCommunities(), // Refresh the list of communities
+      (_) => getMyCommunities(), // Refresh the list of communities
     );
   }
 }

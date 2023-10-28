@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:samla_app/features/community/domain/entities/Community.dart';
 import 'package:samla_app/features/community/presentation/pages/communities.dart';
 import 'package:samla_app/features/community/presentation/pages/community_detail.dart';
 import 'package:samla_app/features/community/presentation/pages/community_page.dart';
@@ -9,6 +10,7 @@ class CustomTile extends StatelessWidget {
   final String newCounter;
   final String date;
   final int communityID;
+  final Community community;
 
   const CustomTile({
     super.key,
@@ -17,6 +19,7 @@ class CustomTile extends StatelessWidget {
     required this.newCounter,
     required this.date,
     required this.communityID,
+    required this.community,
   });
 
   @override
@@ -25,25 +28,27 @@ class CustomTile extends StatelessWidget {
       horizontalTitleGap: 20,
       onTap: () {
         // navigate to the community page
-        Navigator.of(context).push(createRoute(CommunityDetail(
-          communityID: communityID,
+        Navigator.of(context).push(createRoute(
+          
+          community.isMemeber ? CommunityPage(community:community) : CommunityDetail(
+          community:community,
         )));
       },
-      trailing: const Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          Text(
-            '0',
-          ),
-          SizedBox(
-            height: 4,
-          ),
-          Text(
-            '7:09 PM',
-          ),
-        ],
-      ),
+      // trailing: Column(
+      //   mainAxisAlignment: MainAxisAlignment.center,
+      //   crossAxisAlignment: CrossAxisAlignment.end,
+      //   children: [
+      //     Text(
+      //       newCounter,
+      //     ),
+      //     SizedBox(
+      //       height: 4,
+      //     ),
+      //     Text(
+      //       date,
+      //     ),
+      //   ],
+      // ),
       subtitle: Padding(
         padding: const EdgeInsets.only(top: 2.0),
         child: Text(
@@ -53,7 +58,9 @@ class CustomTile extends StatelessWidget {
           overflow: TextOverflow.ellipsis,
         ),
       ),
-      leading: const CircleAvatar(),
+      leading:  CircleAvatar(
+        backgroundImage: NetworkImage(community.imageURL),
+      ),
       title: Padding(
         padding: const EdgeInsets.only(top: 2.0),
         child: Text(title),
@@ -62,20 +69,24 @@ class CustomTile extends StatelessWidget {
   }
 }
 
-List<Widget> buildCommunitiesList(communities) {
+List<Widget> buildCommunitiesList(communities, bool doNotShowMyCommunities) {
+
   List<Widget> list = [];
   for (var community in communities) {
+    // if (doNotShowMyCommunities && community.isMemeber) {
+    //   continue;
+    // }
     list.add(CustomTile(
-      title: community['name'],
-      subtitle: community['description'],
-      newCounter: community['newCounter'],
-      date: community['date'],
-      communityID: community['id'],
+      community: community,
+      title: community.name,
+      subtitle: community.description,
+      newCounter: '0',
+      date: '7:09 PM',
+      communityID: community.id,
     ));
   }
   return list;
 }
-
 
 Route createRoute(Widget page) {
   return PageRouteBuilder(

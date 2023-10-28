@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:dartz/dartz.dart';
-import 'package:dartz/dartz_unsafe.dart';
 import 'package:http/http.dart' as http;
 import 'package:samla_app/core/error/exceptions.dart';
 import 'package:samla_app/features/auth/data/models/user_model.dart';
