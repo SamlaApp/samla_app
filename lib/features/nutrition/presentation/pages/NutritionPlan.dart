@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:samla_app/config/themes/common_styles.dart';
-import 'package:samla_app/features/auth/auth_injection_container.dart' as di;
-
+import '../widgets/addMealButtom.dart';
+import 'MealAdapt.dart';
 import 'newMeal.dart';
 
 class NutritionPlan extends StatelessWidget {
@@ -16,11 +16,23 @@ class NutritionPlan extends StatelessWidget {
         title: Text("Nutrition Plan"),
         centerTitle: true,
       ),
+
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            addMealCard(context),
+
+            AddMealButton(
+              onButtonPressed: (context) {
+                // Your custom navigation action here.
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => NewMeal(),
+                  ),
+                );
+              },
+            ),
+
             SizedBox(height: 40),
             mealCard(
               context,
@@ -63,42 +75,12 @@ class NutritionPlan extends StatelessWidget {
     );
   }
 
-  Widget addMealCard(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => NewMeal(),
-          ),
-        );
-      },
-
-      child: Container(
-        padding: EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          border: Border.all(color: theme_grey, width: 2),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.add_circle_outline, color: theme_grey, size: 40),
-            SizedBox(width: 10),
-            Text(
-              'Add Meal',
-              style: TextStyle(color: Colors.black, fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 
   Widget mealCard(BuildContext context, {required IconData icon, required String title, required String time, required LinearGradient gradient}) {
     return GestureDetector(
       onTap: () {
         // Navigator HERE bro!! (Change it later)
-        Navigator.of(context).push(MaterialPageRoute(builder: (context) => NewPage()));
+        Navigator.of(context).push(MaterialPageRoute(builder: (context) => MealAdapt()));
       },
       child: Container(
         padding: EdgeInsets.all(16),
@@ -132,12 +114,3 @@ class NutritionPlan extends StatelessWidget {
   }
 }
 
-class NewPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('New Page')),
-      body: Center(child: Text('Details for the meal')),
-    );
-  }
-}
