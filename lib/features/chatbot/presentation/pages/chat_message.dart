@@ -15,8 +15,9 @@ class ChatMessageWidget extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       color: chatMessageType == ChatMessageType.bot
-          ? theme_darkblue
-          :  Color.fromRGBO(14, 117, 128, 1.0),
+            ? Colors.grey.shade200.withOpacity(0.5)
+          :  Colors.grey.shade50,
+
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -50,7 +51,7 @@ class ChatMessageWidget extends StatelessWidget {
                     style: Theme.of(context)
                         .textTheme
                         .bodyLarge
-                        ?.copyWith(color: Colors.white),
+                        ?.copyWith(color: Colors.grey.shade700),
                   ),
                 ),
               ],

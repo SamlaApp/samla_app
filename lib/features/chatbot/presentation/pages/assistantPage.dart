@@ -33,19 +33,23 @@ class _AssistantPageState extends State<AssistantPage>{
   void initState() {
     super.initState();
     isLoading = false;
-
-    // send first message to chatbot assistant ''Hello''
-    _messages.add(
-      ChatMessage(
-        text: 'Hi ${user.name} I\'m Samla\'s assistant. How can I help you?',
-        chatMessageType: ChatMessageType.bot,
-      ),
-    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Samla Assistant'),
+        backgroundColor: theme_darkblue,
+        shadowColor: null,
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(1.0),
+          child: Container(
+            color: theme_green,
+            height: 1.0,
+          ),
+        ),
+      ),
       body: SafeArea(
         child: Column(
           children: [
@@ -84,7 +88,7 @@ class _AssistantPageState extends State<AssistantPage>{
         child: IconButton(
           icon: const Icon(
             Icons.send_rounded,
-            color: Color.fromRGBO(142, 142, 160, 1),
+            color: Color.fromRGBO(10, 44, 64, 1),
           ),
           onPressed: () async {
             setState(
@@ -102,7 +106,7 @@ class _AssistantPageState extends State<AssistantPage>{
             _textController.clear();
             Future.delayed(const Duration(milliseconds: 50))
                 .then((_) => _scrollDown());
-            generateResponse(input).then((value) {
+            generateResponse(input,_messages).then((value) {
               setState(() {
                 isLoading = false;
                 _messages.add(
@@ -126,10 +130,11 @@ class _AssistantPageState extends State<AssistantPage>{
     return Expanded(
       child: TextField(
         textCapitalization: TextCapitalization.sentences,
-        style: const TextStyle(color: Colors.white),
+        style: const TextStyle(color: Colors.black),
         controller: _textController,
         decoration: const InputDecoration(
-          fillColor: Color.fromRGBO(142, 142, 160, 1),
+          hintText: 'Ask Samla\'s assistant',
+          hintStyle: TextStyle(color: Colors.grey),
           filled: true,
           border: InputBorder.none,
           focusedBorder: InputBorder.none,
