@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:samla_app/config/themes/common_styles.dart';
+import '../../../auth/presentation/bloc/auth_bloc.dart';
+import '../../../profile/presentation/pages/PersonalInfo.dart';
 import '../../data/datasources/remote_data_source.dart';
 import '../../data/models/chatMessage_model.dart';
 import 'chat_message.dart';
+import 'package:samla_app/features/auth/auth_injection_container.dart'
+as authDI;
 
 const String openAi_token = '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';
+
 
 class AssistantPage extends StatefulWidget {
   const AssistantPage({super.key});
@@ -21,6 +26,9 @@ class _AssistantPageState extends State<AssistantPage>{
   final List<ChatMessage> _messages = [];
   late bool isLoading;
 
+  final authBloc = authDI.sl.get<AuthBloc>();
+
+
   @override
   void initState() {
     super.initState();
@@ -29,7 +37,7 @@ class _AssistantPageState extends State<AssistantPage>{
     // send first message to chatbot assistant ''Hello''
     _messages.add(
       ChatMessage(
-        text: 'Hi there! I\'m Samla\'s assistant. How can I help you?',
+        text: 'Hi ${user.name} I\'m Samla\'s assistant. How can I help you?',
         chatMessageType: ChatMessageType.bot,
       ),
     );
