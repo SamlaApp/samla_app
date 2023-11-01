@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:samla_app/config/themes/common_styles.dart';
+import 'package:samla_app/core/widgets/CustomTextFormField.dart';
 import 'package:samla_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:samla_app/features/community/presentation/cubits/ExploreCubit/explore_cubit.dart';
 import 'package:samla_app/features/community/presentation/cubits/MyCommunitiesCubit/community_cubit.dart';
@@ -20,6 +21,10 @@ class _CommunityPageState extends State<CommunitiesPage> {
   // init the cubits
   late CommunityCubit communityCubit;
   late ExploreCubit exploreCubit;
+
+  final _searchController = TextEditingController();
+  
+
   @override
   void initState() {
     super.initState();
@@ -118,7 +123,7 @@ class _CommunityPageState extends State<CommunitiesPage> {
                   // search field
                   children: [
                     // adding floating button
-    
+
                     Row(
                       children: [
                         Expanded(
@@ -155,10 +160,9 @@ class _CommunityPageState extends State<CommunitiesPage> {
               SizedBox(
                 height: 20.0,
               ),
-    
+
               Container(
-                constraints: BoxConstraints(
-                      minHeight: 300),
+                  constraints: BoxConstraints(minHeight: 300),
                   decoration: primary_decoration,
                   padding: const EdgeInsets.all(5.0),
                   child: selectedIndex == 0
@@ -185,7 +189,8 @@ class _CommunityPageState extends State<CommunitiesPage> {
           );
         }
         if (state is CommunitiesLoaded) {
-          return Column(children: buildCommunitiesList(state.communities,false));
+          return Column(
+              children: buildCommunitiesList(state.communities, false));
         } else if (state is CommunityError) {
           return Center(child: Text(state.message));
         } else
@@ -200,7 +205,6 @@ class _CommunityPageState extends State<CommunitiesPage> {
     return BlocBuilder<ExploreCubit, ExploreState>(
       bloc: exploreCubit,
       builder: (context, state) {
-
         if (state is ExploreEmpty) {
           return Center(
             child: Text('No communities found'),
@@ -216,7 +220,8 @@ class _CommunityPageState extends State<CommunitiesPage> {
           );
         }
         if (state is ExploreLoaded) {
-          return Column(children: buildCommunitiesList(state.communities, true));
+          return Column(
+              children: buildCommunitiesList(state.communities, true));
         } else if (state is ExploreError) {
           return Center(child: Text(state.message));
         } else
@@ -283,47 +288,4 @@ Widget ButtonsBar(int currentIndex, Function(int) myCommunitiesOnTap,
       ),
     ],
   );
-}
-
-class CustomTextField extends StatelessWidget {
-  final String label;
-  final IconData iconData;
-  const CustomTextField({
-    super.key,
-    required this.label,
-    required this.iconData,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 50,
-      child: TextField(
-        style: TextStyle(color: theme_darkblue, fontSize: 16),
-        textAlignVertical: TextAlignVertical.center,
-        cursorColor: theme_darkblue.withOpacity(0.3),
-        decoration: InputDecoration(
-          isCollapsed: true,
-          floatingLabelBehavior: FloatingLabelBehavior.never,
-          fillColor: inputField_color,
-          filled: true,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10.0),
-            borderSide: BorderSide.none,
-          ),
-          labelText: label,
-          labelStyle:
-              TextStyle(color: inputField_color.withOpacity(0.3), fontSize: 14),
-          prefixIcon: Align(
-            widthFactor: 1.0,
-            heightFactor: 1.0,
-            child: Icon(
-              iconData,
-              color: theme_darkblue.withOpacity(0.3),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
 }

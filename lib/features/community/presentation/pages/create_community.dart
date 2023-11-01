@@ -6,6 +6,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:samla_app/config/themes/common_styles.dart';
+import 'package:samla_app/core/widgets/image_helper.dart';
+import 'package:samla_app/core/widgets/loading.dart';
 import 'package:samla_app/features/auth/auth_injection_container.dart';
 import 'package:samla_app/features/community/domain/entities/Community.dart';
 import 'package:samla_app/features/community/domain/repositories/community_repository.dart';
@@ -32,13 +34,20 @@ class _CreateCommunityPageState extends State<CreateCommunityPage> {
   final _handleValidator = RequiredValidator(errorText: 'Handle is required');
 
   Future<void> _pickImage() async {
-    final pickedImage =
-        await ImagePicker().pickImage(source: ImageSource.gallery);
-    if (pickedImage != null) {
+    // final pickedImage =
+    //     await ImagePicker().pickImage(source: ImageSource.gallery);
+    // if (pickedImage != null) {
+    //   setState(() {
+    //     _image = File(pickedImage.path);
+    //   });
+    // }
+
+    final ImageHelper _imageHelper = ImageHelper();
+    final imagePath = await _imageHelper.pickImage(context, (image) {
       setState(() {
-        _image = File(pickedImage.path);
+        _image = image;
       });
-    }
+    });
   }
 
   final cubit = CreateCommunityCubit(sl<CommunityRepository>());
@@ -54,7 +63,8 @@ class _CreateCommunityPageState extends State<CreateCommunityPage> {
           isMemeber: true, // You can set this value as needed
           avatar: _image,
           imageURL: '',
-          numOfMemebers: 0 // Set the image URL based on the uploaded image
+          numOfMemebers: 0,
+          ownerID: -1 // it is not needed here, backend will set it
           );
 
       // You can use this community object for further processing
@@ -86,24 +96,23 @@ class _CreateCommunityPageState extends State<CreateCommunityPage> {
                 content: Text('Community created successfully'),
               ),
             );
+
+            sl<CommunityCubit>().getMyCommunities();
+            // close the create community page
+
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => CommunityPage(community: state.community),
+              ),
+            );
           });
           // refresh the list of communities
-          sl<CommunityCubit>().getMyCommunities();
-          // close the create community page
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => CommunityPage(community: state.community),
-            ),
-          );
         }
         if (state is CreateLoadingState) {
           // show loading indicator
           return Center(
-            child: CircularProgressIndicator(
-              color: theme_green,
-              backgroundColor: theme_pink,
-            ),
+            child: LoadingWidget(),
           );
         } else {
           return Scaffold(

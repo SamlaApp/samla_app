@@ -32,12 +32,14 @@ class CommunityCubit extends Cubit<CommunityState> {
     }); // R
   }
 
-  Future<void> deleteCommunity(int communityID) async {
+  Future<void> deleteCommunity(int communityID, callback) async {
     final result = await repository.deleteCommunity(communityID: communityID);
-    result.fold(
-      (failure) => emit(CommunityError('Failed to delete community')),
-      (_) => getMyCommunities(), // Refresh the list of communities
-    );
+    result.fold((failure) {
+      callback(failure.message);
+    }, (_) {
+      getMyCommunities();
+      callback();
+    }); //
   }
 
   Future<void> updateCommunity(int communityID) async {

@@ -16,7 +16,7 @@ void CommunityInit() {
     return;
   }
   // Features - Community
-  /*  note that the following are factories, not singletons.
+  /*  note that some of the following are factories, not singletons.
       this will allow us to create new instances of the cubits
       which is more efficient in term of memory usage since they 
       will be disposed when the screen is closed. and the garbage 

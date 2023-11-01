@@ -10,7 +10,8 @@ class CommunityModel extends Community {
       super.avatar,
       super.id,
       super.imageURL,
-      required super.isMemeber});
+      required super.isMemeber,
+      required super.ownerID});
 
   factory CommunityModel.fromJson(Map<String, dynamic> json) {
     return CommunityModel(
@@ -21,7 +22,8 @@ class CommunityModel extends Community {
         numOfMemebers: json['num_of_memebers'],
         id: json['id'],
         imageURL: json['avatar'],
-        isMemeber: json['is_member']);
+        isMemeber: json['is_member'],
+        ownerID: json['owner_id']);
   }
 
   Map<String, String> toJson() {
@@ -33,6 +35,7 @@ class CommunityModel extends Community {
       'num_of_memebers': super.numOfMemebers.toString(),
       'id': super.id.toString(),
       'is_member': super.isMemeber ? '1' : '0',
+      'owner_id': super.ownerID.toString(),
     };
   }
 
@@ -46,6 +49,7 @@ class CommunityModel extends Community {
       numOfMemebers: community.numOfMemebers,
       avatar: community.avatar,
       isMemeber: community.isMemeber,
+      ownerID: community.ownerID,
     );
   }
 }

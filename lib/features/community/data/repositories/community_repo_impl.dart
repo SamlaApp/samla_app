@@ -55,9 +55,17 @@ class CommunityRepositoryImpl implements CommunityRepository {
   }
 
   @override
-  Future<Either<Failure, Unit>> deleteCommunity({required int communityID}) {
-    // TODO: implement deleteCommunity
-    throw UnimplementedError();
+  Future<Either<Failure, Unit>> deleteCommunity({required int communityID}) async{
+     if (await networkInfo.isConnected) {
+      try {
+        await remoteDataSource.deleteCommunity(communityID: communityID);
+        return Right(unit);
+      } on ServerException catch (e) {
+        return Left(ServerFailure(message: e.message));
+      }
+    } else {
+      return Left(ServerFailure(message: 'No internet connection'));
+    }
   }
 
   @override

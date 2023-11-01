@@ -8,6 +8,7 @@ class Community extends Equatable {
   final bool isPublic;
   final String handle;
   final bool isMemeber;
+  final int ownerID;
   final int? numOfMemebers;
   //these are depend on the direction of transfer
   //whether it coming from backend, or going to backend
@@ -21,6 +22,7 @@ class Community extends Equatable {
       required this.isPublic,
       required this.handle,
       required this.numOfMemebers,
+      required this.ownerID,
       this.avatar,
       this.id,
       String? imageURL,
@@ -38,4 +40,28 @@ class Community extends Equatable {
         id,
         imageURL
       ];
+
+  Community copyWith(
+      {String? name,
+      String? description,
+      bool? isPublic,
+      String? handle,
+      int? numOfMemebers,
+      File? avatar,
+      int? id,
+      String? imageURL,
+      bool? isMemeber,
+      int? ownerID}) {
+    return Community(
+        name: name ?? this.name,
+        description: description ?? this.description,
+        isPublic: isPublic ?? this.isPublic,
+        handle: handle ?? this.handle,
+        numOfMemebers: numOfMemebers ?? this.numOfMemebers,
+        avatar: avatar ?? this.avatar,
+        id: id ?? this.id,
+        imageURL: imageURL ?? this.imageURL,
+        isMemeber: isMemeber ?? this.isMemeber, 
+        ownerID: ownerID ?? this.ownerID);
+  }
 }
