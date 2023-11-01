@@ -1,14 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:percent_indicator/percent_indicator.dart';
-import 'package:countup/countup.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:samla_app/config/themes/common_styles.dart';
-import 'dart:async';
-import 'package:pedometer/pedometer.dart';
-import 'package:flutter/services.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
 import '../pages/NutritionPlan.dart';
 
 class TodayPlan extends StatelessWidget {

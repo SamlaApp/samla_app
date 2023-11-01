@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:samla_app/config/themes/common_styles.dart';
-import 'package:samla_app/features/chatting/presentation/pages/chat.dart';
+import 'package:samla_app/features/chatbot/presentation/pages/assistantPage.dart';
 import 'package:samla_app/features/community/presentation/pages/communities.dart';
 import 'package:samla_app/features/main/presentation/pages/home.dart';
 import 'package:samla_app/features/nutrition/presentation/pages/nutrition.dart';
@@ -24,7 +24,7 @@ class _MainPagesState extends State<MainPages> {
     NutritionPage(),
     HomePage(),
     CommunitiesPage(),
-    ChattingPage(),
+    AssistantPage(),
   ];
 
   void changePage(int index) {

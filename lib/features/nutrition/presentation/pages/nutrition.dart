@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:samla_app/config/themes/common_styles.dart';
 import 'package:samla_app/features/auth/auth_injection_container.dart' as di;
+import '../../../../main.dart';
 import '../../../nutrition/presentation/widgets/CircularIndicators.dart';
 import '../widgets/CaloriesOverview.dart';
 import '../widgets/Macronutrients.dart';
@@ -41,4 +42,3 @@ class NutritionPage extends StatelessWidget {
     );
   }
 }
-
