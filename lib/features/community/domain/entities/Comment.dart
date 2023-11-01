@@ -4,10 +4,14 @@ class Comment extends Equatable {
   final String content;
   final String postID;
   final int? id;
-  final String writerName;
-  final String writerID;
+  final String? writerName;
+  final String? writerID;
 
-  const Comment(
+// when you send a comment to the server, you don't need to send the id
+  const Comment.toSend({this.id, this.writerName, this.writerID, 
+      required this.content, required this.postID});
+
+  const Comment.toShow(
       {required this.content, required this.postID, required this.id
       , required this.writerName, required this.writerID});
 

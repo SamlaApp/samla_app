@@ -66,6 +66,8 @@ dependencies:
     firebase_messaging: ^14.6.9
     firebase_analytics: ^10.6.0
     animate_gradient: ^0.0.2+1
+    form_field_validator: ^1.1.0
+    image_cropper: ^5.0.0
 
 dev_dependencies:
     flutter_test:

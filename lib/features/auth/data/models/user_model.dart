@@ -12,6 +12,7 @@ class UserModel extends User {
 
 // coming from server
   factory UserModel.fromJson(Map<String, dynamic> json) {
+    print(json);
 
     return UserModel(
       id: json['id'].toString(),

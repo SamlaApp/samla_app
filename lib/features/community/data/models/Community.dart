@@ -9,28 +9,33 @@ class CommunityModel extends Community {
       required super.numOfMemebers,
       super.avatar,
       super.id,
-      super.imageURL});
+      super.imageURL,
+      required super.isMemeber,
+      required super.ownerID});
 
   factory CommunityModel.fromJson(Map<String, dynamic> json) {
     return CommunityModel(
         name: json['name'],
         description: json['description'],
-        isPublic: json['isPublic'],
+        isPublic: json['is_public'] == 1 ? true : false,
         handle: json['handle'],
-        numOfMemebers: json['numOfMemebers'],
+        numOfMemebers: json['num_of_memebers'],
         id: json['id'],
-        imageURL: json['imageURL']);
+        imageURL: json['avatar'],
+        isMemeber: json['is_member'],
+        ownerID: json['owner_id']);
   }
 
-  Map<String, dynamic> toJson() {
+  Map<String, String> toJson() {
     return {
       'name': super.name,
       'description': super.description,
-      'isPublic': super.isPublic ? '1' : '0',
+      'is_public': super.isPublic ? '1' : '0',
       'handle': super.handle,
-      'numOfMemebers': super.numOfMemebers,
-      'id': super.id,
-      'imageURL': super.imageURL
+      'num_of_memebers': super.numOfMemebers.toString(),
+      'id': super.id.toString(),
+      'is_member': super.isMemeber ? '1' : '0',
+      'owner_id': super.ownerID.toString(),
     };
   }
 
@@ -43,7 +48,8 @@ class CommunityModel extends Community {
       handle: community.handle,
       numOfMemebers: community.numOfMemebers,
       avatar: community.avatar,
+      isMemeber: community.isMemeber,
+      ownerID: community.ownerID,
     );
   }
 }
-

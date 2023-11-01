@@ -7,6 +7,8 @@ abstract class CommunityState extends Equatable {
   List<Object> get props => [];
 }
 
+class CommunityLoading extends CommunityState {}
+
 class CommunityInitial extends CommunityState {}
 
 class CommunitiesLoaded extends CommunityState {
@@ -20,3 +22,5 @@ class CommunityError extends CommunityState {
 
   CommunityError(this.message);
 }
+
+

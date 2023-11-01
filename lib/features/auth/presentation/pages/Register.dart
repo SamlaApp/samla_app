@@ -73,6 +73,7 @@ class _RegisterState extends State<RegisterPage> {
           });
         }
         if (state is AuthenticatedState) {
+          print('AuthenticatedState');
           SchedulerBinding.instance.addPostFrameCallback((_) {
             Navigator.of(context).pushNamedAndRemoveUntil(
                 '/MainPages', (Route<dynamic> route) => false);
