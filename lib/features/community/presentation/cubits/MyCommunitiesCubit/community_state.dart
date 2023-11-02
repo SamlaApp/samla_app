@@ -23,4 +23,6 @@ class CommunityError extends CommunityState {
   CommunityError(this.message);
 }
 
+class CommunityEmpty extends CommunityState {}
+
 

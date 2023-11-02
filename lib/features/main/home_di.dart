@@ -29,7 +29,7 @@ void HomeInit() {
   sl.registerLazySingleton<ProgressRepository>(() => ProgressRepositoryImpl(
       networkInfo: sl(), remoteDataSource: sl(), localDataSource: sl()));
   sl.registerLazySingleton<ProgressRemoteDataSource>(
-      () => ProgressRemoteDataSourceImpl(client: sl()));
+      () => ProgressRemoteDataSourceImpl());
   sl.registerLazySingleton<ProgressLocalDataSource>(
       () => ProgressLocalDataSourceImpl(sl()));
 

@@ -79,10 +79,12 @@ class _HomeState extends State<HomePage> {
           return Container(
             child: Text(state.progress.toString()),
           );
-        } else {
-          return const Center(
-            child: Text('Error'),
+        } else if (state is ProgressErrorState){
+          return Center(
+            child: Text('Error ${state.message}'),
           );
+        } else {
+          return Text('Initial');
         }
       },
     );

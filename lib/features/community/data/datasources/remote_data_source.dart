@@ -1,13 +1,10 @@
 import 'dart:convert';
 import 'package:samla_app/core/error/exceptions.dart';
-import 'package:samla_app/features/auth/auth_injection_container.dart';
-import 'package:samla_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:samla_app/features/community/data/models/Community.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 import 'package:samla_app/features/community/domain/entities/Community.dart'; // Import MediaType
 import 'package:samla_app/core/network/samlaAPI.dart';
-import 'package:samla_app/main.dart';
 
 abstract class CommunityRemoteDataSource {
   Future<List<CommunityModel>> getAllCommunities();
@@ -31,14 +28,13 @@ const BASE_URL = 'https://samla.mohsowa.com/api/community';
 
 class CommunityRemoteDataSourceImpl implements CommunityRemoteDataSource {
   final http.Client client;
-  
 
   CommunityRemoteDataSourceImpl({required this.client});
 
   @override
   Future<void> deleteCommunity({required int communityID}) async {
-    final res =
-        await _request(endPoint: '/delete/$communityID', method: 'DELETE');
+    final res = await samlaAPI(
+        endPoint: '/community/delete/$communityID', method: 'DELETE');
     final resBody = await res.stream.bytesToString();
     if (res.statusCode != 200) {
       throw ServerException(message: json.decode(resBody)['message']);
@@ -47,7 +43,7 @@ class CommunityRemoteDataSourceImpl implements CommunityRemoteDataSource {
 
   @override
   Future<List<CommunityModel>> getAllCommunities() async {
-    final res = await _request(endPoint: '/get_all', method: 'GET');
+    final res = await samlaAPI(endPoint: '/community/get_all', method: 'GET');
     final resBody = await res.stream.bytesToString();
     if (res.statusCode == 200) {
       final communitiesJsonList = json.decode(resBody)['communities'];
@@ -55,7 +51,6 @@ class CommunityRemoteDataSourceImpl implements CommunityRemoteDataSource {
       communitiesJsonList.forEach((community) {
         // if the already a member of the community
         if (!community['is_member']) {
-
           if (community['avatar'] != null) {
             community['avatar'] =
                 BASE_URL + '/community_avatar/' + community['avatar'];
@@ -71,7 +66,7 @@ class CommunityRemoteDataSourceImpl implements CommunityRemoteDataSource {
 
   @override
   Future<List<List<CommunityModel>>> getMyCommunities() async {
-    final res = await _request(endPoint: '/get', method: 'GET');
+    final res = await samlaAPI(endPoint: '/community/get', method: 'GET');
     final resBody = await res.stream.bytesToString();
     if (res.statusCode == 200) {
       final communitiesJsonList = json.decode(resBody)['communities'];
@@ -119,7 +114,8 @@ class CommunityRemoteDataSourceImpl implements CommunityRemoteDataSource {
     final data = {
       'community_id': communityID.toString(),
     };
-    final res = await _request(data: data, endPoint: '/join', method: 'POST');
+    final res =
+        await samlaAPI(data: data, endPoint: '/community/join', method: 'POST');
     final resBody = await res.stream.bytesToString();
     if (res.statusCode != 200 && res.statusCode != 201) {
       throw ServerException(message: json.decode(resBody)['message']);
@@ -131,7 +127,8 @@ class CommunityRemoteDataSourceImpl implements CommunityRemoteDataSource {
     final data = {
       'community_id': communityID.toString(),
     };
-    final res = await _request(data: data, endPoint: '/leave', method: 'POST');
+    final res = await samlaAPI(
+        data: data, endPoint: '/community/leave', method: 'POST');
     final resBody = await res.stream.bytesToString();
     if (res.statusCode != 200) {
       throw ServerException(message: json.decode(resBody)['message']);
@@ -159,10 +156,9 @@ class CommunityRemoteDataSourceImpl implements CommunityRemoteDataSource {
       );
     }
 
-
-    final response = await _request(
+    final response = await samlaAPI(
         data: community.toJson(),
-        endPoint: '/create',
+        endPoint: '/community/create',
         method: 'POST',
         file: multipartFile);
     final resBody = await response.stream.bytesToString();
@@ -213,51 +209,47 @@ class CommunityRemoteDataSourceImpl implements CommunityRemoteDataSource {
   //   return response;
   // }
 
+// Future<http.StreamedResponse> _request(
+//       {Map<String, String>? data,
+//       http.MultipartFile? file,
+//       required String endPoint,
+//       required String method,
+//       bool autoLogout = true}) async {
+//     // final token = authBloc.user.accessToken;
+//     final token = 'random';
+//     var headers = {
+//       'Accept': 'application/json',
+//       'Authorization': 'Bearer $token',
+//     };
+//     var request = http.MultipartRequest(method, Uri.parse(BASE_URL + endPoint));
 
-Future<http.StreamedResponse> _request(
-      {Map<String, String>? data,
-      http.MultipartFile? file,
-      required String endPoint,
-      required String method,
-      bool autoLogout = true}) async {
-    final token = authBloc.user.accessToken;
-    // final token = 'random';
-    var headers = {
-      'Accept': 'application/json',
-      'Authorization': 'Bearer $token',
-    };
-    var request = http.MultipartRequest(method, Uri.parse(BASE_URL + endPoint));
+//     if (data != null) {
+//       request.fields.addAll(data);
+//     }
 
-    if (data != null) {
-      request.fields.addAll(data);
-    }
+//     if (file != null) {
+//       request.files.add(file);
+//     }
 
-    if (file != null) {
-      request.files.add(file);
-    }
+//     request.headers.addAll(headers);
 
-    request.headers.addAll(headers);
-
-
-    http.StreamedResponse response = await client.send(request);
-    if (response.statusCode == 401) {
-      if (autoLogout) {
-        authBloc.add(LogOutEvent(navigatorKey.currentState!.context));
-      } else {
-        throw UnauthorizedException();
-      }
-    } else {
-      return response;
-    }
-    return response;
-  }
-
-  
+//     http.StreamedResponse response = await client.send(request);
+//     if (response.statusCode == 401) {
+//       if (autoLogout) {
+//         authBloc.add(LogOutEvent(navigatorKey.currentState!.context));
+//       } else {
+//         throw UnauthorizedException();
+//       }
+//     } else {
+//       return response;
+//     }
+//     return response;
+//   }
 
   @override
   Future<int> getCommunityMemebersNumber({required int communityID}) async {
-    final res = await _request(
-        endPoint: '/get_total_members/$communityID', method: 'GET');
+    final res = await samlaAPI(
+        endPoint: '/community/get_total_members/$communityID', method: 'GET');
     final resBody = await res.stream.bytesToString();
     if (res.statusCode == 200) {
       final membersNumber = json.decode(resBody)['total_members'];
@@ -292,3 +284,4 @@ void main() async {
     print(e.toString());
   }
 }
+

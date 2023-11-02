@@ -7,7 +7,6 @@ import 'package:samla_app/features/community/presentation/cubits/ExploreCubit/ex
 import 'package:samla_app/features/community/presentation/cubits/MyCommunitiesCubit/community_cubit.dart';
 import 'package:samla_app/features/community/presentation/pages/create_community.dart';
 import 'package:samla_app/features/community/presentation/widgets/community_list.dart';
-import 'community_page.dart';
 import 'package:samla_app/features/community/community_di.dart' as di;
 
 class CommunitiesPage extends StatefulWidget {
@@ -140,7 +139,7 @@ class _CommunityPageState extends State<CommunitiesPage> {
                                   builder: (context) => CreateCommunityPage()),
                             );
                           },
-                          icon: Icon(Icons.add),
+                          icon: const Icon(Icons.add),
                           color: theme_green,
                         )
                       ],
@@ -157,12 +156,12 @@ class _CommunityPageState extends State<CommunitiesPage> {
                   ],
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20.0,
               ),
 
               Container(
-                  constraints: BoxConstraints(minHeight: 300),
+                  constraints: const BoxConstraints(minHeight: 300),
                   decoration: primary_decoration,
                   padding: const EdgeInsets.all(5.0),
                   child: selectedIndex == 0
@@ -194,7 +193,7 @@ class _CommunityPageState extends State<CommunitiesPage> {
         } else if (state is CommunityError) {
           return Center(child: Text(state.message));
         } else
-          return Text('Initial');
+          return const Center(child: Text('You are not in any community'));
       },
     );
   }
@@ -206,7 +205,7 @@ class _CommunityPageState extends State<CommunitiesPage> {
       bloc: exploreCubit,
       builder: (context, state) {
         if (state is ExploreEmpty) {
-          return Center(
+          return const Center(
             child: Text('No communities found'),
           );
         }
@@ -225,7 +224,7 @@ class _CommunityPageState extends State<CommunitiesPage> {
         } else if (state is ExploreError) {
           return Center(child: Text(state.message));
         } else
-          return Text('No data');
+          return const Text('No data');
       },
     );
   }

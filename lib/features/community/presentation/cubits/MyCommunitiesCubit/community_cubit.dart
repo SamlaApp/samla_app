@@ -18,13 +18,16 @@ class CommunityCubit extends Cubit<CommunityState> {
     result
         .fold((failure) => emit(CommunityError('Failed to fetch communities')),
             (communities) {
-      emit(CommunitiesLoaded(communities));
+      if (communities.isEmpty) {
+        emit(CommunityEmpty());
+      } else emit(CommunitiesLoaded(communities));
     });
   }
 
-  Future<void> leaveCommunity(int communityID, Function([String? err]) callback) async {
+  Future<void> leaveCommunity(
+      int communityID, Function([String? err]) callback) async {
     final result = await repository.leaveCommunity(communityID: communityID);
-     result.fold((failure) {
+    result.fold((failure) {
       callback(failure.message);
     }, (_) {
       getMyCommunities();
