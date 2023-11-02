@@ -26,7 +26,7 @@ Future<String> generateResponse(String prompt,List<ChatMessage> _messages) async
       "messages": [
         {
           "role": "system",
-          "content": "You are helpful Samla's assistant you will help ${user.name}"
+          "content": "You are helpful Samla's assistant you will help ${user.name}, start by saying hi to him"
         },
         for(var i in _messages)
           {
