@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:countup/countup.dart';
-
 import 'package:flutter/cupertino.dart';
 import 'package:samla_app/config/themes/common_styles.dart';
 import 'dart:async';
@@ -11,7 +10,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CircularIndicators extends StatefulWidget {
-  CircularIndicators({super.key});
+  const CircularIndicators({super.key});
 
   @override
   State<CircularIndicators> createState() => _CircularIndicatorsState();
@@ -35,10 +34,10 @@ class _CircularIndicatorsState extends State<CircularIndicators> {
   }
 
 // stop animation after first build
-  // void didChangeDependencies() {
-  //   super.didChangeDependencies();
-
-  // }    _animation = false;
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _animation = false;
+  }
 
   void onStepCount(StepCount event) {
     getTodaySteps(event.steps).then((value) => setState(() {
@@ -64,17 +63,14 @@ class _CircularIndicatorsState extends State<CircularIndicators> {
   void onStepCountError(error) {
     print('onStepCountError: $error');
     setState(() {
-      // _steps = 0;
+       _steps = 0;
     });
   }
 
   Future<void> _requestPermissions() async {
-    final status = await Permission.activityRecognition.request();
-    if (status.isGranted) {
-      initPlatformState();
-    } else {
-      print('Permission denied');
-    }
+    await Permission.activityRecognition.request().isGranted;
+    await Permission.sensors.request().isGranted;
+    initPlatformState();
   }
 
   void initPlatformState() {
@@ -218,7 +214,7 @@ class _CircularIndicatorsState extends State<CircularIndicators> {
                 children: [
                   !_animation
                       ? Text(
-                          (_steps *0.07).round().toString(),
+                          (_steps * 0.07).round().toString(),
                           style: TextStyle(
                               fontSize: 27,
                               fontWeight: FontWeight.bold,
@@ -250,6 +246,5 @@ class _CircularIndicatorsState extends State<CircularIndicators> {
         ),
       ],
     );
-    ;
   }
 }
