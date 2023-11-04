@@ -6,7 +6,7 @@ void showConfirmationModal({
    required BuildContext context,required String message, required Function confirmCallback,
     String? buttonLabel, bool isNegative = true}) {
   showModalBottomSheet(
-      backgroundColor: primary_color,
+      backgroundColor: isNegative == true ? theme_pink : theme_green,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(
           top: Radius.circular(20.0),
@@ -30,6 +30,12 @@ void showConfirmationModal({
               // SizedBox(height: 0),
               Expanded(
                 child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: const BorderRadius.vertical(
+                      top: Radius.circular(20.0),
+                    ),
+                  ),
                   padding: const EdgeInsets.all(20),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,

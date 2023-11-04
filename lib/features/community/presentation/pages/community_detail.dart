@@ -10,6 +10,7 @@ import 'package:photo_view/photo_view.dart';
 import 'package:samla_app/config/themes/common_styles.dart';
 import 'package:samla_app/core/widgets/ConfirmationModal.dart';
 import 'package:samla_app/core/widgets/image_helper.dart';
+import 'package:samla_app/core/widgets/image_viewer.dart';
 import 'package:samla_app/features/auth/auth_injection_container.dart';
 import 'package:samla_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:samla_app/features/community/domain/entities/Community.dart';
@@ -72,8 +73,9 @@ class CommunityDetail extends StatelessWidget {
                           ),
 
                           ImageViewer(
-                               imageURL: community.imageURL!,
+                               imageURL: community.imageURL,
                                editableCallback: (image){},
+                               title: community.name,
                                ),
 
                           SizedBox(height: 10),
