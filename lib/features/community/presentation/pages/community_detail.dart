@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:math';
 
 import 'package:animate_gradient/animate_gradient.dart';
@@ -5,7 +6,10 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:photo_view/photo_view.dart';
 import 'package:samla_app/config/themes/common_styles.dart';
+import 'package:samla_app/core/widgets/ConfirmationModal.dart';
+import 'package:samla_app/core/widgets/image_helper.dart';
 import 'package:samla_app/features/auth/auth_injection_container.dart';
 import 'package:samla_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:samla_app/features/community/domain/entities/Community.dart';
@@ -67,14 +71,10 @@ class CommunityDetail extends StatelessWidget {
                             height: 80,
                           ),
 
-                          CircleAvatar(
-                            backgroundColor: theme_darkblue.withOpacity(0.1),
-                            radius: 51,
-                            child: CircleAvatar(
-                              backgroundImage: NetworkImage(community.imageURL),
-                              radius: 49,
-                            ),
-                          ),
+                          ImageViewer(
+                               imageURL: community.imageURL!,
+                               editableCallback: (image){},
+                               ),
 
                           SizedBox(height: 10),
 
@@ -124,6 +124,8 @@ class CommunityDetail extends StatelessWidget {
       ),
     );
   }
+
+  
 
   Align mainButton(userRoleOptions userRole, BuildContext context,
       ExploreCubit exploreCubit, CommunityCubit communityCubit) {
@@ -177,17 +179,21 @@ class CommunityDetail extends StatelessWidget {
             }
 
             if (userRole == userRoleOptions.owner) {
-              confirmationModal(
-                  context, 'Are you sure you want to delete this community?',
-                  () {
-                communityCubit.deleteCommunity(community.id!, callback);
-              }, 'Delete');
+              showConfirmationModal(
+                  context: context,
+                  message: 'Are you sure you want to delete this community?',
+                  confirmCallback: () {
+                    communityCubit.deleteCommunity(community.id!, callback);
+                  },
+                  buttonLabel: 'Delete');
             } else if (userRole == userRoleOptions.member) {
-              confirmationModal(
-                  context, 'Are you sure you want to leave this community?',
-                  () {
-                communityCubit.leaveCommunity(community.id!, callback);
-              }, 'Leave');
+              showConfirmationModal(
+                  context: context,
+                  message: 'Are you sure you want to leave this community?',
+                  confirmCallback: () {
+                    communityCubit.leaveCommunity(community.id!, callback);
+                  },
+                  buttonLabel: 'Leave');
             } else if (userRole == userRoleOptions.notMember) {
               exploreCubit.joinCommunity(community.id!, callback);
             }
@@ -207,93 +213,6 @@ class CommunityDetail extends StatelessWidget {
       ),
     );
   }
-}
-
-void confirmationModal(
-    BuildContext context, String message, Function confirmCallback,
-    [String? buttonLabel]) {
-  showModalBottomSheet(
-      backgroundColor: primary_color,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(20.0),
-        ),
-      ),
-      context: context,
-      builder: (context) {
-        return Container(
-          height: 200,
-          child: Column(
-            children: [
-              Container(
-                height:40,
-                decoration: BoxDecoration(
-                  color: theme_pink,
-                  borderRadius: BorderRadius.vertical(
-                    top: Radius.circular(20.0),
-                  ),
-                ),
-              ),
-              // SizedBox(height: 0),
-              Expanded(
-                child: Container(
-                  padding: EdgeInsets.all(20),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(message,
-                          style: TextStyle(
-                              fontWeight: FontWeight.w400,
-                              fontSize: 16,
-                              decoration: TextDecoration.none,
-                              color: theme_darkblue.withOpacity(0.95))),
-                      SizedBox(height: 10),
-                      Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
-                        Expanded(
-                          child: SizedBox(
-                            height: 40,
-                            child: TextButton(
-                              
-                                              
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                              child: Text('Cancel',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 16,
-                                      decoration: TextDecoration.none,
-                                      color: theme_darkblue.withOpacity(0.95))),
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          child: SizedBox(
-                            height: 40,
-                            child: TextButton(
-                              style: ButtonStyle(
-                                backgroundColor: MaterialStateProperty.all<Color>(theme_pink),
-                              ),
-                              onPressed: () {
-                                confirmCallback();
-                              },
-                              child: Text(buttonLabel ?? 'Yes', style: TextStyle(
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: 16,
-                                  decoration: TextDecoration.none,
-                                  color: primary_color.withOpacity(0.95))),
-                            ),
-                          ),
-                        ),
-                      ]),
-                    ],
-                  ),
-                ),
-              )
-            ],
-          ),
-        );
-      });
 }
 
 class OverViewWidget extends StatelessWidget {
@@ -414,11 +333,7 @@ PreferredSize GradientAppBar(context) {
             theme_green,
             Colors.blueAccent,
           ],
-          secondaryColors: [
-            theme_green,
-            Color.fromARGB(255, 120, 90, 255)
-          ],
-          
+          secondaryColors: [theme_green, Color.fromARGB(255, 120, 90, 255)],
         ),
       ),
     ),

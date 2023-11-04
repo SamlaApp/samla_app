@@ -3,9 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:form_field_validator/form_field_validator.dart';
-import 'package:samla_app/config/themes/common_styles.dart';
 import 'package:samla_app/core/widgets/image_helper.dart';
 import 'package:samla_app/core/widgets/loading.dart';
 import 'package:samla_app/features/auth/auth_injection_container.dart';
@@ -159,7 +157,7 @@ class _CreateCommunityPageState extends State<CreateCommunityPage> {
                     ),
                     ElevatedButton(
                       onPressed: _submitForm,
-                      child: Text('Create Community'),
+                      child: const Text('Create Community'),
                     ),
                   ],
                 ),
