@@ -7,6 +7,7 @@ import '../widgets/MealTypeButton.dart';
 import '../widgets/ReminderButton.dart';
 
 class NewMeal extends StatefulWidget {
+  const NewMeal({Key? key}) : super(key: key);
   @override
   _NewMealState createState() => _NewMealState();
 }

@@ -1,42 +1,43 @@
 import 'package:flutter/material.dart';
-import 'package:samla_app/config/themes/common_styles.dart';
-import 'package:samla_app/features/auth/auth_injection_container.dart' as di;
-import '../../../../main.dart';
-import '../../../nutrition/presentation/widgets/CircularIndicators.dart';
 import '../widgets/CaloriesOverview.dart';
 import '../widgets/Macronutrients.dart';
 import '../widgets/MealActions.dart';
 import '../widgets/TodayPlan.dart';
-import 'newMeal.dart';
+import 'package:samla_app/features/nutrition/nutrition_di.dart' as di;
 
-class NutritionPage extends StatelessWidget {
-  NutritionPage({super.key});
+class NutritionPage extends StatefulWidget{
 
-  final user = di.getUser();
+  const NutritionPage({Key? key}) : super(key: key);
+
+  @override
+  _NutritionPageState createState() => _NutritionPageState();
+}
+
+class _NutritionPageState extends State<NutritionPage> {
+
+  @override
+  void initState() {
+    super.initState();
+    di.NutritionInit();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-
-      child: SingleChildScrollView(
-        child: Padding(
-
-          padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 30),
-          child: Column(
-
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              TodayPlan(),
-              SizedBox(height: 20),
-              CaloriesOverview(),
-              SizedBox(height: 20),
-              Macronutrients(),
-              SizedBox(height: 20),
-              MealActions(),
-              SizedBox(height: 20),
-
-            ],
-          ),
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            TodayPlan(),
+            const SizedBox(height: 20),
+            CaloriesOverview(),
+            const SizedBox(height: 20),
+            Macronutrients(),
+            const SizedBox(height: 20),
+            MealActions(),
+            const SizedBox(height: 20),
+          ],
         ),
       ),
     );

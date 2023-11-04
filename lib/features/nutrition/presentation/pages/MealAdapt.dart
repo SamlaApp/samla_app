@@ -4,10 +4,11 @@ import 'package:samla_app/config/themes/common_styles.dart';
 import '../widgets/MaelAdapt/DayDropdown.dart';
 import '../widgets/MaelAdapt/NutrientColumn.dart';
 import '../widgets/MaelAdapt/foodItem.dart';
-import '../widgets/addMealButtom.dart';
-import 'NutritionPlan.dart';
 
 class MealAdapt extends StatelessWidget {
+  const MealAdapt({super.key});
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -107,18 +108,6 @@ class MealAdapt extends StatelessWidget {
               FoodItem(foodName: 'بيض بالجبن', kcal: 187, onRemove: () {
               }),
               SizedBox(height: 30),
-
-              AddMealButton(
-                onButtonPressed: (context) {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-
-                      //Todo: Change this to the new page
-                      builder: (context) => NutritionPlan(),
-                    ),
-                  );
-                },
-              ),
             ],
           ),
         ),
