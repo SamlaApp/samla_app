@@ -1,3 +1,4 @@
+import 'package:animate_gradient/animate_gradient.dart';
 import 'package:flutter/material.dart';
 import 'package:samla_app/config/themes/common_styles.dart';
 import '../../../auth/presentation/bloc/auth_bloc.dart';
@@ -39,15 +40,28 @@ class _AssistantPageState extends State<AssistantPage>{
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Samla Assistant'),
-        backgroundColor: theme_darkblue,
-        shadowColor: null,
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(1.0),
-          child: Container(
-            color: theme_green,
-            height: 1.0,
-          ),
+backgroundColor: const Color.fromRGBO(10, 44, 64, 1),
+        title: const Text(
+          'Samla\'s assistant',
+          style: TextStyle(color: Colors.white, fontSize: 15),
+        ),
+        toolbarHeight: 30,
+        flexibleSpace: AnimateGradient(
+          primaryBegin: Alignment.topLeft,
+          primaryEnd: Alignment.bottomLeft,
+          secondaryBegin: Alignment.bottomRight,
+          secondaryEnd: Alignment.topLeft,
+          duration: const Duration(seconds: 10),
+          reverse: true,
+          animateAlignments: true,
+          primaryColors: [
+            theme_green,
+            Colors.blueAccent,
+          ],
+          secondaryColors: [
+            theme_green,
+            const Color.fromARGB(255, 120, 90, 255),
+          ],
         ),
       ),
       body: SafeArea(
@@ -61,7 +75,8 @@ class _AssistantPageState extends State<AssistantPage>{
               child: const Padding(
                 padding: EdgeInsets.all(8.0),
                 child: CircularProgressIndicator(
-                  color: Colors.white,
+                  color: Color.fromRGBO(64, 194, 210, 1),
+                  backgroundColor: Color.fromRGBO(213, 20, 122, 1),
                 ),
               ),
             ),
