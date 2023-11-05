@@ -11,11 +11,11 @@ class Macronutrients extends StatelessWidget {
       decoration: primary_decoration,
       child: Column(
         children: [
-          nutrientRow('Carbs', 0.95),
+          nutrientRow('Carbs', 0.54),
           SizedBox(height: 10),
-          nutrientRow('Protein', 0.60),
+          nutrientRow('Protein', 0.63),
           SizedBox(height: 10),
-          nutrientRow('Fat', 0.52),
+          nutrientRow('Fat', 0.2),
         ],
       ),
     );
