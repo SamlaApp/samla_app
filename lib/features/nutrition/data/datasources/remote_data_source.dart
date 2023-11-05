@@ -25,12 +25,11 @@ class NutritionPlanRemoteDataSourceImpl
     final res = await samlaAPI(endPoint: '/nutrition/get', method: 'GET');
     final resBody = await res.stream.bytesToString();
     if (res.statusCode == 200) {
-      final nutritionPlanJsonList = json.decode(resBody)['nutrition_plans'];
-      final List<NutritionPlanModel> nutritionPlans = [];
-      for (var item in nutritionPlanJsonList) {
-        nutritionPlans.add(NutritionPlanModel.fromJson(item));
-      }
-      return nutritionPlans;
+      final List<dynamic> nutritionPlans = json.decode(resBody)['nutrition_plans'];
+      final List<NutritionPlanModel> convertedPlans = nutritionPlans
+          .map((e) => NutritionPlanModel.fromJson(e as Map<String, dynamic>))
+          .toList();
+      return convertedPlans;
     } else {
       throw ServerException(message: json.decode(resBody)['message']);
     }

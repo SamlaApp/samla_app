@@ -12,9 +12,8 @@ import 'package:samla_app/features/notifications/presentation/bloc/notification_
 import 'config/router/app_router.dart';
 import 'firebase_options.dart'; // Import your logical code
 import 'features/auth/auth_injection_container.dart' as auth_di;
-import 'features/notifications/notification_injection_container.dart' as notifi_di;
-
-
+import 'features/notifications/notification_injection_container.dart'
+    as notifi_di;
 
 class MyHttpOverrides extends HttpOverrides {
   @override
@@ -24,8 +23,9 @@ class MyHttpOverrides extends HttpOverrides {
           (X509Certificate cert, String host, int port) => true;
   }
 }
+
 Future<void> main() async {
-    HttpOverrides.global = MyHttpOverrides();
+  HttpOverrides.global = MyHttpOverrides();
 
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -35,6 +35,7 @@ Future<void> main() async {
   // Massaging
   FirebaseInAppMessaging.instance.setAutomaticDataCollectionEnabled(true);
   FirebaseMessaging.onBackgroundMessage(_handleMessage);
+  HttpOverrides.global = MyHttpOverrides();
 
   runApp(const MyApp());
 }
@@ -68,12 +69,13 @@ Future<void> _handleMessage(RemoteMessage message) async {
     }
   });
 }
+
 // this for navigation without context
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
-
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -105,3 +107,12 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
+// class MyHttpOverrides extends HttpOverrides {
+//   @override
+//   HttpClient createHttpClient(SecurityContext? context) {
+//     return super.createHttpClient(context)
+//       ..badCertificateCallback =
+//           (X509Certificate cert, String host, int port) => true;
+//   }
+// }

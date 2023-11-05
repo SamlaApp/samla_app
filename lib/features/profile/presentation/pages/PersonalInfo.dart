@@ -21,6 +21,7 @@ class PersonalInfoPage extends StatefulWidget {
   @override
   _PersonalInfoPageState createState() => _PersonalInfoPageState();
 }
+
 final user = getUser();
 
 class _PersonalInfoPageState extends State<PersonalInfoPage> {
