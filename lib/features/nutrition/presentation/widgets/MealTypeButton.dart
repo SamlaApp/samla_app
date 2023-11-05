@@ -18,7 +18,7 @@ class MealTypeButton extends StatelessWidget {
         child: GestureDetector(
           onTap: () => onSelected(label),
           child: Container(
-            padding: EdgeInsets.symmetric(vertical: 14, horizontal: 14),
+            padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
             decoration: BoxDecoration(
               color: isSelected ? Color(0xFF00BCD4) : Colors.white,
               border: Border.all(

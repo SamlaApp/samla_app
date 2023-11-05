@@ -51,9 +51,9 @@ class _NewMealState extends State<NewMeal> {
         ),
         centerTitle: true,
         backgroundColor: theme_darkblue,
-        elevation: 0,  // Remove shadow for cleaner look
+        elevation: 0,
       ),
-        body: SafeArea( // Wrap your UI in a SafeArea widget
+        body: SafeArea(
     child: SingleChildScrollView(
       child: Container(
 
