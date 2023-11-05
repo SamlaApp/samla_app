@@ -59,7 +59,7 @@ class _NutritionPlanState extends State<NutritionPlan> {
           ],
         ),
       ),
-      body: SingleChildScrollView(child: buildBlocBuilder()),
+      body: buildBlocBuilder(),
     );
   }
 
