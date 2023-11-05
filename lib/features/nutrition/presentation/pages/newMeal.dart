@@ -66,8 +66,11 @@ class _NewMealState extends State<NewMeal> {
           ),
         ),
 
+        height: MediaQuery.of(context).size.height -
+            AppBar().preferredSize.height -
+            MediaQuery.of(context).padding.top,
         child: Column(
-
+          mainAxisSize: MainAxisSize.max,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(height: 25),
