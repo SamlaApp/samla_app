@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:samla_app/config/themes/common_styles.dart';
-import 'package:samla_app/features/training/presentation/widgets/routineButtons.dart';
 
 class NewWorkout extends StatelessWidget {
   @override

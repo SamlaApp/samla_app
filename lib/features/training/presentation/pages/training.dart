@@ -1,14 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:samla_app/features/training/presentation/widgets/routineCard.dart';
-import 'package:samla_app/features/training/presentation/widgets/routineButtons.dart';
-import 'package:samla_app/features/training/presentation/widgets/sectionTitle.dart';
-
+import 'package:samla_app/features/training/presentation/pages/startTrainig.dart';
 import '../../../../config/themes/common_styles.dart';
-import '../widgets/TransparentBox.dart';
-import '../widgets/expandableBox.dart';
 import 'Tamplates_page.dart';
-import 'ex.dart';
-
 import 'package:dots_indicator/dots_indicator.dart';
 
 class TrainingPage extends StatefulWidget {
@@ -186,7 +179,15 @@ class _TrainingPageState extends State<TrainingPage> {
                               borderRadius: BorderRadius.circular(8),
                             ),
                           ),
-                          onPressed: () {},
+                          onPressed: () {
+                            print('Icon Clicked');
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => startTraining(), // This is your Templates page widget
+                              ),
+                            );
+                          },
                           child: Text('Start Now'),
                         ),
                       ),
