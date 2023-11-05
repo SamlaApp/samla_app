@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:samla_app/config/themes/common_styles.dart';
+import 'package:samla_app/features/nutrition/data/models/nutritionPlan_model.dart';
 
 import '../widgets/MaelAdapt/DayDropdown.dart';
 import '../widgets/MaelAdapt/NutrientColumn.dart';
 import '../widgets/MaelAdapt/foodItem.dart';
 
 class MealAdapt extends StatelessWidget {
-  const MealAdapt({super.key});
+  const MealAdapt({super.key, required NutritionPlanModel nutritionPlan});
 
 
   @override
