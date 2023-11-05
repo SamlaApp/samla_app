@@ -1,15 +1,21 @@
 // ignore_for_file: use_build_context_synchronously, prefer_const_constructors
 
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:samla_app/config/themes/common_styles.dart';
 import 'package:samla_app/features/auth/auth_injection_container.dart'
     as authDI;
 import 'package:samla_app/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:samla_app/features/profile/presentation/pages/PersonalInfo.dart';
 import 'package:samla_app/features/profile/presentation/widgets/AppBar_Widget01.dart';
-import 'package:samla_app/features/profile/presentation/widgets/appBar_widget.dart';
 import 'package:samla_app/features/profile/presentation/widgets/profile_widget.dart';
 import 'package:samla_app/features/profile/presentation/widgets/Achievments.dart';
 
+// import '../widgets/InfoWidget01.dart';
+import '../widgets/InfoWidget.dart';
+
+import '../widgets/SettingsWidget.dart';
 import '../widgets/numbers.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -49,12 +55,9 @@ class _ProfilePageState extends State<ProfilePage> {
             SizedBox(
               height: 20,
             ),
-            FloatingActionButton(
-              onPressed: () {
-                authBloc.add(LogOutEvent(context));
-              },
-              child: const Text('Logout'),
-            ),
+
+            NumbersWidget(),
+
             Container(
               padding: EdgeInsets.symmetric(horizontal: 20),
               child: Column(
@@ -176,7 +179,9 @@ class _ProfilePageState extends State<ProfilePage> {
                     InfoWidget(),
                   ] else if (_selectedIndex == 1) ...[
                     // Achievements
-                    AchievementsWidget(),
+                    Achievments(
+                      challengeName: 'dummy',
+                    ),
                   ] else if (_selectedIndex == 2) ...[
                     // Settings
                     SettingsWidget(),
@@ -204,6 +209,7 @@ class _ProfilePageState extends State<ProfilePage> {
           style: TextStyle(),
         ),
       ]);
+
   Widget updateInfo(user, context) => Center(
           child: Column(
         children: [
@@ -254,71 +260,4 @@ class _ProfilePageState extends State<ProfilePage> {
       ));
 }
 
-// Info Widget
-/// TODO: Display & Update Info, Update User Goals
-class InfoWidget extends StatefulWidget {
-  const InfoWidget({super.key});
-
-  @override
-  State<InfoWidget> createState() => _InfoWidgetState();
-}
-
-class _InfoWidgetState extends State<InfoWidget> {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-        padding: EdgeInsets.symmetric(horizontal: 20),
-        child: Center(
-          // child: Text("Name: ${user.name}\n"),
-        ));
-  }
-}
-
-// Achievements Widget
-/// TODO: Display Achievements
-class AchievementsWidget extends StatefulWidget {
-  const AchievementsWidget({super.key});
-
-  @override
-  State<AchievementsWidget> createState() => _AchievementsWidgetState();
-}
-
-class _AchievementsWidgetState extends State<AchievementsWidget> {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 20),
-      child: Center(
-        child: Text(
-          "Achievements",
-          style: TextStyle(
-            fontSize: 20,
-            color: Color.fromRGBO(10, 44, 64, 1),
-            fontWeight: FontWeight.bold,
-            decoration: TextDecoration.none,
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-// Settings Widget
-/// TODO: update Password, Delete Account
-class SettingsWidget extends StatefulWidget {
-  const SettingsWidget({super.key});
-
-  @override
-  State<SettingsWidget> createState() => _SettingsWidgetState();
-}
-
-class _SettingsWidgetState extends State<SettingsWidget> {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-        padding: EdgeInsets.symmetric(horizontal: 20),
-        child: Center(
-          child: Text("Settings"),
-        ));
-  }
-}
+//-------Widget for creating textfields with the correct parameters--------
