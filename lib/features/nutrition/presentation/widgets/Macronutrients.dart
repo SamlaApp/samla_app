@@ -12,19 +12,20 @@ class Macronutrients extends StatelessWidget {
       child: Column(
         children: [
           nutrientRow('Carbs', 0.54),
-          SizedBox(height: 10),
+          SizedBox(height: 5),
           nutrientRow('Protein', 0.63),
-          SizedBox(height: 10),
+          SizedBox(height: 5),
           nutrientRow('Fat', 0.2),
         ],
       ),
     );
   }
   Widget nutrientRow(String nutrient, double percentage) {
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(nutrient, style: TextStyle(fontSize: 20, color: Colors.grey)),
+        Text(nutrient, style: TextStyle(fontSize: 16, color: theme_grey)),
         SizedBox(height: 5),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -46,7 +47,7 @@ class Macronutrients extends StatelessWidget {
               ),
             ),
             SizedBox(width: 10),
-            Text('${(percentage * 100).toInt()}%', style: TextStyle(fontSize: 16, color: Colors.grey)),
+            Text('${(percentage * 100).toInt()}%', style: TextStyle(fontSize: 16, color: theme_grey)),
           ],
         ),
       ],
