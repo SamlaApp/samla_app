@@ -7,6 +7,7 @@ class CustomTextField extends StatelessWidget {
   final TextEditingController? controller;
   final String? Function(String?)? validator;
   final Key? formKey;
+  
   CustomTextField(
       {super.key,
       required this.label,
@@ -18,8 +19,9 @@ class CustomTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 50,
+      // height: 50,
       child: TextFormField(
+        autovalidateMode: AutovalidateMode.onUserInteraction ,
         controller: controller,
         validator: validator,
         key: formKey,
@@ -43,7 +45,7 @@ class CustomTextField extends StatelessWidget {
             heightFactor: 1.0,
             child: Icon(
               iconData,
-              color: theme_darkblue.withOpacity(0.3),
+              color: theme_green,
             ),
           ),
         ),

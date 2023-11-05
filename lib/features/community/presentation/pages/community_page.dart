@@ -52,8 +52,11 @@ class CommunityPage extends StatelessWidget {
               Container(
                 width: 50, // Set the desired width
                 height: 50, // Set the desired height
-                child: CircleAvatar(
-                  backgroundImage: NetworkImage(community.imageURL),
+                child: Hero(
+                  tag: 'imageHero',
+                  child: CircleAvatar(
+                    backgroundImage: NetworkImage(community.imageURL),
+                  ),
                 ),
               ),
               SizedBox(

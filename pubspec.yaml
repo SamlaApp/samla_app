@@ -50,7 +50,7 @@ dependencies:
     shared_preferences: ^2.2.1
     fl_chart: ^0.64.0
     dartz: ^0.10.1
-    internet_connection_checker: ^1.0.0+1
+    internet_connection_checker_plus:
     image_picker: ^1.0.4 #added by adhm to test the photo profile changer
     dots_indicator:
 

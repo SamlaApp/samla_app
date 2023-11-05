@@ -4,7 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:form_field_validator/form_field_validator.dart';
+import 'package:samla_app/config/themes/common_styles.dart';
+import 'package:samla_app/core/widgets/CustomTextFormField.dart';
 import 'package:samla_app/core/widgets/image_helper.dart';
+import 'package:samla_app/core/widgets/image_viewer.dart';
 import 'package:samla_app/core/widgets/loading.dart';
 import 'package:samla_app/features/auth/auth_injection_container.dart';
 import 'package:samla_app/features/community/domain/entities/Community.dart';
@@ -26,19 +29,48 @@ class _CreateCommunityPageState extends State<CreateCommunityPage> {
   File? _image;
   bool _isPublic = false;
 
-  final _nameValidator = RequiredValidator(errorText: 'Name is required');
-  final _descriptionValidator =
-      RequiredValidator(errorText: 'Description is required');
-  final _handleValidator = RequiredValidator(errorText: 'Handle is required');
+  String? _nameValidator(String? value){
+    if (value == null || value.isEmpty) {
+      return 'Name is required';
+    }
+    if (value.length < 3) {
+      return 'Name must be at least 3 characters long';
+    }
+    return null;
+  }
+
+  String? _descriptionValidator(String? value){
+    if (value == null || value.isEmpty) {
+      return 'Description is required';
+    }
+    if (value.length > 255) {
+      return 'Description should not exceed 255 characters';
+    }
+    
+    return null;
+
+  }
+  String? _handleValidator(String? value){
+    if (value == null || value.isEmpty) {
+      return 'Handle is required';
+    }
+    if (value.length < 3) {
+      return 'Handle must be at least 3 characters long';
+    }
+    //no spaces except at the beginning or end
+    if (value.trim().contains(' ')) {
+      return 'Handle should not contain spaces';
+    }
+    //no special characters except _
+    if (value.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'))) {
+      return 'Handle should not contain special characters except _';
+    }
+
+    return null;
+
+  }
 
   Future<void> _pickImage() async {
-    // final pickedImage =
-    //     await ImagePicker().pickImage(source: ImageSource.gallery);
-    // if (pickedImage != null) {
-    //   setState(() {
-    //     _image = File(pickedImage.path);
-    //   });
-    // }
 
     final ImageHelper _imageHelper = ImageHelper();
     final imagePath = await _imageHelper.pickImage(context, (image) {
@@ -54,10 +86,12 @@ class _CreateCommunityPageState extends State<CreateCommunityPage> {
     if (_formKey.currentState!.validate()) {
       // All fields are valid, you can create the Community object and proceed
       final community = Community(
-          name: _nameController.text,
-          description: _descriptionController.text,
+          name: _nameController.text.trim(),
+          description: _descriptionController.text.trim(),
           isPublic: _isPublic,
-          handle: _handleController.text,
+          handle: _handleController.text.trim()[0] == '@'
+              ? _handleController.text.trim()
+              : '@${_handleController.text.trim()}',
           isMemeber: true, // You can set this value as needed
           avatar: _image,
           imageURL: '',
@@ -91,6 +125,7 @@ class _CreateCommunityPageState extends State<CreateCommunityPage> {
           SchedulerBinding.instance.addPostFrameCallback((_) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
+                backgroundColor: theme_green.withOpacity(0.65),
                 content: Text('Community created successfully'),
               ),
             );
@@ -115,32 +150,52 @@ class _CreateCommunityPageState extends State<CreateCommunityPage> {
         } else {
           return Scaffold(
             appBar: AppBar(
-              title: Text('Create Community'),
+              title: Text('New Community'),
+              backgroundColor: theme_green,
             ),
             body: SingleChildScrollView(
               padding: const EdgeInsets.all(16.0),
               child: Form(
                 key: _formKey,
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    TextFormField(
+                    ImageViewer(
+                      imageFile: _image,
+                      editableCallback: (newImage) {
+                        setState(() {
+                          _image = newImage;
+                        });
+                      },
+                      title: 'Community Avatar',
+                    ),
+                    SizedBox(height: 60),
+                    CustomTextField(
                       controller: _nameController,
-                      decoration: InputDecoration(labelText: 'Name'),
+                      // decoration: InputDecoration(labelText: 'Name'),
                       validator: _nameValidator,
+                      label: 'Name',
+                      iconData: Icons.person,
                     ),
-                    TextFormField(
+                    SizedBox(height: 20),
+                    CustomTextField(
                       controller: _descriptionController,
-                      decoration: InputDecoration(labelText: 'Description'),
+                      label: 'Description',
                       validator: _descriptionValidator,
+                      iconData: Icons.description,
                     ),
-                    TextFormField(
+                    SizedBox(height: 20),
+                    CustomTextField(
                       controller: _handleController,
-                      decoration: InputDecoration(labelText: 'Handle'),
                       validator: _handleValidator,
+                      label: 'Handle',
+                      iconData: Icons.alternate_email,
                     ),
                     SwitchListTile(
-                      title: Text('Public Community'),
+                      activeTrackColor: theme_green.withOpacity(0.65),
+                      thumbColor: MaterialStateProperty.all<Color>(theme_green),
+                      inactiveTrackColor: inputField_color,
+                      title: Text('Public Community',style: TextStyle(color: theme_darkblue.withOpacity(0.95)),),
                       value: _isPublic,
                       onChanged: (newValue) {
                         setState(() {
@@ -148,16 +203,19 @@ class _CreateCommunityPageState extends State<CreateCommunityPage> {
                         });
                       },
                     ),
-                    ListTile(
-                      title: Text('Community Avatar'),
-                      trailing: _image == null
-                          ? Text('No Image Selected')
-                          : Image.file(_image!),
-                      onTap: _pickImage,
-                    ),
-                    ElevatedButton(
-                      onPressed: _submitForm,
-                      child: const Text('Create Community'),
+                    SizedBox(height: 40),
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: theme_green,
+                      ),
+
+                      width: double.infinity,
+                      child: TextButton(
+                        onPressed: _submitForm,
+                        child: const Text('Create Community',
+                            style: TextStyle(color: Colors.white)),  
+                      ),
                     ),
                   ],
                 ),
