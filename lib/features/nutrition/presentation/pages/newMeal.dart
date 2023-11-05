@@ -53,10 +53,11 @@ class _NewMealState extends State<NewMeal> {
         backgroundColor: theme_darkblue,
         elevation: 0,  // Remove shadow for cleaner look
       ),
+        body: SafeArea( // Wrap your UI in a SafeArea widget
+    child: SingleChildScrollView(
+      child: Container(
 
-      body: Container(
-
-        padding: EdgeInsets.all(30.0),
+        padding: EdgeInsets.all(15.0),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.only(
@@ -78,7 +79,7 @@ class _NewMealState extends State<NewMeal> {
               ),
             ),
 
-            SizedBox(height: 16),
+            SizedBox(height: 10),
             InputField(label: 'Meal Name', hint: 'Enter meal name'),
 
 
@@ -87,30 +88,62 @@ class _NewMealState extends State<NewMeal> {
 
 
             SizedBox(height: 8),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [MealTypeButton(
-                label: "Break Fast",
-                isSelected: selectedMealType == "Break Fast",
-                onSelected: _updateMealType,
-              ),
-                MealTypeButton(
-                  label: "Lunch",
-                  isSelected: selectedMealType == "Lunch",
-                  onSelected: _updateMealType,
+            Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(2.0),
+                        child: MealTypeButton(
+                          label: "Breakfast",
+                          isSelected: selectedMealType == "Breakfast",
+                          onSelected: _updateMealType,
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(2.0),
+                        child: MealTypeButton(
+                          label: "Lunch",
+                          isSelected: selectedMealType == "Lunch",
+                          onSelected: _updateMealType,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-                MealTypeButton(
-                  label: "Dinner",
-                  isSelected: selectedMealType == "Dinner",
-                  onSelected: _updateMealType,
-                ),
-                MealTypeButton(
-                  label: "Snack",
-                  isSelected: selectedMealType == "Snack",
-                  onSelected: _updateMealType,
+                SizedBox(height: 2),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(2.0),
+                        child: MealTypeButton(
+                          label: "Dinner",
+                          isSelected: selectedMealType == "Dinner",
+                          onSelected: _updateMealType,
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(2.0),
+                        child: MealTypeButton(
+                          label: "Snack",
+                          isSelected: selectedMealType == "Snack",
+                          onSelected: _updateMealType,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
+
 
 
             SizedBox(height: 16),
@@ -147,12 +180,13 @@ class _NewMealState extends State<NewMeal> {
 
 
 
-            SizedBox(height: 35),
+            SizedBox(height: 10),
 
-            ConfirmButton('Confirm')
+            ConfirmButton('Confirm'),
+
           ],
         ),
-      ),
+          ),), ),
     );
   }
 }
