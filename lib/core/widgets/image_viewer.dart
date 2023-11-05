@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:photo_view/photo_view.dart';
+import 'package:samla_app/config/themes/common_styles.dart';
 import 'package:samla_app/core/widgets/image_helper.dart';
 
 class ImageViewer extends StatefulWidget {
@@ -33,6 +34,10 @@ class _ImageViewerState extends State<ImageViewer> {
       child: Hero(
         tag: 'imageHero',
         child: CircleAvatar(
+          backgroundColor: inputField_color,
+          child: image == null && widget.imageURL == null
+              ? Icon(Icons.add_a_photo_outlined, color: theme_darkblue.withOpacity(0.3))
+              : null,
           radius: 50,
           backgroundImage: () {
             ImageProvider? _() {
@@ -44,27 +49,38 @@ class _ImageViewerState extends State<ImageViewer> {
                 return NetworkImage(widget.imageURL!);
               }
             }
+            
+            
 
             return _();
           }(),
         ),
       ),
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => ViewerPage(
-                imageURL: widget.imageURL,
-                imageFile: image ?? widget.imageFile,
-                editableCallback: (newImage) {
-                  setState(() {
-                    image = newImage;
-                    widget.editableCallback!(newImage);
-                  });
-                },
-                title: widget.title),
-          ),
-        );
+        if (image == null && widget.imageURL == null) {
+          imageHelper.pickImage(context, (newImage) {
+            setState(() {
+              image = newImage;
+              widget.editableCallback!(newImage);
+            });
+          });
+        } else {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ViewerPage(
+                  imageURL: widget.imageURL,
+                  imageFile: image,
+                  editableCallback: (newImage) {
+                    setState(() {
+                      image = newImage;
+                      widget.editableCallback!(newImage);
+                    });
+                  },
+                  title: widget.title),
+            ),
+          );
+        }
       },
     );
   }
@@ -89,10 +105,10 @@ class ViewerPage extends StatefulWidget {
 
 class _ViewerPageState extends State<ViewerPage> {
   File? image;
-  
+
   @override
   Widget build(BuildContext context) {
-    if (widget.imageFile != null) {
+    if (widget.imageFile != null && image == null) {
       image = widget.imageFile;
     }
     return Scaffold(

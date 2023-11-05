@@ -16,8 +16,10 @@ class CommunityLocalDataSourceImpl implements CommunityLocalDataSource {
   CommunityLocalDataSourceImpl(this.sharedPreferences);
   @override
   Future<List<CommunityModel>> getCachedCommunities() {
-    final jsonCommunities = sharedPreferences.getStringList('my_communities');
-    if (jsonCommunities != null) {
+    final jsonCommunitiesString = sharedPreferences.getString('my_communities');
+    if (jsonCommunitiesString != null) {
+         final jsonCommunities = json.decode(jsonCommunitiesString);
+
       // decode the json list to list of community models
       final communities = jsonCommunities
           .map<CommunityModel>(

@@ -119,6 +119,7 @@ class RemoteDataSourceImpl implements RemoteDataSource {
 
     if (response.statusCode == 201) {
       final userJson = json.decode(responseBody)['user'];
+      print(userJson);
       userJson['access_token'] = json.decode(responseBody)['access_token'];
       return UserModel.fromJson(userJson);
     } else {
