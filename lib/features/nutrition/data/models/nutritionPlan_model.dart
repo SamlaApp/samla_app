@@ -10,7 +10,6 @@ class NutritionPlanModel extends NutritionPlan {
     required super.end_time,
   });
 
-  @override
   factory NutritionPlanModel.fromJson(Map<String, dynamic> json) {
     return NutritionPlanModel(
       id: json['id'],

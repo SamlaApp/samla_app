@@ -25,8 +25,3 @@ final class NutritionPlanErrorState extends NutritionPlanState {
 
 final class NutritionPlanEmptyState extends NutritionPlanState {}
 
-final class NutritionPlanLoaded extends NutritionPlanState {
-  final List<NutritionPlan> nutritionPlans;
-
-  NutritionPlanLoaded(this.nutritionPlans);
-}
