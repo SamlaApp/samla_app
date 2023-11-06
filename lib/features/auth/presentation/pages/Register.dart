@@ -71,6 +71,7 @@ class _RegisterState extends State<RegisterPage> {
               ),
             );
           });
+          authBloc.add(ClearAuthEvent());
         }
         if (state is AuthenticatedState) {
           print('AuthenticatedState');

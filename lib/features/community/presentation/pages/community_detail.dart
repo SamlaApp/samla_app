@@ -73,10 +73,10 @@ class CommunityDetail extends StatelessWidget {
                           ),
 
                           ImageViewer(
-                               imageURL: community.imageURL,
-                               editableCallback: (image){},
-                               title: community.name,
-                               ),
+                            imageURL: community.imageURL,
+                            editableCallback: (image) {},
+                            title: community.name,
+                          ),
 
                           SizedBox(height: 10),
 
@@ -126,8 +126,6 @@ class CommunityDetail extends StatelessWidget {
       ),
     );
   }
-
-  
 
   Align mainButton(userRoleOptions userRole, BuildContext context,
       ExploreCubit exploreCubit, CommunityCubit communityCubit) {

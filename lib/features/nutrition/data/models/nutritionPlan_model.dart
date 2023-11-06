@@ -22,14 +22,14 @@ class NutritionPlanModel extends NutritionPlan {
     );
   }
 
-  Map<String, dynamic> toJson() {
+  Map<String, String> toJson() {
     return {
-      'id': id,
+      'id': id.toString(),
       'name': name,
       'type': type,
-      'calories': calories,
-      'start_time': start_time,
-      'end_time': end_time,
+      'calories': calories.toString(),
+      'start_time': start_time!,
+      'end_time': end_time!,
     };
   }
 

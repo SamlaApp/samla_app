@@ -13,7 +13,7 @@ class CreateCommunityCubit extends Cubit<CreateCommunityState> {
     emit(CreateLoadingState()); // Show loading state
     final result = await repository.createCommunity(community: community);
     result.fold(
-      (failure) => emit(CreateErrorState('Failed to create community')),
+      (failure) => emit(CreateErrorState(failure.message)),
       (cretedCommunity) => emit(CreatedSuccessfullyState(
           cretedCommunity)), // Refresh the list of communities
     );
