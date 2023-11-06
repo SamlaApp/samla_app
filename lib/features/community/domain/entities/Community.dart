@@ -14,7 +14,7 @@ class Community extends Equatable {
   //whether it coming from backend, or going to backend
   final int? id;
   final File? avatar; //image name in the backend
-  final String imageURL; //full link that include image name in the backend
+  final String? imageURL; //full link that include image name in the backend
 
   Community(
       {required this.name,
@@ -25,8 +25,8 @@ class Community extends Equatable {
       required this.ownerID,
       this.avatar,
       this.id,
-      String? imageURL,
-      required this.isMemeber}) : imageURL = imageURL ?? 'https://w7.pngwing.com/pngs/70/991/png-transparent-computer-icons-avatar-organization-flat-icon-heroes-text-business.png';
+      this.imageURL,
+      required this.isMemeber});
 
   @override
   // TODO: implement props
@@ -38,7 +38,6 @@ class Community extends Equatable {
         numOfMemebers,
         avatar,
         id,
-        imageURL
       ];
 
   Community copyWith(
@@ -61,7 +60,7 @@ class Community extends Equatable {
         avatar: avatar ?? this.avatar,
         id: id ?? this.id,
         imageURL: imageURL ?? this.imageURL,
-        isMemeber: isMemeber ?? this.isMemeber, 
+        isMemeber: isMemeber ?? this.isMemeber,
         ownerID: ownerID ?? this.ownerID);
   }
 }

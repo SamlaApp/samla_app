@@ -190,6 +190,8 @@ class _ImageViewerState extends State<ImageViewer> {
                     child: Icon(Icons.add_a_photo_outlined,
                         color: theme_darkblue.withOpacity(0.3)),
                   )
+                : widget.placeholderImagePath != null
+                    ? ClipOval(child: Image.asset(widget.placeholderImagePath!))
                 : throw Exception(
                     'neither imageFile or imgeURL or ImageAsset or editableCallback must be passed '));
   }
@@ -212,8 +214,10 @@ class _ImageViewerState extends State<ImageViewer> {
                     child: Icon(Icons.add_a_photo_outlined,
                         color: theme_darkblue.withOpacity(0.3)),
                   )
-                : throw Exception(
-                    'neither imageFile or imgeURL or ImageAsset or editableCallback must be passed '));
+                : widget.placeholderImagePath != null
+                    ? ClipOval(child: Image.asset(widget.placeholderImagePath!))
+                    : throw Exception(
+                        'neither imageFile or imgeURL or ImageAsset or editableCallback must be passed '));
   }
 }
 
@@ -235,7 +239,6 @@ Widget cachedNetworkImage(
 ) {
   try {
     final widget = CachedNetworkImage(
-        cacheKey: imageURL,
         imageUrl: imageURL,
         cacheManager: CustomCacheManager.instance,
         fit: BoxFit.cover,
