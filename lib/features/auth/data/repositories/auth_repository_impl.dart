@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/services.dart';
 import 'package:samla_app/core/error/exceptions.dart';
 import 'package:samla_app/core/error/failures.dart';
 import 'package:samla_app/core/network/network_info.dart';
@@ -68,6 +69,7 @@ class AuthRepositoryImpl implements AuthRepository {
         await localDataSource.cacheUser(user);
 
         // cache device token
+
         String? deviceToken = await FirebaseMessaging.instance.getToken();
         await localDataSource.cacheDeviceToken(deviceToken!);
 
@@ -78,10 +80,9 @@ class AuthRepositoryImpl implements AuthRepository {
         return Right(user);
       } on ServerException catch (e) {
         return Left(ServerFailure(message: e.message));
+      //  on Firebase
       } catch (e) {
-                print(e.toString());
-
-        return Left(ServerFailure(message: e.toString()));
+        return Left(ServerFailure(message: 'Something went wrong'));
       }
     } else {
       return Left(OfflineFailure());

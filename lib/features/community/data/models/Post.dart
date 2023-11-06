@@ -1,0 +1,3 @@
+// class PostModel extends Post {
+
+// }

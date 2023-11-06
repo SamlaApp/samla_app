@@ -69,6 +69,8 @@ dependencies:
     form_field_validator: ^1.1.0
     image_cropper: ^5.0.0
     photo_view: ^0.14.0
+    cached_network_image: ^3.3.0
+    flutter_cache_manager: ^3.3.1
 
 dev_dependencies:
     flutter_test:
@@ -95,7 +97,7 @@ flutter:
 
     # To add assets to your application, add an assets section, like this:
     assets:
-        - images/
+        - images/defaults/
         - google_fonts/
         - images/Logo/1x/Icon_1@1x.png
         - images/Logo/2x/Icon_1@2x.png

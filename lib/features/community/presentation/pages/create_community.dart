@@ -160,7 +160,7 @@ class _CreateCommunityPageState extends State<CreateCommunityPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    ImageViewer(
+                    ImageViewer.file(
                       imageFile: _image,
                       editableCallback: (newImage) {
                         setState(() {

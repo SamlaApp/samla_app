@@ -72,10 +72,12 @@ class CommunityDetail extends StatelessWidget {
                             height: 80,
                           ),
 
-                          ImageViewer(
+                          ImageViewer.network(
+                            placeholderImagePath: 'images/defaults/community.png',
                             imageURL: community.imageURL,
                             editableCallback: (image) {},
                             title: community.name,
+                            animationTag: 'imageHero',
                           ),
 
                           SizedBox(height: 10),

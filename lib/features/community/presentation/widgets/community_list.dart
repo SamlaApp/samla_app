@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:samla_app/core/widgets/image_viewer.dart';
 import 'package:samla_app/features/community/domain/entities/Community.dart';
 import 'package:samla_app/features/community/presentation/pages/communities.dart';
 import 'package:samla_app/features/community/presentation/pages/community_detail.dart';
@@ -58,8 +59,11 @@ class CustomTile extends StatelessWidget {
           overflow: TextOverflow.ellipsis,
         ),
       ),
-      leading:  CircleAvatar(
-        backgroundImage: NetworkImage(community.imageURL),
+      leading:  ImageViewer.network(
+        imageURL: community.imageURL,
+        viewerMode: false,
+        placeholderImagePath: 'images/defaults/community.png',
+        width: 50,
       ),
       title: Padding(
         padding: const EdgeInsets.only(top: 2.0),

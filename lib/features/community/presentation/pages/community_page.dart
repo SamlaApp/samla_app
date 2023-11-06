@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:samla_app/config/themes/common_styles.dart';
+import 'package:samla_app/core/widgets/image_viewer.dart';
 import 'package:samla_app/features/community/domain/entities/Community.dart';
 import 'package:samla_app/features/community/presentation/pages/community_detail.dart';
 
@@ -54,8 +55,11 @@ class CommunityPage extends StatelessWidget {
                 height: 50, // Set the desired height
                 child: Hero(
                   tag: 'imageHero',
-                  child: CircleAvatar(
-                    backgroundImage: NetworkImage(community.imageURL),
+                  child: ImageViewer.network(
+                    imageURL: community.imageURL,
+                    viewerMode: false,
+                    placeholderImagePath: 'images/defaults/community.png',
+                    width: 50,
                   ),
                 ),
               ),
