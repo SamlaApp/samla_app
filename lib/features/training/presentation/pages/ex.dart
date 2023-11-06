@@ -1,8 +1,9 @@
 import 'package:flutter_svg/flutter_svg.dart';
+
 class Exercise {
   final String name;
   final String? description;
-  final String? imagePath;// url for image
+  final String? imagePath; // url for image
   Exercise({required this.name, this.description, this.imagePath});
 }
 
@@ -18,9 +19,19 @@ final List<Routine> dummyRoutines = [
   Routine(
     title: 'Push Routine',
     exercises: [
-      Exercise(name: 'Push-Ups', description: 'Do 15 push-ups', imagePath: "images/download.jpeg"),
-      Exercise(name: 'Bench Press', description: 'Lift weights on a bench lkajhfldakj laskjdfhalksjf '),
-      Exercise(name: 'Dips', description: 'Do 12 dips'),
+      Exercise(
+          name: 'Push-Ups',
+          description: 'Do 15 push-ups',
+          imagePath: "images/download.jpeg"),
+      Exercise(
+          name: 'Bench Press',
+          description: 'Lift weights on a bench lkajhfldakj laskjdfhalksjf ',
+          imagePath: "images/download.jpeg"),
+      Exercise(
+        name: 'Dips',
+        description: 'Do 12 dips',
+        imagePath: "images/download.jpeg",
+      ),
     ],
   ),
   Routine(

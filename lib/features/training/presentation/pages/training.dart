@@ -41,7 +41,8 @@ class _TrainingPageState extends State<TrainingPage> {
             height: 67,
             padding: const EdgeInsets.all(13),
             margin: EdgeInsets.all(16),
-            decoration: primary_decoration, // ensure this is defined in your project
+            decoration: primary_decoration,
+            // ensure this is defined in your project
             child: Row(
               children: [
                 Text(
@@ -58,7 +59,8 @@ class _TrainingPageState extends State<TrainingPage> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => TemplatesPage(), // This is your Templates page widget
+                        builder: (context) =>
+                            TemplatesPage(), // This is your Templates page widget
                       ),
                     );
                   },
@@ -67,140 +69,152 @@ class _TrainingPageState extends State<TrainingPage> {
                     size: 30,
                   ),
                 )
-
               ],
             ),
           ),
 
           Expanded(
-            child: PageView.builder(
-              controller: _controller,
-              itemCount: 3, // specify the number of days
-              itemBuilder: (BuildContext context, int index) {
-                // Determine the day and routine based on the index
-                String dayRoutine = '';
-                List<Widget> exercises = [];
-                switch (index) {
-                  case 0:
-                    dayRoutine = 'Day 1 - Pull Routine';
-                    exercises = [
-                      ExerciseTile(
-                        imageUrl: 'https://source.unsplash.com/featured/?gym',
-                        title: 'Pull-Ups',
-                        subtitle: '3 sets of 10 reps',
-                      ),ExerciseTile(
-                        imageUrl: 'https://source.unsplash.com/featured/?gym',
-                        title: 'Pull-Ups',
-                        subtitle: '3 sets of 10 reps',
-                      ),ExerciseTile(
-                        imageUrl: 'https://source.unsplash.com/featured/?gym',
-                        title: 'Pull-Ups',
-                        subtitle: '3 sets of 10 reps',
-                      ),ExerciseTile(
-                        imageUrl: 'https://source.unsplash.com/featured/?gym',
-                        title: 'Pull-Ups',
-                        subtitle: '3 sets of 10 reps',
-                      ),
-                      // Add more ExerciseTile widgets specific to Day 1
-                    ];
-                    break;
-                  case 1:
-                    dayRoutine = 'Day 2 - Push Routine';
-                    exercises = [
-                      ExerciseTile(
-                        imageUrl: 'https://source.unsplash.com/featured/?gym',
-                        title: 'Push-Ups',
-                        subtitle: '4 sets of 10 reps',
-                      ),
-                      ExerciseTile(
-                        imageUrl: 'https://source.unsplash.com/featured/?gym',
-                        title: 'Push-Ups',
-                        subtitle: '4 sets of 10 reps',
-                      ),ExerciseTile(
-                        imageUrl: 'https://source.unsplash.com/featured/?gym',
-                        title: 'Push-Ups',
-                        subtitle: '4 sets of 10 reps',
-                      ),ExerciseTile(
-                        imageUrl: 'https://source.unsplash.com/featured/?gym',
-                        title: 'Push-Ups',
-                        subtitle: '4 sets of 10 reps',
-                      ),
-                      // Add more ExerciseTile widgets specific to Day 2
-                    ];
-                    break;
-                  case 2:
-                    dayRoutine = 'Day 3 - Legs Routine';
-                    exercises = [
-                      ExerciseTile(
-                        imageUrl: 'https://source.unsplash.com/featured/?gym',
-                        title: 'Squats',
-                        subtitle: '5 sets of 8 reps',
-                      ),
-                      ExerciseTile(
-                        imageUrl: 'https://source.unsplash.com/featured/?gym',
-                        title: 'Squats',
-                        subtitle: '5 sets of 8 reps',
-                      ),
-                      ExerciseTile(
-                        imageUrl: 'https://source.unsplash.com/featured/?gym',
-                        title: 'Squats',
-                        subtitle: '5 sets of 8 reps',
-                      ),
-                      // Add more ExerciseTile widgets specific to Day 3
-                    ];
-                    break;
-                // Add more cases for more days
-                }
+            child: Container(
+              // color: theme_darkblue,
+              child: PageView.builder(
+                controller: _controller,
+                itemCount: 3, // specify the number of days
+                itemBuilder: (BuildContext context, int index) {
+                  // Determine the day and routine based on the index
+                  String dayRoutine = '';
+                  List<Widget> exercises = [];
+                  switch (index) {
+                    case 0:
+                      dayRoutine = 'Day 1 - Pull Routine';
+                      exercises = [
+                        ExerciseTile(
+                          imageUrl: 'https://source.unsplash.com/featured/?gym',
+                          title: 'Pull-Ups',
+                          subtitle: '3 sets of 10 reps',
+                        ),
+                        ExerciseTile(
+                          imageUrl: 'https://source.unsplash.com/featured/?gym',
+                          title: 'Pull-Ups',
+                          subtitle: '3 sets of 10 reps',
+                        ),
+                        ExerciseTile(
+                          imageUrl: 'https://source.unsplash.com/featured/?gym',
+                          title: 'Pull-Ups',
+                          subtitle: '3 sets of 10 reps',
+                        ),
+                        ExerciseTile(
+                          imageUrl: 'https://source.unsplash.com/featured/?gym',
+                          title: 'Pull-Ups',
+                          subtitle: '3 sets of 10 reps',
+                        ),
+                        // Add more ExerciseTile widgets specific to Day 1
+                      ];
+                      break;
+                    case 1:
+                      dayRoutine = 'Day 2 - Push Routine';
+                      exercises = [
+                        ExerciseTile(
+                          imageUrl: 'https://source.unsplash.com/featured/?gym',
+                          title: 'Push-Ups',
+                          subtitle: '4 sets of 10 reps',
+                        ),
+                        ExerciseTile(
+                          imageUrl: 'https://source.unsplash.com/featured/?gym',
+                          title: 'Push-Ups',
+                          subtitle: '4 sets of 10 reps',
+                        ),
+                        ExerciseTile(
+                          imageUrl: 'https://source.unsplash.com/featured/?gym',
+                          title: 'Push-Ups',
+                          subtitle: '4 sets of 10 reps',
+                        ),
+                        ExerciseTile(
+                          imageUrl: 'https://source.unsplash.com/featured/?gym',
+                          title: 'Push-Ups',
+                          subtitle: '4 sets of 10 reps',
+                        ),
+                        // Add more ExerciseTile widgets specific to Day 2
+                      ];
+                      break;
+                    case 2:
+                      dayRoutine = 'Day 3 - Legs Routine';
+                      exercises = [
+                        ExerciseTile(
+                          imageUrl: 'https://source.unsplash.com/featured/?gym',
+                          title: 'Squats',
+                          subtitle: '5 sets of 8 reps',
+                        ),
+                        ExerciseTile(
+                          imageUrl: 'https://source.unsplash.com/featured/?gym',
+                          title: 'Squats',
+                          subtitle: '5 sets of 8 reps',
+                        ),
+                        ExerciseTile(
+                          imageUrl: 'https://source.unsplash.com/featured/?gym',
+                          title: 'Squats',
+                          subtitle: '5 sets of 8 reps',
+                        ),
+                        // Add more ExerciseTile widgets specific to Day 3
+                      ];
+                      break;
+                    // Add more cases for more days
+                  }
 
-                // Build the content for the current day
-                return Container(
-                  width: MediaQuery.of(context).size.width - 40,
-                  margin: EdgeInsets.all(16),
-                  padding: EdgeInsets.all(16),
-                  decoration: primary_decoration, // ensure this is defined in your project
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(
-                        dayRoutine,
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      SizedBox(height: 16),
-                      ...exercises, // Insert the list of exercises
-                      SizedBox(
-                        width: double.infinity,
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            primary: theme_green, // ensure theme_green is defined and accessible
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
+                  // Build the content for the current day
+                  return Container(
+                    width: MediaQuery.of(context).size.width - 40,
+                    margin: EdgeInsets.all(16),
+                    padding: EdgeInsets.all(16),
+                    decoration: primary_decoration,
+                    // ensure this is defined in your project
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(
+                          dayRoutine,
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
                           ),
-                          onPressed: () {
-                            print('Icon Clicked');
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => startTraining(), // This is your Templates page widget
-                              ),
-                            );
-                          },
-                          child: Text('Start Now'),
                         ),
-                      ),
-                    ],
-                  ),
-                );
-              },
+                        SizedBox(height: 16),
+                        ...exercises, // Insert the list of exercises
+                        SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              primary: theme_green,
+                              // ensure theme_green is defined and accessible
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                            ),
+                            onPressed: () {
+                              print('Start Clicked');
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      startTraining(), // This is your Templates page widget
+                                ),
+                              );
+                            },
+                            child: Text('Start Now'),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
             ),
           ),
 
           DotsIndicator(
-            dotsCount: 3, // the number of dots should match the number of days/pages
-            position: _currentPage.round(), // this should be the current page index
+            dotsCount: 3,
+            // the number of dots should match the number of days/pages
+            position: _currentPage.round(),
+            // this should be the current page index
             decorator: DotsDecorator(
               activeColor: theme_green, // use your theme color here
             ),
@@ -266,7 +280,6 @@ class ExerciseTile extends StatelessWidget {
                     subtitle,
                     style: TextStyle(fontSize: 13), // for smaller text
                   ),
-
                 ],
               ),
             ),
