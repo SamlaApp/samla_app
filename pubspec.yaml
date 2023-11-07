@@ -103,6 +103,7 @@ flutter:
         - google_fonts/
         - images/Logo/1x/Icon_1@1x.png
         - images/Logo/2x/Icon_1@2x.png
+        - images/download.jpeg
 
     # An image asset can refer to one or more resolution-specific "variants", see
     # https://flutter.dev/assets-and-images/#resolution-aware
