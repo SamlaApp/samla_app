@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dartz/dartz.dart';
 import 'package:samla_app/core/error/exceptions.dart';
 import 'package:samla_app/core/error/failures.dart';
@@ -9,6 +11,7 @@ import 'package:samla_app/features/nutrition/data/datasources/remote_data_source
 import 'package:samla_app/features/nutrition/domain/entities/nutritionPlan.dart';
 import 'package:samla_app/features/nutrition/domain/repositories/nutritionPlan_repository.dart';
 
+import '../../../../core/network/samlaAPI.dart';
 import '../models/nutritionPlan_model.dart';
 
 class NutritionPlanRepositoryImpl implements NutritionPlanRepository {
@@ -42,6 +45,22 @@ class NutritionPlanRepositoryImpl implements NutritionPlanRepository {
       }
     }
   }
+
+
+  @override
+  Future<Either<Failure, NutritionPlan>> createNutritionPlan({required NutritionPlan nutritionPlan}) async {
+    if (await networkInfo.isConnected) {
+      try {
+        final newNeutritionPlan = await remoteDataSource.createNutritionPlan(nutritionPlan);
+        return Right(newNeutritionPlan);
+      } on ServerException catch (e) {
+        return Left(ServerFailure(message: e.message));
+      }
+    } else {
+      return Left(ServerFailure(message: 'No internet connection'));
+    }
+  }
+
 
 
 }

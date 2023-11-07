@@ -9,7 +9,7 @@ class NutritionPlan extends Equatable {
   final String? end_time;
 
   const NutritionPlan({
-    required this.id,
+    this.id,
     required this.name,
     required this.type,
     required this.calories,

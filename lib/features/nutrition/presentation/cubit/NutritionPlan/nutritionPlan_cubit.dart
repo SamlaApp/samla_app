@@ -1,8 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:samla_app/features/nutrition/data/models/nutritionPlan_model.dart';
-import 'package:samla_app/features/nutrition/domain/entities/NutritionPlan.dart';
+import 'package:samla_app/features/nutrition/domain/entities/nutritionPlan.dart';
 import 'package:samla_app/features/nutrition/domain/repositories/nutritionPlan_repository.dart';
+
 
 part 'nutritionPlan_state.dart';
 
@@ -22,6 +22,21 @@ class NutritionPlanCubit extends Cubit<NutritionPlanState> {
         return;
       }
       emit(NutritionPlanLoaded(nutritionPlans.cast<NutritionPlan>()));
+    });
+  }
+
+  // createNutritionPlan
+  Future<void> createNutritionPlan(NutritionPlan nutritionPlan) async {
+    emit(NutritionPlanLoadingState()); // Show loading state
+    final result = await repository.createNutritionPlan(nutritionPlan: nutritionPlan);
+    result.fold((failure) => emit(NutritionPlanErrorState('Failed to create nutrition plan')),
+        (nutritionPlan) {
+      if(nutritionPlan == null) {
+        print('empty');
+        emit(NutritionPlanEmptyState());
+        return;
+      }
+      emit(NutritionPlanCreated(nutritionPlan));
     });
   }
 

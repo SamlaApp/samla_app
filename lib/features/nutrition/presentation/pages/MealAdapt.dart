@@ -5,6 +5,7 @@ import 'package:samla_app/features/nutrition/data/models/nutritionPlan_model.dar
 import '../widgets/MaelAdapt/DayDropdown.dart';
 import '../widgets/MaelAdapt/NutrientColumn.dart';
 import '../widgets/MaelAdapt/foodItem.dart';
+import 'nutritionPlan.dart';
 
 class MealAdapt extends StatelessWidget {
   final NutritionPlanModel nutritionPlan;

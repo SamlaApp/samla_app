@@ -6,10 +6,8 @@ import 'package:samla_app/features/nutrition/domain/entities/nutritionPlan.dart'
 import 'package:samla_app/core/network/samlaAPI.dart';
 
 abstract class NutritionPlanRemoteDataSource {
-  /// Calls the https://samla-api.herokuapp.com/nutritionPlans endpoint.
-  ///
-  /// Throws a [ServerException] for all error codes.
- Future<List<NutritionPlan>> getAllNutritionPlans();
+  Future<List<NutritionPlan>> getAllNutritionPlans();
+  Future<NutritionPlanModel> createNutritionPlan(NutritionPlan nutritionPlan);
 }
 
 const BASE_URL = 'https://samla.mohsowa.com/api/nutrition';
@@ -25,7 +23,8 @@ class NutritionPlanRemoteDataSourceImpl
     final res = await samlaAPI(endPoint: '/nutrition/get', method: 'GET');
     final resBody = await res.stream.bytesToString();
     if (res.statusCode == 200) {
-      final List<dynamic> nutritionPlans = json.decode(resBody)['nutrition_plans'];
+      final List<dynamic> nutritionPlans =
+          json.decode(resBody)['nutrition_plans'];
       final List<NutritionPlanModel> convertedPlans = nutritionPlans
           .map((e) => NutritionPlanModel.fromJson(e as Map<String, dynamic>))
           .toList();
@@ -35,4 +34,22 @@ class NutritionPlanRemoteDataSourceImpl
     }
   }
 
+  @override
+  Future<NutritionPlanModel> createNutritionPlan(
+      NutritionPlan nutritionPlan) async {
+    final nutrition = NutritionPlanModel.fromEntity(nutritionPlan);
+    final response = await samlaAPI(
+      data: nutrition.toJson(),
+      endPoint: '/nutrition/create',
+      method: 'POST',
+    );
+    final resBody = await response.stream.bytesToString();
+    if (response.statusCode == 200) {
+      final NutritionPlanModel nutritionPlan =
+          NutritionPlanModel.fromJson(json.decode(resBody)['nutrition_plan']);
+      return nutritionPlan;
+    } else {
+      throw ServerException(message: json.decode(resBody)['message']);
+    }
+  }
 }

@@ -30,3 +30,9 @@ final class NutritionPlanLoaded extends NutritionPlanState {
 
   NutritionPlanLoaded(this.nutritionPlans);
 }
+
+final class NutritionPlanCreated extends NutritionPlanState {
+  final NutritionPlan nutritionPlan;
+
+  NutritionPlanCreated(this.nutritionPlan);
+}

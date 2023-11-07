@@ -2,7 +2,7 @@ import '../../domain/entities/nutritionPlan.dart';
 
 class NutritionPlanModel extends NutritionPlan {
   const NutritionPlanModel({
-    required super.id,
+    super.id,
     required super.name,
     required super.type,
     required super.calories,
