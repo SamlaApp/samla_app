@@ -156,12 +156,25 @@ class _NewMealState extends State<NewMeal> {
                         labelStyle: TextStyle(
                           color: theme_darkblue,
                         ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: theme_grey), // normal
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: theme_darkblue), // selected
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        errorBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: theme_red), // validation error
+                          borderRadius: BorderRadius.circular(10),
+                        ),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
                       ),
                     ),
                   ),
+
                   const SizedBox(height: 20),
                   Padding(
                     padding: const EdgeInsets.all(0.0),
