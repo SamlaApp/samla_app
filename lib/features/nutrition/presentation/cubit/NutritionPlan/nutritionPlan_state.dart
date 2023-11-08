@@ -36,3 +36,9 @@ final class NutritionPlanCreated extends NutritionPlanState {
 
   NutritionPlanCreated(this.nutritionPlan);
 }
+
+final class NutritionPlanMealLibraryLoaded extends NutritionPlanState {
+  final MealLibrary mealLibrary;
+
+  NutritionPlanMealLibraryLoaded(this.mealLibrary);
+}
