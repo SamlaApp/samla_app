@@ -1,23 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:samla_app/config/themes/common_styles.dart';
+import 'package:samla_app/features/nutrition/data/models/nutritionPlan_model.dart';
 import '../widgets/MaelAdapt/DayDropdown.dart';
 import '../widgets/MaelAdapt/NutrientColumn.dart';
 import '../widgets/MaelAdapt/foodItem.dart';
-import 'package:samla_app/features/nutrition/domain/entities/nutritionPlan.dart';
 
-class MealAdapt extends StatefulWidget {
-  final NutritionPlan nutritionPlan;
+class MealAdapt extends StatelessWidget {
+  final NutritionPlanModel nutritionPlan;
 
-  const MealAdapt({Key? key, required this.nutritionPlan}) : super(key: key);
-
-  @override
-  _MealAdaptState createState() => _MealAdaptState(nutritionPlan);
-}
-
-class _MealAdaptState extends State<MealAdapt> {
-  final NutritionPlan nutritionPlan;
-
-  _MealAdaptState(this.nutritionPlan);
+  const MealAdapt({super.key, required this.nutritionPlan});
 
   @override
   Widget build(BuildContext context) {
@@ -61,83 +52,121 @@ class _MealAdaptState extends State<MealAdapt> {
       );
     }
 
-    return Scaffold(
-      appBar: AppBar(
-        toolbarHeight: 200.0,
-        flexibleSpace: Container(
-          decoration: BoxDecoration(gradient: gradient),
-        ),
-        title: Column(
-          children: [
-            Icon(icon, size: 80),
-            const SizedBox(height: 5),
-            Text(
-              nutritionPlan.name,
-              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 10),
-            Text(
-              '${nutritionPlan.start_time} - ${nutritionPlan.end_time}',
-              style: const TextStyle(fontSize: 14),
-            ),
-          ],
-        ),
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
+    return DefaultTabController(
+      length: 2, // Number of tabs
+      child: Scaffold(
+        appBar: AppBar(
+          toolbarHeight: 200.0,
+          flexibleSpace: Container(
+            decoration: BoxDecoration(gradient: gradient),
+          ),
+          title: Column(
             children: [
-              SizedBox(height: 20),
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(20),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.3),
-                      spreadRadius: 2,
-                      blurRadius: 5,
-                    ),
-                  ],
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    NutrientColumn(value: '30', label: 'Carbs'),
-                    NutrientColumn(value: '24', label: 'Protein'),
-                    NutrientColumn(value: '18', label: 'Fat'),
-                    NutrientColumn(value: '350', label: 'Total kcal'),
-                  ],
-                ),
+              Icon(icon, size: 80),
+              const SizedBox(height: 5),
+              Text(
+                nutritionPlan.name,
+                style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
-              const SizedBox(height: 20),
-              DayDropdown(
-                days: const [
-                  'Monday',
-                  'Tuesday',
-                  'Wednesday',
-                  'Thursday',
-                  'Friday',
-                  'Saturday',
-                  'Sunday'
-                ],
-                initialValue: 'Sunday',
-                onChanged: (value) {
-                  print("Selected day: $value");
-                },
+              const SizedBox(height: 10),
+              Text(
+                '${nutritionPlan.start_time} - ${nutritionPlan.end_time}',
+                style: TextStyle(fontSize: 14),
               ),
-              SizedBox(height: 20),
-              FoodItem(foodName: 'شاي حليب', kcal: 22, onRemove: () {}),
-              FoodItem(foodName: 'كبدة', kcal: 213, onRemove: () {}),
-              FoodItem(foodName: 'لحم بالطماط', kcal: 234, onRemove: () {}),
-              FoodItem(foodName: 'بيض بالجبن', kcal: 187, onRemove: () {}),
-              SizedBox(height: 30),
             ],
           ),
+          bottom: TabBar(
+            indicatorColor: theme_green,
+            labelColor: primary_color,
+            unselectedLabelColor: theme_grey,
+            labelStyle: const TextStyle(
+              fontWeight: FontWeight.bold,
+            ),
+            unselectedLabelStyle: const TextStyle(
+              fontWeight: FontWeight.normal,
+            ),
+            tabs: const [
+              Tab(text: 'Your current plan'),
+              Tab(text: 'Find more meals'),
+            ],
+          ),
+        ),
+        body: TabBarView(
+          children: [
+            // First tab content
+            SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsets.all(16.0),
+                child: Column(
+                  children: [
+                    SizedBox(height: 20),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(20),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.2),
+                            spreadRadius: 2,
+                            blurRadius: 5,
+                          ),
+                        ],
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          NutrientColumn(value: '30', label: 'Carbs'),
+                          NutrientColumn(value: '24', label: 'Protein'),
+                          NutrientColumn(value: '18', label: 'Fat'),
+                          NutrientColumn(value: '350', label: 'Total kcal'),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    DayDropdown(
+                      days: const [
+                        'Monday',
+                        'Tuesday',
+                        'Wednesday',
+                        'Thursday',
+                        'Friday',
+                        'Saturday',
+                        'Sunday'
+                      ],
+                      initialValue: 'Saturday',
+                      onChanged: (value) {
+                        print("Selected day: $value");
+                      },
+                    ),
+                    const SizedBox(height: 20),
+                    FoodItem(foodName: 'eggs', kcal: 22, onRemove: () {}),
+                    FoodItem(foodName: 'tea', kcal: 213, onRemove: () {}),
+                    FoodItem(foodName: 'meat', kcal: 234, onRemove: () {}),
+                    FoodItem(foodName: 'apple', kcal: 187, onRemove: () {}),
+                    SizedBox(height: 30),
+                  ],
+                ),
+              ),
+            ),
+            // Second tab content
+            const SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsets.all(16.0),
+                child: Column(
+                  children: [
+                    Text('Hi there!'),
+                    // more widget here
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
   }
 }
+
+
+
