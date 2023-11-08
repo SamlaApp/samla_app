@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:samla_app/config/themes/common_styles.dart';
 import 'package:samla_app/features/nutrition/data/models/nutritionPlan_model.dart';
-import 'package:samla_app/features/nutrition/presentation/cubit/NutritionPlan/nutritionPlan_cubit.dart';
-import 'MealAdapt.dart';
-import 'newMeal.dart';
+import 'package:samla_app/features/nutrition/presentation/cubit/nutritionPlan/nutritionPlan_cubit.dart';
+import 'package:samla_app/features/nutrition/presentation/pages/MealAdapt.dart';
+import 'package:samla_app/features/nutrition/presentation/pages/NewMeal.dart';
 import 'package:samla_app/features/nutrition/nutrition_di.dart' as di;
 
 class NutritionPlan extends StatefulWidget {
@@ -70,9 +70,12 @@ class _NutritionPlanState extends State<NutritionPlan> {
       builder: (context, state) {
         if (state is NutritionPlanLoadingState) {
           return Center(
-            child: CircularProgressIndicator(
-              color: theme_green,
-              backgroundColor: theme_pink,
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: CircularProgressIndicator(
+                color: theme_green,
+                backgroundColor: theme_pink,
+              ),
             ),
           );
         } else if (state is NutritionPlanLoaded) {
@@ -83,7 +86,10 @@ class _NutritionPlanState extends State<NutritionPlan> {
           );
         } else if (state is NutritionPlanEmptyState) {
           return const Center(
-            child: Text('No nutrition plans found'),
+            child: Padding(
+              padding: EdgeInsets.all(16.0),
+              child: Text('No nutrition plans found'),
+            ),
           );
         } else if (state is NutritionPlanErrorState) {
           return Center(
@@ -98,11 +104,12 @@ class _NutritionPlanState extends State<NutritionPlan> {
   buildNutritionPlansList(List<NutritionPlanModel> nutritionPlans, bool bool) {
     return nutritionPlans
         .map(
-          (nutritionPlan) => Padding(
+          (nutritionPlan) =>
+          Padding(
             padding: const EdgeInsets.all(8.0),
             child: mealCard(nutritionPlan: nutritionPlan),
           ),
-        )
+    )
         .toList();
   }
 
@@ -150,7 +157,6 @@ class _NutritionPlanState extends State<NutritionPlan> {
         ],
       );
     }
-
 
 
     return GestureDetector(

@@ -1,16 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:samla_app/config/themes/common_styles.dart';
-import 'package:samla_app/features/nutrition/data/models/nutritionPlan_model.dart';
-
 import '../widgets/MaelAdapt/DayDropdown.dart';
 import '../widgets/MaelAdapt/NutrientColumn.dart';
 import '../widgets/MaelAdapt/foodItem.dart';
-import 'nutritionPlan.dart';
+import 'package:samla_app/features/nutrition/domain/entities/nutritionPlan.dart';
 
-class MealAdapt extends StatelessWidget {
-  final NutritionPlanModel nutritionPlan;
+class MealAdapt extends StatefulWidget {
+  final NutritionPlan nutritionPlan;
 
-  const MealAdapt({super.key, required this.nutritionPlan});
+  const MealAdapt({Key? key, required this.nutritionPlan}) : super(key: key);
+
+  @override
+  _MealAdaptState createState() => _MealAdaptState(nutritionPlan);
+}
+
+class _MealAdaptState extends State<MealAdapt> {
+  final NutritionPlan nutritionPlan;
+
+  _MealAdaptState(this.nutritionPlan);
 
   @override
   Widget build(BuildContext context) {
@@ -76,9 +83,6 @@ class MealAdapt extends StatelessWidget {
           ],
         ),
       ),
-
-
-
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -108,9 +112,9 @@ class MealAdapt extends StatelessWidget {
                   ],
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               DayDropdown(
-                days: [
+                days: const [
                   'Monday',
                   'Tuesday',
                   'Wednesday',
@@ -119,7 +123,7 @@ class MealAdapt extends StatelessWidget {
                   'Saturday',
                   'Sunday'
                 ],
-                initialValue: 'Saturday',
+                initialValue: 'Sunday',
                 onChanged: (value) {
                   print("Selected day: $value");
                 },

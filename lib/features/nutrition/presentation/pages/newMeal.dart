@@ -3,10 +3,8 @@ import 'package:samla_app/config/themes/common_styles.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:day_night_time_picker/day_night_time_picker.dart';
 import 'package:samla_app/features/nutrition/data/models/nutritionPlan_model.dart';
-import 'package:samla_app/features/nutrition/domain/entities/NutritionPlan.dart';
 import 'package:samla_app/features/nutrition/domain/repositories/nutritionPlan_repository.dart';
 import 'package:samla_app/features/nutrition/presentation/cubit/nutritionPlan/nutritionPlan_cubit.dart';
-import '../pages/MealAdapt.dart';
 import '../../nutrition_di.dart';
 
 class NewMeal extends StatefulWidget {
@@ -24,10 +22,17 @@ class _NewMealState extends State<NewMeal> {
   final _startTimeController = TextEditingController();
   final _endTimeController = TextEditingController();
 
-  Time _startTime = Time(hour: 00, minute: 00);
-  Time _endTime = Time(hour: 00, minute: 00);
+  Time _startTime = Time(hour: 06, minute: 00);
+  Time _endTime = Time(hour: 09, minute: 00);
 
-  int _calories = 1;
+  int _calories = 400;
+
+  // method take _startTime or _endTime and return time in string format
+  String _timeToString(Time time) {
+    final hour = time.hour.toString().padLeft(2, '0');
+    final minute = time.minute.toString().padLeft(2, '0');
+    return '$hour:$minute';
+  }
 
   @override
   void initState() {
@@ -247,9 +252,10 @@ class _NewMealState extends State<NewMeal> {
                               ),
                             );
                           },
-                          child: const Text(
-                            'Select Time',
-                            style: TextStyle(color: Color.fromRGBO(64, 194, 210, 1)),
+                          child:Text(
+                            // display only time
+                            _timeToString(_startTime),
+                            style: const TextStyle(color: Color.fromRGBO(64, 194, 210, 1)),
                           ),
                         ),
                       ),
@@ -296,9 +302,9 @@ class _NewMealState extends State<NewMeal> {
                               ),
                             );
                           },
-                          child: const Text(
-                            'Select Time',
-                            style: TextStyle(color: Color.fromRGBO(64, 194, 210, 1)),
+                          child: Text(
+                            _timeToString(_endTime),
+                            style: const TextStyle(color: Color.fromRGBO(64, 194, 210, 1)),
                           ),
                         ),
                       ),
@@ -321,75 +327,109 @@ class _NewMealState extends State<NewMeal> {
                       ),
                       const SizedBox(height: 10),
 
-                      // radio buttons
-
-                      Row(
-                        children: [
-                          Expanded(
-                            child: RadioListTile(
-                              activeColor: theme_green,
-                              title: const Text('Breakfast'),
-                              value: 'Breakfast',
-                              groupValue: _selectedMealTypeController.text,
-                              onChanged: (value) {
-                                setState(() {
-                                  _selectedMealTypeController.text =
-                                      value.toString();
-                                });
-                              },
+                      // Buttons
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.all(4.0),
+                                child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: _selectedMealTypeController.text == 'Breakfast'
+                                        ? theme_green
+                                        : theme_darkblue,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                  ),
+                                  onPressed: () {
+                                    setState(() {
+                                      _selectedMealTypeController.text = 'Breakfast';
+                                    });
+                                  },
+                                  child: const Text('Breakfast'),
+                                ),
+                              ),
                             ),
-                          ),
-                          Expanded(
-                            child: RadioListTile(
-                              activeColor: theme_green,
-                              title: const Text('Lunch'),
-                              value: 'Lunch',
-                              groupValue: _selectedMealTypeController.text,
-                              onChanged: (value) {
-                                setState(() {
-                                  _selectedMealTypeController.text =
-                                      value.toString();
-                                });
-                              },
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.all(4.0),
+                                child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: _selectedMealTypeController.text == 'Lunch'
+                                        ? theme_green
+                                        : theme_darkblue,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                  ),
+                                  onPressed: () {
+                                    setState(() {
+                                      _selectedMealTypeController.text = 'Lunch';
+                                    });
+                                  },
+                                  child: const Text('Lunch'),
+                                ),
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Expanded(
-                            child: RadioListTile(
-                              activeColor: theme_green,
-                              title: const Text('Dinner'),
-                              value: 'Dinner',
-                              groupValue: _selectedMealTypeController.text,
-                              onChanged: (value) {
-                                setState(() {
-                                  _selectedMealTypeController.text =
-                                      value.toString();
-                                });
-                              },
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.all(4.0),
+                                child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: _selectedMealTypeController.text == 'Dinner'
+                                        ? theme_green
+                                        : theme_darkblue,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                  ),
+                                  onPressed: () {
+                                    setState(() {
+                                      _selectedMealTypeController.text = 'Dinner';
+                                    });
+                                  },
+                                  child: const Text('Dinner'),
+                                ),
+                              ),
                             ),
-                          ),
-                          Expanded(
-                            child: RadioListTile(
-                              activeColor: theme_green,
-                              title: const Text('Snack'),
-                              value: 'Snack',
-                              groupValue: _selectedMealTypeController.text,
-                              onChanged: (value) {
-                                setState(() {
-                                  _selectedMealTypeController.text =
-                                      value.toString();
-                                });
-                              },
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.all(4.0),
+                                child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: _selectedMealTypeController.text == 'Snack'
+                                        ? theme_green
+                                        : theme_darkblue,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                  ),
+                                  onPressed: () {
+                                    setState(() {
+                                      _selectedMealTypeController.text = 'Snack';
+                                    });
+                                  },
+                                  child: const Text('Snack'),
+                                ),
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ],
                   ),
+
 
                   const SizedBox(height: 20),
                   SizedBox(
