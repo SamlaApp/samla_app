@@ -339,7 +339,7 @@ class _NewMealState extends State<NewMeal> {
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: _selectedMealTypeController.text == 'Breakfast'
                                         ? theme_green
-                                        : theme_darkblue,
+                                        : inputField_color,
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(10),
                                     ),
@@ -360,7 +360,7 @@ class _NewMealState extends State<NewMeal> {
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: _selectedMealTypeController.text == 'Lunch'
                                         ? theme_green
-                                        : theme_darkblue,
+                                        : inputField_color,
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(10),
                                     ),
@@ -389,7 +389,7 @@ class _NewMealState extends State<NewMeal> {
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: _selectedMealTypeController.text == 'Dinner'
                                         ? theme_green
-                                        : theme_darkblue,
+                                        : inputField_color,
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(10),
                                     ),
@@ -410,7 +410,7 @@ class _NewMealState extends State<NewMeal> {
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: _selectedMealTypeController.text == 'Snack'
                                         ? theme_green
-                                        : theme_darkblue,
+                                        : inputField_color,
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(10),
                                     ),
