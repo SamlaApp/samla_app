@@ -25,28 +25,19 @@ class _DayDropdownState extends State<DayDropdown> {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        SizedBox(width: 20),
-
-        Text(
-          "Day",
-          style: TextStyle(color: theme_green, fontSize: 16, fontWeight: FontWeight.bold),
-        ),
-        SizedBox(width: 20),
         Expanded(
           child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 8.0),
+            padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8.0),
             decoration: BoxDecoration(
               color: inputField_color,
               borderRadius: BorderRadius.circular(15.0),
-
             ),
             child: DropdownButtonHideUnderline(
               child: DropdownButton<String>(
                 value: _currentDay,
                 isExpanded: true,
-                icon: Icon(Icons.keyboard_arrow_down, color: Colors.grey.shade600),
+                icon: Icon(Icons.keyboard_arrow_down, color: Colors.grey.shade400),
                 iconSize: 24,
-                elevation: 16,
                 style: TextStyle(color: Colors.grey.shade800, fontSize: 16),
                 onChanged: (String? newValue) {
                   setState(() {

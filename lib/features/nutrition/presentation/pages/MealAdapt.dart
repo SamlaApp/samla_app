@@ -198,6 +198,11 @@ class _MealAdaptState extends State<MealAdapt> {
                                 },
                                 icon: const Icon(Icons.search),
                                 color: theme_green,
+                                style: ElevatedButton.styleFrom(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(32.0),
+                                  ),
+                                )
                               ),
                             ],
                           ),
@@ -268,7 +273,7 @@ class _MealAdaptState extends State<MealAdapt> {
                           // button to add meal to plan
                           ElevatedButton.icon(
                             onPressed: () {
-                              //cubit.createNutritionPlan(nutritionPlan);
+                              //
                             },
                             icon: const Icon(Icons.add),
                             label: const Text('Add'),
@@ -284,94 +289,97 @@ class _MealAdaptState extends State<MealAdapt> {
                       ),
                     ),
                     const SizedBox(height: 10),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Column(
-                          children: [
-                            Text(
-                              state.mealLibrary.carbs.toString(),
-                              style: const TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white),
-                            ),
-                            const SizedBox(height: 4),
-                            const Text(
-                              'Carbs',
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          ],
-                        ),
-                        Column(
-                          children: [
-                            Text(
-                              state.mealLibrary.protein.toString(),
-                              style: const TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white),
-                            ),
-                            const SizedBox(height: 4),
-                            const Text(
-                              'Protein',
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          ],
-                        ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Column(
+                            children: [
+                              Text(
+                                state.mealLibrary.carbs.toString(),
+                                style: const TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white),
+                              ),
+                              const SizedBox(height: 4),
+                              const Text(
+                                'Carbs',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ],
+                          ),
+                          Column(
+                            children: [
+                              Text(
+                                state.mealLibrary.protein.toString(),
+                                style: const TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white),
+                              ),
+                              const SizedBox(height: 4),
+                              const Text(
+                                'Protein',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ],
+                          ),
 
-                        Column(
-                          children: [
-                            Text(
-                              state.mealLibrary.fat.toString(),
-                              style: const TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white),
-                            ),
-                            const SizedBox(height: 4),
-                            const Text(
-                              'Fat',
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          ],
-                        ),
+                          Column(
+                            children: [
+                              Text(
+                                state.mealLibrary.fat.toString(),
+                                style: const TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white),
+                              ),
+                              const SizedBox(height: 4),
+                              const Text(
+                                'Fat',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ],
+                          ),
 
-                        Column(
-                          children: [
-                            Text(
-                              state.mealLibrary.calories.toString(),
-                              style: const TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white),
-                            ),
-                            const SizedBox(height: 4),
-                            const Text(
-                              'Total kcal',
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          ],
-                        ),
+                          Column(
+                            children: [
+                              Text(
+                                state.mealLibrary.calories.toString(),
+                                style: const TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white),
+                              ),
+                              const SizedBox(height: 4),
+                              const Text(
+                                'Total kcal',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ],
+                          ),
 
-                        // size of meal
-                        Column(
-                          children: [
-                            Text(
-                              state.mealLibrary.serving_size_g.toString(),
-                              style: const TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white),
-                            ),
-                            const SizedBox(height: 4),
-                            const Text(
-                              'Size (g)',
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          ],
-                        ),
-                      ],
+                          // size of meal
+                          Column(
+                            children: [
+                              Text(
+                                state.mealLibrary.serving_size_g.toString(),
+                                style: const TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white),
+                              ),
+                              const SizedBox(height: 4),
+                              const Text(
+                                'Size (g)',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
