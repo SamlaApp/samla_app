@@ -16,14 +16,48 @@ class _NewFoodState extends State<newFood> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _caloriesController = TextEditingController();
+  final _carbsController = TextEditingController();
+  final _proteinController = TextEditingController();
+  final _fatController = TextEditingController();
 
   int _calories = 100;
+  int _carbs = 50;
+  int _protein = 30;
+  int _fat = 20;
 
   @override
   void initState() {
     super.initState();
     _caloriesController.text = _calories.toString();
+    _carbsController.text = _carbs.toString();
+    _proteinController.text = _protein.toString();
+    _fatController.text = _fat.toString();
   }
+
+
+  void _onCarbsChanged(int value) {
+    setState(() {
+      _carbs = value;
+      _carbsController.text = _carbs.toString();
+    });
+  }
+
+  void _onProteinChanged(int value) {
+    setState(() {
+      _protein = value;
+      _proteinController.text = _protein.toString();
+
+    });
+  }
+
+  void _onFatChanged(int value) {
+    setState(() {
+      _fat = value;
+      _fatController.text = _fat.toString();
+
+    });
+  }
+
 
   void _onCaloriesChanged(int value) {
     setState(() {
@@ -31,6 +65,7 @@ class _NewFoodState extends State<newFood> {
       _caloriesController.text = _calories.toString();
     });
   }
+
 
   final cubit = NutritionPlanCubit(sl<NutritionPlanRepository>());
 
@@ -175,8 +210,143 @@ class _NewFoodState extends State<newFood> {
                       ],
                     ),
                   ),
-
+              //gg
                   const SizedBox(height: 20),
+                  Padding(
+                    padding: const EdgeInsets.all(0.0),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Container(
+                            padding: const EdgeInsets.only(left: 8.0),
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              'Carbs (g)',
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: theme_darkblue,
+                              ),
+                            ),
+                          ),
+                        ),
+                        NumberPicker(
+                          textStyle: TextStyle(
+                            color: theme_darkblue,
+                          ),
+                          textMapper: (numberText) => numberText,
+                          itemWidth: 60,
+                          itemHeight: 40,
+                          axis: Axis.horizontal,
+                          selectedTextStyle: TextStyle(
+                            color: theme_green,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(
+                              color: theme_darkblue,
+                            ),
+                          ),
+                          minValue: 0,
+                          maxValue: 1000,
+                          value: _carbs,
+                          onChanged: _onCarbsChanged,
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+
+                  Padding(
+                    padding: const EdgeInsets.all(0.0),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Container(
+                            padding: const EdgeInsets.only(left: 8.0),
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              'Protein (g)',
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: theme_darkblue,
+                              ),
+                            ),
+                          ),
+                        ),
+                        NumberPicker(
+                          textStyle: TextStyle(
+                            color: theme_darkblue,
+                          ),
+                          textMapper: (numberText) => numberText,
+                          itemWidth: 60,
+                          itemHeight: 40,
+                          axis: Axis.horizontal,
+                          selectedTextStyle: TextStyle(
+                            color: theme_green,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(
+                              color: theme_darkblue,
+                            ),
+                          ),
+                          minValue: 0,
+                          maxValue: 1000,
+                          value: _protein,
+                          onChanged: _onProteinChanged,
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+
+                  Padding(
+                    padding: const EdgeInsets.all(0.0),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Container(
+                            padding: const EdgeInsets.only(left: 8.0),
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              'Fats (g)',
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: theme_darkblue,
+                              ),
+                            ),
+                          ),
+                        ),
+                        NumberPicker(
+                          textStyle: TextStyle(
+                            color: theme_darkblue,
+                          ),
+                          textMapper: (numberText) => numberText,
+                          itemWidth: 60,
+                          itemHeight: 40,
+                          axis: Axis.horizontal,
+                          selectedTextStyle: TextStyle(
+                            color: theme_green,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(
+                              color: theme_darkblue,
+                            ),
+                          ),
+                          minValue: 0,
+                          maxValue: 1000,
+                          value: _fat,
+                          onChanged: _onFatChanged,
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 35),
+
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
