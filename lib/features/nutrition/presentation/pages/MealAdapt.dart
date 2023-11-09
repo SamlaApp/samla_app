@@ -4,7 +4,9 @@ import 'package:samla_app/config/themes/common_styles.dart';
 import 'package:samla_app/features/nutrition/domain/entities/MealLibrary.dart';
 import 'package:samla_app/features/nutrition/domain/entities/nutritionPlan.dart';
 import 'package:samla_app/features/nutrition/presentation/cubit/NutritionPlan/nutritionPlan_cubit.dart';
+import 'package:samla_app/features/nutrition/presentation/pages/newFood.dart';
 import '../../../../core/widgets/CustomTextFormField.dart';
+import '../widgets/AddMealButton.dart';
 import '../widgets/MaelAdapt/DayDropdown.dart';
 import '../widgets/MaelAdapt/NutrientColumn.dart';
 import '../widgets/MaelAdapt/foodItem.dart';
@@ -210,7 +212,17 @@ class _MealAdaptState extends State<MealAdapt> {
                       ),
                     ),
                     getSearchedMeals(gradient),
-                  ],
+                    const SizedBox(height: 20),
+
+                    AddMealButton(
+               onButtonPressed: (BuildContext context) {
+                  Navigator.of(context).push(
+                             MaterialPageRoute(
+                               builder: (context) => const newFood(),
+      ),
+
+    );
+  } ),          ],
                 ),
               ),
             ),
