@@ -17,9 +17,9 @@ class MealLibraryModel extends MealLibrary {
       id: json['id'],
       name: json['name'],
       calories: json['calories'],
-      fat: json['fat'],
-      protein: json['protein'],
-      carbs: json['carbs'],
+      fat: json['fat']?.toDouble(),
+      protein: json['protein']?.toDouble(),
+      carbs: json['carbs']?.toDouble(),
       serving_size_g: json['serving_size_g']?.toDouble(),
     );
   }
