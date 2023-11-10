@@ -161,10 +161,9 @@ class _MealAdaptState extends State<MealAdapt> {
                       },
                     ),
                     const SizedBox(height: 20),
-                    FoodItem(foodName: 'eggs', kcal: 22, onRemove: () {}),
-                    FoodItem(foodName: 'tea', kcal: 213, onRemove: () {}),
-                    FoodItem(foodName: 'meat', kcal: 234, onRemove: () {}),
-                    FoodItem(foodName: 'apple', kcal: 187, onRemove: () {}),
+                    FoodItem(foodName: 'eggs', kcal: 22,fat: 22,protein: 33,carbs: 33, onRemove: () {}),
+
+
                     const SizedBox(height: 30),
                   ],
                 ),
@@ -290,8 +289,19 @@ class _MealAdaptState extends State<MealAdapt> {
                           // button to add meal to plan
                           ElevatedButton.icon(
                             onPressed: () {
-                              //
+
+                              final MealLibrary mealToAdd = MealLibrary(
+                                name: mealLibrary.name,
+                                calories: mealLibrary.calories,
+                                carbs: mealLibrary.carbs,
+                                protein: mealLibrary.protein,
+                                fat: mealLibrary.fat,
+
+                              );
+                              context.read<NutritionPlanCubit>().addMealToPlan(mealToAdd);
                             },
+
+
                             icon: const Icon(Icons.add),
                             label: const Text('Add'),
                             style: ElevatedButton.styleFrom(
@@ -428,4 +438,5 @@ class _MealAdaptState extends State<MealAdapt> {
       },
     );
   }
+
 }

@@ -6,13 +6,16 @@ import 'package:samla_app/config/themes/common_styles.dart';
 class FoodItem extends StatefulWidget {
   final String foodName;
   final int kcal;
+  final int fat;
+  final int protein;
+  final int carbs;
   final VoidCallback onRemove;
 
   const FoodItem({
     Key? key,
     required this.foodName,
     required this.kcal,
-    required this.onRemove,
+    required this.onRemove, required this.fat, required this.protein, required this.carbs,
   }) : super(key: key);
 
   @override

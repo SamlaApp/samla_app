@@ -7,7 +7,7 @@ class MealLibrary extends Equatable {
   final double fat;
   final double protein;
   final double carbs;
-  final double serving_size_g;
+  final double? serving_size_g;
 
   const MealLibrary({
     this.id,
@@ -16,7 +16,7 @@ class MealLibrary extends Equatable {
     required this.fat,
     required this.protein,
     required this.carbs,
-    required this.serving_size_g,
+    this.serving_size_g,
   });
 
   @override
