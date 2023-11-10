@@ -29,7 +29,7 @@ class _CreateCommunityPageState extends State<CreateCommunityPage> {
   File? _image;
   bool _isPublic = false;
 
-  String? _nameValidator(String? value){
+  String? _nameValidator(String? value) {
     if (value == null || value.isEmpty) {
       return 'Name is required';
     }
@@ -39,18 +39,18 @@ class _CreateCommunityPageState extends State<CreateCommunityPage> {
     return null;
   }
 
-  String? _descriptionValidator(String? value){
+  String? _descriptionValidator(String? value) {
     if (value == null || value.isEmpty) {
       return 'Description is required';
     }
     if (value.length > 255) {
       return 'Description should not exceed 255 characters';
     }
-    
-    return null;
 
+    return null;
   }
-  String? _handleValidator(String? value){
+
+  String? _handleValidator(String? value) {
     if (value == null || value.isEmpty) {
       return 'Handle is required';
     }
@@ -67,11 +67,9 @@ class _CreateCommunityPageState extends State<CreateCommunityPage> {
     }
 
     return null;
-
   }
 
   Future<void> _pickImage() async {
-
     final ImageHelper _imageHelper = ImageHelper();
     final imagePath = await _imageHelper.pickImage(context, (image) {
       setState(() {
@@ -170,7 +168,7 @@ class _CreateCommunityPageState extends State<CreateCommunityPage> {
                       title: 'Community Avatar',
                     ),
                     SizedBox(height: 60),
-                    CustomTextField(
+                    CustomTextFormField(
                       controller: _nameController,
                       // decoration: InputDecoration(labelText: 'Name'),
                       validator: _nameValidator,
@@ -178,14 +176,14 @@ class _CreateCommunityPageState extends State<CreateCommunityPage> {
                       iconData: Icons.person,
                     ),
                     SizedBox(height: 20),
-                    CustomTextField(
+                    CustomTextFormField(
                       controller: _descriptionController,
                       label: 'Description',
                       validator: _descriptionValidator,
                       iconData: Icons.description,
                     ),
                     SizedBox(height: 20),
-                    CustomTextField(
+                    CustomTextFormField(
                       controller: _handleController,
                       validator: _handleValidator,
                       label: 'Handle',
@@ -195,7 +193,11 @@ class _CreateCommunityPageState extends State<CreateCommunityPage> {
                       activeTrackColor: theme_green.withOpacity(0.65),
                       thumbColor: MaterialStateProperty.all<Color>(theme_green),
                       inactiveTrackColor: inputField_color,
-                      title: Text('Public Community',style: TextStyle(color: theme_darkblue.withOpacity(0.95)),),
+                      title: Text(
+                        'Public Community',
+                        style:
+                            TextStyle(color: theme_darkblue.withOpacity(0.95)),
+                      ),
                       value: _isPublic,
                       onChanged: (newValue) {
                         setState(() {
@@ -209,12 +211,11 @@ class _CreateCommunityPageState extends State<CreateCommunityPage> {
                         borderRadius: BorderRadius.circular(10),
                         color: theme_green,
                       ),
-
                       width: double.infinity,
                       child: TextButton(
                         onPressed: _submitForm,
                         child: const Text('Create Community',
-                            style: TextStyle(color: Colors.white)),  
+                            style: TextStyle(color: Colors.white)),
                       ),
                     ),
                   ],

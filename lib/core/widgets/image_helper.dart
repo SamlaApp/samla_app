@@ -60,10 +60,10 @@ class ImageHelper {
   }
 
   pickImage(BuildContext context, Function(File) onImageSelected,
-      [int? imageQualtiy,
+      {int? imageQualtiy,
       CropAspectRatio? aspectRatio,
       CropStyle? cropStyle,
-      int? maxWidth]) async {
+      int? maxWidth}) async {
     //show bottom sheet
     showModalBottomSheet(
         backgroundColor: primary_color,

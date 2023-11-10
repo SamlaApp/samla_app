@@ -14,12 +14,13 @@ class NutritionPlanLocalDataSourceImpl implements NutritionPlanLocalDataSource {
   NutritionPlanLocalDataSourceImpl(this.sharedPreferences);
   @override
   Future<List<NutritionPlanModel>> getCachedNutritionPlans() {
-    final jsonNutritionPlans = sharedPreferences.getStringList('my_nutritionPlans');
-    if (jsonNutritionPlans != null) {
-      // decode the json list to list of nutritionPlan models
-      final nutritionPlans = jsonNutritionPlans
+    final jsonNutritionPlansString =
+        sharedPreferences.getString('my_nutritionPlans');
+    if (jsonNutritionPlansString != null) {
+      final jsonNutritionPlansList = json.decode(jsonNutritionPlansString);
+      final nutritionPlans = jsonNutritionPlansList
           .map<NutritionPlanModel>(
-              (nutritionPlan) => NutritionPlanModel.fromJson(json.decode(nutritionPlan)))
+              (nutritionPlan) => NutritionPlanModel.fromJson(nutritionPlan))
           .toList();
       return Future.value(nutritionPlans);
     } else {

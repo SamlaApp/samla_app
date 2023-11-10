@@ -15,6 +15,7 @@ class ImageViewer extends StatefulWidget {
   String? placeholderImagePath;
   bool isRectangular;
   double width;
+  double height;
   bool viewerMode;
   File? imageFile;
   Function(File)? editableCallback;
@@ -27,12 +28,12 @@ class ImageViewer extends StatefulWidget {
       this.imageURL,
       this.isRectangular = false,
       this.width = 100,
+      this.height = 100,
       this.viewerMode = true,
       this.title,
       this.editableCallback,
       this.placeholderImagePath,
-      this.animationTag
-      })
+      this.animationTag})
       : type = ImageViewerType.network;
 
   ImageViewer.asset(
@@ -40,6 +41,7 @@ class ImageViewer extends StatefulWidget {
       this.assetImagePath,
       this.isRectangular = false,
       this.width = 100,
+      this.height = 100,
       this.viewerMode = true,
       this.title,
       this.editableCallback,
@@ -52,6 +54,7 @@ class ImageViewer extends StatefulWidget {
       this.isRectangular = false,
       this.viewerMode = true,
       this.width = 100,
+      this.height = 100,
       this.title,
       this.editableCallback,
       this.animationTag})
@@ -62,6 +65,7 @@ class ImageViewer extends StatefulWidget {
     this.isRectangular = false,
     this.viewerMode = true,
     this.width = 100,
+    this.height = 100,
     this.title,
     this.editableCallback,
     this.animationTag,
@@ -72,7 +76,6 @@ class ImageViewer extends StatefulWidget {
 }
 
 class _ImageViewerState extends State<ImageViewer> {
-  
   File? image;
   @override
   Widget build(BuildContext context) {
@@ -97,82 +100,93 @@ class _ImageViewerState extends State<ImageViewer> {
       }
     }();
 
-    return 
-    // without clickable
-    widget.viewerMode == false && widget.editableCallback == null
-        ?
-    widget.animationTag != null
-          ? Hero(
-              tag: widget.animationTag!,
-              child: widget.isRectangular == true
-                  ? RectanagularWidget(imageWidget)
+    final imageRectWidget = () {
+      if (image != null) {
+        return Image.file(image!);
+      }
+      if (widget.type == ImageViewerType.network && widget.imageURL != null) {
+        return cachedNetworkImage(
+                widget.imageURL!, widget.placeholderImagePath);
+      } else if (widget.type == ImageViewerType.asset &&
+          widget.assetImagePath != null) {
+        return Image.asset(widget.assetImagePath!);
+      } else if (widget.type == ImageViewerType.file &&
+          widget.imageFile != null) {
+        return Image.file(widget.imageFile!);
+      }
+    }();
 
-                  // circular image
-                  : CircularWidget(imageWidget),
-            )
-          :
-       widget.isRectangular == true
-            ? RectanagularWidget(imageWidget)
+    return
+        // without clickable
+        widget.viewerMode == false && widget.editableCallback == null
+            ? widget.animationTag != null
+                ? Hero(
+                    tag: widget.animationTag!,
+                    child: widget.isRectangular == true
+                        ? RectanagularWidget(imageRectWidget)
 
-            // circular image
-            : CircularWidget(imageWidget) :
+                        // circular image
+                        : CircularWidget(imageWidget),
+                  )
+                : widget.isRectangular == true
+                    ? RectanagularWidget(imageRectWidget)
 
-    
-    // with clickable
-    GestureDetector(
-      child: 
-      widget.animationTag != null
-          ? Hero(
-              tag: widget.animationTag!,
-              child: widget.isRectangular == true
-                  ? RectanagularWidget(imageWidget)
+                    // circular image
+                    : CircularWidget(imageWidget)
+            :
 
-                  // circular image
-                  : CircularWidget(imageWidget),
-            )
-          :
-       widget.isRectangular == true
-            ? RectanagularWidget(imageWidget)
+            // with clickable
+            GestureDetector(
+                child: widget.animationTag != null
+                    ? Hero(
+                        tag: widget.animationTag!,
+                        child: widget.isRectangular == true
+                            ? RectanagularWidget(imageRectWidget)
 
-            // circular image
-            : CircularWidget(imageWidget),
-      
-      onTap: () {
-        if (image == null && imageWidget == null) {
-          if (widget.editableCallback != null) {
-            imageHelper.pickImage(context, (newImage) {
-              setState(() {
-                image = newImage;
-                widget.editableCallback!(newImage);
-              });
-            });
-          }
-        } else {
-          if (widget.viewerMode) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => ViewerPage(
-                    imageURL: widget.imageURL,
-                    imageFile: image,
-                    type: widget.type,
-                    assetImagePath:
-                        widget.placeholderImagePath ?? widget.assetImagePath,
-                    editableCallback: widget.editableCallback != null
-                        ? (newImage) {
-                            setState(() {
-                              image = newImage;
-                              widget.editableCallback!(newImage);
-                            });
-                          }
-                        : null,
-                    title: widget.title),
-              ),
-            );
-          }
-        }
-      },
-    );
+                            // circular image
+                            : CircularWidget(imageWidget),
+                      )
+                    : widget.isRectangular == true
+                        ? RectanagularWidget(imageRectWidget)
+
+                        // circular image
+                        : CircularWidget(imageWidget),
+                onTap: () {
+                  if (image == null && imageWidget == null) {
+                    if (widget.editableCallback != null) {
+                      imageHelper.pickImage(context, (newImage) {
+                        setState(() {
+                          image = newImage;
+                          widget.editableCallback!(newImage);
+                        });
+                      });
+                    }
+                  } else {
+                    if (widget.viewerMode) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ViewerPage(
+                              imageURL: widget.imageURL,
+                              imageFile: image,
+                              type: widget.type,
+                              assetImagePath: widget.placeholderImagePath ??
+                                  widget.assetImagePath,
+                              editableCallback: widget.editableCallback != null
+                                  ? (newImage) {
+                                      setState(() {
+                                        image = newImage;
+                                        widget.editableCallback!(newImage);
+                                      });
+                                    }
+                                  : null,
+                              title: widget.title),
+                        ),
+                      );
+                    }
+                  }
+                },
+              );
   }
 
   CircleAvatar CircularWidget(ClipOval? imageWidget) {
@@ -192,21 +206,27 @@ class _ImageViewerState extends State<ImageViewer> {
                   )
                 : widget.placeholderImagePath != null
                     ? ClipOval(child: Image.asset(widget.placeholderImagePath!))
-                : throw Exception(
-                    'neither imageFile or imgeURL or ImageAsset or editableCallback must be passed '));
+                    : throw Exception(
+                        'neither imageFile or imgeURL or ImageAsset or editableCallback must be passed '));
   }
 
-  Container RectanagularWidget(ClipOval? imageWidget) {
+  Container RectanagularWidget(Widget? imageWidget) {
     return Container(
+        clipBehavior: Clip.hardEdge,
         width: widget.width,
-        height: widget.width,
+        height: widget.height,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
+          color: inputField_color,
         ),
         child: imageWidget != null
-            ? imageWidget
+            ? FittedBox(
+                child: imageWidget,
+                fit: BoxFit.cover,
+              )
             : widget.editableCallback != null
                 ? Container(
+                    height: double.maxFinite,
                     decoration: BoxDecoration(
                       color: inputField_color,
                       borderRadius: BorderRadius.circular(10),
@@ -248,13 +268,9 @@ Widget cachedNetworkImage(
         errorWidget: (context, url, error) => placeholderImagePath != null
             ? Image.asset(placeholderImagePath)
             : Center(child: Icon(Icons.error)),
-        imageBuilder: (context, imageProvider) => Container(
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: imageProvider,
-                  fit: BoxFit.cover,
-                ),
-              ),
+        imageBuilder: (context, imageProvider) => Image(
+              image: imageProvider,
+              fit: BoxFit.cover,
             ));
     return widget;
   } catch (e) {
@@ -318,7 +334,7 @@ class _ViewerPageState extends State<ViewerPage> {
       body: Container(
         color: Colors.black,
         child: Hero(
-            tag: 'imageHero',
+            tag: widget.imageURL ?? '',
             child: photoView(
                 image, widget.imageURL, widget.assetImagePath, widget.type)),
       ),

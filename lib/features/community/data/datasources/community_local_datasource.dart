@@ -23,7 +23,7 @@ class CommunityLocalDataSourceImpl implements CommunityLocalDataSource {
       // decode the json list to list of community models
       final communities = jsonCommunities
           .map<CommunityModel>(
-              (community) => CommunityModel.fromJson(json.decode(community)))
+              (community) => CommunityModel.fromJson(community))
           .toList();
       return Future.value(communities);
     } else {

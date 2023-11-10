@@ -1,27 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:samla_app/config/themes/common_styles.dart';
 
-class CustomTextField extends StatelessWidget {
+class CustomTextFormField extends StatelessWidget {
   final String label;
   final IconData iconData;
   final TextEditingController? controller;
   final String? Function(String?)? validator;
   final Key? formKey;
-  
-  CustomTextField(
+  bool textArealike;
+
+  CustomTextFormField(
       {super.key,
       required this.label,
       required this.iconData,
       this.controller,
       this.validator,
-      this.formKey});
+      this.formKey,
+      this.textArealike = false});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       // height: 50,
       child: TextFormField(
-        autovalidateMode: AutovalidateMode.onUserInteraction ,
+        maxLines: textArealike ? null : 1,
+        keyboardType: textArealike ? TextInputType.multiline : null,
+        autovalidateMode: AutovalidateMode.onUserInteraction,
         controller: controller,
         validator: validator,
         key: formKey,
@@ -29,6 +33,7 @@ class CustomTextField extends StatelessWidget {
         textAlignVertical: TextAlignVertical.center,
         cursorColor: theme_darkblue.withOpacity(0.3),
         decoration: InputDecoration(
+          contentPadding: textArealike ? EdgeInsets.all(10.0) : null,
           isCollapsed: true,
           floatingLabelBehavior: FloatingLabelBehavior.never,
           fillColor: inputField_color,
