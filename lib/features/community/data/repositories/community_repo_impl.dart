@@ -2,8 +2,8 @@ import 'package:dartz/dartz.dart';
 import 'package:samla_app/core/error/exceptions.dart';
 import 'package:samla_app/core/error/failures.dart';
 import 'package:samla_app/core/network/network_info.dart';
-import 'package:samla_app/features/community/data/datasources/local_datasource.dart';
-import 'package:samla_app/features/community/data/datasources/remote_data_source.dart';
+import 'package:samla_app/features/community/data/datasources/community_local_datasource.dart';
+import 'package:samla_app/features/community/data/datasources/community_remote_data_source.dart';
 import 'package:samla_app/features/community/domain/entities/Community.dart';
 import 'package:samla_app/features/community/domain/repositories/community_repository.dart';
 

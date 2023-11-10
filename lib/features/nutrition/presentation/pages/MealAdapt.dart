@@ -4,7 +4,9 @@ import 'package:samla_app/config/themes/common_styles.dart';
 import 'package:samla_app/features/nutrition/domain/entities/MealLibrary.dart';
 import 'package:samla_app/features/nutrition/domain/entities/nutritionPlan.dart';
 import 'package:samla_app/features/nutrition/presentation/cubit/NutritionPlan/nutritionPlan_cubit.dart';
+import 'package:samla_app/features/nutrition/presentation/pages/newFood.dart';
 import '../../../../core/widgets/CustomTextFormField.dart';
+import '../widgets/AddMealButton.dart';
 import '../widgets/MaelAdapt/DayDropdown.dart';
 import '../widgets/MaelAdapt/NutrientColumn.dart';
 import '../widgets/MaelAdapt/foodItem.dart';
@@ -159,15 +161,19 @@ class _MealAdaptState extends State<MealAdapt> {
                       },
                     ),
                     const SizedBox(height: 20),
-                    FoodItem(foodName: 'eggs', kcal: 22, onRemove: () {}),
-                    FoodItem(foodName: 'tea', kcal: 213, onRemove: () {}),
-                    FoodItem(foodName: 'meat', kcal: 234, onRemove: () {}),
-                    FoodItem(foodName: 'apple', kcal: 187, onRemove: () {}),
+                    FoodItem(foodName: 'eggs', kcal: 22,fat: 22,protein: 33,carbs: 33, onRemove: () {}),
+
+
                     const SizedBox(height: 30),
                   ],
                 ),
               ),
             ),
+
+
+
+
+
 
             // Second tab content
             SingleChildScrollView(
@@ -185,7 +191,7 @@ class _MealAdaptState extends State<MealAdapt> {
                           Row(
                             children: [
                               Expanded(
-                                child: CustomTextField(
+                                child: CustomTextFormField(
                                   label: 'Search for a food',
                                   iconData: Icons.emoji_food_beverage,
                                   controller: _searchController,
@@ -210,7 +216,17 @@ class _MealAdaptState extends State<MealAdapt> {
                       ),
                     ),
                     getSearchedMeals(gradient),
-                  ],
+                    const SizedBox(height: 20),
+
+                    AddMealButton(
+               onButtonPressed: (BuildContext context) {
+                  Navigator.of(context).push(
+                             MaterialPageRoute(
+                               builder: (context) => const newFood(),
+      ),
+
+    );
+  } ),          ],
                 ),
               ),
             ),
@@ -273,8 +289,19 @@ class _MealAdaptState extends State<MealAdapt> {
                           // button to add meal to plan
                           ElevatedButton.icon(
                             onPressed: () {
-                              //
+
+                              final MealLibrary mealToAdd = MealLibrary(
+                                name: mealLibrary.name,
+                                calories: mealLibrary.calories,
+                                carbs: mealLibrary.carbs,
+                                protein: mealLibrary.protein,
+                                fat: mealLibrary.fat,
+
+                              );
+                              context.read<NutritionPlanCubit>().addMealToPlan(mealToAdd);
                             },
+
+
                             icon: const Icon(Icons.add),
                             label: const Text('Add'),
                             style: ElevatedButton.styleFrom(
@@ -411,4 +438,5 @@ class _MealAdaptState extends State<MealAdapt> {
       },
     );
   }
+
 }

@@ -22,7 +22,6 @@ class _CommunityPageState extends State<CommunitiesPage> {
   late ExploreCubit exploreCubit;
 
   final _searchController = TextEditingController();
-  
 
   @override
   void initState() {
@@ -126,7 +125,7 @@ class _CommunityPageState extends State<CommunitiesPage> {
                     Row(
                       children: [
                         Expanded(
-                          child: CustomTextField(
+                          child: CustomTextFormField(
                             label: 'Search for a community',
                             iconData: Icons.search,
                           ),

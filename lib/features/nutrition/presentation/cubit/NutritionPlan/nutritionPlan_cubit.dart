@@ -3,7 +3,6 @@ import 'package:equatable/equatable.dart';
 import 'package:samla_app/features/nutrition/domain/entities/MealLibrary.dart';
 import 'package:samla_app/features/nutrition/domain/entities/nutritionPlan.dart';
 import 'package:samla_app/features/nutrition/domain/repositories/nutritionPlan_repository.dart';
-
 part 'nutritionPlan_state.dart';
 
 class NutritionPlanCubit extends Cubit<NutritionPlanState> {
@@ -23,7 +22,7 @@ class NutritionPlanCubit extends Cubit<NutritionPlanState> {
         emit(NutritionPlanEmptyState());
         return;
       }
-      emit(NutritionPlanLoaded(nutritionPlans.cast<NutritionPlan>()));
+      emit(NutritionPlanLoaded(nutritionPlans.cast<NutritionPlan>(), []));
     });
   }
 
@@ -60,4 +59,22 @@ class NutritionPlanCubit extends Cubit<NutritionPlanState> {
       emit(NutritionPlanMealLibraryLoaded(mealLibrary));
     });
   }
+
+  void addMealToPlan(MealLibrary meal) {
+     final currentState = state;
+    if(currentState is NutritionPlanLoaded) {
+      final updatedMeals = List<MealLibrary>.from(currentState.meals)..add(meal);
+      emit(NutritionPlanLoaded(updatedMeals.cast<NutritionPlan>(), currentState.meals));
+    }
+  }
+
+  void removeMealFromPlan(MealLibrary meal) {
+    final currentState = state;
+    if(currentState is NutritionPlanLoaded) {
+      final updatedMeals = List<MealLibrary>.from(currentState.meals)..remove(meal);
+      emit(NutritionPlanLoaded(updatedMeals.cast<NutritionPlan>(), currentState.meals));
+    }
+  }
+
+
 }
