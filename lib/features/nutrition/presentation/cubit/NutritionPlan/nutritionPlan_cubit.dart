@@ -60,13 +60,10 @@ class NutritionPlanCubit extends Cubit<NutritionPlanState> {
     });
   }
 
-  // Inside your 'NutritionPlanCubit' class
   void addMealToPlan(MealLibrary meal) {
      final currentState = state;
     if(currentState is NutritionPlanLoaded) {
-      // Add the new meal to the current list of meals
       final updatedMeals = List<MealLibrary>.from(currentState.meals)..add(meal);
-      // Emit the new state with updated meals
       emit(NutritionPlanLoaded(updatedMeals.cast<NutritionPlan>(), currentState.meals));
     }
   }
@@ -74,9 +71,7 @@ class NutritionPlanCubit extends Cubit<NutritionPlanState> {
   void removeMealFromPlan(MealLibrary meal) {
     final currentState = state;
     if(currentState is NutritionPlanLoaded) {
-      // Remove the meal from the current list
       final updatedMeals = List<MealLibrary>.from(currentState.meals)..remove(meal);
-      // Emit the new state with updated meals
       emit(NutritionPlanLoaded(updatedMeals.cast<NutritionPlan>(), currentState.meals));
     }
   }
