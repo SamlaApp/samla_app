@@ -1,9 +1,18 @@
+
 import 'package:flutter/material.dart';
 import 'package:samla_app/config/themes/common_styles.dart';
 
-class TemplatesPage extends StatelessWidget {
+import 'new_tamplate_page.dart';
+
+
+class TemplatesPage extends StatefulWidget {
   TemplatesPage({Key? key}) : super(key: key);
 
+  @override
+  _TemplatesPageState createState() => _TemplatesPageState();
+}
+
+class _TemplatesPageState extends State<TemplatesPage> {
   final List<Map<String, dynamic>> templates = [
     {
       'templateName': 'Template 1',
@@ -53,21 +62,110 @@ class TemplatesPage extends StatelessWidget {
   ];
 
 
+  Map<String, bool> addedTemplates = {};
+
+  @override
+  void initState() {
+    super.initState();
+    // Initialize the addedTemplates map based on your templates list
+    for (var template in templates) {
+      addedTemplates[template['templateName']] = false;
+    }
+  }
+
+
+
+  void showExercisesDialog(String dayName, String exercises) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          insetPadding: EdgeInsets.all(13),
+          child: Container(
+            width: MediaQuery.of(context).size.width * 0.9,
+            padding: EdgeInsets.all(20.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Text(dayName, style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold)),
+                SizedBox(height: 20.0),
+                SingleChildScrollView(
+                  child: ListBody(
+                    children: exercises.split(', ').map((exercise) {
+                      return Card(
+                        clipBehavior: Clip.antiAlias,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: ListTile(
+                          leading: Padding(
+                            padding: const EdgeInsets.all(3.0),
+                            child: Image.network(
+                              'https://source.unsplash.com/featured/?gym', // Replace with your exercise image link
+                              width: 60,
+                              height: 60,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                          title: Text(
+                            exercise, // The name of the exercise
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          trailing: IconButton(
+                            icon: Icon(Icons.info_outline),
+                            onPressed: () {
+                              // The functionality for showing exercise details goes here
+                              _showExerciseDetails(context, exercise); // Make sure to define this method to show details
+                            },
+                          ),
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                ),
+                SizedBox(height: 20.0),
+                TextButton(
+                  child: Text('Close'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void _showExerciseDetails(BuildContext context, String exercise) {
+    // Implement your exercise details presentation logic here
+  }
+
+
+
+
+  ////////////////////////////  ////////////////////////////  ////////////////////////////
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Workout Templates'),
-        backgroundColor: theme_green,
+        title: Text('Workout Templates', style: TextStyle(color: Colors.black)),
+        backgroundColor: Colors.white,
+        iconTheme: IconThemeData(color: Colors.black), // Set the icon color
+        // Define your theme_green color in your theme
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            buildStartEmptyWorkoutButton(),
+            //buildStartEmptyWorkoutButton(),
             SizedBox(height: 16),
-            buildTemplatesHeader(),
+            buildTemplatesHeader(context),
             SizedBox(height: 16),
             Expanded(
               child: buildTemplateList(),
@@ -78,24 +176,27 @@ class TemplatesPage extends StatelessWidget {
     );
   }
 
+  ////////////////////////////  ////////////////////////////  ////////////////////////////  ////////////////////////////
+
+
   Widget buildStartEmptyWorkoutButton() {
     return GestureDetector(
       onTap: () {
-        // TODO: Implement the functionality for starting an empty workout
+        // Implement the functionality for starting an empty workout
       },
       child: Container(
         padding: EdgeInsets.all(16),
         decoration: BoxDecoration(
-          border: Border.all(color: theme_green, width: 2),
+          border: Border.all(color: theme_green, width: 2), // Define your theme_green color in your theme
           borderRadius: BorderRadius.circular(10),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              'Start Empty WorkOut',
+              'Start Empty Workout',
               style: TextStyle(
-                color: theme_green,
+                color: theme_green, // Define your theme_green color in your theme
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
               ),
@@ -106,17 +207,7 @@ class TemplatesPage extends StatelessWidget {
     );
   }
 
-//   onPressed: () {
-//   print('Icon Clicked');
-//   Navigator.push(
-//   context,
-//   MaterialPageRoute(
-//   builder: (context) => startTraining(), // This is your Templates page widget
-//   ),
-//   );
-// },
-
-  Widget buildTemplatesHeader() {
+  Widget buildTemplatesHeader(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -126,11 +217,14 @@ class TemplatesPage extends StatelessWidget {
         ),
         ElevatedButton(
           onPressed: () {
-            // TODO: Implement the functionality for adding a new template
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => NewTemplatePage()), // Make sure you have NewTemplatePage in your project
+            );
           },
-          child: Text('+Template'),
+          child: Text('+ Add Template'),
           style: ElevatedButton.styleFrom(
-            backgroundColor: theme_green,
+            primary: theme_green, // Define your theme_green color in your theme
           ),
         ),
       ],
@@ -146,8 +240,10 @@ class TemplatesPage extends StatelessWidget {
       },
     );
   }
+
   Widget buildTemplateCard(Map<String, dynamic> template) {
-    bool isTemplateAdded = true; // Keep track of whether the template is added
+    String templateName = template['templateName'];
+    bool isTemplateAdded = addedTemplates[templateName] ?? false;
 
     return Card(
       child: Stack(
@@ -166,34 +262,16 @@ class TemplatesPage extends StatelessWidget {
                 ),
                 SizedBox(height: 16),
                 Container(
-                  height: 80, // Set a fixed height for the exercise list
+                  height: 80,
                   child: ListView(
-                    scrollDirection: Axis.horizontal, // Enable horizontal scrolling
+                    scrollDirection: Axis.horizontal,
                     children: (template['days'] as List).map<Widget>((day) {
-                      return Card(
-                        child: Container(
-                          width: 200, // Set a fixed width for the day card
-                          padding: const EdgeInsets.all(8.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                day['dayName'] as String,
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              SizedBox(height: 8),
-                              SingleChildScrollView(
-                                scrollDirection: Axis.horizontal, // Enable horizontal scrolling for exercises
-                                child: Text(
-                                  day['exercises'] as String,
-                                ),
-                              ),
-                            ],
-                          ),
+                      return InkWell(
+                        onTap: () => showExercisesDialog(
+                          day['dayName'] as String,
+                          day['exercises'] as String,
                         ),
+                        child: buildDayCard(day),
                       );
                     }).toList(),
                   ),
@@ -202,18 +280,20 @@ class TemplatesPage extends StatelessWidget {
             ),
           ),
           Positioned(
-            top: 8, // Adjust the top position as needed
-            right: 8, // Adjust the right position as needed
-            child: GestureDetector(
-              onTap: () {
-                // Toggle the template's state (added or not)
-                isTemplateAdded = !isTemplateAdded;
-                // TODO: Implement functionality to add or remove the template
+            top: 8,
+            right: 8,
+            child: IconButton(
+              onPressed: () {
+                setState(() {
+                  addedTemplates[templateName] = !isTemplateAdded;
+                });
               },
-              child: Icon(
-                isTemplateAdded ? Icons.check_box : Icons.check_box_outline_blank,
-                size: 24,
-                color: isTemplateAdded ? theme_green : Colors.grey, // Change the colors as needed
+              icon: Icon(
+                isTemplateAdded
+                    ? Icons.toggle_on
+                    : Icons.toggle_off,
+                size: 40,
+                color: isTemplateAdded ? theme_green : Colors.grey,
               ),
             ),
           ),
@@ -221,10 +301,6 @@ class TemplatesPage extends StatelessWidget {
       ),
     );
   }
-
-
-
-
 
   Widget buildDayCard(Map<String, dynamic> day) {
     return Card(
@@ -248,3 +324,4 @@ class TemplatesPage extends StatelessWidget {
     );
   }
 }
+
