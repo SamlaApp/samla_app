@@ -1,4 +1,7 @@
 PODS:
+  - connectivity_plus (0.0.1):
+    - Flutter
+    - ReachabilitySwift
   - Firebase (10.16.0):
     - Firebase/Core (= 10.16.0)
   - Firebase/Analytics (10.16.0):
@@ -79,6 +82,9 @@ PODS:
   - flutter_libphonenumber_ios (1.1.4):
     - Flutter
     - PhoneNumberKit/PhoneNumberKitCore (= 3.6.6)
+  - FMDB (2.7.5):
+    - FMDB/standard (= 2.7.5)
+  - FMDB/standard (2.7.5)
   - GoogleAppMeasurement (10.16.0):
     - GoogleAppMeasurement/AdIdSupport (= 10.16.0)
     - GoogleUtilities/AppDelegateSwizzler (~> 7.11)
@@ -163,12 +169,17 @@ PODS:
   - PhoneNumberKit/UIKit (3.6.6):
     - PhoneNumberKit/PhoneNumberKitCore
   - PromisesObjC (2.3.1)
+  - ReachabilitySwift (5.0.0)
   - shared_preferences_foundation (0.0.1):
     - Flutter
     - FlutterMacOS
+  - sqflite (0.0.3):
+    - Flutter
+    - FMDB (>= 2.7.5)
   - TOCropViewController (2.6.1)
 
 DEPENDENCIES:
+  - connectivity_plus (from `.symlinks/plugins/connectivity_plus/ios`)
   - Firebase
   - firebase_analytics (from `.symlinks/plugins/firebase_analytics/ios`)
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
@@ -187,6 +198,7 @@ DEPENDENCIES:
   - pedometer (from `.symlinks/plugins/pedometer/ios`)
   - permission_handler_apple (from `.symlinks/plugins/permission_handler_apple/ios`)
   - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/darwin`)
+  - sqflite (from `.symlinks/plugins/sqflite/ios`)
 
 SPEC REPOS:
   trunk:
@@ -198,15 +210,19 @@ SPEC REPOS:
     - FirebaseInAppMessaging
     - FirebaseInstallations
     - FirebaseMessaging
+    - FMDB
     - GoogleAppMeasurement
     - GoogleDataTransport
     - GoogleUtilities
     - nanopb
     - PhoneNumberKit
     - PromisesObjC
+    - ReachabilitySwift
     - TOCropViewController
 
 EXTERNAL SOURCES:
+  connectivity_plus:
+    :path: ".symlinks/plugins/connectivity_plus/ios"
   firebase_analytics:
     :path: ".symlinks/plugins/firebase_analytics/ios"
   firebase_core:
@@ -233,8 +249,11 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/permission_handler_apple/ios"
   shared_preferences_foundation:
     :path: ".symlinks/plugins/shared_preferences_foundation/darwin"
+  sqflite:
+    :path: ".symlinks/plugins/sqflite/ios"
 
 SPEC CHECKSUMS:
+  connectivity_plus: bf0076dd84a130856aa636df1c71ccaff908fa1d
   Firebase: 25899099b77d255a636e3579c3d9dce10ec150d5
   firebase_analytics: 6b9cf6da9b2e38ace14482bd29e099b25abac4ad
   firebase_core: 68027ba03585e3efe1608e35d3ab2777a64eabe9
@@ -249,6 +268,7 @@ SPEC CHECKSUMS:
   FirebaseMessaging: 80b4a086d20ed4fd385a702f4bfa920e14f5064d
   Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
   flutter_libphonenumber_ios: 80bfe6d4d69334aaf36642c1b528615bfffe7c6a
+  FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
   GoogleAppMeasurement: 079d7632810e9d9704a99932547ba1554acc4342
   GoogleDataTransport: 54dee9d48d14580407f8f5fbf2f496e92437a2f2
   GoogleUtilities: 202e7a9f5128accd11160fb9c19612de1911aa19
@@ -261,9 +281,11 @@ SPEC CHECKSUMS:
   permission_handler_apple: e76247795d700c14ea09e3a2d8855d41ee80a2e6
   PhoneNumberKit: 5b1be7ee4955dfeeb855f51eecdd829ab24b3484
   PromisesObjC: c50d2056b5253dadbd6c2bea79b0674bd5a52fa4
+  ReachabilitySwift: 985039c6f7b23a1da463388634119492ff86c825
   shared_preferences_foundation: 5b919d13b803cadd15ed2dc053125c68730e5126
+  sqflite: 31f7eba61e3074736dff8807a9b41581e4f7f15a
   TOCropViewController: edfd4f25713d56905ad1e0b9f5be3fbe0f59c863
 
-PODFILE CHECKSUM: 16640a6876929a8a818ce844e07a7aa33332aedb
+PODFILE CHECKSUM: af0d94eeb3613d754bf24d53bf4941bda404669d
 
 COCOAPODS: 1.13.0

@@ -27,6 +27,30 @@ final class NutritionPlanEmptyState extends NutritionPlanState {}
 
 final class NutritionPlanLoaded extends NutritionPlanState {
   final List<NutritionPlan> nutritionPlans;
+  final List<MealLibrary> meals;
+  NutritionPlanLoaded(this.nutritionPlans, this.meals);
+}
 
-  NutritionPlanLoaded(this.nutritionPlans);
+final class NutritionPlanCreated extends NutritionPlanState {
+  final NutritionPlan nutritionPlan;
+
+  NutritionPlanCreated(this.nutritionPlan);
+}
+
+final class NutritionPlanMealLibraryLoaded extends NutritionPlanState {
+  final MealLibrary mealLibrary;
+
+  NutritionPlanMealLibraryLoaded(this.mealLibrary);
+}
+
+final class NutritionPlanMealAdded extends NutritionPlanState {
+  final List<MealLibrary> updatedMeals;
+
+  NutritionPlanMealAdded(this.updatedMeals);
+}
+
+final class NutritionPlanMealRemoved extends NutritionPlanState {
+  final List<MealLibrary> updatedMeals;
+
+  NutritionPlanMealRemoved(this.updatedMeals);
 }
