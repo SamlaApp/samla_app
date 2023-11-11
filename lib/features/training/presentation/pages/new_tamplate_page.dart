@@ -5,9 +5,9 @@ import '../../../../config/themes/common_styles.dart';
 import '../../data/datasources/mock_data_source.dart';
 import '../../data/models/day_model.dart';
 import '../../data/models/exercise_model.dart';
-import '../../data/models/template_model.dart';
-import '../../data/repositories/exercise_repository.dart';
-import '../../data/repositories/template_repository.dart';
+import '../../data/models/temp_template_model.dart';
+import '../../data/repositories/exercise_repository_impl.dart';
+import '../../data/repositories/temp_template_repository_impl.dart';
 import '../widgets/newTamplate/day_card.dart';
 import '../widgets/newTamplate/exercise_selection_dialog.dart';
 
@@ -31,7 +31,7 @@ class _NewTemplatePageState extends State<NewTemplatePage> {
   // Initialize _dayModels as an empty list right away
   List<DayModel> _dayModels = [];
 
-  late final TemplateRepository _templateRepository;
+  late final TempTemplateRepository _templateRepository;
 
   @override
   void initState() {
@@ -39,7 +39,7 @@ class _NewTemplatePageState extends State<NewTemplatePage> {
 
     // Initialize the MockDataSource and TemplateRepository
     MockDataSource mockDataSource = MockDataSource();
-    _templateRepository = TemplateRepository(mockDataSource);
+    _templateRepository = TempTemplateRepository(mockDataSource);
 
     // Initialize the ExerciseRepository
     _exerciseRepository = ExerciseRepository(mockDataSource);
@@ -225,7 +225,7 @@ class _NewTemplatePageState extends State<NewTemplatePage> {
 
   void _saveTemplate() {
     // Implement logic to save the template
-    TemplateModel newTemplate = TemplateModel(
+    TempTemplateModel newTemplate = TempTemplateModel(
       templateId: 'UniqueID',
       templateName: _templateNameController.text,
       creator: 'UserID',  // Adjust based on your user management

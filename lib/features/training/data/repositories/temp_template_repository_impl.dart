@@ -1,12 +1,12 @@
 import '../datasources/mock_data_source.dart';
-import '../models/template_model.dart';
+import '../models/temp_template_model.dart';
 
-class TemplateRepository {
+class TempTemplateRepository {
   final MockDataSource _dataSource;
 
-  TemplateRepository(this._dataSource);
+  TempTemplateRepository(this._dataSource);
 
-  Future<List<TemplateModel>> getTemplates() async {
+  Future<List<TempTemplateModel>> getTemplates() async {
     return _dataSource.getTemplates();
   }
 

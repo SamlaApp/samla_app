@@ -4,6 +4,9 @@ import '../../../../config/themes/common_styles.dart';
 import 'Tamplates_page.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 
+import 'package:samla_app/features/training/training_di.dart' as di;
+
+
 class TrainingPage extends StatefulWidget {
   TrainingPage({Key? key}) : super(key: key);
 
@@ -18,6 +21,9 @@ class _TrainingPageState extends State<TrainingPage> {
   @override
   void initState() {
     super.initState();
+
+    di.TrainingInit(); // Initialize the training module
+
     _controller.addListener(() {
       setState(() {
         _currentPage = _controller.page ?? 0;

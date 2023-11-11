@@ -1,9 +1,12 @@
-
+import 'package:animate_gradient/animate_gradient.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:samla_app/config/themes/common_styles.dart';
+import 'package:samla_app/features/training/domain/entities/Template.dart';
+import 'package:samla_app/features/training/presentation/cubit/Templates/template_cubit.dart';
+import 'package:samla_app/features/training/training_di.dart' as di;
 
 import 'new_tamplate_page.dart';
-
 
 class TemplatesPage extends StatefulWidget {
   TemplatesPage({Key? key}) : super(key: key);
@@ -13,6 +16,8 @@ class TemplatesPage extends StatefulWidget {
 }
 
 class _TemplatesPageState extends State<TemplatesPage> {
+  final cubit = TemplateCubit(di.sl.get());
+
   final List<Map<String, dynamic>> templates = [
     {
       'templateName': 'Template 1',
@@ -61,7 +66,6 @@ class _TemplatesPageState extends State<TemplatesPage> {
     // Add more templates here
   ];
 
-
   Map<String, bool> addedTemplates = {};
 
   @override
@@ -72,8 +76,6 @@ class _TemplatesPageState extends State<TemplatesPage> {
       addedTemplates[template['templateName']] = false;
     }
   }
-
-
 
   void showExercisesDialog(String dayName, String exercises) {
     showDialog(
@@ -87,7 +89,9 @@ class _TemplatesPageState extends State<TemplatesPage> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                Text(dayName, style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold)),
+                Text(dayName,
+                    style:
+                        TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold)),
                 SizedBox(height: 20.0),
                 SingleChildScrollView(
                   child: ListBody(
@@ -101,7 +105,8 @@ class _TemplatesPageState extends State<TemplatesPage> {
                           leading: Padding(
                             padding: const EdgeInsets.all(3.0),
                             child: Image.network(
-                              'https://source.unsplash.com/featured/?gym', // Replace with your exercise image link
+                              'https://source.unsplash.com/featured/?gym',
+                              // Replace with your exercise image link
                               width: 60,
                               height: 60,
                               fit: BoxFit.cover,
@@ -118,7 +123,8 @@ class _TemplatesPageState extends State<TemplatesPage> {
                             icon: Icon(Icons.info_outline),
                             onPressed: () {
                               // The functionality for showing exercise details goes here
-                              _showExerciseDetails(context, exercise); // Make sure to define this method to show details
+                              _showExerciseDetails(context,
+                                  exercise); // Make sure to define this method to show details
                             },
                           ),
                         ),
@@ -145,18 +151,50 @@ class _TemplatesPageState extends State<TemplatesPage> {
     // Implement your exercise details presentation logic here
   }
 
-
-
-
   ////////////////////////////  ////////////////////////////  ////////////////////////////
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Workout Templates', style: TextStyle(color: Colors.black)),
-        backgroundColor: Colors.white,
-        iconTheme: IconThemeData(color: Colors.black), // Set the icon color
-        // Define your theme_green color in your theme
+        title: const Text(
+          "Workout Templates",
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        ),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.add_circle_outline),
+            onPressed: () {
+              /*
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const NewMeal(),
+                ),
+              );
+
+               */
+            },
+          ),
+        ],
+        flexibleSpace: AnimateGradient(
+          primaryBegin: Alignment.topLeft,
+          primaryEnd: Alignment.bottomLeft,
+          secondaryBegin: Alignment.bottomRight,
+          secondaryEnd: Alignment.topLeft,
+          primaryColors: [
+            theme_green,
+            Colors.blueAccent,
+          ],
+          secondaryColors: [
+            theme_green,
+            const Color.fromARGB(255, 120, 90, 255)
+          ],
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -165,11 +203,11 @@ class _TemplatesPageState extends State<TemplatesPage> {
           children: [
             //buildStartEmptyWorkoutButton(),
             SizedBox(height: 16),
-            buildTemplatesHeader(context),
+            //buildTemplatesHeader(context),
             SizedBox(height: 16),
-            Expanded(
-              child: buildTemplateList(),
-            ),
+
+            //Expanded(child: buildTemplateList(),),
+            Expanded(child: buildBlocBuilder()),
           ],
         ),
       ),
@@ -177,7 +215,6 @@ class _TemplatesPageState extends State<TemplatesPage> {
   }
 
   ////////////////////////////  ////////////////////////////  ////////////////////////////  ////////////////////////////
-
 
   Widget buildStartEmptyWorkoutButton() {
     return GestureDetector(
@@ -187,7 +224,8 @@ class _TemplatesPageState extends State<TemplatesPage> {
       child: Container(
         padding: EdgeInsets.all(16),
         decoration: BoxDecoration(
-          border: Border.all(color: theme_green, width: 2), // Define your theme_green color in your theme
+          border: Border.all(color: theme_green, width: 2),
+          // Define your theme_green color in your theme
           borderRadius: BorderRadius.circular(10),
         ),
         child: Row(
@@ -196,7 +234,8 @@ class _TemplatesPageState extends State<TemplatesPage> {
             Text(
               'Start Empty Workout',
               style: TextStyle(
-                color: theme_green, // Define your theme_green color in your theme
+                color: theme_green,
+                // Define your theme_green color in your theme
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
               ),
@@ -219,7 +258,9 @@ class _TemplatesPageState extends State<TemplatesPage> {
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => NewTemplatePage()), // Make sure you have NewTemplatePage in your project
+              MaterialPageRoute(
+                  builder: (context) =>
+                      NewTemplatePage()), // Make sure you have NewTemplatePage in your project
             );
           },
           child: Text('+ Add Template'),
@@ -289,9 +330,7 @@ class _TemplatesPageState extends State<TemplatesPage> {
                 });
               },
               icon: Icon(
-                isTemplateAdded
-                    ? Icons.toggle_on
-                    : Icons.toggle_off,
+                isTemplateAdded ? Icons.toggle_on : Icons.toggle_off,
                 size: 40,
                 color: isTemplateAdded ? theme_green : Colors.grey,
               ),
@@ -323,5 +362,74 @@ class _TemplatesPageState extends State<TemplatesPage> {
       ),
     );
   }
-}
 
+  BlocBuilder<TemplateCubit, TemplateState> buildBlocBuilder() {
+    cubit.getAllTemplates();
+    return BlocBuilder<TemplateCubit, TemplateState>(
+      bloc: cubit,
+      builder: (context, state) {
+        if (state is TemplateLoadingState) {
+          return Center(
+            child: CircularProgressIndicator(
+              color: theme_green,
+              backgroundColor: theme_pink,
+            ),
+          );
+        } else if (state is TemplateLoaded) {
+          return ListView.builder(
+            itemCount: state.templates.length,
+            itemBuilder: (context, index) {
+              final template = state.templates[index];
+              return _buildTemplateCard(template);
+            },
+          );
+        }
+        return const SizedBox.shrink();
+      },
+    );
+  }
+
+  Widget _buildTemplateCard(Template template) {
+    String templateName = template.name;
+    bool isTemplateAdded = addedTemplates[templateName] ?? false;
+
+    return Card(
+      child: Stack(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  template.name,
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 16),
+              ],
+            ),
+          ),
+          Positioned(
+            top: 8,
+            right: 8,
+            child: IconButton(
+              onPressed: () {
+                setState(() {
+                  addedTemplates[templateName] = !isTemplateAdded;
+                });
+              },
+              icon: Icon(
+                isTemplateAdded ? Icons.toggle_on : Icons.toggle_off,
+                size: 40,
+                color: isTemplateAdded ? theme_green : Colors.grey,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

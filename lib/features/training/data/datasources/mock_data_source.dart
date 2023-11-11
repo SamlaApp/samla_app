@@ -1,11 +1,11 @@
 import '../models/day_model.dart';
 import '../models/exercise_model.dart';
-import '../models/template_model.dart';
+import '../models/temp_template_model.dart';
 
 class MockDataSource {
   // Mock Templates
-  final List<TemplateModel> _templates = [
-    TemplateModel(
+  final List<TempTemplateModel> _templates = [
+    TempTemplateModel(
       templateId: '1',
       templateName: 'Strength Training',
       creator: 'User123',
@@ -32,7 +32,7 @@ class MockDataSource {
     // Add more templates
   ];
 
-  Future<List<TemplateModel>> getTemplates() async {
+  Future<List<TempTemplateModel>> getTemplates() async {
     // Simulate network delay
     await Future.delayed(Duration(seconds: 2));
     return _templates;

@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:samla_app/features/training/data/models/exercise_model.dart';
-import 'package:samla_app/features/training/data/repositories/exercise_repository.dart';
+import 'package:samla_app/features/training/data/repositories/exercise_repository_impl.dart';
 
 class ExerciseState {
   final bool isLoading;

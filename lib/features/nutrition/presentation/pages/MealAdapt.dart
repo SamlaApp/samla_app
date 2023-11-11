@@ -298,7 +298,7 @@ class _MealAdaptState extends State<MealAdapt> {
                                 fat: mealLibrary.fat,
 
                               );
-                              context.read<NutritionPlanCubit>().addMealToPlan(mealToAdd);
+
                             },
 
 

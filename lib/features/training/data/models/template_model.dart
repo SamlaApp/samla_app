@@ -1,37 +1,35 @@
-import 'day_model.dart';
+import 'package:samla_app/features/training/domain/entities/Template.dart';
 
-class TemplateModel {
-  final String templateId;
-  final String templateName;
-  final String creator;
-  final bool isCustomizable;
-  final List<DayModel> days;
-
-  TemplateModel({
-    required this.templateId,
-    required this.templateName,
-    required this.creator,
-    required this.isCustomizable,
-    required this.days,
+class TemplateModel extends Template {
+  const TemplateModel({
+    required super.id,
+    required super.name,
+    required super.is_active,
   });
 
+  @override
   factory TemplateModel.fromJson(Map<String, dynamic> json) {
     return TemplateModel(
-      templateId: json['templateId'],
-      templateName: json['templateName'],
-      creator: json['creator'],
-      isCustomizable: json['isCustomizable'],
-      days: List<DayModel>.from(json['days'].map((x) => DayModel.fromJson(x))),
+      id: json['id'],
+      name: json['name'],
+      is_active: json['is_active'] == 1 ? true : false,
     );
   }
 
-  Map<String, dynamic> toJson() {
+  Map<String, String> toJson() {
     return {
-      'templateId': templateId,
-      'templateName': templateName,
-      'creator': creator,
-      'isCustomizable': isCustomizable,
-      'days': days.map((x) => x.toJson()).toList(),
+      'id': id.toString(),
+      'name': name,
+      'is_active': is_active ? '1' : '0',
     };
   }
+
+  factory TemplateModel.fromEntity(Template entity) {
+    return TemplateModel(
+      id: entity.id,
+      name: entity.name,
+      is_active: entity.is_active,
+    );
+  }
+
 }
