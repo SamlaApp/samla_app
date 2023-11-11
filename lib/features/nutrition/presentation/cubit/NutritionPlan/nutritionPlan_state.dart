@@ -54,3 +54,9 @@ final class NutritionPlanMealRemoved extends NutritionPlanState {
 
   NutritionPlanMealRemoved(this.updatedMeals);
 }
+
+final class NutritionPlanMealLibraryAdded extends NutritionPlanState {
+  final MealLibrary updatedMeals;
+
+  NutritionPlanMealLibraryAdded(this.updatedMeals);
+}

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:samla_app/config/themes/common_styles.dart';
 import 'package:numberpicker/numberpicker.dart';
+import 'package:samla_app/features/nutrition/domain/entities/MealLibrary.dart';
 import 'package:samla_app/features/nutrition/domain/repositories/nutritionPlan_repository.dart';
 import 'package:samla_app/features/nutrition/presentation/cubit/nutritionPlan/nutritionPlan_cubit.dart';
 import '../../nutrition_di.dart';
@@ -71,8 +72,18 @@ class _NewFoodState extends State<newFood> {
 
   void _submitForm() {
     if (_formKey.currentState!.validate()) {
-      //Backend I shall do
-      Navigator.pop(context);
+      /*
+      final meal = MealLibrary(
+          name: _nameController.text,
+          calories: _calories,
+          fat: _fat,
+          protein: _protein,
+          carbs: _carbs)
+      ;
+      
+       */
+
+
     }
   }
 
@@ -190,6 +201,7 @@ class _NewFoodState extends State<newFood> {
                           ),
                           textMapper: (numberText) => numberText,
                           itemWidth: 60,
+                          haptics: true,
                           itemHeight: 40,
                           axis: Axis.horizontal,
                           selectedTextStyle: TextStyle(

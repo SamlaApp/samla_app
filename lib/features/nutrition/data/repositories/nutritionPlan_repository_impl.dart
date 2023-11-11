@@ -13,8 +13,6 @@ import 'package:samla_app/features/nutrition/domain/entities/MealLibrary.dart';
 
 
 import 'package:samla_app/features/nutrition/domain/repositories/nutritionPlan_repository.dart';
-
-import '../../../../core/network/samlaAPI.dart';
 import '../models/nutritionPlan_model.dart';
 
 class NutritionPlanRepositoryImpl implements NutritionPlanRepository {
@@ -77,6 +75,21 @@ class NutritionPlanRepositoryImpl implements NutritionPlanRepository {
       return Left(ServerFailure(message: 'No internet connection'));
     }
   }
+
+  @override
+  Future<Either<Failure, MealLibrary>> addMealLibrary({required MealLibrary mealLibrary}) async {
+    if (await networkInfo.isConnected) {
+      try {
+        final newMealLibrary = await remoteDataSource.addMealLibrary(mealLibrary);
+        return Right(newMealLibrary);
+      } on ServerException catch (e) {
+        return Left(ServerFailure(message: e.message));
+      }
+    } else {
+      return Left(ServerFailure(message: 'No internet connection'));
+    }
+  }
+
 
 
 

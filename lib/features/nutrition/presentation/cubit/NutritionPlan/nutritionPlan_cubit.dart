@@ -26,7 +26,7 @@ class NutritionPlanCubit extends Cubit<NutritionPlanState> {
     });
   }
 
-  // createNutritionPlan
+
   Future<void> createNutritionPlan(NutritionPlan nutritionPlan) async {
     emit(NutritionPlanLoadingState()); // Show loading state
     final result =
@@ -60,21 +60,25 @@ class NutritionPlanCubit extends Cubit<NutritionPlanState> {
     });
   }
 
-  void addMealToPlan(MealLibrary meal) {
-     final currentState = state;
-    if(currentState is NutritionPlanLoaded) {
-      final updatedMeals = List<MealLibrary>.from(currentState.meals)..add(meal);
-      emit(NutritionPlanLoaded(updatedMeals.cast<NutritionPlan>(), currentState.meals));
-    }
+  //addMealLibrary
+  Future<void> addMealLibrary(MealLibrary mealLibrary) async {
+    emit(NutritionPlanLoadingState()); // Show loading state
+    final result = await repository.addMealLibrary(mealLibrary: mealLibrary);
+    result.fold(
+        (failure) =>
+            emit(NutritionPlanErrorState('Failed to add meal library')),
+        (mealLibrary) {
+      if (mealLibrary == null) {
+        print('empty');
+        emit(NutritionPlanEmptyState());
+        return;
+      }
+      emit(NutritionPlanMealLibraryAdded(mealLibrary));
+    });
   }
 
-  void removeMealFromPlan(MealLibrary meal) {
-    final currentState = state;
-    if(currentState is NutritionPlanLoaded) {
-      final updatedMeals = List<MealLibrary>.from(currentState.meals)..remove(meal);
-      emit(NutritionPlanLoaded(updatedMeals.cast<NutritionPlan>(), currentState.meals));
-    }
-  }
+
+
 
 
 }
