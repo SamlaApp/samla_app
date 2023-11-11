@@ -170,14 +170,13 @@ class _TemplatesPageState extends State<TemplatesPage> {
           IconButton(
             icon: const Icon(Icons.add_circle_outline),
             onPressed: () {
-              /*
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => const NewMeal(),
-                ),
+              // Implement the functionality for adding a new template
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return buildNewTemplateDialog();
+                },
               );
-
-               */
             },
           ),
         ],
@@ -201,12 +200,12 @@ class _TemplatesPageState extends State<TemplatesPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            //buildStartEmptyWorkoutButton(),
+            buildStartEmptyWorkoutButton(),
             SizedBox(height: 16),
-            //buildTemplatesHeader(context),
+            buildTemplatesHeader(context),
             SizedBox(height: 16),
 
-            //Expanded(child: buildTemplateList(),),
+            Expanded(child: buildTemplateList(),),
             Expanded(child: buildBlocBuilder()),
           ],
         ),
@@ -358,6 +357,62 @@ class _TemplatesPageState extends State<TemplatesPage> {
             SizedBox(height: 8),
             Text(day['exercises'] as String),
           ],
+        ),
+      ),
+    );
+  }
+
+  // Pup up for new template, just name
+  Widget buildNewTemplateDialog() {
+    final _formKey = GlobalKey<FormState>();
+    final _nameController = TextEditingController();
+
+    void _submitForm() {
+      if (_formKey.currentState!.validate()) {
+        final template = Template(
+            name: _nameController.text,
+            is_active: false,
+        );
+        cubit.createTemplate(template);
+        Navigator.of(context).pop();
+      }
+    }
+
+    return Dialog(
+      insetPadding: EdgeInsets.all(13),
+      child: Container(
+        width: MediaQuery.of(context).size.width * 0.9,
+        padding: EdgeInsets.all(20.0),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              const Text('New Template',
+                  style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 20.0),
+              TextFormField(
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'Template Name',
+                ),
+                controller: _nameController,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter a name';
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 20.0),
+              TextButton(
+                child: Text('Create'),
+                onPressed: () {
+                  _submitForm();
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );

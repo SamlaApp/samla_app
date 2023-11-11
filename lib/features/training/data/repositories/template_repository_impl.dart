@@ -41,4 +41,24 @@ class TemplateRepositoryImpl implements TemplateRepository {
       }
     }
   }
+
+  @override
+  Future<Either<Failure, Template>> createTemplate(Template template) async {
+    if (await networkInfo.isConnected) {
+      try {
+        final remoteTemplate = await remoteDataSource.createTemplate(template);
+        localDataSource.cacheTemplate(remoteTemplate as TemplateModel);
+        return Right(remoteTemplate);
+      } on ServerException catch (e) {
+        return Left(ServerFailure(message: e.message));
+      }
+    } else {
+      try {
+        final localTemplate = await localDataSource.getCachedTemplate(template.id as String);
+        return Right(localTemplate);
+      } on EmptyCacheException catch (e) {
+        return Left(CacheFailure(message: e.message));
+      }
+    }
+  }
 }

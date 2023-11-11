@@ -24,8 +24,16 @@ class TemplateCubit extends Cubit<TemplateState> {
       }
       emit(TemplateLoaded(templates.cast<Template>(), []));
     });
+  }
 
-
+  Future<void> createTemplate(Template template) async {
+    emit(TemplateLoadingState());
+    final result = await repository.createTemplate(template);
+    result.fold(
+        (failure) => emit(TemplateErrorState('Failed to create template')),
+        (template) {
+      emit(TemplateLoaded([template], []));
+    });
   }
 
 }

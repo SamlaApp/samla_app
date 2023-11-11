@@ -7,6 +7,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 abstract class LocalDataSource {
   Future<void> cacheTemplates(List<TemplateModel> templates);
   Future<List<TemplateModel>> getCachedTemplates();
+  Future<void> cacheTemplate(TemplateModel template);
+  Future<TemplateModel> getCachedTemplate(String id);
 }
 
 class LocalDataSourceImpl implements LocalDataSource {
@@ -32,6 +34,25 @@ class LocalDataSourceImpl implements LocalDataSource {
       return Future.value(templates);
     } else {
       throw EmptyCacheException(message: 'No cached templates');
+    }
+  }
+
+  @override
+  Future<void> cacheTemplate(TemplateModel template) {
+    final jsonTemplate = jsonEncode(template);
+    sharedPreferences.setString('my_template', jsonTemplate);
+    return Future.value();
+  }
+
+  @override
+  Future<TemplateModel> getCachedTemplate(String id) {
+    final jsonTemplateString = sharedPreferences.getString('my_template');
+    if (jsonTemplateString != null) {
+      final jsonTemplate = json.decode(jsonTemplateString);
+      final template = TemplateModel.fromJson(jsonTemplate);
+      return Future.value(template);
+    } else {
+      throw EmptyCacheException(message: 'No cached template');
     }
   }
 }
