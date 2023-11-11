@@ -15,8 +15,6 @@ abstract class NutritionPlanRemoteDataSource {
   Future<MealLibraryModel> addMealLibrary(MealLibrary mealLibrary);
 }
 
-const BASE_URL = 'https://samla.mohsowa.com/api/nutrition';
-
 class NutritionPlanRemoteDataSourceImpl
     implements NutritionPlanRemoteDataSource {
   final http.Client client;
@@ -79,7 +77,7 @@ class NutritionPlanRemoteDataSourceImpl
     final meal = MealLibraryModel.fromEntity(mealLibrary);
     final response = await samlaAPI(
       data: meal.toJson(),
-      endPoint: '/nutrition/food/add',
+      endPoint: '/nutrition/food/create',
       method: 'POST',
     );
     final resBody = await response.stream.bytesToString();
