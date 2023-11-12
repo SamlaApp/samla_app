@@ -46,8 +46,6 @@ class PostRemoteDataSourceImpl implements PostRemoteDataSource {
     final decodedJson = json.decode(resBody);
 
     if (res.statusCode == 201) {
-      decodedJson['writer_name'] = decodedJson['user']['name'];
-      decodedJson['writer_photo'] = decodedJson['user']['photo'];
       return PostModel.fromJson(decodedJson['post']);
     } else {
       throw ServerException(message: decodedJson['message']);
@@ -66,8 +64,10 @@ class PostRemoteDataSourceImpl implements PostRemoteDataSource {
     final decodedJson = json.decode(resBody);
 
     if (res.statusCode == 201) {
-      decodedJson['comment']['writer_name'] = decodedJson['comment']['user']['name'];
-      decodedJson['comment']['writer_photo'] = decodedJson['comment']['user']['photo'];
+      decodedJson['comment']['writer_name'] =
+          decodedJson['comment']['user']['name'];
+      decodedJson['comment']['writer_photo'] =
+          decodedJson['comment']['user']['photo'];
       return CommentModel.fromJson(decodedJson['comment']);
     } else {
       throw ServerException(message: decodedJson['message']);
@@ -88,15 +88,14 @@ class PostRemoteDataSourceImpl implements PostRemoteDataSource {
     final resBody = await res.stream.bytesToString();
     if (res.statusCode == 200) {
       final decodedJson = json.decode(resBody);
-      
+
       final posts = decodedJson['posts'].map<PostModel>((post) {
         post['writer_name'] = post['user']['name'];
         post['writer_photo'] = post['user']['photo'];
         final postModel = PostModel.fromJson(post);
         print(post['comments']);
-        final comments = post['comments'] != null
-            ? _getCommentsFromJson(post)
-            : null;
+        final comments =
+            post['comments'] != null ? _getCommentsFromJson(post) : null;
         postModel.comments = comments ?? [];
         return postModel;
       }).toList();

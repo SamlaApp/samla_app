@@ -19,7 +19,7 @@ class ImageHelper {
         _imageCropper = imageCropper ?? ImageCropper();
 
   Future<String?> _pickImage(
-      {required ImageSource source, int imageQuality = 50}) async {
+      {required ImageSource source, int imageQuality = 1}) async {
     final pickedImage = await ImagePicker()
         .pickImage(source: source, imageQuality: imageQuality);
     return pickedImage == null ? '' : pickedImage.path;
@@ -179,4 +179,3 @@ class ImageHelper {
 }
 
 final imageHelper = ImageHelper();
-
