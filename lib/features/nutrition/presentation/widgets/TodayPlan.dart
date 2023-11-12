@@ -85,22 +85,22 @@ class _TodayPlanState extends State<TodayPlan> {
               children: [
                 Text(
                   date,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
-                    color: Colors.white,
+                    color: primary_color,
                   ),
                 ),
                 TextButton(
                   onPressed: () {
                     Navigator.of(context).push(MaterialPageRoute(builder: (context) => NutritionPlan()));
                   },
-                  child: const Text(
+                  child: Text(
                     'Edit',
                     style: TextStyle(
-                      color: Colors.white,
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
+                      color: primary_color,
                     ),
                   ),
                 ),
@@ -142,14 +142,14 @@ class _TodayPlanState extends State<TodayPlan> {
                 Text(
                   foodName,
                   style: TextStyle(
-                    color: Colors.white,
+                    color: primary_color,
                     fontSize: 16,
                   ),
                 ),
                 Text(
                   calValue,
                   style: TextStyle(
-                    color: Colors.white,
+                    color: primary_color,
                     fontSize: 14,
                   ),
                 ),
