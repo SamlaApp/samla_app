@@ -4,7 +4,9 @@ import 'package:samla_app/core/error/failures.dart';
 import 'package:samla_app/core/network/network_info.dart';
 import 'package:samla_app/features/community/data/datasources/post_local_data_source.dart';
 import 'package:samla_app/features/community/data/datasources/post_remote_data_source.dart';
+import 'package:samla_app/features/community/data/models/Comment.dart';
 import 'package:samla_app/features/community/data/models/Post.dart';
+import 'package:samla_app/features/community/domain/entities/Comment.dart';
 import 'package:samla_app/features/community/domain/entities/Post.dart';
 import 'package:samla_app/features/community/domain/repositories/post_repository.dart';
 
@@ -51,9 +53,17 @@ class PostRepositoryImpl implements PostRepository {
   }
   
   @override
-  Future<Either<Failure, Unit>> commentPost(int postID) {
-    // TODO: implement commentPost
-    throw UnimplementedError();
+  Future<Either<Failure, Comment>> commentPost(Comment comment) async {
+    if (await networkInfo.isConnected) {
+      try {
+        final  newComment = await remoteDataSource.commentPost(CommentModel.fromEntity(comment));
+        return Right(newComment);
+      } on ServerException catch (e) {
+        return Left(ServerFailure(message: e.message));
+      }
+    } else {
+      return Left(ServerFailure(message: 'No internet connection'));
+      }
   }
   
   @override
@@ -61,13 +71,7 @@ class PostRepositoryImpl implements PostRepository {
     // TODO: implement deletePost
     throw UnimplementedError();
   }
-  
-  @override
-  Future<Either<Failure, int>> getPostComments(int postID) {
-    // TODO: implement getPostComments
-    throw UnimplementedError();
-  }
-  
+   
   @override
   Future<Either<Failure, Unit>> likePost(int postID) {
     // TODO: implement likePost

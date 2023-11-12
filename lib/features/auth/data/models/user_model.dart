@@ -8,13 +8,20 @@ class UserModel extends User {
       required super.phone,
       required super.dateOfBirth,
       required super.id,
-      required super.accessToken});
+      required super.accessToken,
+      super.photoUrl,
+      super.gender,
+      super.height,
+      super.hasGoal
+      });
 
 // coming from server
   factory UserModel.fromJson(Map<String, dynamic> json) {
-    print(json);
-
     return UserModel(
+      gender: json['gender'],
+      height: json['height'],
+      hasGoal: json['has_goal'],
+      photoUrl: json['photo'],
       id: json['id'].toString(),
       name: json['name'],
       email: json['email'],
@@ -34,6 +41,9 @@ class UserModel extends User {
       phone: user.phone,
       dateOfBirth: user.dateOfBirth,
       accessToken: user.accessToken ?? '',
+      gender: user.gender ?? '',
+      height: user.height ?? 0,
+      hasGoal: user.hasGoal ?? false,
     );
   }
 
@@ -47,6 +57,9 @@ class UserModel extends User {
       'phone': phone,
       'date_of_birth': dateOfBirth,
       'access_token': accessToken!,
+      'photo':photoUrl ?? '',
+      'height': height.toString(),
+      'has_goal': hasGoal.toString()
     };
   }
 }

@@ -8,8 +8,16 @@ class User extends Equatable {
   String phone;
   String dateOfBirth;
   String? accessToken;
+  String? photoUrl;
+  String? gender;
+  double? height;
+  bool? hasGoal;
 
   User({
+    this.gender,
+    this.height,
+    this.hasGoal,
+    this.photoUrl,
     this.id,
     required this.name,
     required this.email,
@@ -18,8 +26,6 @@ class User extends Equatable {
     required this.dateOfBirth,
     this.accessToken,
   });
-
-
 
   @override
   List<Object?> get props =>

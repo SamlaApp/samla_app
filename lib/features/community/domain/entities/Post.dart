@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:samla_app/features/community/domain/entities/Comment.dart';
+
 class Post {
   final String? content;
   final int writerID;
@@ -13,9 +15,11 @@ class Post {
   final List<String>? likesUserIDs;
   final String? writerName;
   final String? writerImageURL;
+  final String? date;
+  List<Comment> comments;
 
   Post( 
-      {this.writerName,
+      {this.date,this.writerName,
       this.writerImageURL,
       this.postID,
       required this.communityID,
@@ -26,5 +30,7 @@ class Post {
       required this.numOfLikes,
       this.imageFile,
       this.numOfComments,
-      this.likesUserIDs});
+      this.likesUserIDs,
+      this.comments = const[],
+      });
 }

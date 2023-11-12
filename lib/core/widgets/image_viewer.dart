@@ -106,7 +106,7 @@ class _ImageViewerState extends State<ImageViewer> {
       }
       if (widget.type == ImageViewerType.network && widget.imageURL != null) {
         return cachedNetworkImage(
-                widget.imageURL!, widget.placeholderImagePath);
+            widget.imageURL!, widget.placeholderImagePath);
       } else if (widget.type == ImageViewerType.asset &&
           widget.assetImagePath != null) {
         return Image.asset(widget.assetImagePath!);
@@ -195,17 +195,17 @@ class _ImageViewerState extends State<ImageViewer> {
         radius: widget.width / 2,
         child: imageWidget != null
             ? imageWidget
-            : widget.editableCallback != null
-                ? Container(
-                    decoration: BoxDecoration(
-                      color: inputField_color,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Icon(Icons.add_a_photo_outlined,
-                        color: theme_darkblue.withOpacity(0.3)),
-                  )
-                : widget.placeholderImagePath != null
-                    ? ClipOval(child: Image.asset(widget.placeholderImagePath!))
+            : widget.placeholderImagePath != null
+                ? ClipOval(child: Image.asset(widget.placeholderImagePath!))
+                : widget.editableCallback != null
+                    ? Container(
+                        decoration: BoxDecoration(
+                          color: inputField_color,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Icon(Icons.add_a_photo_outlined,
+                            color: theme_darkblue.withOpacity(0.3)),
+                      )
                     : throw Exception(
                         'neither imageFile or imgeURL or ImageAsset or editableCallback must be passed '));
   }

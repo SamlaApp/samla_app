@@ -75,7 +75,7 @@ class CommunityDetail extends StatelessWidget {
                           ImageViewer.network(
                             placeholderImagePath: 'images/defaults/community.png',
                             imageURL: community.imageURL,
-                            editableCallback: (image) {},
+                            editableCallback: userRole == userRoleOptions.member ? (image) {} : null,
                             title: community.name,
                             animationTag: 'imageHero',
                           ),

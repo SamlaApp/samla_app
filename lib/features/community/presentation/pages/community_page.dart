@@ -1,29 +1,28 @@
 import 'dart:io';
-import 'dart:math';
-
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:image_cropper/image_cropper.dart';
 import 'package:samla_app/config/themes/common_styles.dart';
 import 'package:samla_app/core/network/samlaAPI.dart';
 import 'package:samla_app/core/widgets/CustomTextFormField.dart';
 import 'package:samla_app/core/widgets/image_viewer.dart';
-import 'package:samla_app/core/widgets/loading.dart';
 import 'package:samla_app/features/auth/presentation/bloc/auth_bloc.dart';
-import 'package:samla_app/features/auth/presentation/pages/Register.dart';
 import 'package:samla_app/features/community/community_di.dart';
+import 'package:samla_app/features/community/domain/entities/Comment.dart';
 import 'package:samla_app/features/community/domain/entities/Community.dart';
 import 'package:samla_app/features/community/domain/entities/Post.dart';
+import 'package:samla_app/features/community/presentation/cubits/AddComment/add_comment_cubit.dart';
 import 'package:samla_app/features/community/presentation/cubits/CRUDPostCubit/crud_post_cubit.dart';
 import 'package:samla_app/features/community/presentation/cubits/GetPosts/get_posts_cubit.dart';
 import 'package:samla_app/features/community/presentation/cubits/PostCubit/post_cubit.dart';
 import 'package:samla_app/features/community/presentation/pages/community_detail.dart';
 
+// ignore: must_be_immutable
 class CommunityPage extends StatelessWidget {
   final Community community;
   CommunityPage({super.key, required this.community});
+  // ignore: non_constant_identifier_names
   late CrudPostCubit CRUDCubit;
   final userID = sl.get<AuthBloc>().user.id!;
   @override
@@ -47,8 +46,8 @@ class CommunityPage extends StatelessWidget {
             onPressed: () {
               showAddPostModal(context);
             },
-            child: Icon(Icons.add),
             backgroundColor: theme_pink,
+            child: const Icon(Icons.add),
           ),
           appBar: AppBar(
             toolbarHeight: 60,
@@ -56,7 +55,7 @@ class CommunityPage extends StatelessWidget {
             titleSpacing: 0,
             // leadingWidth: 35,
             leading: IconButton(
-              icon: Icon(Icons.arrow_back_ios),
+              icon: const Icon(Icons.arrow_back_ios),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -66,22 +65,28 @@ class CommunityPage extends StatelessWidget {
           body: BlocBuilder<GetPostsCubit, GetPostsState>(
             bloc: sl.get<GetPostsCubit>()..getPosts(community.id!),
             builder: (context, state) {
+              
               if (state is GetPostsLoading) {
-                return Center(child: CircularProgressIndicator());
+                return const Center(child: CircularProgressIndicator());
               }
 
               if (state is GetPostsLoaded) {
+                if (state.posts.isEmpty) {
+                  return const Center(
+                      child: Text('No posts yet, be the first!'));
+                }
                 return Container(
                   color: primary_color,
                   child: ListView(
                     children: [
                       () {
+                        
                         return ListView.builder(
                           shrinkWrap: true,
-                          physics: NeverScrollableScrollPhysics(),
+                          physics: const NeverScrollableScrollPhysics(),
                           itemCount: state.posts.length,
                           itemBuilder: (context, index) {
-                            return PostWidget(state.posts[index]);
+                            return postWidget(state.posts[index]);
                           },
                         );
                       }()
@@ -89,7 +94,7 @@ class CommunityPage extends StatelessWidget {
                   ),
                 );
               }
-              return Center(child: Text('Something went wrong'));
+              return const Center(child: Text('Something went wrong'));
             },
           ),
         );
@@ -128,7 +133,8 @@ class CommunityPage extends StatelessWidget {
                 Expanded(
                   child: SingleChildScrollView(
                     child: Container(
-                      padding: EdgeInsets.all(20),
+                      alignment: Alignment.bottomCenter,
+                      padding: const EdgeInsets.all(20),
                       decoration: BoxDecoration(
                           borderRadius: const BorderRadius.vertical(
                             top: Radius.circular(20.0),
@@ -140,18 +146,18 @@ class CommunityPage extends StatelessWidget {
                             width: 450,
                             height: 300,
                             isRectangular: true,
-                            editableCallback: (_image) {
-                              image = _image;
+                            editableCallback: (newImage) {
+                              image = newImage;
                             },
                           ),
-                          SizedBox(height: 20),
+                          const SizedBox(height: 20),
                           CustomTextFormField(
                             controller: textController,
                             iconData: Icons.text_fields_rounded,
                             label: 'Post description',
                             textArealike: true,
                           ),
-                          SizedBox(height: 20),
+                          const SizedBox(height: 20),
                           Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
@@ -216,10 +222,11 @@ class CommunityPage extends StatelessWidget {
         });
   }
 
-  Widget PostWidget(Post post) {
+  Widget postWidget(Post post) {
     final controller = ExpandableController(initialExpanded: false);
-
+    final commentController = TextEditingController();
     final cubit = sl.get<PostCubit>();
+    final commentCubit = sl.get<AddCommentCubit>();
     return BlocBuilder<PostCubit, PostState>(
       bloc: cubit,
       builder: (context, state) {
@@ -234,8 +241,6 @@ class CommunityPage extends StatelessWidget {
           controller: controller,
           header: GestureDetector(
             onTap: () {
-              print('show comments');
-              // cubit.showComments();
               controller.toggle();
             },
             child: Container(
@@ -256,13 +261,24 @@ class CommunityPage extends StatelessWidget {
                           isRectangular: true,
                         )
                       : Container(),
-                  SizedBox(height: 10),
-                  Text('by ${post.writerName}',
-                      style: TextStyle(
-                          color: theme_darkblue.withOpacity(0.7),
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500)),
-                  SizedBox(height: 5),
+                  const SizedBox(height: 10),
+                  Row(
+                    children: [
+                      ImageViewer.network(
+                        imageURL: post.writerImageURL,
+                        viewerMode: false,
+                        placeholderImagePath: 'images/defaults/user.png',
+                        width: 30,
+                      ),
+                      const SizedBox(width: 10),
+                      Text('${post.writerName}',
+                          style: TextStyle(
+                              color: theme_darkblue.withOpacity(0.7),
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500)),
+                    ],
+                  ),
+                  const SizedBox(height: 5),
                   Text(
                     post.content ?? 'this a dummy content for this post',
                     style: TextStyle(
@@ -272,23 +288,145 @@ class CommunityPage extends StatelessWidget {
               ),
             ),
           ),
-          expanded: Container(
-            margin: const EdgeInsets.fromLTRB(30.0, 0, 30, 0),
-            child: Container(
-              child: Center(child: Text('comments not implemented yet')),
-              height: 300,
-              // rounded corners from bottom only 
-              decoration: BoxDecoration(
-                color: inputField_color,
-                borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(20),
-                  bottomRight: Radius.circular(20),
+          expanded: BlocBuilder<AddCommentCubit, AddCommentState>(
+            bloc: commentCubit,
+            builder: (context, state) {
+              return Container(
+                margin: const EdgeInsets.fromLTRB(30.0, 0, 30, 0),
+
+                // rounded corners from bottom only
+                decoration: BoxDecoration(
+                  color: inputField_color,
+                  borderRadius: const BorderRadius.only(
+                    bottomLeft: Radius.circular(20),
+                    bottomRight: Radius.circular(20),
+                  ),
                 ),
-              ),
-            ),
+                child: commentsList(state, context, post, commentController,
+                    commentCubit, cubit),
+                // child: Container(),
+              );
+            },
           ),
         );
       },
+    );
+  }
+
+  Container commentsList(
+      AddCommentState state,
+      BuildContext context,
+      Post post,
+      TextEditingController commentController,
+      AddCommentCubit commentCubit,
+      PostCubit cubit) {
+    return Container(
+      child: () {
+        // if (state is AddCommentLoading) {
+        //   return CircularProgressIndicator();
+        // }
+        if (state is AddCommentError) {
+          SchedulerBinding.instance.addPostFrameCallback((_) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(state.message),
+              ),
+            );
+          });
+        }
+
+        if (state is AddCommentSuccess) {
+          post.comments.add(state.comment);
+          SchedulerBinding.instance.addPostFrameCallback((_) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Comment added successfully'),
+              ),
+            );
+          });
+        }
+        return ListView.builder(
+          shrinkWrap: true,
+          scrollDirection: Axis.vertical,
+          itemCount: post.comments.length + 1,
+          itemBuilder: (context, index) {
+            if (index != post.comments.length) {
+              return commentWidget(post.comments[index]);
+            }
+            return SizedBox(
+              height: 100,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  CustomTextFormField(
+                    label: 'write a comment',
+                    iconData: Icons.comment,
+                    controller: commentController,
+                  ),
+                  const SizedBox(width: 10),
+                  IconButton(
+                    onPressed: () {
+                      final comment = Comment(
+                        communityID: community.id!,
+                        writerID: int.parse(userID),
+                        content: commentController.text,
+                        postID: post.postID!,
+                        writerName: authBloc.user.name,
+                      );
+                      commentCubit.addComment(comment);
+                      cubit.emit(PostInitial());
+                    },
+                    icon: const Icon(Icons.send),
+                    color: theme_pink,
+                  )
+                ],
+              ),
+            );
+          },
+        );
+      }(),
+    );
+  }
+
+  Widget commentWidget(Comment comment) {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              ImageViewer.network(
+                imageURL: comment.writerImageURL,
+                viewerMode: false,
+                placeholderImagePath: 'images/defaults/user.png',
+                width: 40,
+              ),
+              const SizedBox(width: 10),
+              Text('${comment.writerName}',
+                  style: TextStyle(
+                      color: theme_darkblue.withOpacity(0.7),
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500)),
+            ],
+          ),
+          const SizedBox(height: 10),
+          Row(
+            children: [
+              const SizedBox(width: 50),
+              Flexible(
+                child: Text(
+                  comment.content,
+                  style: TextStyle(
+                      fontSize: 14, color: theme_darkblue.withOpacity(0.6)),
+                ),
+              )
+            ],
+          ),
+          Divider(
+            color: theme_darkblue.withOpacity(0.6),
+          )
+        ],
+      ),
     );
   }
 
@@ -321,7 +459,7 @@ class CommunityPage extends StatelessWidget {
       },
       child: Row(
         children: [
-          Container(
+          SizedBox(
             width: 50, // Set the desired width
             height: 50, // Set the desired height
             child: Hero(
@@ -334,7 +472,8 @@ class CommunityPage extends StatelessWidget {
               ),
             ),
           ),
-          SizedBox(width: 8), // Add spacing between the avatar and the title
+          const SizedBox(
+              width: 8), // Add spacing between the avatar and the title
           Text(community.name),
         ],
       ),

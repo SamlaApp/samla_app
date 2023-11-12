@@ -2,18 +2,22 @@ import 'package:equatable/equatable.dart';
 
 class Comment extends Equatable {
   final String content;
-  final String postID;
+  final int postID;
+  final int communityID;
   final int? id;
   final String? writerName;
-  final String? writerID;
+  final int? writerID;
+  final String? date;
+  final String? writerImageURL;
 
-// when you send a comment to the server, you don't need to send the id
-  const Comment.toSend({this.id, this.writerName, this.writerID, 
-      required this.content, required this.postID});
-
-  const Comment.toShow(
-      {required this.content, required this.postID, required this.id
-      , required this.writerName, required this.writerID});
+  Comment( 
+      {this.writerImageURL,required this.content,
+      required this.postID,
+      required this.communityID,
+      this.id,
+      required this.writerName,
+      required this.writerID,
+      this.date});
 
   @override
   // TODO: implement props

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:samla_app/config/themes/common_styles.dart';
+import 'package:samla_app/core/widgets/image_viewer.dart';
 import 'package:samla_app/features/auth/auth_injection_container.dart'
     as authDI;
 import 'package:samla_app/features/auth/auth_injection_container.dart';
@@ -41,10 +42,12 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                         CircleAvatar(
                           backgroundColor: theme_green,
                           radius: 21,
-                          child: const CircleAvatar(
-                            backgroundImage: AssetImage('images/download.jpeg'),
-                            radius: 19,
-                          ),
+                          child: ImageViewer.network(
+                            imageURL:user.photoUrl,
+                            width: 42,
+                            height: 42,
+                            placeholderImagePath: 'images/defaults/user.png',
+                          )
                         ),
                         const SizedBox(width: 10),
                         Text(user.name,

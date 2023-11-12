@@ -1,3 +1,4 @@
+import 'package:samla_app/features/community/data/models/Comment.dart';
 import 'package:samla_app/features/community/domain/entities/Post.dart';
 
 class PostModel extends Post {
@@ -13,7 +14,9 @@ class PostModel extends Post {
       super.imageFile,
       super.likesUserIDs,
       super.numOfComments,
-      super.type});
+      super.type, required super.date,
+      super.comments
+      });
 
   factory PostModel.fromJson(Map<String, dynamic> json) {
     return PostModel(
@@ -29,6 +32,7 @@ class PostModel extends Post {
           : null,
       type: json['type'],
       numOfComments: json['num_of_comments'],
+      date: json['created_at'],
     );
   }
 
@@ -46,6 +50,8 @@ class PostModel extends Post {
       type: post.type,
       numOfComments: post.numOfComments,
       imageFile: post.imageFile,
+      date: post.date,
+      comments: post.comments
     );
   }
 
@@ -61,6 +67,7 @@ class PostModel extends Post {
       'num_of_comments': super.numOfComments.toString(),
       'writer_name':super.writerName.toString(),
       'writer_photo': super.writerImageURL.toString(),
+      'created_at': super.date.toString(),
     };
   }
 }
