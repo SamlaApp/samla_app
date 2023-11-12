@@ -3,16 +3,17 @@ import 'package:samla_app/core/error/exceptions.dart';
 import 'package:samla_app/features/nutrition/data/models/MealLibrary_model.dart';
 import 'package:samla_app/features/nutrition/data/models/nutritionPlan_model.dart';
 import 'package:http/http.dart' as http;
+import 'package:samla_app/features/nutrition/domain/entities/MealLibrary.dart';
 import 'package:samla_app/features/nutrition/domain/entities/nutritionPlan.dart';
 import 'package:samla_app/core/network/samlaAPI.dart';
+
 
 abstract class NutritionPlanRemoteDataSource {
   Future<List<NutritionPlan>> getAllNutritionPlans();
   Future<NutritionPlanModel> createNutritionPlan(NutritionPlan nutritionPlan);
   Future<MealLibraryModel> searchMealLibrary(String query);
+  Future<MealLibraryModel> addMealLibrary(MealLibrary mealLibrary);
 }
-
-const BASE_URL = 'https://samla.mohsowa.com/api/nutrition';
 
 class NutritionPlanRemoteDataSourceImpl
     implements NutritionPlanRemoteDataSource {
@@ -70,4 +71,25 @@ class NutritionPlanRemoteDataSourceImpl
       throw ServerException(message: json.decode(resBody)['message']);
     }
   }
+
+  @override
+  Future<MealLibraryModel> addMealLibrary(MealLibrary mealLibrary) async {
+    final meal = MealLibraryModel.fromEntity(mealLibrary);
+    final response = await samlaAPI(
+      data: meal.toJson(),
+      endPoint: '/nutrition/food/create',
+      method: 'POST',
+    );
+    final resBody = await response.stream.bytesToString();
+    if (response.statusCode == 200) {
+      final MealLibraryModel mealLibrary =
+          MealLibraryModel.fromJson(json.decode(resBody)['meal']);
+      return mealLibrary;
+    } else {
+      throw ServerException(message: json.decode(resBody)['message']);
+    }
+
+  }
+
+
 }

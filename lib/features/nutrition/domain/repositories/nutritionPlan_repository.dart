@@ -8,4 +8,5 @@ abstract class NutritionPlanRepository {
   Future<Either<Failure, List<NutritionPlan>>> getAllNutritionPlans();
   Future<Either<Failure, NutritionPlan>> createNutritionPlan({required NutritionPlan nutritionPlan});
   Future<Either<Failure, MealLibrary>> searchMealLibrary({required String query});
+  Future<Either<Failure, MealLibrary>> addMealLibrary({required MealLibrary mealLibrary});
 }
