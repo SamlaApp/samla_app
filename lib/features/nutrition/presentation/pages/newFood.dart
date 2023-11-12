@@ -6,14 +6,14 @@ import 'package:samla_app/features/nutrition/domain/repositories/nutritionPlan_r
 import 'package:samla_app/features/nutrition/presentation/cubit/nutritionPlan/nutritionPlan_cubit.dart';
 import '../../nutrition_di.dart';
 
-class newFood extends StatefulWidget {
-  const newFood({Key? key}) : super(key: key);
+class NewFoodPage extends StatefulWidget {
+  const NewFoodPage({Key? key}) : super(key: key);
 
   @override
   _NewFoodState createState() => _NewFoodState();
 }
 
-class _NewFoodState extends State<newFood> {
+class _NewFoodState extends State<NewFoodPage> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _caloriesController = TextEditingController();
@@ -363,29 +363,33 @@ class _NewFoodState extends State<newFood> {
                     ),
                   ),
                   const SizedBox(height: 35),
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: theme_green,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
-                      onPressed: _submitForm,
-                      child: const Padding(
-                        padding: EdgeInsets.all(16.0),
-                        child: Text(
-                          'Add Food',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
+                  _buttonAddCustomMeal(),
                 ]),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buttonAddCustomMeal(){
+    return SizedBox(
+      width: double.infinity,
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: theme_green,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+        ),
+        onPressed: _submitForm,
+        child: const Padding(
+          padding: EdgeInsets.all(16.0),
+          child: Text(
+            'Add Food',
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
       ),

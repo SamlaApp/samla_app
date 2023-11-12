@@ -5,8 +5,10 @@ class DayDropdown extends StatefulWidget {
   final List<String> days;
   final String? initialValue;
   final Function(String) onChanged;
+  final Color color;
+  final Color backgroundColor;
 
-  DayDropdown({required this.days, this.initialValue, required this.onChanged});
+  DayDropdown({required this.days, this.initialValue, required this.onChanged, required this.color, required this.backgroundColor});
 
   @override
   _DayDropdownState createState() => _DayDropdownState();
@@ -14,6 +16,13 @@ class DayDropdown extends StatefulWidget {
 
 class _DayDropdownState extends State<DayDropdown> {
   late String _currentDay;
+
+  // get currentDay => _currentDay;
+
+
+
+
+
 
   @override
   void initState() {
@@ -38,7 +47,8 @@ class _DayDropdownState extends State<DayDropdown> {
                 isExpanded: true,
                 icon: Icon(Icons.keyboard_arrow_down, color: Colors.grey.shade400),
                 iconSize: 24,
-                style: TextStyle(color: Colors.grey.shade800, fontSize: 16),
+                dropdownColor: widget.backgroundColor,
+                style: TextStyle(color: widget.color, fontSize: 16),
                 onChanged: (String? newValue) {
                   setState(() {
                     _currentDay = newValue!;

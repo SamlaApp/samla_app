@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
+import 'package:numberpicker/numberpicker.dart';
 import 'package:samla_app/config/themes/common_styles.dart';
 import 'package:samla_app/features/nutrition/domain/entities/MealLibrary.dart';
 import 'package:samla_app/features/nutrition/domain/entities/nutritionPlan.dart';
@@ -25,6 +27,9 @@ class _MealAdaptState extends State<MealAdapt> {
 
   final NutritionPlan nutritionPlan;
   final _searchController = TextEditingController();
+
+  DateTime date = DateTime.now();
+  String today = DateFormat('EEEE').format(DateTime.now());
 
   final cubit = NutritionPlanCubit(sl<NutritionPlanRepository>());
   late MealLibrary mealLibrary;
@@ -86,7 +91,7 @@ class _MealAdaptState extends State<MealAdapt> {
               Text(
                 nutritionPlan.name,
                 style:
-                    const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 10),
               Text(
@@ -146,6 +151,8 @@ class _MealAdaptState extends State<MealAdapt> {
                     ),
                     const SizedBox(height: 20),
                     DayDropdown(
+                      color: theme_darkblue,
+                      backgroundColor: Colors.white,
                       days: const [
                         'Monday',
                         'Tuesday',
@@ -155,25 +162,24 @@ class _MealAdaptState extends State<MealAdapt> {
                         'Saturday',
                         'Sunday'
                       ],
-                      initialValue: 'Saturday',
+                      initialValue: today,
                       onChanged: (value) {
                         print("Selected day: $value");
                       },
                     ),
                     const SizedBox(height: 20),
-                    FoodItem(foodName: 'eggs', kcal: 22,fat: 22,protein: 33,carbs: 33, onRemove: () {}),
-
-
+                    FoodItem(
+                        foodName: 'eggs',
+                        kcal: 22,
+                        fat: 22,
+                        protein: 33,
+                        carbs: 33,
+                        onRemove: () {}),
                     const SizedBox(height: 30),
                   ],
                 ),
               ),
             ),
-
-
-
-
-
 
             // Second tab content
             SingleChildScrollView(
@@ -198,18 +204,17 @@ class _MealAdaptState extends State<MealAdapt> {
                                 ),
                               ),
                               IconButton.filled(
-                                onPressed: () {
-                                  cubit.searchMealLibrary(
-                                      _searchController.text);
-                                },
-                                icon: const Icon(Icons.search),
-                                color: theme_green,
-                                style: ElevatedButton.styleFrom(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(32.0),
-                                  ),
-                                )
-                              ),
+                                  onPressed: () {
+                                    cubit.searchMealLibrary(
+                                        _searchController.text);
+                                  },
+                                  icon: const Icon(Icons.search),
+                                  color: theme_green,
+                                  style: ElevatedButton.styleFrom(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(32.0),
+                                    ),
+                                  )),
                             ],
                           ),
                         ],
@@ -218,15 +223,7 @@ class _MealAdaptState extends State<MealAdapt> {
                     getSearchedMeals(gradient),
                     const SizedBox(height: 20),
 
-                    AddMealButton(
-               onButtonPressed: (BuildContext context) {
-                  Navigator.of(context).push(
-                             MaterialPageRoute(
-                               builder: (context) => const newFood(),
-      ),
-
-    );
-  } ),          ],
+                  ],
                 ),
               ),
             ),
@@ -234,6 +231,51 @@ class _MealAdaptState extends State<MealAdapt> {
         ),
       ),
     );
+  }
+
+  final _formKey = GlobalKey<FormState>();
+  final _selectedDay = TextEditingController();
+  final _selectedSize = TextEditingController();
+
+  int _selectedSizeValue = 100;
+
+  void initState() {
+    super.initState();
+    _selectedDay.text = today;
+    _selectedSize.text = _selectedSizeValue.toString();
+  }
+
+  void _onDayChanged(String value) {
+    setState(() {
+      _selectedDay.text = value;
+    });
+  }
+
+  void _onSizeChanged(String value) {
+    setState(() {
+      _selectedSizeValue = int.parse(value);
+      _selectedSize.text = value;
+    });
+  }
+
+  num _calculateCarbs(num carbs, num size, MealLibrary mealLibrary) {
+    num result = (carbs * size / 100);
+    return num.parse(result.toStringAsFixed(2));
+  }
+
+  num _calculateProtein(num protein, num size, MealLibrary mealLibrary) {
+    num result = (protein * size / 100);
+    return num.parse(result.toStringAsFixed(2));
+  }
+
+  num _calculateFat(num fat, num size, MealLibrary mealLibrary) {
+    num result = (fat * size / 100);
+    return num.parse(result.toStringAsFixed(2));
+  }
+
+  num _calculateCalories(num calories, num size, MealLibrary mealLibrary) {
+    num result = (calories * size / 100);
+    return num.parse(result.toStringAsFixed(2));
   }
 
   BlocBuilder<NutritionPlanCubit, NutritionPlanState> getSearchedMeals(
@@ -252,186 +294,280 @@ class _MealAdaptState extends State<MealAdapt> {
             ),
           );
         } else if (state is NutritionPlanMealLibraryLoaded) {
-          return Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              const SizedBox(height: 20),
-              Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-                decoration: BoxDecoration(
-                  gradient: gradient,
-                  borderRadius: BorderRadius.circular(20),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.2),
-                      spreadRadius: 2,
-                      blurRadius: 5,
-                    ),
-                  ],
-                ),
-                child: Column(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 15),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            state.mealLibrary.name,
-                            style: const TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            ),
-                          ),
-                          // button to add meal to plan
-                          ElevatedButton.icon(
-                            onPressed: () {
-
-                              final MealLibrary mealToAdd = MealLibrary(
-                                name: mealLibrary.name,
-                                calories: mealLibrary.calories,
-                                carbs: mealLibrary.carbs,
-                                protein: mealLibrary.protein,
-                                fat: mealLibrary.fat,
-
-                              );
-
-                            },
-
-
-                            icon: const Icon(Icons.add),
-                            label: const Text('Add'),
-                            style: ElevatedButton.styleFrom(
-                              foregroundColor: theme_darkblue,
-                              backgroundColor: Colors.white,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(32.0),
+          return Form(
+            key: _formKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                const SizedBox(height: 20),
+                Container(
+                  padding:
+                  const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                  decoration: BoxDecoration(
+                    gradient: gradient,
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.2),
+                        spreadRadius: 2,
+                        blurRadius: 5,
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 15),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              state.mealLibrary.name,
+                              style: const TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
                               ),
                             ),
-                          ),
-                        ],
+                            // button to add meal to plan
+                            ElevatedButton.icon(
+                              onPressed: () {
+                                //
+                              },
+                              icon: const Icon(Icons.add),
+                              label: const Text('Add'),
+                              style: ElevatedButton.styleFrom(
+                                foregroundColor: theme_darkblue,
+                                backgroundColor: Colors.white,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(32.0),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 10),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          Column(
-                            children: [
-                              Text(
-                                state.mealLibrary.carbs.toString(),
-                                style: const TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white),
-                              ),
-                              const SizedBox(height: 4),
-                              const Text(
-                                'Carbs',
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            ],
-                          ),
-                          Column(
-                            children: [
-                              Text(
-                                state.mealLibrary.protein.toString(),
-                                style: const TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white),
-                              ),
-                              const SizedBox(height: 4),
-                              const Text(
-                                'Protein',
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            ],
-                          ),
+                      const SizedBox(height: 10),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Column(
+                              children: [
+                                Text(
+                                  _calculateCarbs(state.mealLibrary.carbs,
+                                      _selectedSizeValue, state.mealLibrary)
+                                      .toString(),
+                                  style: const TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white),
+                                ),
+                                const SizedBox(height: 4),
+                                const Text(
+                                  'Carbs',
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                              ],
+                            ),
+                            Column(
+                              children: [
+                                Text(
+                                  _calculateProtein(state.mealLibrary.protein,
+                                      _selectedSizeValue, state.mealLibrary)
+                                      .toString(),
+                                  style: const TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white),
+                                ),
+                                const SizedBox(height: 4),
+                                const Text(
+                                  'Protein',
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                              ],
+                            ),
 
-                          Column(
-                            children: [
-                              Text(
-                                state.mealLibrary.fat.toString(),
-                                style: const TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white),
-                              ),
-                              const SizedBox(height: 4),
-                              const Text(
-                                'Fat',
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            ],
-                          ),
+                            Column(
+                              children: [
+                                Text(
+                                  _calculateFat(state.mealLibrary.fat,
+                                      _selectedSizeValue, state.mealLibrary)
+                                      .toString(),
+                                  style: const TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white),
+                                ),
+                                const SizedBox(height: 4),
+                                const Text(
+                                  'Fat',
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                              ],
+                            ),
 
-                          Column(
-                            children: [
-                              Text(
-                                state.mealLibrary.calories.toString(),
-                                style: const TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white),
-                              ),
-                              const SizedBox(height: 4),
-                              const Text(
-                                'Total kcal',
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            ],
-                          ),
+                            Column(
+                              children: [
+                                Text(
+                                  _calculateCalories(state.mealLibrary.calories,
+                                      _selectedSizeValue, state.mealLibrary)
+                                      .toString(),
+                                  style: const TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white),
+                                ),
+                                const SizedBox(height: 4),
+                                const Text(
+                                  'Total kcal',
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                              ],
+                            ),
 
-                          // size of meal
-                          Column(
-                            children: [
-                              Text(
-                                state.mealLibrary.serving_size_g.toString(),
-                                style: const TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white),
-                              ),
-                              const SizedBox(height: 4),
-                              const Text(
-                                'Size (g)',
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            ],
-                          ),
-                        ],
+                            // size of meal
+                            Column(
+                              children: [
+                                Text(
+                                  _selectedSizeValue.toString(),
+                                  style: const TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white),
+                                ),
+                                const SizedBox(height: 4),
+                                const Text(
+                                  'Size (g)',
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
+
+                      // selected Day
+                      const SizedBox(height: 10),
+                      DayDropdown(
+                        color: Colors.white,
+                        backgroundColor: Colors.black87,
+                        days: const [
+                          'Monday',
+                          'Tuesday',
+                          'Wednesday',
+                          'Thursday',
+                          'Friday',
+                          'Saturday',
+                          'Sunday'
+                        ],
+                        initialValue: today,
+                        onChanged: (value) {
+                          _onDayChanged(value);
+                        },
+                      ),
+
+                      // selected size
+                      const SizedBox(height: 10),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        // scrolled number picker
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Container(
+                                padding: const EdgeInsets.only(left: 8.0),
+                                alignment: Alignment.centerLeft,
+                                child: const Text(
+                                  'Size (g)',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            NumberPicker(
+                              textStyle: const TextStyle(
+                                color: Colors.white60,
+                              ),
+                              textMapper: (value) => value.toString(),
+                              itemWidth: 60,
+                              itemHeight: 40,
+                              axis: Axis.horizontal,
+                              selectedTextStyle: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(
+                                  color: theme_darkblue,
+                                ),
+                              ),
+                              minValue: 1,
+                              maxValue: 500,
+                              value: _selectedSizeValue,
+                              onChanged: (value) {
+                                setState(() {
+                                  _onSizeChanged(value.toString());
+                                });
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+                const SizedBox(height: 20),
+                _NewFoodButton(),
+              ],
+            ),
           );
         } else if (state is NutritionPlanEmptyState) {
-          return const Center(
+          return  Center(
             child: Padding(
-              padding: EdgeInsets.all(16.0),
-              child: Text('No meals found'),
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text('No meals found'),
+                  const SizedBox(height: 20),
+                  _NewFoodButton(),
+                ],
+              ),
             ),
           );
         } else if (state is NutritionPlanErrorState) {
           return Center(
             child: Padding(
               padding: const EdgeInsets.all(16.0),
-              child: Text(state.message),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(state.message),
+                  const SizedBox(height: 20),
+                  _NewFoodButton(),
+                ],
+              ),
             ),
           );
         } else {
-          return const Center(
+          return  Center(
             child: Padding(
               padding: EdgeInsets.all(16.0),
-              child: Text('No food to show'),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text('No food to show'),
+                  const SizedBox(height: 20),
+                  _NewFoodButton(),
+                ],
+              ),
             ),
           );
         }
@@ -439,4 +575,25 @@ class _MealAdaptState extends State<MealAdapt> {
     );
   }
 
+  Widget _NewFoodButton() {
+    return ElevatedButton.icon(
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => NewFoodPage(),
+          ),
+        );
+      },
+      icon: const Icon(Icons.add),
+      label: const Text('Add custom food'),
+      style: ElevatedButton.styleFrom(
+        foregroundColor: theme_darkblue,
+        backgroundColor: Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(32.0),
+        ),
+      ),
+    );
+  }
 }

@@ -15,20 +15,19 @@ class AddMealButton extends StatelessWidget {
     return GestureDetector(
       onTap: () => onButtonPressed(context),
       child: Container(
-        padding: EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          border: Border.all(color: theme_grey, width: 2),
-          borderRadius: BorderRadius.circular(10),
+        color: theme_darkblue,
+        decoration: const BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(12)),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(Icons.add_circle_outline, color: theme_grey, size: 40),
-            SizedBox(width: 10),
-            Text(
+             SizedBox(width: 10),
+             Text(
               'Add new food',
               style: TextStyle(
-                color: Colors.black,
+                color: theme_green,
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
               ),
