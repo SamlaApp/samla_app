@@ -12,15 +12,16 @@ class UserModel extends User {
       super.photoUrl,
       super.gender,
       super.height,
-      super.hasGoal
-      });
+      super.hasGoal});
 
 // coming from server
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
       gender: json['gender'],
-      height: json['height'],
-      hasGoal: json['has_goal'],
+      height: json['height'] == null || json['height'].toString().isEmpty
+          ? 0.0
+          : double.parse(json['height'].toString()),
+      hasGoal: json['has_goal'] == 1 ? true : false,
       photoUrl: json['photo'],
       id: json['id'].toString(),
       name: json['name'],
@@ -43,7 +44,7 @@ class UserModel extends User {
       accessToken: user.accessToken ?? '',
       gender: user.gender ?? '',
       height: user.height ?? 0,
-      hasGoal: user.hasGoal ?? false,
+      hasGoal: user.hasGoal,
     );
   }
 
@@ -57,9 +58,9 @@ class UserModel extends User {
       'phone': phone,
       'date_of_birth': dateOfBirth,
       'access_token': accessToken!,
-      'photo':photoUrl ?? '',
-      'height': height.toString(),
-      'has_goal': hasGoal.toString()
+      'photo': photoUrl ?? '',
+      'height': height != null ? height.toString() : '',
+      'has_goal': hasGoal ? '1' : '0'
     };
   }
 }

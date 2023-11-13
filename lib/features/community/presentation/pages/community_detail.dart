@@ -15,9 +15,11 @@ import 'package:samla_app/features/auth/auth_injection_container.dart';
 import 'package:samla_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:samla_app/features/community/domain/entities/Community.dart';
 import 'package:samla_app/features/community/presentation/cubits/ExploreCubit/explore_cubit.dart';
+import 'package:samla_app/features/community/presentation/cubits/ManageMemebers/get_memebers_cubit.dart';
 import 'package:samla_app/features/community/presentation/cubits/MyCommunitiesCubit/community_cubit.dart';
 import 'package:samla_app/features/community/presentation/cubits/SpecificCommunityCubit/specific_community_cubit.dart';
 import 'package:samla_app/features/community/presentation/pages/community_page.dart';
+import 'package:samla_app/features/community/presentation/pages/join_requests.dart';
 
 enum userRoleOptions { owner, member, notMember }
 
@@ -32,12 +34,14 @@ class CommunityDetail extends StatelessWidget {
     final communityCubit = sl.get<CommunityCubit>();
     final exploreCubit = sl.get<ExploreCubit>();
     final user = sl.get<AuthBloc>().user;
+    final getMemebersCubit = sl.get<GetMemebersCubit>();
     specificCubit.getCommunitynumOfMemebers(community.id!);
     final userRole = community.ownerID == int.parse(user.id!)
         ? userRoleOptions.owner
         : community.isMemeber
             ? userRoleOptions.member
             : userRoleOptions.notMember;
+    getMemebersCubit.getMemebers(community.id!);
     return BlocProvider(
       create: (context) => specificCubit,
       child: BlocBuilder<SpecificCommunityCubit, SpecificCommunityState>(
@@ -57,7 +61,7 @@ class CommunityDetail extends StatelessWidget {
             body: Stack(
               children: [
                 Positioned(
-                  child: GradientAppBar(context),
+                  child: GradientAppBar(context, userRole, community),
                 ),
                 Container(
                   padding: EdgeInsets.all(20),
@@ -73,9 +77,14 @@ class CommunityDetail extends StatelessWidget {
                           ),
 
                           ImageViewer.network(
-                            placeholderImagePath: 'images/defaults/community.png',
+                            placeholderImagePath:
+                                'images/defaults/community.png',
                             imageURL: community.imageURL,
-                            editableCallback: userRole == userRoleOptions.member ? (image) {} : null,
+                            editableCallback:
+                                userRole == userRoleOptions.member ||
+                                        userRole == userRoleOptions.owner
+                                    ? (image) {}
+                                    : null,
                             title: community.name,
                             animationTag: 'imageHero',
                           ),
@@ -115,6 +124,9 @@ class CommunityDetail extends StatelessWidget {
                           SizedBox(
                             height: 30,
                           ),
+
+                          // TODO: show community memebers
+                          
 
                           mainButton(
                               userRole, context, exploreCubit, communityCubit),
@@ -307,12 +319,65 @@ class MermbersCountWidget extends StatelessWidget {
   }
 }
 
-PreferredSize GradientAppBar(context) {
+PreferredSize GradientAppBar(
+    context, userRoleOptions userRole, Community community) {
   return PreferredSize(
     preferredSize: Size.fromHeight(190),
     child: Container(
       height: 190,
       child: AppBar(
+        actions: [
+          // joining requests list only showed for community owner
+
+          () {
+            if (userRole == userRoleOptions.owner) {
+              return Container(
+                height: 20,
+                width: 50,
+                child: Stack(children: [
+                  Positioned(
+                    top: 15,
+                    right: 5,
+                    child: IconButton(
+                      icon: const Icon(
+                        Icons.people,
+                        size: 30,
+                      ),
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => JoinRequestsPage(
+                                      community: community,
+                                    )));
+                      },
+                    ),
+                  ),
+                  Positioned(
+                      top: 15,
+                      right: 10,
+                      child: Container(
+                        height: 15,
+                        width: 25,
+                        // make it circle,
+                        decoration: BoxDecoration(
+                          color: Colors.red,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Center(
+                          child: Text(
+                            '99',
+                            style: TextStyle(color: Colors.white, fontSize: 10),
+                          ),
+                        ),
+                      )),
+                ]),
+              );
+            } else {
+              return Container();
+            }
+          }()
+        ],
         leading: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [

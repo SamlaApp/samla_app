@@ -11,6 +11,7 @@ import 'package:samla_app/features/community/presentation/cubits/AddComment/add_
 import 'package:samla_app/features/community/presentation/cubits/CRUDPostCubit/crud_post_cubit.dart';
 import 'package:samla_app/features/community/presentation/cubits/ExploreCubit/explore_cubit.dart';
 import 'package:samla_app/features/community/presentation/cubits/GetPosts/get_posts_cubit.dart';
+import 'package:samla_app/features/community/presentation/cubits/ManageMemebers/get_memebers_cubit.dart';
 import 'package:samla_app/features/community/presentation/cubits/MyCommunitiesCubit/community_cubit.dart';
 import 'package:samla_app/features/community/presentation/cubits/PostCubit/post_cubit.dart';
 import 'package:samla_app/features/community/presentation/cubits/SpecificCommunityCubit/specific_community_cubit.dart';
@@ -41,6 +42,7 @@ void CommunityInit() {
   sl.registerFactory(() => GetPostsCubit(sl()));
   sl.registerFactoryParam((int community,_) => CrudPostCubit(community,sl()));
   sl.registerFactory(() => AddCommentCubit(sl()));
+  sl.registerFactory(() => GetMemebersCubit(sl()));
   //datasources
   sl.registerLazySingleton<PostRemoteDataSource>(() => PostRemoteDataSourceImpl());
   sl.registerLazySingleton<PostLocalDataSource>(() => PostLocalDataSourceImpl(sl()));

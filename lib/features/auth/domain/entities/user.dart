@@ -11,12 +11,12 @@ class User extends Equatable {
   String? photoUrl;
   String? gender;
   double? height;
-  bool? hasGoal;
+  bool hasGoal;
 
   User({
     this.gender,
     this.height,
-    this.hasGoal,
+    this.hasGoal = false,
     this.photoUrl,
     this.id,
     required this.name,
