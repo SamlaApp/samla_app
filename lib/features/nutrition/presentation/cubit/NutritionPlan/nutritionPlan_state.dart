@@ -43,12 +43,6 @@ final class NutritionPlanMealLibraryLoaded extends NutritionPlanState {
   NutritionPlanMealLibraryLoaded(this.mealLibrary);
 }
 
-final class NutritionPlanMealAdded extends NutritionPlanState {
-  final List<MealLibrary> updatedMeals;
-
-  NutritionPlanMealAdded(this.updatedMeals);
-}
-
 final class NutritionPlanMealRemoved extends NutritionPlanState {
   final List<MealLibrary> updatedMeals;
 
@@ -60,3 +54,41 @@ final class NutritionPlanMealLibraryAdded extends NutritionPlanState {
 
   NutritionPlanMealLibraryAdded(this.updatedMeals);
 }
+
+final class NutritionPlanMealAdded extends NutritionPlanState {
+  final NutritionPlanMeal nutritionPlanMeal;
+
+  NutritionPlanMealAdded(this.nutritionPlanMeal);
+}
+
+final class NutritionPlanMealRemovedSuccessfully extends NutritionPlanState {
+  final NutritionPlanMeal nutritionPlanMeal;
+
+  NutritionPlanMealRemovedSuccessfully(this.nutritionPlanMeal);
+}
+
+final class NutritionPlanMealUpdated extends NutritionPlanState {
+  final NutritionPlanMeal nutritionPlanMeal;
+
+  NutritionPlanMealUpdated(this.nutritionPlanMeal);
+}
+
+// NutritionPlanMealEmptyState
+final class NutritionPlanMealEmptyState extends NutritionPlanState {}
+
+// NutritionPlanMealErrorState
+final class NutritionPlanMealErrorState extends NutritionPlanState {
+  final String message;
+
+  NutritionPlanMealErrorState(this.message);
+}
+
+// NutritionPlanMealLoaded
+final class NutritionPlanMealLoaded extends NutritionPlanState {
+  final List<NutritionPlanMeal> nutritionPlanMeals;
+
+  NutritionPlanMealLoaded(this.nutritionPlanMeals);
+}
+
+// NutritionPlanMealsLoadingState
+final class NutritionPlanMealsLoadingState extends NutritionPlanState {}
