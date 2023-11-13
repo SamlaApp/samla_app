@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:samla_app/features/nutrition/domain/entities/MealLibrary.dart';
+import 'package:samla_app/features/nutrition/domain/entities/NutritionPlanMeal.dart';
 import 'package:samla_app/features/nutrition/domain/entities/nutritionPlan.dart';
 import 'package:samla_app/features/nutrition/domain/repositories/nutritionPlan_repository.dart';
 part 'nutritionPlan_state.dart';
@@ -73,6 +74,40 @@ class NutritionPlanCubit extends Cubit<NutritionPlanState> {
         return;
       }
       emit(NutritionPlanMealLibraryAdded(mealLibrary));
+    });
+  }
+
+  //addNutritionPlanMeal
+  Future<void> addNutritionPlanMeal(NutritionPlanMeal nutritionPlanMeal) async {
+    emit(NutritionPlanLoadingState()); // Show loading state
+    final result = await repository.addNutritionPlanMeal(nutritionPlanMeal: nutritionPlanMeal);
+    result.fold(
+        (failure) =>
+            emit(NutritionPlanMealErrorState('Failed to add nutrition plan meal')),
+        (nutritionPlanMeal) {
+      if (nutritionPlanMeal == null) {
+        print('empty');
+        emit(NutritionPlanMealEmptyState());
+        return;
+      }
+      emit(NutritionPlanMealAdded(nutritionPlanMeal));
+    });
+  }
+
+  // getNutritionPlanMeals
+  Future<void> getNutritionPlanMeals(String query) async {
+    emit(NutritionPlanMealsLoadingState()); // Show loading state
+    final result = await repository.getNutritionPlanMeals(query: query);
+    result.fold(
+        (failure) =>
+            emit(NutritionPlanMealErrorState('Failed to get nutrition plan meals')),
+        (nutritionPlanMeal) {
+      if (nutritionPlanMeal.isEmpty) {
+        print('empty');
+        emit(NutritionPlanMealEmptyState());
+        return;
+      }
+      emit(NutritionPlanMealLoaded(nutritionPlanMeal));
     });
   }
 

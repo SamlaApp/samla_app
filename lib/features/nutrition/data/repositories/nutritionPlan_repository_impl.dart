@@ -7,6 +7,8 @@ import 'package:samla_app/core/network/network_info.dart';
 
 import 'package:samla_app/features/nutrition/data/datasources/local_datasource.dart';
 import 'package:samla_app/features/nutrition/data/datasources/remote_data_source.dart';
+import 'package:samla_app/features/nutrition/domain/entities/NutritionPlanMeal.dart';
+
 
 import 'package:samla_app/features/nutrition/domain/entities/nutritionPlan.dart';
 import 'package:samla_app/features/nutrition/domain/entities/MealLibrary.dart';
@@ -82,6 +84,34 @@ class NutritionPlanRepositoryImpl implements NutritionPlanRepository {
       try {
         final newMealLibrary = await remoteDataSource.addMealLibrary(mealLibrary);
         return Right(newMealLibrary);
+      } on ServerException catch (e) {
+        return Left(ServerFailure(message: e.message));
+      }
+    } else {
+      return Left(ServerFailure(message: 'No internet connection'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, NutritionPlanMeal>> addNutritionPlanMeal({required NutritionPlanMeal nutritionPlanMeal}) async {
+    if (await networkInfo.isConnected) {
+      try {
+        final newNutritionPlanMeal = await remoteDataSource.addNutritionPlanMeal(nutritionPlanMeal);
+        return Right(newNutritionPlanMeal);
+      } on ServerException catch (e) {
+        return Left(ServerFailure(message: e.message));
+      }
+    } else {
+      return Left(ServerFailure(message: 'No internet connection'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<NutritionPlanMeal>>> getNutritionPlanMeals({required String query}) async {
+    if (await networkInfo.isConnected) {
+      try {
+        final nutritionPlanMeals = await remoteDataSource.getNutritionPlanMeals(query);
+        return Right(nutritionPlanMeals);
       } on ServerException catch (e) {
         return Left(ServerFailure(message: e.message));
       }

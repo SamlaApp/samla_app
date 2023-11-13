@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:samla_app/config/themes/common_styles.dart';
 import 'package:samla_app/features/nutrition/domain/entities/MealLibrary.dart';
+import 'package:samla_app/features/nutrition/domain/entities/NutritionPlanMeal.dart';
 import 'package:samla_app/features/nutrition/domain/entities/nutritionPlan.dart';
 import 'package:samla_app/features/nutrition/presentation/cubit/NutritionPlan/nutritionPlan_cubit.dart';
 import 'package:samla_app/features/nutrition/presentation/pages/newFood.dart';
@@ -33,6 +34,20 @@ class _MealAdaptState extends State<MealAdapt> {
 
   final cubit = NutritionPlanCubit(sl<NutritionPlanRepository>());
   late MealLibrary mealLibrary;
+
+  final _displayedDay = TextEditingController();
+
+  void initState() {
+    super.initState();
+    _selectedDay.text = today;
+    _displayedDay.text = today;
+    _selectedSize.text = _selectedSizeValue.toString();
+    _submitValue();
+  }
+
+  void _submitValue() {
+    cubit.getNutritionPlanMeals(_displayedDay.text);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -73,6 +88,46 @@ class _MealAdaptState extends State<MealAdapt> {
           theme_pink,
           Colors.blueAccent,
         ],
+      );
+    }
+
+    BlocBuilder<NutritionPlanCubit, NutritionPlanState> _displayedMeals() {
+      return BlocBuilder<NutritionPlanCubit, NutritionPlanState>(
+        bloc: cubit,
+        builder: (context, state) {
+          if (state is NutritionPlanMealsLoadingState) {
+            return Center(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: CircularProgressIndicator(
+                  color: theme_green,
+                  backgroundColor: theme_pink,
+                ),
+              ),
+            );
+          } else if (state is NutritionPlanMealLoaded) {
+             print(state.nutritionPlanMeals);
+             return Column(
+               children: [
+                  for (var meal in state.nutritionPlanMeals)
+                    FoodItem(
+                      foodName: meal.meal_name!,
+                      kcal: meal.calories!,
+                      fat: meal.fat!,
+                      protein: meal.protein!,
+                      carbs: meal.carbs!,
+                      onRemove: () {
+                        //cubit.deleteNutritionPlanMeal(meal.id!);
+                      },
+                    ),
+                ],
+            );
+          } else {
+            return const Center(
+              child: Text('No food to show'),
+            );
+          }
+        },
       );
     }
 
@@ -150,22 +205,27 @@ class _MealAdaptState extends State<MealAdapt> {
                       ),
                     ),
                     const SizedBox(height: 20),
-                    DayDropdown(
-                      color: theme_darkblue,
-                      backgroundColor: Colors.white,
-                      days: const [
-                        'Monday',
-                        'Tuesday',
-                        'Wednesday',
-                        'Thursday',
-                        'Friday',
-                        'Saturday',
-                        'Sunday'
-                      ],
-                      initialValue: today,
-                      onChanged: (value) {
-                        print("Selected day: $value");
-                      },
+                    Form(
+                      child: DayDropdown(
+                        color: theme_darkblue,
+                        backgroundColor: Colors.white,
+                        days: const [
+                          'Monday',
+                          'Tuesday',
+                          'Wednesday',
+                          'Thursday',
+                          'Friday',
+                          'Saturday',
+                          'Sunday'
+                        ],
+                        initialValue: today,
+                        onChanged: (value) {
+                          setState(() {
+                            _displayedDay.text = value;
+                            _submitValue();
+                          });
+                        },
+                      ),
                     ),
                     const SizedBox(height: 20),
                     FoodItem(
@@ -176,6 +236,7 @@ class _MealAdaptState extends State<MealAdapt> {
                         carbs: 33,
                         onRemove: () {}),
                     const SizedBox(height: 30),
+                    _displayedMeals(),
                   ],
                 ),
               ),
@@ -239,11 +300,7 @@ class _MealAdaptState extends State<MealAdapt> {
 
   int _selectedSizeValue = 100;
 
-  void initState() {
-    super.initState();
-    _selectedDay.text = today;
-    _selectedSize.text = _selectedSizeValue.toString();
-  }
+
 
   void _onDayChanged(String value) {
     setState(() {
@@ -276,6 +333,28 @@ class _MealAdaptState extends State<MealAdapt> {
   num _calculateCalories(num calories, num size, MealLibrary mealLibrary) {
     num result = (calories * size / 100);
     return num.parse(result.toStringAsFixed(2));
+  }
+
+  void _addMealToPlan(MealLibrary mealLibrary) {
+    if (_formKey.currentState!.validate()) {
+      final nutritionPlanMeal = NutritionPlanMeal(
+        nutrition_plan_id: nutritionPlan.id,
+        meal_id: mealLibrary.id,
+        day: _selectedDay.text,
+        size: _selectedSizeValue,
+      );
+
+      cubit.addNutritionPlanMeal(nutritionPlanMeal);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Meal added to plan'),
+        ),
+      );
+
+
+
+    }
   }
 
   BlocBuilder<NutritionPlanCubit, NutritionPlanState> getSearchedMeals(
@@ -333,7 +412,7 @@ class _MealAdaptState extends State<MealAdapt> {
                             // button to add meal to plan
                             ElevatedButton.icon(
                               onPressed: () {
-                                //
+                                _addMealToPlan(state.mealLibrary);
                               },
                               icon: const Icon(Icons.add),
                               label: const Text('Add'),

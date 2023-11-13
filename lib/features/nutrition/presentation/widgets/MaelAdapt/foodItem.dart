@@ -5,10 +5,10 @@ import 'package:samla_app/config/themes/common_styles.dart';
 
 class FoodItem extends StatefulWidget {
   final String foodName;
-  final int kcal;
-  final int fat;
-  final int protein;
-  final int carbs;
+  final double kcal;
+  final double fat;
+  final double protein;
+  final double carbs;
   final VoidCallback onRemove;
 
   const FoodItem({
