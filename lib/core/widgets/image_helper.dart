@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:photo_view/photo_view.dart';
@@ -19,11 +20,14 @@ class ImageHelper {
         _imageCropper = imageCropper ?? ImageCropper();
 
   Future<String?> _pickImage(
-      {required ImageSource source, int imageQuality = 1}) async {
+      {required ImageSource source, int imageQuality = 100}) async {
     final pickedImage = await ImagePicker()
         .pickImage(source: source, imageQuality: imageQuality);
-    return pickedImage == null ? '' : pickedImage.path;
+    final compressed = await compressFile(File(pickedImage!.path));
+    return compressed == null ? '' : compressed.path;
   }
+
+
 
   // crop image
   Future<CroppedFile?> crop({
@@ -177,5 +181,23 @@ class ImageHelper {
         });
   }
 }
+Future<XFile?> compressFile(File file) async {
+  final filePath = file.absolute.path;
 
+  // Create output file path
+  // eg:- "Volume/VM/abcd_out.jpeg"
+  final lastIndex = filePath.lastIndexOf(new RegExp(r'.jp'));
+  final splitted = filePath.substring(0, (lastIndex));
+  final outPath = "${splitted}_out${filePath.substring(lastIndex)}";
+  var result = await FlutterImageCompress.compressAndGetFile(
+    file.absolute.path,
+    outPath,
+    quality: 25,
+  );
+
+  print(file.lengthSync());
+  print(result?.length());
+
+  return result;
+}
 final imageHelper = ImageHelper();

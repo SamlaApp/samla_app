@@ -49,7 +49,7 @@ class _NewFoodState extends State<NewFoodPage> {
         serving_size_g: 100,
       );
 
-      // cubit.addMealLibrary(meal);
+      cubit.addMealLibrary(meal);
 
       // page message
       ScaffoldMessenger.of(context).showSnackBar(
