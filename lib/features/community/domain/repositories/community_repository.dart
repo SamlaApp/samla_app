@@ -19,4 +19,6 @@ abstract class CommunityRepository {
   Future<Either<Failure, Community>> updateCommunity({required int communityID});
 
   Future<Either<Failure,int>> getCommunityMemebersNumber({required int communityID});
+
+  Future<Either<Failure, List<Community>>> searchCommunities(String query);
 }

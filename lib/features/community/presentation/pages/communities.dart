@@ -5,6 +5,7 @@ import 'package:samla_app/core/widgets/CustomTextFormField.dart';
 import 'package:samla_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:samla_app/features/community/presentation/cubits/ExploreCubit/explore_cubit.dart';
 import 'package:samla_app/features/community/presentation/cubits/MyCommunitiesCubit/community_cubit.dart';
+import 'package:samla_app/features/community/presentation/cubits/Search/search_cubit.dart';
 import 'package:samla_app/features/community/presentation/pages/create_community.dart';
 import 'package:samla_app/features/community/presentation/widgets/community_list.dart';
 import 'package:samla_app/features/community/community_di.dart' as di;
@@ -20,6 +21,7 @@ class _CommunityPageState extends State<CommunitiesPage> {
   // init the cubits
   late CommunityCubit communityCubit;
   late ExploreCubit exploreCubit;
+  late SearchCubit searchCubit;
 
   final _searchController = TextEditingController();
 
@@ -28,83 +30,19 @@ class _CommunityPageState extends State<CommunitiesPage> {
     super.initState();
     // This code runs when the widget is first created
     // You can perform any setup or initial actions here
-    print('init community page');
     di.CommunityInit();
     communityCubit = di.sl.get<CommunityCubit>();
     exploreCubit = di.sl.get<ExploreCubit>();
+    searchCubit = di.sl.get<SearchCubit>();
   }
 
   final user = di.sl.get<AuthBloc>().user;
 
   int selectedIndex = 0;
-  final List<Map<String, dynamic>> communities = [
-    {
-      'name': 'KFUPM GYM',
-      'description': 'Gym for KFUPM students',
-      'id': 1,
-      'newCounter': '0',
-      'date': '7:09 PM',
-    },
-    {
-      'name': 'GYM gamers',
-      'description': 'Gym for KFUPM students',
-      'id': 2,
-      'newCounter': '0',
-      'date': '7:09 PM',
-    },
-    {
-      'name': 'GYM h2o',
-      'description': 'Gym for KFUPM hhhhh thats not funny my son students',
-      'id': 3,
-      'newCounter': '0',
-      'date': '7:09 PM',
-    },
-    {
-      'name': 'KFUPM GYM',
-      'description': 'Gym for KFUPM students',
-      'id': 1,
-      'newCounter': '0',
-      'date': '7:09 PM',
-    },
-    {
-      'name': 'GYM gamers',
-      'description': 'Gym for KFUPM students',
-      'id': 2,
-      'newCounter': '0',
-      'date': '7:09 PM',
-    },
-    {
-      'name': 'GYM h2o',
-      'description': 'Gym for KFUPM hhhhh thats not funny my son students',
-      'id': 3,
-      'newCounter': '0',
-      'date': '7:09 PM',
-    },
-    {
-      'name': 'KFUPM GYM',
-      'description': 'Gym for KFUPM students',
-      'id': 1,
-      'newCounter': '0',
-      'date': '7:09 PM',
-    },
-    {
-      'name': 'GYM gamers',
-      'description': 'Gym for KFUPM students',
-      'id': 2,
-      'newCounter': '0',
-      'date': '7:09 PM',
-    },
-    {
-      'name': 'GYM h2o',
-      'description': 'Gym for KFUPM hhhhh thats not funny my son students',
-      'id': 3,
-      'newCounter': '0',
-      'date': '7:09 PM',
-    }
-  ];
 
   @override
   Widget build(BuildContext context) {
+    communityCubit.getMyCommunities();
     return Container(
       color: inputField_color,
       height: double.maxFinite,
@@ -126,6 +64,11 @@ class _CommunityPageState extends State<CommunitiesPage> {
                       children: [
                         Expanded(
                           child: CustomTextFormField(
+                            onChanged: (value) {
+                                searchCubit.search(value);
+                              
+                            },
+                            controller: _searchController,
                             label: 'Search for a community',
                             iconData: Icons.search,
                           ),
@@ -163,13 +106,72 @@ class _CommunityPageState extends State<CommunitiesPage> {
                   constraints: const BoxConstraints(minHeight: 300),
                   decoration: primary_decoration,
                   padding: const EdgeInsets.all(5.0),
-                  child: selectedIndex == 0
-                      ? myCommunitiesBuilder()
-                      : exploreCommunitiesBuilder()),
+                  child: BlocBuilder<SearchCubit, SearchState>(
+                    bloc: searchCubit,
+                    builder: (context, state) {
+                      if (_searchController.value != null &&
+                          _searchController.value.text.isNotEmpty) {
+                        return searchCommunitiesBuilder();
+                      } else if (selectedIndex == 0) {
+                        return myCommunitiesBuilder();
+                      } else {
+                        return exploreCommunitiesBuilder();
+                      }
+                    },
+                  ))
             ],
           ),
         ),
       ),
+    );
+  }
+
+  BlocBuilder<CommunityCubit, CommunityState> searchCommunitiesBuilder() {
+    // communityCubit.getMyCommunities();
+    return BlocBuilder<CommunityCubit, CommunityState>(
+      bloc: communityCubit,
+      builder: (context, myCommunityState) {
+        if (myCommunityState is CommunityLoading) {
+          return Center(
+            child: CircularProgressIndicator(
+              color: theme_green,
+              backgroundColor: theme_pink,
+            ),
+          );
+        }
+        if (myCommunityState is CommunitiesLoaded) {
+          return BlocBuilder<SearchCubit, SearchState>(
+            bloc: searchCubit,
+            builder: (context, state) {
+              if (state is SearchLoading) {
+                return Center(
+                  child: CircularProgressIndicator(
+                    color: theme_green,
+                    backgroundColor: theme_pink,
+                  ),
+                );
+              } else if (state is SearchLoaded && state.communities.isNotEmpty) {
+                
+                state.communities.forEach((searchedCommunity) {
+                  myCommunityState.communities.forEach((myCommunity) {
+                    if (searchedCommunity.id == myCommunity.id) {
+                      searchedCommunity.isMemeber = true;
+                    }
+                  });
+                });
+                return Column(
+                    children: buildCommunitiesList(state.communities, false));
+              } else if (state is SearchError) {
+                return Center(child: Text(state.message));
+              }
+              return const Center(child: Text('No such a community'));
+            },
+          );
+        } else if (myCommunityState is CommunityError) {
+          return Center(child: Text(myCommunityState.message));
+        } else
+          return const Center(child: Text('Failed try agian later'));
+      },
     );
   }
 

@@ -22,6 +22,8 @@ abstract class CommunityRemoteDataSource {
   Future<void> leaveCommunity({required int communityID});
 
   Future<int> getCommunityMemebersNumber({required int communityID});
+
+  Future<List<CommunityModel>> searchCommunities(String query);
 }
 
 const BASE_URL = 'https://samla.mohsowa.com/api/community';
@@ -74,8 +76,10 @@ class CommunityRemoteDataSourceImpl implements CommunityRemoteDataSource {
       final List<CommunityModel> requestedCommunities = [];
 
       communitiesJsonList.forEach((communityRequest) {
-        // if the already a member of the community
-        if (communityRequest['community'] == null) {
+
+        // if user is the creator of the community
+        if (communityRequest['community'] == null &&
+            communityRequest['handle'] != null) {
           communityRequest['is_member'] = true;
 
           if (communityRequest['avatar'] != null) {
@@ -83,6 +87,11 @@ class CommunityRemoteDataSourceImpl implements CommunityRemoteDataSource {
                 BASE_URL + '/community_avatar/' + communityRequest['avatar'];
           }
           communities.add(CommunityModel.fromJson(communityRequest));
+        } else
+        // if community is deleted
+        if (communityRequest['handle'] == null &&
+            communityRequest['community'] == null) {
+          // do nothing
         }
         // if the community is public or the request is accepted
         else if (communityRequest['community']['is_public'] == 1 ||
@@ -179,72 +188,6 @@ class CommunityRemoteDataSourceImpl implements CommunityRemoteDataSource {
     }
   }
 
-  // Future<http.StreamedResponse> _request(
-  //     {Map<String, String>? data,
-  //     http.MultipartFile? file,
-  //     required String endPoint,
-  //     required String method}) async {
-  //   final token = sl.get<AuthBloc>().user.accessToken;
-  //   // final token =
-  //   // 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiMWM1MmY3MzE4YTU4ZGM0YTk0N2ZhNzNmMDE3MDA2ZWFkNDBiYWI5YjYxNDFkYTg4ZmVmMGNjNzI0YjQ0ZTQ0ZjA5OTQxYjI0ZTA1NzdiMWIiLCJpYXQiOjE2OTgyNzA2MzQuMjcwOTg2LCJuYmYiOjE2OTgyNzA2MzQuMjcwOTksImV4cCI6MTcyOTg5MzAzNC4yNjExNywic3ViIjoiMiIsInNjb3BlcyI6W119.XLyod1nGrbfBwN1QOPo1ns5gIo9qPiPwGXtw_nzlJjL6ZjNiijTPPQUEwV5ffrWARfefq0o956AZKexEyVP5ngYWx39R9mo6NSWi1pvbZVJ0Jy8mJR2MeFCkNcYbKrlSSWZsWVl3UYJg3H_INSJOxgSGcRBaIrQQBUF-HsGWSO8rX5rLTfUYB76au3-JEEB4O_68MDKHs1skoaAlLxX3VRvRV9DcL1beGLAN9h0jjZRP7oByOMKUZl_oj1__QmcYC_XtvaKCflWZrfNYQ2bm1WVsmTvdPfxrS6g7lakBZjUFPWbYZfhjK9ZCu5pvngfDB1DwyJ899VPZmi0AqaiBAES6VC78hF_Eci26wQsCexeGCTOl1di8iSSdVa3sUe5QynjS0VF-DJ1EVBlFxY59N9z-KFy89Zkz-OHsplR2SujZIgyGq3QsIEDxz0Qr9iWJau6DaO3U9h-ZuEFm56Ugs6nIVfXzXOqg4C45mfFZFmWnmw96PRE1myfKJc6wwSn07I5uSL9WQzTC-zUU77HzhrGUiP5hjNxmwTTXIZ-8FKpI3me0jmMgG_RT46RcIyqxXyQXV42ZohXVmPGsWC4ZOfg4brEfJaM_tale8GwXqASKKN3OnirNWHjqkUvki_wRtK5jfbDzanKNoqwPe2puqry1npE2vGeLv0GnzJHujEE';
-
-  //   var headers = {
-  //     'Accept': 'application/json',
-  //     'Authorization': 'Bearer $token',
-  //   };
-  //   var request = http.MultipartRequest(method, Uri.parse(BASE_URL + endPoint));
-
-  //   if (data != null) {
-  //     request.fields.addAll(data);
-  //   }
-
-  //   if (file != null) {
-  //     request.files.add(file);
-  //   }
-
-  //   request.headers.addAll(headers);
-
-  //   http.StreamedResponse response = await client.send(request);
-  //   // print('hello, world');
-  //   return response;
-  // }
-
-// Future<http.StreamedResponse> _request(
-//       {Map<String, String>? data,
-//       http.MultipartFile? file,
-//       required String endPoint,
-//       required String method,
-//       bool autoLogout = true}) async {
-//     // final token = authBloc.user.accessToken;
-//     final token = 'random';
-//     var headers = {
-//       'Accept': 'application/json',
-//       'Authorization': 'Bearer $token',
-//     };
-//     var request = http.MultipartRequest(method, Uri.parse(BASE_URL + endPoint));
-
-//     if (data != null) {
-//       request.fields.addAll(data);
-//     }
-
-//     if (file != null) {
-//       request.files.add(file);
-//     }
-
-//     request.headers.addAll(headers);
-
-//     http.StreamedResponse response = await client.send(request);
-//     if (response.statusCode == 401) {
-//       if (autoLogout) {
-//         authBloc.add(LogOutEvent(navigatorKey.currentState!.context));
-//       } else {
-//         throw UnauthorizedException();
-//       }
-//     } else {
-//       return response;
-//     }
-//     return response;
-//   }
 
   @override
   Future<int> getCommunityMemebersNumber({required int communityID}) async {
@@ -254,6 +197,23 @@ class CommunityRemoteDataSourceImpl implements CommunityRemoteDataSource {
     if (res.statusCode == 200) {
       final membersNumber = json.decode(resBody)['total_members'];
       return membersNumber;
+    } else {
+      throw ServerException(message: json.decode(resBody)['message']);
+    }
+  }
+
+  @override
+  Future<List<CommunityModel>> searchCommunities(String query) async {
+    final res =
+        await samlaAPI(endPoint: '/community/search/$query', method: 'GET');
+    final resBody = await res.stream.bytesToString();
+    if (res.statusCode == 200) {
+      final communitiesJsonList = json.decode(resBody)['communities'];
+      final List<CommunityModel> communities = [];
+      communitiesJsonList.forEach((community) {
+        communities.add(CommunityModel.fromJson(community));
+      });
+      return communities;
     } else {
       throw ServerException(message: json.decode(resBody)['message']);
     }
@@ -284,4 +244,3 @@ void main() async {
     print(e.toString());
   }
 }
-

@@ -7,7 +7,7 @@ class Community extends Equatable {
   final String description;
   final bool isPublic;
   final String handle;
-  final bool isMemeber;
+  bool isMemeber;
   final int ownerID;
   final int? numOfMemebers;
   //these are depend on the direction of transfer
