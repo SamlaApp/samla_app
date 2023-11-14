@@ -1,12 +1,44 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:samla_app/features/auth/auth_injection_container.dart'
-as authDI;
+import 'package:samla_app/core/error/exceptions.dart';
 
 import '../../../profile/presentation/pages/PersonalInfo.dart';
 import '../models/chatMessage_model.dart';
 
+import 'package:samla_app/core/network/samlaAPI.dart';
+
+
 const apiSecretKey = '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';
+
+Future<Map<String, dynamic>> getNutritionPlan() async {
+  final res = await samlaAPI(endPoint: '/nutrition/plan/get_full', method: 'GET');
+  final resBody = await res.stream.bytesToString();
+
+  if (res.statusCode == 200) {
+    return json.decode(resBody)['nutrition_plan'];
+  } else {
+    throw ServerException(message: json.decode(resBody)['message']);
+  }
+}
+//progress/get_all
+Future<Map<String, dynamic>> getProgress() async {
+  final res = await samlaAPI(endPoint: '/progress/get_all', method: 'GET');
+  final resBody = await res.stream.bytesToString();
+
+  if (res.statusCode == 200) {
+    // json.decode(resBody)['user_progress'];
+    // if not empty
+    if(json.decode(resBody)['user_progress'].length > 0){
+      return json.decode(resBody)['user_progress'][0];
+    }else{
+      // return empty
+      return {};
+    }
+  } else {
+    throw ServerException(message: json.decode(resBody)['message']);
+  }
+}
+
 
 Future<String> generateResponse(String prompt,List<ChatMessage> _messages) async {
   const apiKey = apiSecretKey;
@@ -22,11 +54,23 @@ Future<String> generateResponse(String prompt,List<ChatMessage> _messages) async
     },
 
     body: json.encode({
-      "model": "gpt-3.5-turbo",
+      "model": "gpt-3.5-turbo-1106",
       "messages": [
         {
           "role": "system",
-          "content": "You are helpful Samla's assistant you will help ${user.name}, start by saying hi to him"
+          "content": "You are helpful Samla's assistant you will help ${user.name}, start by saying hi to ${user.name}"
+        },
+        {
+          "role": "system",
+          "content": "Today is ${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year}"
+        },
+        {
+          "role": "system",
+          "content": "this is my nutrition plan data: as json string => ${await getNutritionPlan()}"
+        },
+        {
+          "role": "system",
+          "content": "this is my progress data: as json string => ${await getProgress()}"
         },
         for(var i in _messages)
           {
