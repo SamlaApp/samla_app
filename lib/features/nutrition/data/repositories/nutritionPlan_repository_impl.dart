@@ -134,6 +134,19 @@ class NutritionPlanRepositoryImpl implements NutritionPlanRepository {
     }
   }
 
+  @override
+  Future<Either<Failure, NutritionPlan>> deleteNutritionPlan({required int id}) async {
+    if (await networkInfo.isConnected) {
+      try {
+        final nutritionPlan = await remoteDataSource.deleteNutritionPlan(id);
+        return Right(nutritionPlan as NutritionPlan);
+      } on ServerException catch (e) {
+        return Left(ServerFailure(message: e.message));
+      }
+    } else {
+      return Left(ServerFailure(message: 'No internet connection'));
+    }
+  }
 
 
 

@@ -37,8 +37,6 @@ class _MealAdaptState extends State<MealAdapt> {
 
   final _displayedDay = TextEditingController();
 
-
-
   num _totalCarbs = 0;
   num _totalProtein = 0;
   num _totalFat = 0;
@@ -85,8 +83,6 @@ class _MealAdaptState extends State<MealAdapt> {
     return num.parse(result.toStringAsFixed(1));
   }
 
-
-
   @override
   void initState() {
     super.initState();
@@ -100,262 +96,11 @@ class _MealAdaptState extends State<MealAdapt> {
     cubit.getNutritionPlanMeals(_displayedDay.text, nutritionPlan.id!);
   }
 
-
-  @override
-  Widget build(BuildContext context) {
-    String type = nutritionPlan.type;
-    late IconData icon;
-    late LinearGradient gradient;
-    late Color color;
-
-    if (type == 'Breakfast') {
-      icon = Icons.free_breakfast;
-      gradient = LinearGradient(
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-        colors: [
-          theme_green,
-          Colors.blueAccent,
-        ],
-      );
-      color = theme_green;
-    } else if (type == 'Lunch') {
-      icon = Icons.lunch_dining;
-      gradient = LinearGradient(
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-        colors: [theme_orange, Colors.red],
-      );
-      color = theme_orange;
-    } else if (type == 'Dinner') {
-      icon = Icons.dinner_dining;
-      gradient = LinearGradient(
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-        colors: [theme_darkblue, theme_green],
-      );
-      color = theme_darkblue;
-    } else if (type == 'Snack') {
-      icon = Icons.fastfood;
-      gradient = LinearGradient(
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-        colors: [
-          theme_pink,
-          Colors.blueAccent,
-        ],
-      );
-      color = theme_pink;
-    }
-
-    BlocBuilder<NutritionPlanCubit, NutritionPlanState> displayedMeals() {
-      return BlocBuilder<NutritionPlanCubit, NutritionPlanState>(
-        bloc: cubit,
-        builder: (context, state) {
-          if (state is NutritionPlanMealsLoadingState) {
-            return Center(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: CircularProgressIndicator(
-                  color: theme_green,
-                  backgroundColor: theme_pink,
-                ),
-              ),
-            );
-          } else if (state is NutritionPlanMealLoaded) {
-            _totalCarbs = _calculateTotalCarbs(state.nutritionPlanMeals);
-            _totalProtein = _calculateTotalProtein(state.nutritionPlanMeals);
-            _totalFat = _calculateTotalFat(state.nutritionPlanMeals);
-            _totalCalories = _calculateTotalCalories(state.nutritionPlanMeals);
-            _totalSize = _calculateTotalSize(state.nutritionPlanMeals);
-             return Column(
-               children: [
-                 Container(
-                   padding: const EdgeInsets.symmetric(
-                       horizontal: 30, vertical: 15),
-                   decoration: BoxDecoration(
-                     color: Colors.white,
-                     borderRadius: BorderRadius.circular(20),
-                     boxShadow: [
-                       BoxShadow(
-                         color: Colors.grey.withOpacity(0.2),
-                         spreadRadius: 2,
-                         blurRadius: 5,
-                       ),
-                     ],
-                   ),
-                   child: Row(
-                     mainAxisAlignment: MainAxisAlignment.spaceAround,
-                     children: [
-                       NutrientColumn(value: _totalCarbs, label: 'Carbs', color: color),
-                       NutrientColumn(value: _totalProtein, label: 'Protein', color: color),
-                       NutrientColumn(value: _totalFat, label: 'Fat', color: color),
-                       NutrientColumn(value: _totalCalories, label: 'Calories', color: color),
-                       NutrientColumn(value: _totalSize, label: 'Total Size', color: color),
-                     ],
-                   ),
-                 ),
-
-                  const SizedBox(height: 20),
-                  for (var meal in state.nutritionPlanMeals)
-                    FoodItem(
-                      gradient: gradient,
-                      foodName: meal.meal_name!,
-                      kcal: meal.calories!,
-                      fat: meal.fat!,
-                      protein: meal.protein!,
-                      carbs: meal.carbs!,
-                      size: meal.size!,
-                      onRemove: () {
-                        cubit.deleteNutritionPlanMeal(meal.id!);
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Meal removed from plan'),
-                          ),
-                        );
-                      },
-                    ),
-                ],
-            );
-          } else {
-            return const Center(
-              child: Text('No food to show'),
-            );
-          }
-        },
-      );
-    }
-
-    return DefaultTabController(
-      length: 2, // Number of tabs
-      child: Scaffold(
-        appBar: AppBar(
-          toolbarHeight: 200.0,
-          flexibleSpace: Container(
-            decoration: BoxDecoration(gradient: gradient),
-          ),
-          title: Column(
-            children: [
-              Icon(icon, size: 80),
-              const SizedBox(height: 5),
-              Text(
-                nutritionPlan.name,
-                style:
-                const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 10),
-              Text(
-                '${nutritionPlan.start_time} - ${nutritionPlan.end_time}',
-                style: const TextStyle(fontSize: 14),
-              ),
-            ],
-          ),
-          bottom: TabBar(
-            indicatorColor: Colors.white,
-            labelColor: primary_color,
-            unselectedLabelColor: Colors.white,
-            labelStyle: const TextStyle(
-              fontWeight: FontWeight.bold,
-            ),
-            unselectedLabelStyle: const TextStyle(
-              fontWeight: FontWeight.w300,
-            ),
-            tabs: const [
-              Tab(text: 'Your current plan'),
-              Tab(text: 'Find more meals'),
-            ],
-          ),
-        ),
-        body: TabBarView(
-          children: [
-            // First tab content
-            SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  children: [
-                    const SizedBox(height: 20),
-                    Form(
-                      child: DayDropdown(
-                        color: theme_darkblue,
-                        backgroundColor: Colors.white,
-                        initialValue: today,
-                        onChanged: (value) {
-                          setState(() {
-                            _displayedDay.text = value;
-                            _submitValue();
-                          });
-                        },
-                      ),
-                    ),
-
-
-                    const SizedBox(height: 30),
-                    displayedMeals(),
-                  ],
-                ),
-              ),
-            ),
-
-            // Second tab content
-            SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  children: [
-                    Container(
-                      decoration: primary_decoration,
-                      padding: const EdgeInsets.all(20.0),
-                      child: Column(
-                        // search field
-                        children: [
-                          // adding floating button
-                          Row(
-                            children: [
-                              Expanded(
-                                child: CustomTextFormField(
-                                  label: 'Search for a food',
-                                  iconData: Icons.emoji_food_beverage,
-                                  controller: _searchController,
-                                ),
-                              ),
-                              IconButton.filled(
-                                  onPressed: () {
-                                    cubit.searchMealLibrary(
-                                        _searchController.text);
-                                  },
-                                  icon: const Icon(Icons.search),
-                                  color: theme_green,
-                                  style: ElevatedButton.styleFrom(
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(32.0),
-                                    ),
-                                  )),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                    getSearchedMeals(gradient),
-                    const SizedBox(height: 20),
-
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
   final _formKey = GlobalKey<FormState>();
   final _selectedDay = TextEditingController();
   final _selectedSize = TextEditingController();
 
   int _selectedSizeValue = 100;
-
-
 
   void _onDayChanged(String value) {
     setState(() {
@@ -406,9 +151,6 @@ class _MealAdaptState extends State<MealAdapt> {
           content: Text('Meal added to plan'),
         ),
       );
-
-
-
     }
   }
 
@@ -435,8 +177,7 @@ class _MealAdaptState extends State<MealAdapt> {
               children: [
                 const SizedBox(height: 20),
                 Container(
-                  padding:
-                  const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                  padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
                   decoration: BoxDecoration(
                     gradient: gradient,
                     borderRadius: BorderRadius.circular(20),
@@ -492,7 +233,7 @@ class _MealAdaptState extends State<MealAdapt> {
                               children: [
                                 Text(
                                   _calculateCarbs(state.mealLibrary.carbs,
-                                      _selectedSizeValue, state.mealLibrary)
+                                          _selectedSizeValue, state.mealLibrary)
                                       .toString(),
                                   style: const TextStyle(
                                       fontSize: 20,
@@ -510,7 +251,7 @@ class _MealAdaptState extends State<MealAdapt> {
                               children: [
                                 Text(
                                   _calculateProtein(state.mealLibrary.protein,
-                                      _selectedSizeValue, state.mealLibrary)
+                                          _selectedSizeValue, state.mealLibrary)
                                       .toString(),
                                   style: const TextStyle(
                                       fontSize: 20,
@@ -529,7 +270,7 @@ class _MealAdaptState extends State<MealAdapt> {
                               children: [
                                 Text(
                                   _calculateFat(state.mealLibrary.fat,
-                                      _selectedSizeValue, state.mealLibrary)
+                                          _selectedSizeValue, state.mealLibrary)
                                       .toString(),
                                   style: const TextStyle(
                                       fontSize: 20,
@@ -548,7 +289,7 @@ class _MealAdaptState extends State<MealAdapt> {
                               children: [
                                 Text(
                                   _calculateCalories(state.mealLibrary.calories,
-                                      _selectedSizeValue, state.mealLibrary)
+                                          _selectedSizeValue, state.mealLibrary)
                                       .toString(),
                                   style: const TextStyle(
                                       fontSize: 20,
@@ -654,7 +395,7 @@ class _MealAdaptState extends State<MealAdapt> {
             ),
           );
         } else if (state is NutritionPlanEmptyState) {
-          return  Center(
+          return Center(
             child: Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(
@@ -682,7 +423,7 @@ class _MealAdaptState extends State<MealAdapt> {
             ),
           );
         } else {
-          return  Center(
+          return Center(
             child: Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(
@@ -697,6 +438,275 @@ class _MealAdaptState extends State<MealAdapt> {
           );
         }
       },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    String type = nutritionPlan.type;
+    late IconData icon;
+    late LinearGradient gradient;
+    late Color color;
+
+    if (type == 'Breakfast') {
+      icon = Icons.free_breakfast;
+      gradient = LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: [
+          theme_green,
+          Colors.blueAccent,
+        ],
+      );
+      color = theme_green;
+    } else if (type == 'Lunch') {
+      icon = Icons.lunch_dining;
+      gradient = LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: [theme_orange, Colors.red],
+      );
+      color = theme_orange;
+    } else if (type == 'Dinner') {
+      icon = Icons.dinner_dining;
+      gradient = LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: [theme_darkblue, theme_green],
+      );
+      color = theme_darkblue;
+    } else if (type == 'Snack') {
+      icon = Icons.fastfood;
+      gradient = LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: [
+          theme_pink,
+          Colors.blueAccent,
+        ],
+      );
+      color = theme_pink;
+    }
+
+    BlocBuilder<NutritionPlanCubit, NutritionPlanState> displayedMeals() {
+      return BlocBuilder<NutritionPlanCubit, NutritionPlanState>(
+        bloc: cubit,
+        builder: (context, state) {
+          if (state is NutritionPlanMealsLoadingState) {
+            return Center(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: CircularProgressIndicator(
+                  color: theme_green,
+                  backgroundColor: theme_pink,
+                ),
+              ),
+            );
+          } else if (state is NutritionPlanMealLoaded) {
+            _totalCarbs = _calculateTotalCarbs(state.nutritionPlanMeals);
+            _totalProtein = _calculateTotalProtein(state.nutritionPlanMeals);
+            _totalFat = _calculateTotalFat(state.nutritionPlanMeals);
+            _totalCalories = _calculateTotalCalories(state.nutritionPlanMeals);
+            _totalSize = _calculateTotalSize(state.nutritionPlanMeals);
+            return Column(
+              children: [
+                Container(
+                  padding:
+                  const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.2),
+                        spreadRadius: 2,
+                        blurRadius: 5,
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      NutrientColumn(
+                          value: _totalCarbs, label: 'Carbs', color: color),
+                      NutrientColumn(
+                          value: _totalProtein, label: 'Protein', color: color),
+                      NutrientColumn(
+                          value: _totalFat, label: 'Fat', color: color),
+                      NutrientColumn(
+                          value: _totalCalories,
+                          label: 'Calories',
+                          color: color),
+                      NutrientColumn(
+                          value: _totalSize, label: 'Total Size', color: color),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 20),
+                for (var meal in state.nutritionPlanMeals)
+                  FoodItem(
+                    gradient: gradient,
+                    foodName: meal.meal_name!,
+                    kcal: meal.calories!,
+                    fat: meal.fat!,
+                    protein: meal.protein!,
+                    carbs: meal.carbs!,
+                    size: meal.size!,
+                    onRemove: () {
+                      cubit.deleteNutritionPlanMeal(meal.id!);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Meal removed from plan'),
+                        ),
+                      );
+                    },
+                  ),
+              ],
+            );
+          } else {
+            return const Center(
+              child: Text('No food to show'),
+            );
+          }
+        },
+      );
+    }
+
+    return DefaultTabController(
+      length: 2, // Number of tabs
+      child: Scaffold(
+        appBar: AppBar(
+          toolbarHeight: 200.0,
+          flexibleSpace: Container(
+            decoration: BoxDecoration(gradient: gradient),
+          ),
+          actions: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: IconButton(
+                onPressed: () {
+                  cubit.deleteNutritionPlan(nutritionPlan.id!);
+                  Navigator.pop(context);
+
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Nutrition plan deleted'),
+                    ),
+                  );
+                },
+                icon: const Icon(Icons.delete),
+              ),
+            ),
+          ],
+          title: Column(
+            children: [
+              Icon(icon, size: 80),
+              const SizedBox(height: 5),
+              Text(
+                nutritionPlan.name,
+                style:
+                const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 10),
+              Text(
+                '${nutritionPlan.start_time} - ${nutritionPlan.end_time}',
+                style: const TextStyle(fontSize: 14),
+              ),
+            ],
+          ),
+          bottom: TabBar(
+            indicatorColor: Colors.white,
+            labelColor: primary_color,
+            unselectedLabelColor: Colors.white,
+            labelStyle: const TextStyle(
+              fontWeight: FontWeight.bold,
+            ),
+            unselectedLabelStyle: const TextStyle(
+              fontWeight: FontWeight.w300,
+            ),
+            tabs: const [
+              Tab(text: 'Your current plan'),
+              Tab(text: 'Find more meals'),
+            ],
+          ),
+        ),
+        body: TabBarView(
+          children: [
+            // First tab content
+            SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  children: [
+                    const SizedBox(height: 20),
+                    Form(
+                      child: DayDropdown(
+                        color: theme_darkblue,
+                        backgroundColor: Colors.white,
+                        initialValue: today,
+                        onChanged: (value) {
+                          setState(() {
+                            _displayedDay.text = value;
+                            _submitValue();
+                          });
+                        },
+                      ),
+                    ),
+                    const SizedBox(height: 30),
+                    displayedMeals(),
+                  ],
+                ),
+              ),
+            ),
+
+            // Second tab content
+            SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  children: [
+                    Container(
+                      decoration: primary_decoration,
+                      padding: const EdgeInsets.all(20.0),
+                      child: Column(
+                        // search field
+                        children: [
+                          // adding floating button
+                          Row(
+                            children: [
+                              Expanded(
+                                child: CustomTextFormField(
+                                  label: 'Search for a food',
+                                  iconData: Icons.emoji_food_beverage,
+                                  controller: _searchController,
+                                ),
+                              ),
+                              IconButton.filled(
+                                  onPressed: () {
+                                    cubit.searchMealLibrary(
+                                        _searchController.text);
+                                  },
+                                  icon: const Icon(Icons.search),
+                                  color: theme_green,
+                                  style: ElevatedButton.styleFrom(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(32.0),
+                                    ),
+                                  )),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    getSearchedMeals(gradient),
+                    const SizedBox(height: 20),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 

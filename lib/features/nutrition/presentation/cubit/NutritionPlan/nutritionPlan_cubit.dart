@@ -128,6 +128,23 @@ class NutritionPlanCubit extends Cubit<NutritionPlanState> {
     });
   }
 
+  // deleteNutritionPlan
+  Future<void> deleteNutritionPlan(int id) async {
+    emit(NutritionPlanLoadingState()); // Show loading state
+    final result = await repository.deleteNutritionPlan(id: id);
+    result.fold(
+        (failure) =>
+            emit(NutritionPlanErrorState('Failed to delete nutrition plan')),
+        (nutritionPlan) {
+      if (nutritionPlan == null) {
+        print('empty');
+        emit(NutritionPlanEmptyState());
+        return;
+      }
+      emit(NutritionPlanDeleted(nutritionPlan));
+    });
+  }
+
 
 
 
