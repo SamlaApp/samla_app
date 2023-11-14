@@ -2,13 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:samla_app/config/themes/common_styles.dart';
 
 class DayDropdown extends StatefulWidget {
-  final List<String> days;
   final String? initialValue;
   final Function(String) onChanged;
   final Color color;
   final Color backgroundColor;
 
-  DayDropdown({required this.days, this.initialValue, required this.onChanged, required this.color, required this.backgroundColor});
+  const DayDropdown({super.key,  this.initialValue, required this.onChanged, required this.color, required this.backgroundColor});
 
   @override
   _DayDropdownState createState() => _DayDropdownState();
@@ -16,18 +15,20 @@ class DayDropdown extends StatefulWidget {
 
 class _DayDropdownState extends State<DayDropdown> {
   late String _currentDay;
-
-  // get currentDay => _currentDay;
-
-
-
-
-
+  final List<String> days = const [
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday',
+    'Sunday'
+  ];
 
   @override
   void initState() {
     super.initState();
-    _currentDay = widget.initialValue ?? widget.days[0];
+    _currentDay = widget.initialValue ?? days[0];
   }
 
   @override
@@ -55,7 +56,7 @@ class _DayDropdownState extends State<DayDropdown> {
                     widget.onChanged(newValue);
                   });
                 },
-                items: widget.days.map<DropdownMenuItem<String>>((String value) {
+                items: days.map<DropdownMenuItem<String>>((String value) {
                   return DropdownMenuItem<String>(
                     value: value,
                     child: Text(value),

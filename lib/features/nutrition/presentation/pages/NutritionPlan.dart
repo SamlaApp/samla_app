@@ -19,6 +19,26 @@ class _NutritionPlanState extends State<NutritionPlan> {
   final cubit = NutritionPlanCubit(di.sl.get());
 
   @override
+  void initState() {
+    super.initState();
+    cubit.getAllNutritionPlans();
+  }
+
+  @override
+  void dispose() {
+    cubit.close();
+    super.dispose();
+  }
+
+  void refresh() {
+    setState(() {
+      cubit.getAllNutritionPlans();
+    });
+  }
+
+
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -59,12 +79,36 @@ class _NutritionPlanState extends State<NutritionPlan> {
           ],
         ),
       ),
-      body: SingleChildScrollView(child: buildBlocBuilder()),
+      body: SingleChildScrollView(child: Column(
+        children: [
+          Container(
+            padding: const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 8),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                 Text(
+                  'Nutrition Plans',
+                  style: TextStyle(
+                      color: theme_darkblue,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold),
+                ),
+                IconButton(
+                  icon:  Icon(Icons.refresh, color: theme_darkblue),
+                  onPressed: () {
+                    refresh();
+                  },
+                ),
+              ],
+            ),
+          ), // refresh button
+          buildBlocBuilder(),
+        ],
+      )),
     );
   }
 
   BlocBuilder<NutritionPlanCubit, NutritionPlanState> buildBlocBuilder() {
-    cubit.getAllNutritionPlans();
     return BlocBuilder<NutritionPlanCubit, NutritionPlanState>(
       bloc: cubit,
       builder: (context, state) {
@@ -104,16 +148,15 @@ class _NutritionPlanState extends State<NutritionPlan> {
   buildNutritionPlansList(List<NutritionPlanModel> nutritionPlans, bool bool) {
     return nutritionPlans
         .map(
-          (nutritionPlan) =>
-          Padding(
+          (nutritionPlan) => Padding(
             padding: const EdgeInsets.all(8.0),
             child: mealCard(nutritionPlan: nutritionPlan),
           ),
-    )
+        )
         .toList();
   }
 
-  Widget mealCard({ required NutritionPlanModel nutritionPlan}) {
+  Widget mealCard({required NutritionPlanModel nutritionPlan}) {
     String type = nutritionPlan.type;
     late IconData icon;
     late LinearGradient gradient;
@@ -133,18 +176,14 @@ class _NutritionPlanState extends State<NutritionPlan> {
       gradient = LinearGradient(
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
-        colors: [
-          theme_orange, Colors.red
-        ],
+        colors: [theme_orange, Colors.red],
       );
     } else if (type == 'Dinner') {
       icon = Icons.dinner_dining;
       gradient = LinearGradient(
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
-        colors: [
-          theme_darkblue, theme_green
-        ],
+        colors: [theme_darkblue, theme_green],
       );
     } else if (type == 'Snack') {
       icon = Icons.fastfood;
@@ -157,7 +196,6 @@ class _NutritionPlanState extends State<NutritionPlan> {
         ],
       );
     }
-
 
     return GestureDetector(
       onTap: () {

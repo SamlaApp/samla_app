@@ -94,10 +94,27 @@ class NutritionPlanCubit extends Cubit<NutritionPlanState> {
     });
   }
 
+  //deleteNutritionPlanMeal
+  Future<void> deleteNutritionPlanMeal(int id) async {
+    emit(NutritionPlanLoadingState()); // Show loading state
+    final result = await repository.deleteNutritionPlanMeal(id: id);
+    result.fold(
+        (failure) =>
+            emit(NutritionPlanMealErrorState('Failed to delete nutrition plan meal')),
+        (nutritionPlanMeal) {
+      if (nutritionPlanMeal == null) {
+        print('empty');
+        emit(NutritionPlanMealEmptyState());
+        return;
+      }
+      emit(NutritionPlanMealDeleted(nutritionPlanMeal));
+    });
+  }
+
   // getNutritionPlanMeals
-  Future<void> getNutritionPlanMeals(String query) async {
+  Future<void> getNutritionPlanMeals(String query, int id) async {
     emit(NutritionPlanMealsLoadingState()); // Show loading state
-    final result = await repository.getNutritionPlanMeals(query: query);
+    final result = await repository.getNutritionPlanMeals(query: query, id:id);
     result.fold(
         (failure) =>
             emit(NutritionPlanMealErrorState('Failed to get nutrition plan meals')),
@@ -110,6 +127,25 @@ class NutritionPlanCubit extends Cubit<NutritionPlanState> {
       emit(NutritionPlanMealLoaded(nutritionPlanMeal));
     });
   }
+
+  // deleteNutritionPlan
+  Future<void> deleteNutritionPlan(int id) async {
+    emit(NutritionPlanLoadingState()); // Show loading state
+    final result = await repository.deleteNutritionPlan(id: id);
+    result.fold(
+        (failure) =>
+            emit(NutritionPlanErrorState('Failed to delete nutrition plan')),
+        (nutritionPlan) {
+      if (nutritionPlan == null) {
+        print('empty');
+        emit(NutritionPlanEmptyState());
+        return;
+      }
+      emit(NutritionPlanDeleted(nutritionPlan));
+    });
+  }
+
+
 
 
 
