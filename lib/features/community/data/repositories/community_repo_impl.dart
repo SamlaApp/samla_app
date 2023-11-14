@@ -136,4 +136,18 @@ class CommunityRepositoryImpl implements CommunityRepository {
       return Left(ServerFailure(message: 'No internet connection'));
       }
   }
+  
+  @override
+  Future<Either<Failure, List<Community>>> searchCommunities(String query) async {
+    if (await networkInfo.isConnected) {
+      try {
+        final  communities = await remoteDataSource.searchCommunities(query);
+        return Right(communities);
+      } on ServerException catch (e) {
+        return Left(ServerFailure(message: e.message));
+      }
+    } else {
+      return Left(ServerFailure(message: 'No internet connection'));
+    }
+  }
 }

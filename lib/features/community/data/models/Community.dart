@@ -19,10 +19,10 @@ class CommunityModel extends Community {
         description: json['description'],
         isPublic: json['is_public'] == 1 ? true : false,
         handle: json['handle'],
-        numOfMemebers: json['num_of_memebers'],
+        numOfMemebers: json['num_of_memebers'] ?? 0,
         id: json['id'],
         imageURL: json['avatar'],
-        isMemeber: json['is_member'],
+        isMemeber: json['is_member'] ?? false,
         ownerID: json['owner_id']);
   }
 

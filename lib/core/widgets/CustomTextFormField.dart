@@ -8,6 +8,7 @@ class CustomTextFormField extends StatelessWidget {
   final String? Function(String?)? validator;
   final Key? formKey;
   bool textArealike;
+  final Function(String)? onChanged;
 
   CustomTextFormField(
       {super.key,
@@ -16,13 +17,14 @@ class CustomTextFormField extends StatelessWidget {
       this.controller,
       this.validator,
       this.formKey,
-      this.textArealike = false});
+      this.textArealike = false, this.onChanged});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       // height: 50,
       child: TextFormField(
+        onChanged: onChanged,
         maxLines: textArealike ? null : 1,
         keyboardType: textArealike ? TextInputType.multiline : null,
         autovalidateMode: AutovalidateMode.onUserInteraction,
