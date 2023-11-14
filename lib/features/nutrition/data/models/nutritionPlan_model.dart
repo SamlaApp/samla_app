@@ -5,7 +5,6 @@ class NutritionPlanModel extends NutritionPlan {
     super.id,
     required super.name,
     required super.type,
-    required super.calories,
     required super.start_time,
     required super.end_time,
   });
@@ -16,7 +15,6 @@ class NutritionPlanModel extends NutritionPlan {
       id: json['id'],
       name: json['name'],
       type: json['type'],
-      calories: json['calories'],
       start_time: json['start_time'],
       end_time: json['end_time'],
     );
@@ -27,7 +25,6 @@ class NutritionPlanModel extends NutritionPlan {
       'id': id.toString(),
       'name': name,
       'type': type,
-      'calories': calories.toString(),
       'start_time': start_time!,
       'end_time': end_time!,
     };
@@ -38,7 +35,6 @@ class NutritionPlanModel extends NutritionPlan {
       id: entity.id,
       name: entity.name,
       type: entity.type,
-      calories: entity.calories,
       start_time: entity.start_time,
       end_time: entity.end_time,
     );

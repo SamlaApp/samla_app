@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:samla_app/config/themes/common_styles.dart';
-import 'package:numberpicker/numberpicker.dart';
 import 'package:day_night_time_picker/day_night_time_picker.dart';
 import 'package:samla_app/features/nutrition/data/models/nutritionPlan_model.dart';
 import 'package:samla_app/features/nutrition/domain/repositories/nutritionPlan_repository.dart';
@@ -17,7 +16,6 @@ class NewMeal extends StatefulWidget {
 class _NewMealState extends State<NewMeal> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
-  final _caloriesController = TextEditingController();
   final _selectedMealTypeController = TextEditingController();
   final _startTimeController = TextEditingController();
   final _endTimeController = TextEditingController();
@@ -37,17 +35,9 @@ class _NewMealState extends State<NewMeal> {
   @override
   void initState() {
     super.initState();
-    _caloriesController.text = _calories.toString();
     _selectedMealTypeController.text = 'Breakfast';
     _startTimeController.text = _startTime.toString().substring(10, 15);
     _endTimeController.text = _endTime.toString().substring(10, 15);
-  }
-
-  void _onCaloriesChanged(int value) {
-    setState(() {
-      _calories = value;
-      _caloriesController.text = _calories.toString();
-    });
   }
 
   void _onStartTimeChanged(Time newTime) {
@@ -72,7 +62,6 @@ class _NewMealState extends State<NewMeal> {
     if (_formKey.currentState!.validate()) {
       final nutritionPlan = NutritionPlanModel(
         name: _nameController.text.trim(),
-        calories: int.parse(_caloriesController.text),
         start_time: _startTimeController.text,
         end_time: _endTimeController.text,
         type: _selectedMealTypeController.text,
@@ -175,55 +164,6 @@ class _NewMealState extends State<NewMeal> {
                     ),
                   ),
 
-                  const SizedBox(height: 20),
-                  Padding(
-                    padding: const EdgeInsets.all(0.0),
-                    // scrolled number picker
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Container(
-                            padding: const EdgeInsets.only(left: 8.0),
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              'Calories',
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: theme_darkblue,
-                              ),
-                            ),
-                          ),
-                        ),
-                        NumberPicker(
-                          textStyle: TextStyle(
-                            color: theme_darkblue,
-                          ),
-                          textMapper: (value) => value.toString(),
-                          itemWidth: 60,
-                          itemHeight: 40,
-                          axis: Axis.horizontal,
-                          selectedTextStyle: TextStyle(
-                            color: theme_green,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            border: Border.all(
-                              color: theme_darkblue,
-                            ),
-                          ),
-                          minValue: 0,
-                          maxValue: 1000,
-                          value: _calories,
-                          onChanged: (value) {
-                            setState(() {
-                              _onCaloriesChanged(value);
-                            });
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
                   const SizedBox(height: 20),
                   Row(
                     children: [
