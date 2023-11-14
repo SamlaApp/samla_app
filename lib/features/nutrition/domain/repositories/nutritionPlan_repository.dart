@@ -13,5 +13,6 @@ abstract class NutritionPlanRepository {
   Future<Either<Failure, MealLibrary>> searchMealLibrary({required String query});
   Future<Either<Failure, MealLibrary>> addMealLibrary({required MealLibrary mealLibrary});
   Future<Either<Failure, NutritionPlanMeal>> addNutritionPlanMeal({required NutritionPlanMeal nutritionPlanMeal});
-  Future<Either<Failure, List<NutritionPlanMeal>>> getNutritionPlanMeals({required String query});
+  Future<Either<Failure, List<NutritionPlanMeal>>> getNutritionPlanMeals({required String query,required int id});
+  Future<Either<Failure, NutritionPlanMeal>> deleteNutritionPlanMeal({required int id});
 }

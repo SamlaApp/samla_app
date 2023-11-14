@@ -14,13 +14,13 @@ final class NutritionPlanLoadingState extends NutritionPlanState {}
 final class NutritionPlanCreatedSuccessfullyState extends NutritionPlanState {
   final NutritionPlan nutritionPlan;
 
-  NutritionPlanCreatedSuccessfullyState(this.nutritionPlan);
+  const NutritionPlanCreatedSuccessfullyState(this.nutritionPlan);
 }
 
 final class NutritionPlanErrorState extends NutritionPlanState {
   final String message;
 
-  NutritionPlanErrorState(this.message);
+  const NutritionPlanErrorState(this.message);
 }
 
 final class NutritionPlanEmptyState extends NutritionPlanState {}
@@ -28,49 +28,49 @@ final class NutritionPlanEmptyState extends NutritionPlanState {}
 final class NutritionPlanLoaded extends NutritionPlanState {
   final List<NutritionPlan> nutritionPlans;
   final List<MealLibrary> meals;
-  NutritionPlanLoaded(this.nutritionPlans, this.meals);
+  const NutritionPlanLoaded(this.nutritionPlans, this.meals);
 }
 
 final class NutritionPlanCreated extends NutritionPlanState {
   final NutritionPlan nutritionPlan;
 
-  NutritionPlanCreated(this.nutritionPlan);
+  const NutritionPlanCreated(this.nutritionPlan);
 }
 
 final class NutritionPlanMealLibraryLoaded extends NutritionPlanState {
   final MealLibrary mealLibrary;
 
-  NutritionPlanMealLibraryLoaded(this.mealLibrary);
+  const NutritionPlanMealLibraryLoaded(this.mealLibrary);
 }
 
 final class NutritionPlanMealRemoved extends NutritionPlanState {
   final List<MealLibrary> updatedMeals;
 
-  NutritionPlanMealRemoved(this.updatedMeals);
+  const NutritionPlanMealRemoved(this.updatedMeals);
 }
 
 final class NutritionPlanMealLibraryAdded extends NutritionPlanState {
   final MealLibrary updatedMeals;
 
-  NutritionPlanMealLibraryAdded(this.updatedMeals);
+  const NutritionPlanMealLibraryAdded(this.updatedMeals);
 }
 
 final class NutritionPlanMealAdded extends NutritionPlanState {
   final NutritionPlanMeal nutritionPlanMeal;
 
-  NutritionPlanMealAdded(this.nutritionPlanMeal);
+  const NutritionPlanMealAdded(this.nutritionPlanMeal);
 }
 
 final class NutritionPlanMealRemovedSuccessfully extends NutritionPlanState {
   final NutritionPlanMeal nutritionPlanMeal;
 
-  NutritionPlanMealRemovedSuccessfully(this.nutritionPlanMeal);
+  const NutritionPlanMealRemovedSuccessfully(this.nutritionPlanMeal);
 }
 
 final class NutritionPlanMealUpdated extends NutritionPlanState {
   final NutritionPlanMeal nutritionPlanMeal;
 
-  NutritionPlanMealUpdated(this.nutritionPlanMeal);
+  const NutritionPlanMealUpdated(this.nutritionPlanMeal);
 }
 
 // NutritionPlanMealEmptyState
@@ -80,15 +80,22 @@ final class NutritionPlanMealEmptyState extends NutritionPlanState {}
 final class NutritionPlanMealErrorState extends NutritionPlanState {
   final String message;
 
-  NutritionPlanMealErrorState(this.message);
+  const NutritionPlanMealErrorState(this.message);
 }
 
 // NutritionPlanMealLoaded
 final class NutritionPlanMealLoaded extends NutritionPlanState {
   final List<NutritionPlanMeal> nutritionPlanMeals;
 
-  NutritionPlanMealLoaded(this.nutritionPlanMeals);
+  const NutritionPlanMealLoaded(this.nutritionPlanMeals);
 }
 
 // NutritionPlanMealsLoadingState
 final class NutritionPlanMealsLoadingState extends NutritionPlanState {}
+
+// NutritionPlanMealDeleted
+final class NutritionPlanMealDeleted extends NutritionPlanState {
+  final NutritionPlanMeal nutritionPlanMeal;
+
+  const NutritionPlanMealDeleted(this.nutritionPlanMeal);
+}

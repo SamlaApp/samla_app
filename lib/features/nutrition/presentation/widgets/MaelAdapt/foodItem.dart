@@ -1,7 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:samla_app/config/themes/common_styles.dart';
-
 
 class FoodItem extends StatefulWidget {
   final String foodName;
@@ -9,13 +6,15 @@ class FoodItem extends StatefulWidget {
   final double fat;
   final double protein;
   final double carbs;
+  final LinearGradient gradient;
   final VoidCallback onRemove;
+  final int size;
 
   const FoodItem({
     Key? key,
     required this.foodName,
     required this.kcal,
-    required this.onRemove, required this.fat, required this.protein, required this.carbs,
+    required this.onRemove, required this.fat, required this.protein, required this.carbs, required this.gradient, required this.size,
   }) : super(key: key);
 
   @override
@@ -30,12 +29,12 @@ class _FoodItemState extends State<FoodItem> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("Confirm"),
-          content: Text("Are you sure you want to remove this item?"),
+          title: const Text("Confirm"),
+          content: const Text("Are you sure you want to remove this item?"),
           actions: <Widget>[
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: Text("Cancel"),
+              child: const Text("Cancel"),
             ),
             TextButton(
               onPressed: () {
@@ -45,7 +44,7 @@ class _FoodItemState extends State<FoodItem> {
                 });
                 Navigator.of(context).pop();
               },
-              child: Text("Remove"),
+              child: const Text("Remove"),
             ),
           ],
         );
@@ -59,56 +58,133 @@ class _FoodItemState extends State<FoodItem> {
       return Container();
     }
 
-    return Card(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-      elevation: 3.0,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              children: [
-                Icon(Icons.fastfood, color: theme_grey),
-                SizedBox(width: 10),
-                Text(
-                  widget.foodName,
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: theme_grey,
-                  ),
-                ),
-                SizedBox(width: 8),
-                Text(
-                  '${widget.kcal} kcal',
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: theme_grey,
-                  ),
-                ),
-              ],
+    return Container(
+      margin: const EdgeInsets.only(bottom: 10),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        gradient: widget.gradient,
+      ),
+      child: ListTile(
+        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        title: Padding(
+          padding: const EdgeInsets.only(top: 10),
+          child: Text(
+            widget.foodName,
+            style: const TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
             ),
-            InkWell(
-              onTap: _handleRemove,
-              child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-                decoration: BoxDecoration(
-                  border: Border.all(color: theme_red, width: 2),
-                  borderRadius: BorderRadius.circular(5.0),
-                ),
-                child: Center(
-                  child: Text(
-                    'Remove',
+          ),
+        ),
+        subtitle: Padding(
+          padding: const EdgeInsets.only(top: 20),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Carbs',
                     style: TextStyle(
-                      color: theme_red,
+                      color: Colors.white,
                       fontSize: 14,
-                      fontWeight: FontWeight.w600,
                     ),
                   ),
-                ),
+                  Text(
+                    '${widget.carbs}g',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 14,
+                    ),
+                  ),
+                ],
               ),
-            ),
-          ],
+              Column(
+                children: [
+                  const Text(
+                    'Protein',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 14,
+                    ),
+                  ),
+                  Text(
+                    '${widget.protein}g',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 14,
+                    ),
+                  ),
+                ],
+              ),
+              Column(
+                children: [
+                  const Text(
+                    'Fat',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 14,
+                    ),
+                  ),
+                  Text(
+                    '${widget.fat}g',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 14,
+                    ),
+                  ),
+                ],
+              ),
+
+              Column(
+                children: [
+                  const Text(
+                    'Calories',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 14,
+                    ),
+                  ),
+                  Text(
+                    '${widget.kcal}kcal',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 14,
+                    ),
+                  ),
+
+                ],
+              ),
+              Column(
+                children: [
+                  const Text(
+                    'Size',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 14,
+                    ),
+                  ),
+                  Text(
+                    '${widget.size}g',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 14,
+                    ),
+                  ),
+
+                ],
+              ),
+            ],
+          ),
+        ),
+        trailing: IconButton(
+          onPressed: _handleRemove,
+          icon: const Icon(
+            Icons.delete,
+            color: Colors.white,
+          ),
         ),
       ),
     );

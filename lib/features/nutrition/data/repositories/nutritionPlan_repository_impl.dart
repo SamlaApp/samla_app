@@ -1,4 +1,3 @@
-import 'dart:convert';
 
 import 'package:dartz/dartz.dart';
 import 'package:samla_app/core/error/exceptions.dart';
@@ -106,12 +105,27 @@ class NutritionPlanRepositoryImpl implements NutritionPlanRepository {
     }
   }
 
+
   @override
-  Future<Either<Failure, List<NutritionPlanMeal>>> getNutritionPlanMeals({required String query}) async {
+  Future<Either<Failure, List<NutritionPlanMeal>>> getNutritionPlanMeals({required String query,required int id}) async {
     if (await networkInfo.isConnected) {
       try {
-        final nutritionPlanMeals = await remoteDataSource.getNutritionPlanMeals(query);
+        final nutritionPlanMeals = await remoteDataSource.getNutritionPlanMeals(query,id);
         return Right(nutritionPlanMeals);
+      } on ServerException catch (e) {
+        return Left(ServerFailure(message: e.message));
+      }
+    } else {
+      return Left(ServerFailure(message: 'No internet connection'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, NutritionPlanMeal>> deleteNutritionPlanMeal({required int id}) async {
+    if (await networkInfo.isConnected) {
+      try {
+        final nutritionPlanMeal = await remoteDataSource.deleteNutritionPlanMeal(id);
+        return Right(nutritionPlanMeal as NutritionPlanMeal);
       } on ServerException catch (e) {
         return Left(ServerFailure(message: e.message));
       }

@@ -9,7 +9,6 @@ import 'package:samla_app/features/nutrition/domain/entities/nutritionPlan.dart'
 import 'package:samla_app/features/nutrition/presentation/cubit/NutritionPlan/nutritionPlan_cubit.dart';
 import 'package:samla_app/features/nutrition/presentation/pages/newFood.dart';
 import '../../../../core/widgets/CustomTextFormField.dart';
-import '../widgets/AddMealButton.dart';
 import '../widgets/MaelAdapt/DayDropdown.dart';
 import '../widgets/MaelAdapt/NutrientColumn.dart';
 import '../widgets/MaelAdapt/foodItem.dart';
@@ -20,6 +19,7 @@ class MealAdapt extends StatefulWidget {
   const MealAdapt({Key? key, required this.nutritionPlan}) : super(key: key);
   final NutritionPlan nutritionPlan;
 
+  @override
   _MealAdaptState createState() => _MealAdaptState(nutritionPlan);
 }
 
@@ -37,6 +37,57 @@ class _MealAdaptState extends State<MealAdapt> {
 
   final _displayedDay = TextEditingController();
 
+
+
+  num _totalCarbs = 0;
+  num _totalProtein = 0;
+  num _totalFat = 0;
+  num _totalCalories = 0;
+  num _totalSize = 0;
+
+  num _calculateTotalCarbs(List<NutritionPlanMeal> nutritionPlanMeals) {
+    num result = 0;
+    for (var meal in nutritionPlanMeals) {
+      result += meal.carbs!;
+    }
+    return num.parse(result.toStringAsFixed(1));
+  }
+
+  num _calculateTotalProtein(List<NutritionPlanMeal> nutritionPlanMeals) {
+    num result = 0;
+    for (var meal in nutritionPlanMeals) {
+      result += meal.protein!;
+    }
+    return num.parse(result.toStringAsFixed(1));
+  }
+
+  num _calculateTotalFat(List<NutritionPlanMeal> nutritionPlanMeals) {
+    num result = 0;
+    for (var meal in nutritionPlanMeals) {
+      result += meal.fat!;
+    }
+    return num.parse(result.toStringAsFixed(1));
+  }
+
+  num _calculateTotalCalories(List<NutritionPlanMeal> nutritionPlanMeals) {
+    num result = 0;
+    for (var meal in nutritionPlanMeals) {
+      result += meal.calories!;
+    }
+    return num.parse(result.toStringAsFixed(1));
+  }
+
+  num _calculateTotalSize(List<NutritionPlanMeal> nutritionPlanMeals) {
+    num result = 0;
+    for (var meal in nutritionPlanMeals) {
+      result += meal.size!;
+    }
+    return num.parse(result.toStringAsFixed(1));
+  }
+
+
+
+  @override
   void initState() {
     super.initState();
     _selectedDay.text = today;
@@ -46,14 +97,16 @@ class _MealAdaptState extends State<MealAdapt> {
   }
 
   void _submitValue() {
-    cubit.getNutritionPlanMeals(_displayedDay.text);
+    cubit.getNutritionPlanMeals(_displayedDay.text, nutritionPlan.id!);
   }
+
 
   @override
   Widget build(BuildContext context) {
     String type = nutritionPlan.type;
     late IconData icon;
     late LinearGradient gradient;
+    late Color color;
 
     if (type == 'Breakfast') {
       icon = Icons.free_breakfast;
@@ -65,6 +118,7 @@ class _MealAdaptState extends State<MealAdapt> {
           Colors.blueAccent,
         ],
       );
+      color = theme_green;
     } else if (type == 'Lunch') {
       icon = Icons.lunch_dining;
       gradient = LinearGradient(
@@ -72,6 +126,7 @@ class _MealAdaptState extends State<MealAdapt> {
         end: Alignment.bottomRight,
         colors: [theme_orange, Colors.red],
       );
+      color = theme_orange;
     } else if (type == 'Dinner') {
       icon = Icons.dinner_dining;
       gradient = LinearGradient(
@@ -79,6 +134,7 @@ class _MealAdaptState extends State<MealAdapt> {
         end: Alignment.bottomRight,
         colors: [theme_darkblue, theme_green],
       );
+      color = theme_darkblue;
     } else if (type == 'Snack') {
       icon = Icons.fastfood;
       gradient = LinearGradient(
@@ -89,9 +145,10 @@ class _MealAdaptState extends State<MealAdapt> {
           Colors.blueAccent,
         ],
       );
+      color = theme_pink;
     }
 
-    BlocBuilder<NutritionPlanCubit, NutritionPlanState> _displayedMeals() {
+    BlocBuilder<NutritionPlanCubit, NutritionPlanState> displayedMeals() {
       return BlocBuilder<NutritionPlanCubit, NutritionPlanState>(
         bloc: cubit,
         builder: (context, state) {
@@ -106,18 +163,56 @@ class _MealAdaptState extends State<MealAdapt> {
               ),
             );
           } else if (state is NutritionPlanMealLoaded) {
-             print(state.nutritionPlanMeals);
+            _totalCarbs = _calculateTotalCarbs(state.nutritionPlanMeals);
+            _totalProtein = _calculateTotalProtein(state.nutritionPlanMeals);
+            _totalFat = _calculateTotalFat(state.nutritionPlanMeals);
+            _totalCalories = _calculateTotalCalories(state.nutritionPlanMeals);
+            _totalSize = _calculateTotalSize(state.nutritionPlanMeals);
              return Column(
                children: [
+                 Container(
+                   padding: const EdgeInsets.symmetric(
+                       horizontal: 30, vertical: 15),
+                   decoration: BoxDecoration(
+                     color: Colors.white,
+                     borderRadius: BorderRadius.circular(20),
+                     boxShadow: [
+                       BoxShadow(
+                         color: Colors.grey.withOpacity(0.2),
+                         spreadRadius: 2,
+                         blurRadius: 5,
+                       ),
+                     ],
+                   ),
+                   child: Row(
+                     mainAxisAlignment: MainAxisAlignment.spaceAround,
+                     children: [
+                       NutrientColumn(value: _totalCarbs, label: 'Carbs', color: color),
+                       NutrientColumn(value: _totalProtein, label: 'Protein', color: color),
+                       NutrientColumn(value: _totalFat, label: 'Fat', color: color),
+                       NutrientColumn(value: _totalCalories, label: 'Calories', color: color),
+                       NutrientColumn(value: _totalSize, label: 'Total Size', color: color),
+                     ],
+                   ),
+                 ),
+
+                  const SizedBox(height: 20),
                   for (var meal in state.nutritionPlanMeals)
                     FoodItem(
+                      gradient: gradient,
                       foodName: meal.meal_name!,
                       kcal: meal.calories!,
                       fat: meal.fat!,
                       protein: meal.protein!,
                       carbs: meal.carbs!,
+                      size: meal.size!,
                       onRemove: () {
-                        //cubit.deleteNutritionPlanMeal(meal.id!);
+                        cubit.deleteNutritionPlanMeal(meal.id!);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Meal removed from plan'),
+                          ),
+                        );
                       },
                     ),
                 ],
@@ -180,44 +275,10 @@ class _MealAdaptState extends State<MealAdapt> {
                 child: Column(
                   children: [
                     const SizedBox(height: 20),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 30, vertical: 15),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(20),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.2),
-                            spreadRadius: 2,
-                            blurRadius: 5,
-                          ),
-                        ],
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          NutrientColumn(value: '30', label: 'Carbs'),
-                          NutrientColumn(value: '24', label: 'Protein'),
-                          NutrientColumn(value: '18', label: 'Fat'),
-                          NutrientColumn(value: '350', label: 'Total kcal'),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 20),
                     Form(
                       child: DayDropdown(
                         color: theme_darkblue,
                         backgroundColor: Colors.white,
-                        days: const [
-                          'Monday',
-                          'Tuesday',
-                          'Wednesday',
-                          'Thursday',
-                          'Friday',
-                          'Saturday',
-                          'Sunday'
-                        ],
                         initialValue: today,
                         onChanged: (value) {
                           setState(() {
@@ -227,16 +288,10 @@ class _MealAdaptState extends State<MealAdapt> {
                         },
                       ),
                     ),
-                    const SizedBox(height: 20),
-                    FoodItem(
-                        foodName: 'eggs',
-                        kcal: 22,
-                        fat: 22,
-                        protein: 33,
-                        carbs: 33,
-                        onRemove: () {}),
+
+
                     const SizedBox(height: 30),
-                    _displayedMeals(),
+                    displayedMeals(),
                   ],
                 ),
               ),
@@ -534,15 +589,6 @@ class _MealAdaptState extends State<MealAdapt> {
                       DayDropdown(
                         color: Colors.white,
                         backgroundColor: Colors.black87,
-                        days: const [
-                          'Monday',
-                          'Tuesday',
-                          'Wednesday',
-                          'Thursday',
-                          'Friday',
-                          'Saturday',
-                          'Sunday'
-                        ],
                         initialValue: today,
                         onChanged: (value) {
                           _onDayChanged(value);
@@ -603,7 +649,7 @@ class _MealAdaptState extends State<MealAdapt> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                _NewFoodButton(),
+                _newFoodButton(),
               ],
             ),
           );
@@ -616,7 +662,7 @@ class _MealAdaptState extends State<MealAdapt> {
                 children: [
                   const Text('No meals found'),
                   const SizedBox(height: 20),
-                  _NewFoodButton(),
+                  _newFoodButton(),
                 ],
               ),
             ),
@@ -630,7 +676,7 @@ class _MealAdaptState extends State<MealAdapt> {
                 children: [
                   Text(state.message),
                   const SizedBox(height: 20),
-                  _NewFoodButton(),
+                  _newFoodButton(),
                 ],
               ),
             ),
@@ -638,13 +684,13 @@ class _MealAdaptState extends State<MealAdapt> {
         } else {
           return  Center(
             child: Padding(
-              padding: EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(16.0),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Text('No food to show'),
                   const SizedBox(height: 20),
-                  _NewFoodButton(),
+                  _newFoodButton(),
                 ],
               ),
             ),
@@ -654,13 +700,13 @@ class _MealAdaptState extends State<MealAdapt> {
     );
   }
 
-  Widget _NewFoodButton() {
+  Widget _newFoodButton() {
     return ElevatedButton.icon(
       onPressed: () {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => NewFoodPage(),
+            builder: (context) => const NewFoodPage(),
           ),
         );
       },

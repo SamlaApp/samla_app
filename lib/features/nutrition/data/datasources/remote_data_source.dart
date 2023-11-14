@@ -1,5 +1,7 @@
 import 'dart:convert';
+import 'package:dartz/dartz.dart';
 import 'package:samla_app/core/error/exceptions.dart';
+import 'package:samla_app/core/error/failures.dart';
 import 'package:samla_app/features/nutrition/data/models/MealLibrary_model.dart';
 import 'package:samla_app/features/nutrition/data/models/NutritionPlanMeal_model.dart';
 import 'package:samla_app/features/nutrition/data/models/nutritionPlan_model.dart';
@@ -20,7 +22,8 @@ abstract class NutritionPlanRemoteDataSource {
   Future<MealLibraryModel> searchMealLibrary(String query);
   Future<MealLibraryModel> addMealLibrary(MealLibrary mealLibrary);
   Future<NutritionPlanMeal> addNutritionPlanMeal(NutritionPlanMeal nutritionPlanMeal);
-  Future<List<NutritionPlanMeal>> getNutritionPlanMeals(String query);
+  Future<List<NutritionPlanMeal>> getNutritionPlanMeals(String query,int id);
+  Future<Either<Failure, NutritionPlanMeal>> deleteNutritionPlanMeal(int id);
 }
 
 class NutritionPlanRemoteDataSourceImpl
@@ -121,20 +124,36 @@ class NutritionPlanRemoteDataSourceImpl
   }
 
   @override
-  Future<List<NutritionPlanMeal>> getNutritionPlanMeals(String query) async {
+  Future<List<NutritionPlanMeal>> getNutritionPlanMeals(String query,int id) async {
     final response = await samlaAPI(
-      endPoint: '/nutrition/plan/get/$query',
+      endPoint: '/nutrition/plan/get/$query/$id',
       method: 'GET',
     );
     final resBody = await response.stream.bytesToString();
     if (response.statusCode == 200) {
-      print(resBody);
       final List<dynamic> nutritionPlanMeals =
           json.decode(resBody)['nutrition_plan'];
       final List<NutritionPlanMealModel> convertedPlans = nutritionPlanMeals
           .map((e) => NutritionPlanMealModel.fromJson(e as Map<String, dynamic>))
           .toList();
       return convertedPlans;
+    } else {
+      throw ServerException(message: json.decode(resBody)['message']);
+    }
+  }
+
+  @override
+  Future<Either<Failure, NutritionPlanMeal>> deleteNutritionPlanMeal(int id) async {
+    final response = await samlaAPI(
+      endPoint: '/nutrition/plan/remove',
+      method: 'POST',
+      data: {'user_meal_id': '$id'},
+    );
+    final resBody = await response.stream.bytesToString();
+    if (response.statusCode == 200) {
+      final NutritionPlanMealModel nutritionPlanMeal =
+      NutritionPlanMealModel.fromJson(json.decode(resBody)['user_meal']);
+      return Right(nutritionPlanMeal);
     } else {
       throw ServerException(message: json.decode(resBody)['message']);
     }
