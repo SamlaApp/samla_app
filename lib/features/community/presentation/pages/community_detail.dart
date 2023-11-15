@@ -9,6 +9,7 @@ import 'package:samla_app/config/themes/common_styles.dart';
 import 'package:samla_app/core/widgets/ConfirmationModal.dart';
 import 'package:samla_app/core/widgets/image_viewer.dart';
 import 'package:samla_app/features/auth/auth_injection_container.dart';
+import 'package:samla_app/features/auth/domain/entities/user.dart';
 import 'package:samla_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:samla_app/features/community/domain/entities/Community.dart';
 import 'package:samla_app/features/community/presentation/cubits/ExploreCubit/explore_cubit.dart';
@@ -25,28 +26,30 @@ enum userRoleOptions { owner, member, notMember }
 class CommunityDetail extends StatelessWidget {
   final Community community;
 
-  const CommunityDetail({super.key, required this.community});
+  CommunityDetail({super.key, required this.community});
+   final specificCubit = sl.get<SpecificCommunityCubit>();
+  final communityCubit = sl.get<CommunityCubit>();
+  final exploreCubit = sl.get<ExploreCubit>();
+  final user = sl.get<AuthBloc>().user;
+  final memebersCubit = sl.get<MemebersCubit>();
+  final requestsCubit = sl.get<RequestsCubit>();
 
   @override
   Widget build(BuildContext context) {
-    final specificCubit = sl.get<SpecificCommunityCubit>();
-    final communityCubit = sl.get<CommunityCubit>();
-    final exploreCubit = sl.get<ExploreCubit>();
-    final user = sl.get<AuthBloc>().user;
-    final getMemebersCubit = sl.get<GetMemebersCubit>();
-    final requestsCubit = sl.get<RequestsCubit>();
+   
+
     specificCubit.getCommunitynumOfMemebers(community.id!);
     final userRole = community.ownerID == int.parse(user.id!)
         ? userRoleOptions.owner
         : community.isMemeber
             ? userRoleOptions.member
             : userRoleOptions.notMember;
-    getMemebersCubit.getMemebers(community.id!);
+    if (userRole == userRoleOptions.owner || community.isPublic) {
+      memebersCubit.getMemebers(community.id!, community.isPublic);
+    }
     if (!community.isPublic && userRole == userRoleOptions.owner) {
       requestsCubit.getJoinRequests(community.id!);
     }
-
-    print('comuunity id is ${community.id}');
 
     return BlocProvider(
       create: (context) => specificCubit,
@@ -129,10 +132,14 @@ class CommunityDetail extends StatelessWidget {
 
                           OverViewWidget(overview: community.description),
                           SizedBox(
-                            height: 30,
+                            height: 10,
                           ),
 
                           // TODO: show community memebers
+                          _builderMembersWidget(memebersCubit, user),
+                          SizedBox(
+                            height: 30,
+                          ),
 
                           mainButton(
                               userRole, context, exploreCubit, communityCubit),
@@ -143,6 +150,179 @@ class CommunityDetail extends StatelessWidget {
             ),
           );
         },
+      ),
+    );
+  }
+
+  BlocBuilder<MemebersCubit, MemebersState> _builderMembersWidget(
+      MemebersCubit memebersCubit, User user) {
+    return BlocBuilder<MemebersCubit, MemebersState>(
+      bloc: memebersCubit,
+      builder: (context, state) {
+        if (state is MemebersError) {
+          SchedulerBinding.instance.addPostFrameCallback((_) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(state.message),
+              ),
+            );
+          });
+        } else if (state is MemebersLoaded) {
+          return Container(
+              decoration: primary_decoration,
+              child: ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: state.users.length,
+                  itemBuilder: (context, index) {
+                    return memberWidget(
+                        context, state, index, user, memebersCubit);
+                  }));
+        } else if (state is MemebersLoading) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+        return Container();
+      },
+    );
+  }
+
+  Widget memberWidget(context, MemebersLoaded state, int index, User user,
+      MemebersCubit memebersCubit) {
+    return GestureDetector(
+      onTap: () {
+        showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                content: Container(
+                  // put border radius
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(30),
+                      color: Colors.white),
+                  height: 230,
+                  width: 200,
+                  child: Column(
+                    children: [
+                      ImageViewer.network(
+                        imageURL: state.users[index].photoUrl,
+                        placeholderImagePath: 'images/defaults/user.png',
+                        animationTag: 'memeberImage$user.id',
+                        // viewerMode: false,
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        state.users[index].name,
+                        style: TextStyle(
+                            fontWeight: FontWeight.w400,
+                            fontSize: 16,
+                            decoration: TextDecoration.none,
+                            color: theme_darkblue.withOpacity(0.95)),
+                      ),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      Text(
+                        '@' + state.users[index].username,
+                        style: TextStyle(
+                            fontWeight: FontWeight.w400,
+                            fontSize: 14,
+                            decoration: TextDecoration.none,
+                            color: theme_darkblue.withOpacity(0.5)),
+                      ),
+                      SizedBox(
+                        height: 40,
+                      ),
+                      // delete user button
+                      () {
+                        if (community.ownerID == int.parse(user.id!) &&
+                            state.users[index].id != user.id!) {
+                          return Container(
+                            width: 250,
+                            height: 40,
+                            decoration: primary_decoration.copyWith(color: theme_red),
+                            child: TextButton.icon(
+                              // stretch the button 
+                             
+                              icon: Icon(Icons.delete, color: Colors.white,),
+                                onPressed: () {
+                                  showConfirmationModal(
+                                      context: context,
+                                      message:
+                                          'Are you sure you want to delete this user?',
+                                      confirmCallback: () {
+                                        memebersCubit.deleteUser(community.id!,
+                                            int.parse(state.users[index].id!),
+                                            (err) {
+                                          if (err == null) {
+                                            Navigator.pop(context);
+                                            Navigator.pop(context);
+                                            specificCubit
+                                                .getCommunitynumOfMemebers(
+                                                    community.id!);
+                                            
+                                          } else {
+                                            Navigator.pop(context);
+                                                    
+                                            SchedulerBinding.instance
+                                                .addPostFrameCallback((_) {
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(
+                                                SnackBar(
+                                                  content: Text(err),
+                                                ),
+                                              );
+                                            });
+                                          }
+                                        }, community.isPublic);
+                                      },
+                                      buttonLabel: 'Delete');
+                                },
+                                label: Text('Delete', style: TextStyle(color: Colors.white),),
+                                                    ),
+                          );
+                        } else {
+                          return Container();
+                        }
+                      }(),
+                    ],
+                  ),
+                ),
+                actions: [
+                  TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: Text('Close', style: TextStyle(color: theme_grey),))
+                ],
+              );
+            });
+      },
+      child: ListTile(
+        leading: ImageViewer.network(
+          imageURL: state.users[index].photoUrl,
+          placeholderImagePath: 'images/defaults/user.png',
+          animationTag: 'memeberImage$user.id',
+          viewerMode: false,
+        ),
+        title: Text(
+          state is MemebersLoaded ? state.users[index].name : '',
+          style: TextStyle(
+              fontWeight: FontWeight.w400,
+              fontSize: 16,
+              decoration: TextDecoration.none,
+              color: theme_darkblue.withOpacity(0.95)),
+        ),
+        subtitle: Text(
+          state is MemebersLoaded ? state.users[index].email : '',
+          style: TextStyle(
+              fontWeight: FontWeight.w400,
+              fontSize: 14,
+              decoration: TextDecoration.none,
+              color: theme_darkblue.withOpacity(0.5)),
+        ),
       ),
     );
   }

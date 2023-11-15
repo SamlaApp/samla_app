@@ -298,8 +298,8 @@ class CommunityPage extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: inputField_color,
                   borderRadius: const BorderRadius.only(
-                    bottomLeft: Radius.circular(20),
-                    bottomRight: Radius.circular(20),
+                    bottomLeft: Radius.circular(10),
+                    bottomRight: Radius.circular(10),
                   ),
                 ),
                 child: commentsList(state, context, post, commentController,
@@ -348,20 +348,27 @@ class CommunityPage extends StatelessWidget {
         return ListView.builder(
           shrinkWrap: true,
           scrollDirection: Axis.vertical,
-          itemCount: post.comments.length + 1,
+          itemCount: post.comments.length + 2,
           itemBuilder: (context, index) {
+            if (index == 0){
+              return const SizedBox(height: 10);
+            }
+            index -= 1; // to skip the first item
             if (index != post.comments.length) {
               return commentWidget(post.comments[index]);
             }
-            return SizedBox(
-              height: 100,
-              child: Column(
+            return Container(
+              padding: EdgeInsets.all(10.0),
+              // height: 100,
+              child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  CustomTextFormField(
-                    label: 'write a comment',
-                    iconData: Icons.comment,
-                    controller: commentController,
+                  Expanded(
+                    child: CustomTextFormField(
+                      label: 'write a comment',
+                      iconData: Icons.comment,
+                      controller: commentController,
+                    ),
                   ),
                   const SizedBox(width: 10),
                   IconButton(
@@ -377,7 +384,7 @@ class CommunityPage extends StatelessWidget {
                       cubit.emit(PostInitial());
                     },
                     icon: const Icon(Icons.send),
-                    color: theme_pink,
+                    color: theme_green,
                   )
                 ],
               ),

@@ -37,4 +37,17 @@ class CommunityAdminRepositoryImpl implements CommunityAdminRepository {
     // TODO: implement rejectJoinRequest
     throw UnimplementedError();
   }
+  
+  @override
+  Future<Either<Failure, Unit>> deleteUser({required int communityID, required int userID})async {
+    try{
+      final res = await remoteDataSource.deleteUser(communityID, userID);
+      return Right(unit);
+    }
+    on ServerFailure catch (e) {
+      return Left(ServerFailure(message: e.message));
+    } catch (e) {
+      return Left(ServerFailure(message: e.toString()));
+    }
+  }
 }

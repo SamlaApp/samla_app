@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:samla_app/core/error/exceptions.dart';
+import 'package:samla_app/features/auth/data/models/user_model.dart';
 import 'package:samla_app/features/community/data/models/Community.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
@@ -24,6 +25,8 @@ abstract class CommunityRemoteDataSource {
   Future<int> getCommunityMemebersNumber({required int communityID});
 
   Future<List<CommunityModel>> searchCommunities(String query);
+
+  Future<List<UserModel>> getCommunityMemebers(int communityID, bool isPublic);
 }
 
 const BASE_URL = 'https://samla.mohsowa.com/api/community';
@@ -214,6 +217,23 @@ class CommunityRemoteDataSourceImpl implements CommunityRemoteDataSource {
         communities.add(CommunityModel.fromJson(community));
       });
       return communities;
+    } else {
+      throw ServerException(message: json.decode(resBody)['message']);
+    }
+  }
+  
+  @override
+  Future<List<UserModel>> getCommunityMemebers(int communityID, bool isPublic) async{
+    final endpoint = isPublic ? '/community/get_public_community_members/$communityID' : '/community/get_private_community_members/$communityID';
+    final res = await samlaAPI(endPoint: endpoint, method: 'GET');
+    final resBody = await res.stream.bytesToString();
+    if (res.statusCode == 200) {
+      final membersJsonList = json.decode(resBody)['members'];
+      final List<UserModel> members = [];
+      membersJsonList.forEach((member) {
+        members.add(UserModel.fromJson(member['user']));
+      });
+      return members;
     } else {
       throw ServerException(message: json.decode(resBody)['message']);
     }

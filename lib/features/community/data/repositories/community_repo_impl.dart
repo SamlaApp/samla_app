@@ -2,6 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:samla_app/core/error/exceptions.dart';
 import 'package:samla_app/core/error/failures.dart';
 import 'package:samla_app/core/network/network_info.dart';
+import 'package:samla_app/features/auth/domain/entities/user.dart';
 import 'package:samla_app/features/community/data/datasources/community_local_datasource.dart';
 import 'package:samla_app/features/community/data/datasources/community_remote_data_source.dart';
 import 'package:samla_app/features/community/domain/entities/Community.dart';
@@ -143,6 +144,20 @@ class CommunityRepositoryImpl implements CommunityRepository {
       try {
         final  communities = await remoteDataSource.searchCommunities(query);
         return Right(communities);
+      } on ServerException catch (e) {
+        return Left(ServerFailure(message: e.message));
+      }
+    } else {
+      return Left(ServerFailure(message: 'No internet connection'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<User>>> getCommunityMemebers(int communityID, bool isPublic)async {
+    if (await networkInfo.isConnected) {
+      try {
+        final  users = await remoteDataSource.getCommunityMemebers(communityID, isPublic);
+        return Right(users);
       } on ServerException catch (e) {
         return Left(ServerFailure(message: e.message));
       }

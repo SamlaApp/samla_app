@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:samla_app/core/error/failures.dart';
+import 'package:samla_app/features/auth/domain/entities/user.dart';
 import 'package:samla_app/features/community/domain/entities/Community.dart';
 
 abstract class CommunityRepository {
@@ -16,9 +17,14 @@ abstract class CommunityRepository {
 
   Future<Either<Failure, Unit>> deleteCommunity({required int communityID});
 
-  Future<Either<Failure, Community>> updateCommunity({required int communityID});
+  Future<Either<Failure, Community>> updateCommunity(
+      {required int communityID});
 
-  Future<Either<Failure,int>> getCommunityMemebersNumber({required int communityID});
+  Future<Either<Failure, int>> getCommunityMemebersNumber(
+      {required int communityID});
 
   Future<Either<Failure, List<Community>>> searchCommunities(String query);
+
+  Future<Either<Failure, List<User>>> getCommunityMemebers(
+      int communityID, bool isPublic);
 }
