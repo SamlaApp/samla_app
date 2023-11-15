@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:google_fonts/google_fonts.dart';
 // import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:samla_app/config/themes/common_styles.dart';
+import 'package:samla_app/features/setup/setStepsGoalPage.dart';
 import 'package:samla_app/features/setup/userMeasurment.dart';
 import 'package:numberpicker/numberpicker.dart';
 
@@ -157,8 +158,8 @@ class _SetWeightPageState extends State<SetWeightPage> {
                       onPressed: () {
                         final userProgress = userMeasurment();
                         userProgress.updateheight(height: intWeightValue);
-                        Navigator.pushReplacementNamed(context,
-                            '/stepsGoal'); //should navegate to next page
+                        // Navigator.pushReplacementNamed(context, '/stepsGoal'); //should navegate to next page
+                        const SetStepsGoalPage(); //should navegate to SetStepsGoalPage
                       },
                       // child: const Text(
                       //   '>',

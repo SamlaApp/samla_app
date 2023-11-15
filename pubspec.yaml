@@ -108,6 +108,18 @@ flutter:
         - images/Logo/1x/Icon_1@1x.png
         - images/Logo/2x/Icon_1@2x.png
         - images/download.jpeg
+        - images/WelcomePage-pic.png
+        - images/WelcomePage2-pic.png
+        - images/SelectGender-pic.png
+        - images/SelectHight-pic.png
+        - images/SelectWeight-pic.png
+        - images/Logo/White-logo.png
+        - images/Male.png
+        - images/Male2.png
+        - images/female.png
+        - images/StepsGoal-pic.png
+        - images/Footprint.png
+        - images/setWeight-pic.jpg
 
     # An image asset can refer to one or more resolution-specific "variants", see
     # https://flutter.dev/assets-and-images/#resolution-aware

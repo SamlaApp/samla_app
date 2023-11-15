@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'dart:ui';
 import 'package:google_fonts/google_fonts.dart';
 // import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:samla_app/config/themes/common_styles.dart';
 import 'package:samla_app/features/setup/userMeasurment.dart';
+import 'package:samla_app/core/widgets/splash_screen.dart';
 
 // void main() {
 //   runApp(const MaterialApp(
@@ -15,13 +17,13 @@ import 'package:samla_app/features/setup/userMeasurment.dart';
 //   ));
 // }
 
-class SelectStepsGoal extends StatefulWidget {
-  const SelectStepsGoal({Key? key}) : super(key: key);
+class SetStepsGoalPage extends StatefulWidget {
+  const SetStepsGoalPage({Key? key}) : super(key: key);
   @override
-  _SelectStepsGoalState createState() => _SelectStepsGoalState();
+  _SetStepsGoalPageState createState() => _SetStepsGoalPageState();
 }
 
-class _SelectStepsGoalState extends State<SelectStepsGoal> {
+class _SetStepsGoalPageState extends State<SetStepsGoalPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _stepsGoalController = TextEditingController();
 
@@ -141,6 +143,14 @@ class _SelectStepsGoalState extends State<SelectStepsGoal> {
                         final userProgress = userMeasurment();
                         userProgress.updatesteps(
                             steps: int.parse(_stepsGoalController.text));
+
+                        SchedulerBinding.instance.addPostFrameCallback((_) {
+                          Navigator.of(context).pushNamedAndRemoveUntil(
+                              '/MainPages',
+                              (Route<dynamic> route) =>
+                                  false); //it should go to the home page
+                        });
+                        // SplashScreen();
                         // Navigator.push(  //it should go to the home page
                         //   context,
                         //   MaterialPageRoute(builder: (context) => HomePage()),

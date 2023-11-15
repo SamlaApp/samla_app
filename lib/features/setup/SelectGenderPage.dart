@@ -6,7 +6,12 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:samla_app/config/themes/common_styles.dart';
 import 'package:samla_app/features/profile/data/profile_requests.dart';
 import 'package:samla_app/features/setup/customRectangularButtons.dart';
+import 'package:samla_app/features/setup/setHeightPage.dart';
 import 'package:samla_app/features/setup/userMeasurment.dart';
+// import '../../bloc/auth_bloc.dart';
+import 'package:samla_app/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:samla_app/features/auth/auth_injection_container.dart'
+    as authDI;
 
 // void main() {
 //   runApp(const MaterialApp(
@@ -18,15 +23,19 @@ import 'package:samla_app/features/setup/userMeasurment.dart';
 //   ));
 // }
 
-class SelectGender extends StatefulWidget {
-  const SelectGender({Key? key}) : super(key: key);
+class SelectGenderPage extends StatefulWidget {
+  const SelectGenderPage({Key? key}) : super(key: key);
   @override
-  _SelectGenderState createState() => _SelectGenderState();
+  _SelectGenderPageState createState() => _SelectGenderPageState();
 }
 
-class _SelectGenderState extends State<SelectGender> {
+class _SelectGenderPageState extends State<SelectGenderPage> {
+  final authBloc = authDI.sl.get<AuthBloc>();
+
   @override
   Widget build(BuildContext context) {
+    final user = authDI.getUser(); //checkTokenValidity
+
     return Scaffold(
       backgroundColor: theme_darkblue,
       appBar: AppBar(
@@ -132,8 +141,8 @@ class _SelectGenderState extends State<SelectGender> {
                         backgroundColor: Colors.white,
                       ),
                       onPressed: () {
-                        Navigator.pushReplacementNamed(context,
-                            '/setHight'); //should navegate to next page
+                        // Navigator.pushReplacementNamed(context,'/setHight'); //should navegate to next page
+                        const SetHeightPage(); //should navegate to SetHeightPage
                       },
                       // child: const Text(
                       //   '>',

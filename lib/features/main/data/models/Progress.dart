@@ -19,7 +19,7 @@ class ProgressModel extends Progress {
       height: (json['height'] as num).toDouble(), // Ensure it's converted to a double
       steps: json['steps'],
       calories: json['calories'],
-      date: DateFormat('yyyy-MM-dd').parse(json['date']),
+      date: DateFormat('yyyy-MM-dd').parse(json['created_at']),
     );
   }
 

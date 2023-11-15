@@ -6,7 +6,7 @@ import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:samla_app/config/themes/common_styles.dart';
 import 'package:samla_app/core/widgets/loading.dart';
 import 'package:samla_app/features/auth/auth_injection_container.dart' as di;
-
+import 'package:samla_app/features/setup/welcomePage.dart';
 import '../bloc/auth_bloc.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -44,6 +44,7 @@ class _RegisterState extends State<RegisterPage> {
         password: _passwordController.text.trim(),
       ),
     );
+    const WelcomePage(); //navigate to the welcome page
   }
 
   @override
