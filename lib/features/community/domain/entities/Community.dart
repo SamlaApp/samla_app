@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:equatable/equatable.dart';
+import 'package:samla_app/features/community/presentation/pages/communities.dart';
 
 class Community extends Equatable {
   final String name;
@@ -13,6 +14,7 @@ class Community extends Equatable {
   //these are depend on the direction of transfer
   //whether it coming from backend, or going to backend
   final int? id;
+  RequestType? requestType;
   final File? avatar; //image name in the backend
   final String? imageURL; //full link that include image name in the backend
 
@@ -26,7 +28,9 @@ class Community extends Equatable {
       this.avatar,
       this.id,
       this.imageURL,
-      required this.isMemeber});
+      required this.isMemeber,
+      this.requestType
+      });
 
   @override
   // TODO: implement props

@@ -65,8 +65,7 @@ class _CommunityPageState extends State<CommunitiesPage> {
                         Expanded(
                           child: CustomTextFormField(
                             onChanged: (value) {
-                                searchCubit.search(value);
-                              
+                              searchCubit.search(value);
                             },
                             controller: _searchController,
                             label: 'Search for a community',
@@ -126,51 +125,64 @@ class _CommunityPageState extends State<CommunitiesPage> {
     );
   }
 
-  BlocBuilder<CommunityCubit, CommunityState> searchCommunitiesBuilder() {
+  Widget searchCommunitiesBuilder() {
     // communityCubit.getMyCommunities();
-    return BlocBuilder<CommunityCubit, CommunityState>(
-      bloc: communityCubit,
-      builder: (context, myCommunityState) {
-        if (myCommunityState is CommunityLoading) {
-          return Center(
-            child: CircularProgressIndicator(
-              color: theme_green,
-              backgroundColor: theme_pink,
-            ),
-          );
-        }
-        if (myCommunityState is CommunitiesLoaded) {
-          return BlocBuilder<SearchCubit, SearchState>(
-            bloc: searchCubit,
-            builder: (context, state) {
-              if (state is SearchLoading) {
-                return Center(
-                  child: CircularProgressIndicator(
-                    color: theme_green,
-                    backgroundColor: theme_pink,
-                  ),
-                );
-              } else if (state is SearchLoaded && state.communities.isNotEmpty) {
-                
-                state.communities.forEach((searchedCommunity) {
-                  myCommunityState.communities.forEach((myCommunity) {
-                    if (searchedCommunity.id == myCommunity.id) {
-                      searchedCommunity.isMemeber = true;
+    return BlocBuilder<ExploreCubit, ExploreState>(
+      bloc: exploreCubit,
+      builder: (context, state) {
+        return BlocBuilder<CommunityCubit, CommunityState>(
+          bloc: communityCubit..getMyCommunities(),
+          builder: (context, myCommunityState) {
+            if (myCommunityState is CommunityLoading) {
+              return Center(
+                child: CircularProgressIndicator(
+                  color: theme_green,
+                  backgroundColor: theme_pink,
+                ),
+              );
+            }
+            if (myCommunityState is CommunitiesLoaded) {
+              return BlocBuilder<SearchCubit, SearchState>(
+                bloc: searchCubit,
+                builder: (context, state) {
+                  if (state is SearchLoading) {
+                    return Center(
+                      child: CircularProgressIndicator(
+                        color: theme_green,
+                        backgroundColor: theme_pink,
+                      ),
+                    );
+                  } else if (state is SearchLoaded &&
+                      state.communities.isNotEmpty) {
+                    state.communities.forEach((searchedCommunity) {
+                      myCommunityState.communities.forEach((myCommunity) {
+                        if (searchedCommunity.id == myCommunity.id) {
+                          searchedCommunity.isMemeber = true;
+                        }
+                      });
+                    });
+                    final filteredCommunities = state.communities
+                        .where((community) =>
+                            showThisCommunity(community.id, communityCubit))
+                        .toList();
+                    if (filteredCommunities.isNotEmpty){
+                      return Column(
+                          children:
+                          buildCommunitiesList(filteredCommunities, false));
                     }
-                  });
-                });
-                return Column(
-                    children: buildCommunitiesList(state.communities, false));
-              } else if (state is SearchError) {
-                return Center(child: Text(state.message));
-              }
-              return const Center(child: Text('No such a community'));
-            },
-          );
-        } else if (myCommunityState is CommunityError) {
-          return Center(child: Text(myCommunityState.message));
-        } else
-          return const Center(child: Text('Failed try agian later'));
+                   return const Center(child: Text('No such a community'));
+                  } else if (state is SearchError) {
+                    return Center(child: Text(state.message));
+                  }
+                  return const Center(child: Text('No such a community'));
+                },
+              );
+            } else if (myCommunityState is CommunityError) {
+              return Center(child: Text(myCommunityState.message));
+            } else
+              return const Center(child: Text('Failed try agian later'));
+          },
+        );
       },
     );
   }
@@ -288,4 +300,17 @@ Widget ButtonsBar(int currentIndex, Function(int) myCommunitiesOnTap,
       ),
     ],
   );
+}
+
+enum RequestType { accepted, pending, rejected }
+
+// if it should show the community or not, if user send request but it rejected or pending it should not show it
+bool showThisCommunity(communityID, CommunityCubit cubit) {
+  final requestedCommunities = cubit.allCommunities;
+  for (var i = 0; i < requestedCommunities.length; i++) {
+    if (requestedCommunities[i].id == communityID) {
+      return false;
+    }
+  }
+  return true;
 }

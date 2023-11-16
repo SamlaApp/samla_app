@@ -47,7 +47,7 @@ void CommunityInit() {
   sl.registerFactory(() => GetPostsCubit(sl()));
   sl.registerFactoryParam((int community, _) => CrudPostCubit(community, sl()));
   sl.registerFactory(() => AddCommentCubit(sl()));
-  sl.registerFactory(() => GetMemebersCubit(sl()));
+  sl.registerFactory(() => MemebersCubit(sl(), sl()));
   sl.registerFactory(() => RequestsCubit(sl()));
   sl.registerFactory(() => SearchCubit(sl()));
   //datasources
@@ -68,6 +68,6 @@ void CommunityInit() {
   sl.registerLazySingleton<PostRepository>(() => PostRepositoryImpl(
       networkInfo: sl(), remoteDataSource: sl(), localDataSource: sl()));
   sl.registerLazySingleton<CommunityAdminRepository>(
-      () => CommunityAdminRepositoryImpl(remoteDataSource: sl()));
+      () => CommunityAdminRepositoryImpl(sl(),sl()));
   _isInitialized = true;
 }

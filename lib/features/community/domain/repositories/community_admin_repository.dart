@@ -10,4 +10,8 @@ abstract class CommunityAdminRepository {
 
   Future<Either<Failure, Unit>> rejectJoinRequest({required int communityID, required int userID});
 
+  Future<Either<Failure, Unit>> deleteUser({required int communityID, required int userID});
+
+  
+
 }

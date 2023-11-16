@@ -47,6 +47,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                             width: 42,
                             height: 42,
                             placeholderImagePath: 'images/defaults/user.png',
+                            viewerMode: false,
                           )
                         ),
                         const SizedBox(width: 10),

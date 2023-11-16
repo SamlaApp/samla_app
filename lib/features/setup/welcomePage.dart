@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:ui';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:samla_app/config/themes/common_styles.dart';
+import 'package:samla_app/features/setup/SelectGenderPage.dart';
 
 // void main() {
 //   runApp(const MaterialApp(
@@ -113,7 +114,9 @@ class _WelcomePageState extends State<WelcomePage> {
                         elevation: 4, //shadow
                         backgroundColor: Colors.white,
                       ),
-                      onPressed: () {}, //should navegate to next page
+                      onPressed: () {
+                        SelectGenderPage(); //should navegate to SelectGenderPage
+                      },
                       // child: const Text(
                       //   '>',
                       //   style: TextStyle(

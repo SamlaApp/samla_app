@@ -20,7 +20,10 @@ class CommunityCubit extends Cubit<CommunityState> {
             (communities) {
       if (communities.isEmpty) {
         emit(CommunityEmpty());
-      } else emit(CommunitiesLoaded(communities));
+      } else {
+        myCommunities = communities[0];
+        allCommunities = communities[1];
+        emit(CommunitiesLoaded(communities[0]));}
     });
   }
 
