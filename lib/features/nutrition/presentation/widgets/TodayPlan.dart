@@ -43,7 +43,6 @@ class _TodayPlanState extends State<TodayPlan> {
             children: [
               PageView(
                 controller: _pageController,
-
                 scrollDirection: Axis.horizontal,
                 children: [
                   for (var nutritionPlan in state.nutritionPlans)
