@@ -25,20 +25,31 @@ class _TodayPlanState extends State<TodayPlan> {
 
   final cubit = NutritionPlanCubit(sl<NutritionPlanRepository>());
 
+  @override
+  void initState() {
+    super.initState();
+    cubit.getTodayNutritionPlan(DateFormat('EEEE').format(DateTime.now()));
+  }
+
+  @override
+  void dispose() {
+    cubit.close();
+    super.dispose();
+  }
+
 
   BlocBuilder<NutritionPlanCubit, NutritionPlanState> getTodayPlans(
       gradient) {
+
     return BlocBuilder<NutritionPlanCubit, NutritionPlanState>(
       bloc: cubit,
       builder: (context, state) {
         if (state is NutritionPlanInitial) {
-          cubit.getAllNutritionPlans();
+          cubit.getTodayNutritionPlan(DateFormat('EEEE').format(DateTime.now()));
           return const Center(child: CircularProgressIndicator());
         } else if (state is NutritionPlanLoadingState) {
           return const Center(child: CircularProgressIndicator());
         } else if (state is NutritionPlanLoaded) {
-
-
           return Stack(
             children: [
               PageView(
