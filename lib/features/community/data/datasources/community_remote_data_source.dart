@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 import 'package:samla_app/features/community/domain/entities/Community.dart'; // Import MediaType
 import 'package:samla_app/core/network/samlaAPI.dart';
+import 'package:samla_app/features/community/presentation/pages/communities.dart';
 
 abstract class CommunityRemoteDataSource {
   Future<List<CommunityModel>> getAllCommunities();
@@ -79,7 +80,6 @@ class CommunityRemoteDataSourceImpl implements CommunityRemoteDataSource {
       final List<CommunityModel> requestedCommunities = [];
 
       communitiesJsonList.forEach((communityRequest) {
-
         // if user is the creator of the community
         if (communityRequest['community'] == null &&
             communityRequest['handle'] != null) {
@@ -110,9 +110,15 @@ class CommunityRemoteDataSourceImpl implements CommunityRemoteDataSource {
               .add(CommunityModel.fromJson(communityRequest['community']));
         } else {
           communityRequest['community']['is_member'] = false;
-
-          requestedCommunities
-              .add(CommunityModel.fromJson(communityRequest['community']));
+          if (communityRequest['accepted'] == 0 &&
+              communityRequest['rejected'] == 0) {
+            requestedCommunities.add(CommunityModel.fromJson(
+                communityRequest['community'], RequestType.pending));
+          } else if (communityRequest['accepted'] == 0 &&
+              communityRequest['rejected'] == 1) {
+            requestedCommunities.add(CommunityModel.fromJson(
+                communityRequest['community'], RequestType.rejected));
+          }
         }
       });
       return [communities, requestedCommunities];
@@ -191,7 +197,6 @@ class CommunityRemoteDataSourceImpl implements CommunityRemoteDataSource {
     }
   }
 
-
   @override
   Future<int> getCommunityMemebersNumber({required int communityID}) async {
     final res = await samlaAPI(
@@ -214,6 +219,10 @@ class CommunityRemoteDataSourceImpl implements CommunityRemoteDataSource {
       final communitiesJsonList = json.decode(resBody)['communities'];
       final List<CommunityModel> communities = [];
       communitiesJsonList.forEach((community) {
+        if (community['avatar'] != null) {
+          community['avatar'] =
+              BASE_URL + '/community_avatar/' + community['avatar'];
+        }
         communities.add(CommunityModel.fromJson(community));
       });
       return communities;
@@ -221,10 +230,13 @@ class CommunityRemoteDataSourceImpl implements CommunityRemoteDataSource {
       throw ServerException(message: json.decode(resBody)['message']);
     }
   }
-  
+
   @override
-  Future<List<UserModel>> getCommunityMemebers(int communityID, bool isPublic) async{
-    final endpoint = isPublic ? '/community/get_public_community_members/$communityID' : '/community/get_private_community_members/$communityID';
+  Future<List<UserModel>> getCommunityMemebers(
+      int communityID, bool isPublic) async {
+    final endpoint = isPublic
+        ? '/community/get_public_community_members/$communityID'
+        : '/community/get_private_community_members/$communityID';
     final res = await samlaAPI(endPoint: endpoint, method: 'GET');
     final resBody = await res.stream.bytesToString();
     if (res.statusCode == 200) {

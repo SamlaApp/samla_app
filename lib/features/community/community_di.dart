@@ -68,6 +68,6 @@ void CommunityInit() {
   sl.registerLazySingleton<PostRepository>(() => PostRepositoryImpl(
       networkInfo: sl(), remoteDataSource: sl(), localDataSource: sl()));
   sl.registerLazySingleton<CommunityAdminRepository>(
-      () => CommunityAdminRepositoryImpl(remoteDataSource: sl()));
+      () => CommunityAdminRepositoryImpl(sl(),sl()));
   _isInitialized = true;
 }

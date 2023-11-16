@@ -27,7 +27,7 @@ class CommunityDetail extends StatelessWidget {
   final Community community;
 
   CommunityDetail({super.key, required this.community});
-   final specificCubit = sl.get<SpecificCommunityCubit>();
+  final specificCubit = sl.get<SpecificCommunityCubit>();
   final communityCubit = sl.get<CommunityCubit>();
   final exploreCubit = sl.get<ExploreCubit>();
   final user = sl.get<AuthBloc>().user;
@@ -36,17 +36,15 @@ class CommunityDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-   
-
     specificCubit.getCommunitynumOfMemebers(community.id!);
     final userRole = community.ownerID == int.parse(user.id!)
         ? userRoleOptions.owner
         : community.isMemeber
             ? userRoleOptions.member
             : userRoleOptions.notMember;
-    if (userRole == userRoleOptions.owner || community.isPublic) {
-      memebersCubit.getMemebers(community.id!, community.isPublic);
-    }
+    // if (userRole == userRoleOptions.owner || community.isPublic) {
+    //   memebersCubit.getMemebers(community.id!, community.isPublic);
+    // }
     if (!community.isPublic && userRole == userRoleOptions.owner) {
       requestsCubit.getJoinRequests(community.id!);
     }
@@ -127,6 +125,8 @@ class CommunityDetail extends StatelessWidget {
                                 : '0',
                             publicOrPrivate:
                                 community.isPublic ? 'PUBLIC' : 'PRIVATE',
+                            requestsCubit: requestsCubit,
+                            communityID: community.id!,
                           ),
                           SizedBox(height: 10),
 
@@ -136,7 +136,10 @@ class CommunityDetail extends StatelessWidget {
                           ),
 
                           // TODO: show community memebers
-                          _builderMembersWidget(memebersCubit, user),
+
+                          userRole == userRoleOptions.owner
+                              ? _builderMembersWidget(memebersCubit, user)
+                              : Container(),
                           SizedBox(
                             height: 30,
                           ),
@@ -154,35 +157,46 @@ class CommunityDetail extends StatelessWidget {
     );
   }
 
-  BlocBuilder<MemebersCubit, MemebersState> _builderMembersWidget(
-      MemebersCubit memebersCubit, User user) {
-    return BlocBuilder<MemebersCubit, MemebersState>(
-      bloc: memebersCubit,
+  Widget _builderMembersWidget(MemebersCubit memebersCubit, User user) {
+    return BlocBuilder<RequestsCubit, RequestsState>(
+      bloc: requestsCubit,
       builder: (context, state) {
-        if (state is MemebersError) {
-          SchedulerBinding.instance.addPostFrameCallback((_) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(state.message),
-              ),
-            );
-          });
-        } else if (state is MemebersLoaded) {
-          return Container(
-              decoration: primary_decoration,
-              child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: state.users.length,
-                  itemBuilder: (context, index) {
-                    return memberWidget(
-                        context, state, index, user, memebersCubit);
-                  }));
-        } else if (state is MemebersLoading) {
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        }
-        return Container();
+        return BlocBuilder<MemebersCubit, MemebersState>(
+          buildWhen: (previous, current) {
+            if (current is MemebersLoaded) {
+              return true;
+            }
+            return false;
+          },
+          bloc: memebersCubit..getMemebers(community.id!, community.isPublic),
+          builder: (context, state) {
+            if (state is MemebersError) {
+              SchedulerBinding.instance.addPostFrameCallback((_) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(state.message),
+                  ),
+                );
+              });
+            } else if (state is MemebersLoaded) {
+              return Container(
+                  decoration: primary_decoration,
+                  child: ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: state.users.length,
+                      itemBuilder: (context, index) {
+                        return memberWidget(
+                            context, state, index, user, memebersCubit);
+                      }));
+            }
+            // else if (state is MemebersLoading) {
+            //   return Center(
+            //     child: CircularProgressIndicator(),
+            //   );
+            // }
+            return Container();
+          },
+        );
       },
     );
   }
@@ -242,46 +256,52 @@ class CommunityDetail extends StatelessWidget {
                           return Container(
                             width: 250,
                             height: 40,
-                            decoration: primary_decoration.copyWith(color: theme_red),
+                            decoration:
+                                primary_decoration.copyWith(color: theme_red),
                             child: TextButton.icon(
-                              // stretch the button 
-                             
-                              icon: Icon(Icons.delete, color: Colors.white,),
-                                onPressed: () {
-                                  showConfirmationModal(
-                                      context: context,
-                                      message:
-                                          'Are you sure you want to delete this user?',
-                                      confirmCallback: () {
-                                        memebersCubit.deleteUser(community.id!,
-                                            int.parse(state.users[index].id!),
-                                            (err) {
-                                          if (err == null) {
-                                            Navigator.pop(context);
-                                            Navigator.pop(context);
-                                            specificCubit
-                                                .getCommunitynumOfMemebers(
-                                                    community.id!);
-                                            
-                                          } else {
-                                            Navigator.pop(context);
-                                                    
-                                            SchedulerBinding.instance
-                                                .addPostFrameCallback((_) {
-                                              ScaffoldMessenger.of(context)
-                                                  .showSnackBar(
-                                                SnackBar(
-                                                  content: Text(err),
-                                                ),
-                                              );
-                                            });
-                                          }
-                                        }, community.isPublic);
-                                      },
-                                      buttonLabel: 'Delete');
-                                },
-                                label: Text('Delete', style: TextStyle(color: Colors.white),),
-                                                    ),
+                              // stretch the button
+
+                              icon: Icon(
+                                Icons.delete,
+                                color: Colors.white,
+                              ),
+                              onPressed: () {
+                                showConfirmationModal(
+                                    context: context,
+                                    message:
+                                        'Are you sure you want to delete this user?',
+                                    confirmCallback: () {
+                                      memebersCubit.deleteUser(community.id!,
+                                          int.parse(state.users[index].id!),
+                                          (err) {
+                                        if (err == null) {
+                                          Navigator.pop(context);
+                                          Navigator.pop(context);
+                                          specificCubit
+                                              .getCommunitynumOfMemebers(
+                                                  community.id!);
+                                        } else {
+                                          Navigator.pop(context);
+
+                                          SchedulerBinding.instance
+                                              .addPostFrameCallback((_) {
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(
+                                              SnackBar(
+                                                content: Text(err),
+                                              ),
+                                            );
+                                          });
+                                        }
+                                      }, community.isPublic);
+                                    },
+                                    buttonLabel: 'Delete');
+                              },
+                              label: Text(
+                                'Delete',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ),
                           );
                         } else {
                           return Container();
@@ -295,7 +315,10 @@ class CommunityDetail extends StatelessWidget {
                       onPressed: () {
                         Navigator.pop(context);
                       },
-                      child: Text('Close', style: TextStyle(color: theme_grey),))
+                      child: Text(
+                        'Close',
+                        style: TextStyle(color: theme_grey),
+                      ))
                 ],
               );
             });
@@ -394,8 +417,32 @@ class CommunityDetail extends StatelessWidget {
                     communityCubit.leaveCommunity(community.id!, callback);
                   },
                   buttonLabel: 'Leave');
-            } else if (userRole == userRoleOptions.notMember) {
+            } else if (userRole == userRoleOptions.notMember &&
+                community.isPublic) {
               exploreCubit.joinCommunity(community.id!, callback);
+            } else {
+              exploreCubit.joinCommunity(community.id!, ([String? err]) {
+                if (err != null) {
+                  SchedulerBinding.instance.addPostFrameCallback((_) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(err),
+                      ),
+                    );
+                  });
+                } else {
+                  SchedulerBinding.instance.addPostFrameCallback((_) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Request sent successfully'),
+                      ),
+                    );
+                  });
+                  Navigator.of(context).popUntil((route) {
+                    return route.settings.name == '/MainPages';
+                  });
+                }
+              });
             }
           },
           child: Text(
@@ -450,11 +497,15 @@ class OverViewWidget extends StatelessWidget {
 class MermbersCountWidget extends StatelessWidget {
   final String numOfMembers;
   final String publicOrPrivate;
+  final RequestsCubit requestsCubit;
+  final int communityID;
 
   const MermbersCountWidget({
     super.key,
     required this.numOfMembers,
     required this.publicOrPrivate,
+    required this.requestsCubit,
+    required this.communityID,
   });
 
   @override
@@ -467,12 +518,25 @@ class MermbersCountWidget extends StatelessWidget {
         children: [
           Column(
             children: [
-              Text(numOfMembers,
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20,
-                      decoration: TextDecoration.none,
-                      color: theme_green)),
+              BlocBuilder<RequestsCubit, RequestsState>(
+                bloc: requestsCubit,
+                builder: (context, state) {
+                  return BlocBuilder<SpecificCommunityCubit,
+                      SpecificCommunityState>(
+                    bloc: sl.get<SpecificCommunityCubit>()
+                      ..getCommunitynumOfMemebers(communityID),
+                    builder: (context, state) {
+                      return Text(state is SpecificCommunityNumberLoaded ?
+                              state.numOfMembers.toString() : numOfMembers,
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
+                              decoration: TextDecoration.none,
+                              color: theme_green));
+                    },
+                  );
+                },
+              ),
               SizedBox(height: 5),
               Text('Members',
                   style: TextStyle(

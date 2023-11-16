@@ -1,5 +1,7 @@
 import 'package:dartz/dartz.dart';
+import 'package:samla_app/core/error/exceptions.dart';
 import 'package:samla_app/core/error/failures.dart';
+import 'package:samla_app/core/network/network_info.dart';
 import 'package:samla_app/features/community/data/datasources/community_admin_remote_data_source.dart';
 import 'package:samla_app/features/community/data/models/RequestToJoin.dart';
 import 'package:samla_app/features/community/domain/entities/community.dart';
@@ -7,14 +9,23 @@ import 'package:samla_app/features/community/domain/repositories/community_admin
 
 class CommunityAdminRepositoryImpl implements CommunityAdminRepository {
   final CommunityAdminRemoteDataSource remoteDataSource;
+  final NetworkInfo networkInfo;
 
-  CommunityAdminRepositoryImpl({required this.remoteDataSource});
+  CommunityAdminRepositoryImpl(this.networkInfo,  this.remoteDataSource);
 
   @override
   Future<Either<Failure, Unit>> acceptJoinRequest(
-      {required int communityID, required int userID}) {
-    // TODO: implement acceptJoinRequest
-    throw UnimplementedError();
+      {required int communityID, required int userID}) async {
+       if (await networkInfo.isConnected) {
+      try {
+        await remoteDataSource.acceptJoinRequest(communityID, userID);
+        return Right(unit);
+      } on ServerException catch (e) {
+        return Left(ServerFailure(message: e.message));
+      }
+    } else {
+      return Left(ServerFailure(message: 'No internet connection'));
+      }
   }
 
   @override
@@ -33,9 +44,17 @@ class CommunityAdminRepositoryImpl implements CommunityAdminRepository {
 
   @override
   Future<Either<Failure, Unit>> rejectJoinRequest(
-      {required int communityID, required int userID}) {
-    // TODO: implement rejectJoinRequest
-    throw UnimplementedError();
+     {required int communityID, required int userID}) async {
+    if (await networkInfo.isConnected) {
+      try {
+        await remoteDataSource.rejectJoinRequest(communityID, userID);
+        return Right(unit);
+      } on ServerException catch (e) {
+        return Left(ServerFailure(message: e.message));
+      }
+    } else {
+      return Left(ServerFailure(message: 'No internet connection'));
+    }
   }
   
   @override

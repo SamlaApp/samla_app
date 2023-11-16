@@ -1,4 +1,5 @@
 import 'package:samla_app/features/community/domain/entities/Community.dart';
+import 'package:samla_app/features/community/presentation/pages/communities.dart';
 
 class CommunityModel extends Community {
   CommunityModel(
@@ -11,9 +12,10 @@ class CommunityModel extends Community {
       super.id,
       super.imageURL,
       required super.isMemeber,
+      super.requestType,
       required super.ownerID});
 
-  factory CommunityModel.fromJson(Map<String, dynamic> json) {
+  factory CommunityModel.fromJson(Map<String, dynamic> json, [RequestType requestType = RequestType.accepted]) {
     return CommunityModel(
         name: json['name'],
         description: json['description'],
@@ -23,6 +25,7 @@ class CommunityModel extends Community {
         id: json['id'],
         imageURL: json['avatar'],
         isMemeber: json['is_member'] ?? false,
+        requestType: requestType,
         ownerID: json['owner_id']);
   }
 

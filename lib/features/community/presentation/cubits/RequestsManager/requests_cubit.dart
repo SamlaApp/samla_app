@@ -21,20 +21,21 @@ class RequestsCubit extends Cubit<RequestsState> {
   }
 
   Future<void> acceptRequest(RequestToJoin request) async {
-    // emit(RequestsCubitsLoading());
-    // final result = await _communityAdminRepository.acceptRequest(request);
-    // result.fold(
-    //   (failure) => emit(RequestsCubitsError(failure.message)),
-    //   (_) => emit(RequestsCubitsInitial()),
-    // );
+    emit(RequestsCubitsLoading());
+    final result = await _communityAdminRepository.acceptJoinRequest(communityID: request.communityID,userID: int.parse(request.user.id!));
+    result.fold(
+      (failure) => emit(RequestsCubitsError(failure.message)),
+      (_) => emit(RequestsCubitsInitial()),
+    );
   }
 
   Future<void> rejectRequest(RequestToJoin request) async {
-    // emit(RequestsCubitsLoading());
-    // final result = await _communityAdminRepository.rejectRequest(request);
-    // result.fold(
-    //   (failure) => emit(RequestsCubitsError(failure.message)),
-    //   (_) => emit(RequestsCubitsInitial()),
-    // );
+    emit(RequestsCubitsLoading());
+    final result = await _communityAdminRepository.rejectJoinRequest(
+        communityID: request.communityID, userID: int.parse(request.user.id!));
+    result.fold(
+      (failure) => emit(RequestsCubitsError(failure.message)),
+      (_) => emit(RequestsCubitsInitial()),
+    );
   }
 }

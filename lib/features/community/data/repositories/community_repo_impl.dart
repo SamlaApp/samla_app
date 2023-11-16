@@ -24,18 +24,12 @@ class CommunityRepositoryImpl implements CommunityRepository {
     if (await networkInfo.isConnected) {
       try {
         final remoteCommunities = await remoteDataSource.getAllCommunities();
-        localDataSource.cacheCommunities(remoteCommunities);
         return Right(remoteCommunities);
       } on ServerException catch (e) {
         return Left(ServerFailure(message: e.message));
       }
     } else {
-      try {
-        final localCommunities = await localDataSource.getCachedCommunities();
-        return Right(localCommunities);
-      } on EmptyCacheException catch (e) {
-        return Left(EmptyCacheFailure(message: e.message));
-      }
+      return Left(ServerFailure(message: 'No internet connection'));
     }
   }
 
@@ -70,12 +64,12 @@ class CommunityRepositoryImpl implements CommunityRepository {
   }
 
   @override
-  Future<Either<Failure, List<Community>>> getMyCommunities() async {
+  Future<Either<Failure, List<List<Community>>>> getMyCommunities() async {
     if (await networkInfo.isConnected) {
       try {
         final remoteCommunities = await remoteDataSource.getMyCommunities();
-        localDataSource.cacheCommunities(remoteCommunities[0]);
-        return Right(remoteCommunities[0]);
+        localDataSource.cacheCommunities(remoteCommunities);
+        return Right(remoteCommunities);
       } on ServerException catch (e) {
         return Left(ServerFailure(message: e.message));
       }

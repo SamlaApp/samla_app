@@ -6,7 +6,7 @@ import 'package:samla_app/features/community/domain/entities/Community.dart';
 abstract class CommunityRepository {
   Future<Either<Failure, List<Community>>> getAllCommunities();
 
-  Future<Either<Failure, List<Community>>> getMyCommunities();
+  Future<Either<Failure, List<List<Community>>>> getMyCommunities();
 
   Future<Either<Failure, Community>> createCommunity(
       {required Community community});
