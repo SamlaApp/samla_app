@@ -148,6 +148,20 @@ class NutritionPlanRepositoryImpl implements NutritionPlanRepository {
     }
   }
 
+  @override
+  Future<Either<Failure, List<NutritionPlan>>> getTodayNutritionPlan({required String query}) async {
+    if (await networkInfo.isConnected) {
+      try {
+        final todayNutritionPlan = await remoteDataSource.getTodayNutritionPlan(query);
+        return Right(todayNutritionPlan);
+      } on ServerException catch (e) {
+        return Left(ServerFailure(message: e.message));
+      }
+    } else {
+      return Left(ServerFailure(message: 'No internet connection'));
+    }
+  }
+
 
 
 }

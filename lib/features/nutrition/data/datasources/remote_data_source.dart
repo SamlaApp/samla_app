@@ -25,6 +25,7 @@ abstract class NutritionPlanRemoteDataSource {
   Future<List<NutritionPlanMeal>> getNutritionPlanMeals(String query,int id);
   Future<Either<Failure, NutritionPlanMeal>> deleteNutritionPlanMeal(int id);
   Future<Either<Failure, NutritionPlan>> deleteNutritionPlan(int id);
+  Future<List<NutritionPlan>> getTodayNutritionPlan(String query);
 }
 
 class NutritionPlanRemoteDataSourceImpl
@@ -172,6 +173,25 @@ class NutritionPlanRemoteDataSourceImpl
       final NutritionPlanModel nutritionPlan =
       NutritionPlanModel.fromJson(json.decode(resBody)['nutrition_plan']);
       return Right(nutritionPlan);
+    } else {
+      throw ServerException(message: json.decode(resBody)['message']);
+    }
+  }
+
+  @override
+  Future<List<NutritionPlan>> getTodayNutritionPlan(String query) async {
+    final response = await samlaAPI(
+      endPoint: '/nutrition/plan/get_today/$query',
+      method: 'GET',
+    );
+    final resBody = await response.stream.bytesToString();
+    if (response.statusCode == 200) {
+      final List<dynamic> nutritionPlans =
+      json.decode(resBody)['nutrition_plan'];
+      final List<NutritionPlanModel> convertedPlans = nutritionPlans
+          .map((e) => NutritionPlanModel.fromJson(e as Map<String, dynamic>))
+          .toList();
+      return convertedPlans;
     } else {
       throw ServerException(message: json.decode(resBody)['message']);
     }

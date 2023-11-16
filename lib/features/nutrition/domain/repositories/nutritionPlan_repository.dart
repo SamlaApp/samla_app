@@ -16,4 +16,5 @@ abstract class NutritionPlanRepository {
   Future<Either<Failure, List<NutritionPlanMeal>>> getNutritionPlanMeals({required String query,required int id});
   Future<Either<Failure, NutritionPlanMeal>> deleteNutritionPlanMeal({required int id});
   Future<Either<Failure, NutritionPlan>> deleteNutritionPlan({required int id});
+  Future<Either<Failure, List<NutritionPlan>>> getTodayNutritionPlan({required String query});
 }
