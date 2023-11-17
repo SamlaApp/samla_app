@@ -7,8 +7,8 @@ import 'package:samla_app/features/training/domain/entities/Template.dart';
 
 abstract class RemoteDataSource {
   Future<List<Template>> getAllTemplates();
-
   Future<Template> createTemplate(Template template);
+  Future<Template> activeTemplate();
 }
 
 class TemplateRemoteDataSourceImpl implements RemoteDataSource {
@@ -40,6 +40,22 @@ class TemplateRemoteDataSourceImpl implements RemoteDataSource {
         method: 'POST',
         data: n_template.toJson());
     final resBody = await res.stream.bytesToString();
+    if (res.statusCode == 200) {
+      final TemplateModel convertedTemplate =
+      TemplateModel.fromJson(json.decode(resBody)['template']);
+      return convertedTemplate;
+    } else {
+      throw ServerException(message: json.decode(resBody)['message']);
+    }
+  }
+
+  @override
+  Future<Template> activeTemplate() async {
+    final res = await samlaAPI(
+        endPoint: '/training/template/active',
+        method: 'GET');
+    final resBody = await res.stream.bytesToString();
+    print(resBody);
     if (res.statusCode == 200) {
       final TemplateModel convertedTemplate =
       TemplateModel.fromJson(json.decode(resBody)['template']);

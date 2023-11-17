@@ -259,7 +259,7 @@ class _TemplatesPageState extends State<TemplatesPage> {
               context,
               MaterialPageRoute(
                   builder: (context) =>
-                      NewTemplatePage()), // Make sure you have NewTemplatePage in your project
+                      NewTemplatePage()), // Navigate to the new template page
             );
           },
           child: Text('+ Add Template'),
