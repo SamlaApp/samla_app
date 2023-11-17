@@ -20,13 +20,15 @@ class _TrainingPageState extends State<TrainingPage> {
   final _controller = PageController();
   double _currentPage = 0;
 
-  final cubit = TemplateCubit(di.sl.get());
+  late TemplateCubit cubit;
+
 
   @override
   void initState() {
     super.initState();
 
     di.TrainingInit(); // Initialize the training module
+    cubit = di.sl<TemplateCubit>(); // Get the cubit instance
 
     _controller.addListener(() {
       setState(() {
