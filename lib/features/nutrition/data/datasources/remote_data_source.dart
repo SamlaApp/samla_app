@@ -4,11 +4,13 @@ import 'package:samla_app/core/error/exceptions.dart';
 import 'package:samla_app/core/error/failures.dart';
 import 'package:samla_app/features/nutrition/data/models/MealLibrary_model.dart';
 import 'package:samla_app/features/nutrition/data/models/NutritionPlanMeal_model.dart';
+import 'package:samla_app/features/nutrition/data/models/NutritionPlanStatus_model.dart';
 import 'package:samla_app/features/nutrition/data/models/nutritionPlan_model.dart';
 
 import 'package:http/http.dart' as http;
 import 'package:samla_app/features/nutrition/domain/entities/MealLibrary.dart';
 import 'package:samla_app/features/nutrition/domain/entities/NutritionPlanMeal.dart';
+import 'package:samla_app/features/nutrition/domain/entities/NutritionPlanStatus.dart';
 import 'package:samla_app/features/nutrition/domain/entities/nutritionPlan.dart';
 
 
@@ -26,6 +28,8 @@ abstract class NutritionPlanRemoteDataSource {
   Future<Either<Failure, NutritionPlanMeal>> deleteNutritionPlanMeal(int id);
   Future<Either<Failure, NutritionPlan>> deleteNutritionPlan(int id);
   Future<List<NutritionPlan>> getTodayNutritionPlan(String query);
+  Future<NutritionPlanStatus> getNutritionPlanStatus(int id);
+  Future<NutritionPlanStatus> updateNutritionPlanStatus(NutritionPlanStatus nutritionPlanStatus);
 }
 
 class NutritionPlanRemoteDataSourceImpl
@@ -196,6 +200,42 @@ class NutritionPlanRemoteDataSourceImpl
       throw ServerException(message: json.decode(resBody)['message']);
     }
   }
+
+  @override
+  Future<NutritionPlanStatus> getNutritionPlanStatus(int id) async {
+    final response = await samlaAPI(
+      endPoint: '/nutrition/plan/status/get/$id',
+      method: 'GET',
+    );
+    final resBody = await response.stream.bytesToString();
+    if (response.statusCode == 200) {
+      final NutritionPlanStatusModel nutritionPlanStatus =
+      NutritionPlanStatusModel.fromJson(json.decode(resBody)['status']);
+      return nutritionPlanStatus;
+    } else {
+      throw ServerException(message: json.decode(resBody)['message']);
+    }
+  }
+
+  @override
+  Future<NutritionPlanStatus> updateNutritionPlanStatus(NutritionPlanStatus nutritionPlanStatus) async {
+    final status = NutritionPlanStatusModel.fromEntity(nutritionPlanStatus);
+    final response = await samlaAPI(
+      data: status.toJson(),
+      endPoint: '/nutrition/plan/status/set',
+      method: 'POST',
+    );
+    final resBody = await response.stream.bytesToString();
+    if (response.statusCode == 200) {
+      final NutritionPlanStatusModel nutritionPlanStatus =
+      NutritionPlanStatusModel.fromJson(json.decode(resBody)['status']);
+      return nutritionPlanStatus;
+    } else {
+      throw ServerException(message: json.decode(resBody)['message']);
+    }
+  }
+
+
 
 
 

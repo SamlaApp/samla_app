@@ -3,6 +3,7 @@ import 'package:samla_app/core/error/failures.dart';
 import 'package:samla_app/features/nutrition/domain/entities/NutritionPlanMeal.dart';
 import 'package:samla_app/features/nutrition/domain/entities/nutritionPlan.dart';
 import 'package:samla_app/features/nutrition/domain/entities/MealLibrary.dart';
+import 'package:samla_app/features/nutrition/domain/entities/NutritionPlanStatus.dart';
 
 
 
@@ -17,4 +18,6 @@ abstract class NutritionPlanRepository {
   Future<Either<Failure, NutritionPlanMeal>> deleteNutritionPlanMeal({required int id});
   Future<Either<Failure, NutritionPlan>> deleteNutritionPlan({required int id});
   Future<Either<Failure, List<NutritionPlan>>> getTodayNutritionPlan({required String query});
+  Future<Either<Failure, NutritionPlanStatus>> getNutritionPlanStatus({required int id});
+  Future<Either<Failure, NutritionPlanStatus>> updateNutritionPlanStatus({required NutritionPlanStatus nutritionPlanStatus});
 }

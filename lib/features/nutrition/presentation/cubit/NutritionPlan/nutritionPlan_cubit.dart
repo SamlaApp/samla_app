@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:samla_app/features/nutrition/domain/entities/MealLibrary.dart';
 import 'package:samla_app/features/nutrition/domain/entities/NutritionPlanMeal.dart';
+import 'package:samla_app/features/nutrition/domain/entities/NutritionPlanStatus.dart';
 import 'package:samla_app/features/nutrition/domain/entities/nutritionPlan.dart';
 import 'package:samla_app/features/nutrition/domain/repositories/nutritionPlan_repository.dart';
 part 'nutritionPlan_state.dart';
@@ -86,7 +87,6 @@ class NutritionPlanCubit extends Cubit<NutritionPlanState> {
             emit(const NutritionPlanMealErrorState('Failed to add nutrition plan meal')),
         (nutritionPlanMeal) {
       if (nutritionPlanMeal == null) {
-        print('empty');
         emit(NutritionPlanMealEmptyState());
         return;
       }
@@ -103,7 +103,6 @@ class NutritionPlanCubit extends Cubit<NutritionPlanState> {
             emit(const NutritionPlanMealErrorState('Failed to delete nutrition plan meal')),
         (nutritionPlanMeal) {
       if (nutritionPlanMeal == null) {
-        print('empty');
         emit(NutritionPlanMealEmptyState());
         return;
       }
@@ -120,7 +119,6 @@ class NutritionPlanCubit extends Cubit<NutritionPlanState> {
             emit(const NutritionPlanMealErrorState('Failed to get nutrition plan meals')),
         (nutritionPlanMeal) {
       if (nutritionPlanMeal.isEmpty) {
-        print('empty');
         emit(NutritionPlanMealEmptyState());
         return;
       }
@@ -137,7 +135,6 @@ class NutritionPlanCubit extends Cubit<NutritionPlanState> {
             emit(const NutritionPlanErrorState('Failed to delete nutrition plan')),
         (nutritionPlan) {
       if (nutritionPlan == null) {
-        print('empty');
         emit(NutritionPlanEmptyState());
         return;
       }
@@ -154,11 +151,41 @@ class NutritionPlanCubit extends Cubit<NutritionPlanState> {
             emit(const NutritionPlanErrorState('Failed to get today nutrition plan')),
         (nutritionPlan) {
       if (nutritionPlan.isEmpty) {
-        print('empty');
         emit(NutritionPlanEmptyState());
         return;
       }
       emit(NutritionPlanLoaded(nutritionPlan.cast<NutritionPlan>(), []));
+    });
+  }
+
+  Future<void> getNutritionPlanStatus(int id) async {
+    emit(NutritionPlanLoadingState()); // Show loading state
+    final result = await repository.getNutritionPlanStatus(id: id);
+    result.fold(
+        (failure) =>
+            emit(const NutritionPlanErrorState('Failed to get nutrition plan status')),
+        (nutritionPlanStatus) {
+      if (nutritionPlanStatus == null) {
+        emit(NutritionPlanEmptyState());
+        return;
+      }
+      emit(NutritionPlanStatusLoaded(nutritionPlanStatus));
+    });
+  }
+
+  //updateNutritionPlanStatus
+  Future<void> updateNutritionPlanStatus(NutritionPlanStatus nutritionPlanStatus) async {
+    emit(NutritionPlanLoadingState()); // Show loading state
+    final result = await repository.updateNutritionPlanStatus(nutritionPlanStatus: nutritionPlanStatus);
+    result.fold(
+        (failure) =>
+            emit(const NutritionPlanErrorState('Failed to update nutrition plan status')),
+        (nutritionPlanStatus) {
+      if (nutritionPlanStatus == null) {
+        emit(NutritionPlanEmptyState());
+        return;
+      }
+      emit(NutritionPlanStatusLoaded(nutritionPlanStatus));
     });
   }
 

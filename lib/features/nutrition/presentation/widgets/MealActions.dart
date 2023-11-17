@@ -6,73 +6,47 @@ import 'package:flutter/services.dart';
 class MealActions extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: [
-        _mealCard(
-            icon: Icons.coffee,
-            title: "Breakfast",
-            subtitle: "300 kcal",
-            buttons: ["Done", "Skip Meal"]),
-        _mealCard(
-            icon: Icons.local_fire_department,
-            title: "Custom Calories",
-            subtitle: "e.g. 30 kcal",
-            buttons: ["Enter"]),
-      ],
+    return _mealCard(
+      icon: Icons.food_bank,
+      title: "Add custom calories",
     );
   }
+
   Widget _mealCard({
     required IconData icon,
     required String title,
-    required String subtitle,
-    required List<String> buttons,
   }) {
     return Container(
-      width: 180,
-      height: 180,
-      padding: EdgeInsets.all(15),
+      height: 80,
+      width: double.infinity,
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.3),
+            color: Colors.grey.withOpacity(0.2),
             spreadRadius: 3,
             blurRadius: 6,
-            offset: Offset(0, 2),
           ),
         ],
       ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           Row(
             children: [
               Icon(icon, color: theme_darkblue, size: 30),
-              SizedBox(width: 10), // A space between the icon and the text
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: textStyle.copyWith(
-                      fontSize: 15,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Text(
-                    subtitle,
-                    style: greyTextStyle.copyWith(
-                      fontSize: 15,
-                      color: theme_darkblue.withOpacity(0.7),
-                    ),
-                  ),
-                ],
+              SizedBox(width: 10),
+              Text(
+                title,
+                style: greyTextStyle.copyWith(
+                  fontSize: 15,
+                  color: theme_darkblue.withOpacity(0.7),
+                ),
               ),
             ],
           ),
-          for (var btn in buttons) _customButton(btn),
         ],
       ),
     );
@@ -86,12 +60,13 @@ class MealActions extends StatelessWidget {
         onPressed: () {},
         child: Text(title, style: TextStyle(fontSize: 16, color: Colors.white)),
         style: ElevatedButton.styleFrom(
-          foregroundColor: Colors.white, backgroundColor: theme_green,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
+          foregroundColor: Colors.white,
+          backgroundColor: theme_green,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
           padding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
         ),
       ),
     );
   }
 }
-

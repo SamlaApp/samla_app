@@ -29,13 +29,15 @@ class _NutritionPageState extends State<NutritionPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            TodayPlan(),
-            const SizedBox(height: 20),
-            CaloriesOverview(),
-            const SizedBox(height: 20),
-            Macronutrients(),
+            const TodayPlan(),
             const SizedBox(height: 20),
             MealActions(),
+            const SizedBox(height: 20),
+            //CaloriesOverview(),
+            const SizedBox(height: 20),
+            Macronutrients(),
+
+
             const SizedBox(height: 20),
           ],
         ),

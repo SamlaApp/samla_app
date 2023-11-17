@@ -106,3 +106,10 @@ final class NutritionPlanDeleted extends NutritionPlanState {
 
   const NutritionPlanDeleted(this.nutritionPlan);
 }
+
+//NutritionPlanStatusLoaded
+final class NutritionPlanStatusLoaded extends NutritionPlanState {
+  final NutritionPlanStatus nutritionPlanStatus;
+
+  const NutritionPlanStatusLoaded(this.nutritionPlanStatus);
+}

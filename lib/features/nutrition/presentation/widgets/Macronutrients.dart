@@ -7,14 +7,14 @@ class Macronutrients extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(15.0),
+      padding: const EdgeInsets.all(15.0),
       decoration: primary_decoration,
       child: Column(
         children: [
           nutrientRow('Carbs', 0.54),
-          SizedBox(height: 5),
+          const SizedBox(height: 5),
           nutrientRow('Protein', 0.63),
-          SizedBox(height: 5),
+          const SizedBox(height: 5),
           nutrientRow('Fat', 0.2),
         ],
       ),
@@ -26,7 +26,7 @@ class Macronutrients extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(nutrient, style: TextStyle(fontSize: 16, color: theme_grey)),
-        SizedBox(height: 5),
+        const SizedBox(height: 5),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -46,7 +46,7 @@ class Macronutrients extends StatelessWidget {
 
               ),
             ),
-            SizedBox(width: 10),
+            const SizedBox(width: 10),
             Text('${(percentage * 100).toInt()}%', style: TextStyle(fontSize: 16, color: theme_grey)),
           ],
         ),
