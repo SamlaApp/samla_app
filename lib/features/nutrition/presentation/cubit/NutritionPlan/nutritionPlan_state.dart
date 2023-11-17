@@ -113,3 +113,10 @@ final class NutritionPlanStatusLoaded extends NutritionPlanState {
 
   const NutritionPlanStatusLoaded(this.nutritionPlanStatus);
 }
+
+// NutritionPlanDailySummaryLoaded
+final class NutritionPlanDailySummaryLoaded extends NutritionPlanState {
+  final DailyNutritionPlanSummary dailyNutritionPlanSummary;
+
+  const NutritionPlanDailySummaryLoaded(this.dailyNutritionPlanSummary);
+}

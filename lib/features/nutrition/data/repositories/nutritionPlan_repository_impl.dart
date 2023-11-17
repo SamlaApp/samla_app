@@ -6,6 +6,7 @@ import 'package:samla_app/core/network/network_info.dart';
 
 import 'package:samla_app/features/nutrition/data/datasources/local_datasource.dart';
 import 'package:samla_app/features/nutrition/data/datasources/remote_data_source.dart';
+import 'package:samla_app/features/nutrition/domain/entities/DailyNutritionPlanSummary.dart';
 import 'package:samla_app/features/nutrition/domain/entities/NutritionPlanMeal.dart';
 import 'package:samla_app/features/nutrition/domain/entities/NutritionPlanStatus.dart';
 
@@ -184,6 +185,21 @@ class NutritionPlanRepositoryImpl implements NutritionPlanRepository {
       try {
         final nutritionPlan = await remoteDataSource.updateNutritionPlanStatus(nutritionPlanStatus);
         return Right(nutritionPlan);
+      } on ServerException catch (e) {
+        return Left(ServerFailure(message: e.message));
+      }
+    } else {
+      return Left(ServerFailure(message: 'No internet connection'));
+
+    }
+  }
+
+  @override
+  Future<Either<Failure, DailyNutritionPlanSummary>> getDailyNutritionPlanSummary() async {
+    if (await networkInfo.isConnected) {
+      try {
+        final dailyNutritionPlanSummary = await remoteDataSource.getDailyNutritionPlanSummary();
+        return Right(dailyNutritionPlanSummary);
       } on ServerException catch (e) {
         return Left(ServerFailure(message: e.message));
       }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:samla_app/features/nutrition/presentation/widgets/TodayNutritionSummary.dart';
 import '../widgets/CaloriesOverview.dart';
 import '../widgets/Macronutrients.dart';
 import '../widgets/MealActions.dart';
@@ -31,13 +32,12 @@ class _NutritionPageState extends State<NutritionPage> {
           children: [
             const TodayPlan(),
             const SizedBox(height: 20),
-            MealActions(),
+            const TodayNutritionSummary(),
             const SizedBox(height: 20),
-            //CaloriesOverview(),
+            CustomSignedCalories(),
             const SizedBox(height: 20),
             Macronutrients(),
-
-
+            
             const SizedBox(height: 20),
           ],
         ),

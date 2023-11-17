@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:samla_app/features/nutrition/domain/entities/DailyNutritionPlanSummary.dart';
 import 'package:samla_app/features/nutrition/domain/entities/MealLibrary.dart';
 import 'package:samla_app/features/nutrition/domain/entities/NutritionPlanMeal.dart';
 import 'package:samla_app/features/nutrition/domain/entities/NutritionPlanStatus.dart';
@@ -186,6 +187,21 @@ class NutritionPlanCubit extends Cubit<NutritionPlanState> {
         return;
       }
       emit(NutritionPlanStatusLoaded(nutritionPlanStatus));
+    });
+  }
+
+  Future<void> getDailyNutritionPlanSummary() async {
+    emit(NutritionPlanLoadingState()); // Show loading state
+    final result = await repository.getDailyNutritionPlanSummary();
+    result.fold(
+        (failure) =>
+            emit(const NutritionPlanErrorState('Failed to get daily nutrition plan summary')),
+        (dailyNutritionPlanSummary) {
+      if (dailyNutritionPlanSummary == null) {
+        emit(NutritionPlanEmptyState());
+        return;
+      }
+      emit(NutritionPlanDailySummaryLoaded(dailyNutritionPlanSummary));
     });
   }
 

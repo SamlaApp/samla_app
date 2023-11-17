@@ -3,12 +3,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:samla_app/config/themes/common_styles.dart';
 import 'package:flutter/services.dart';
 
-class MealActions extends StatelessWidget {
+class CustomSignedCalories extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return _mealCard(
       icon: Icons.food_bank,
-      title: "Add custom calories",
+      title: "Custom Calories",
     );
   }
 
@@ -17,7 +17,7 @@ class MealActions extends StatelessWidget {
     required String title,
   }) {
     return Container(
-      height: 80,
+      height: 150,
       width: double.infinity,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -31,41 +31,76 @@ class MealActions extends StatelessWidget {
           ),
         ],
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      child: Column(
         children: [
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Icon(icon, color: theme_darkblue, size: 30),
-              SizedBox(width: 10),
-              Text(
-                title,
-                style: greyTextStyle.copyWith(
-                  fontSize: 15,
-                  color: theme_darkblue.withOpacity(0.7),
+              Row(
+                children: [
+                  Icon(icon, color: theme_darkblue, size: 30),
+                  const SizedBox(width: 10),
+                  Text(
+                    title,
+                    style: greyTextStyle.copyWith(
+                      fontSize: 15,
+                      color: theme_darkblue.withOpacity(0.7),
+                    ),
+                  ),
+                ],
+              ),
+              Container(
+                width: 150,
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: TextField(
+                  keyboardType: TextInputType.number,
+                  inputFormatters: <TextInputFormatter>[
+                    FilteringTextInputFormatter.digitsOnly
+                  ],
+                  decoration: InputDecoration(
+                    hintText: "e.g. 100",
+                    hintStyle: greyTextStyle.copyWith(
+                      fontSize: 15,
+                      color: theme_darkblue.withOpacity(0.7),
+                    ),
+                    border:  OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: BorderSide(
+                        color: theme_green,
+                        width: 0.2,
+                      ),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: BorderSide(
+                        color: theme_green,
+                        width: 0.2,
+                      ),
+                    ),
+                    focusColor: theme_green,
+                  ),
                 ),
               ),
             ],
           ),
-        ],
-      ),
-    );
-  }
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            width: double.infinity,
+            child: ElevatedButton.icon(
+              icon: const Icon(Icons.add, color: Colors.white),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: theme_darkblue,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+              onPressed: () {
 
-  Widget _customButton(String title) {
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: 5),
-      width: 120,
-      child: ElevatedButton(
-        onPressed: () {},
-        child: Text(title, style: TextStyle(fontSize: 16, color: Colors.white)),
-        style: ElevatedButton.styleFrom(
-          foregroundColor: Colors.white,
-          backgroundColor: theme_green,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
-          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-        ),
+              },
+              label: const Text('Add'),
+            ),
+          ),
+        ],
       ),
     );
   }

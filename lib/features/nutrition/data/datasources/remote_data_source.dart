@@ -2,12 +2,14 @@ import 'dart:convert';
 import 'package:dartz/dartz.dart';
 import 'package:samla_app/core/error/exceptions.dart';
 import 'package:samla_app/core/error/failures.dart';
+import 'package:samla_app/features/nutrition/data/models/DailyNutritionPlanSummary_model.dart';
 import 'package:samla_app/features/nutrition/data/models/MealLibrary_model.dart';
 import 'package:samla_app/features/nutrition/data/models/NutritionPlanMeal_model.dart';
 import 'package:samla_app/features/nutrition/data/models/NutritionPlanStatus_model.dart';
 import 'package:samla_app/features/nutrition/data/models/nutritionPlan_model.dart';
 
 import 'package:http/http.dart' as http;
+import 'package:samla_app/features/nutrition/domain/entities/DailyNutritionPlanSummary.dart';
 import 'package:samla_app/features/nutrition/domain/entities/MealLibrary.dart';
 import 'package:samla_app/features/nutrition/domain/entities/NutritionPlanMeal.dart';
 import 'package:samla_app/features/nutrition/domain/entities/NutritionPlanStatus.dart';
@@ -30,6 +32,7 @@ abstract class NutritionPlanRemoteDataSource {
   Future<List<NutritionPlan>> getTodayNutritionPlan(String query);
   Future<NutritionPlanStatus> getNutritionPlanStatus(int id);
   Future<NutritionPlanStatus> updateNutritionPlanStatus(NutritionPlanStatus nutritionPlanStatus);
+  Future<DailyNutritionPlanSummary> getDailyNutritionPlanSummary();
 }
 
 class NutritionPlanRemoteDataSourceImpl
@@ -230,6 +233,23 @@ class NutritionPlanRemoteDataSourceImpl
       final NutritionPlanStatusModel nutritionPlanStatus =
       NutritionPlanStatusModel.fromJson(json.decode(resBody)['status']);
       return nutritionPlanStatus;
+    } else {
+      throw ServerException(message: json.decode(resBody)['message']);
+    }
+  }
+
+  @override
+  Future<DailyNutritionPlanSummary> getDailyNutritionPlanSummary() async {
+    final response = await samlaAPI(
+      endPoint: '/summary/get',
+      method: 'GET',
+    );
+    final resBody = await response.stream.bytesToString();
+    print(resBody);
+    if (response.statusCode == 200) {
+      final DailyNutritionPlanSummaryModel dailyNutritionPlanSummary =
+      DailyNutritionPlanSummaryModel.fromJson(json.decode(resBody)['summary']);
+      return dailyNutritionPlanSummary;
     } else {
       throw ServerException(message: json.decode(resBody)['message']);
     }

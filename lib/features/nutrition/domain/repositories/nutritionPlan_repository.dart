@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:samla_app/core/error/failures.dart';
+import 'package:samla_app/features/nutrition/domain/entities/DailyNutritionPlanSummary.dart';
 import 'package:samla_app/features/nutrition/domain/entities/NutritionPlanMeal.dart';
 import 'package:samla_app/features/nutrition/domain/entities/nutritionPlan.dart';
 import 'package:samla_app/features/nutrition/domain/entities/MealLibrary.dart';
@@ -20,4 +21,5 @@ abstract class NutritionPlanRepository {
   Future<Either<Failure, List<NutritionPlan>>> getTodayNutritionPlan({required String query});
   Future<Either<Failure, NutritionPlanStatus>> getNutritionPlanStatus({required int id});
   Future<Either<Failure, NutritionPlanStatus>> updateNutritionPlanStatus({required NutritionPlanStatus nutritionPlanStatus});
+  Future<Either<Failure, DailyNutritionPlanSummary>> getDailyNutritionPlanSummary();
 }
