@@ -1,16 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:samla_app/features/training/domain/entities/Template.dart';
-
+import 'package:samla_app/features/training/presentation/cubit/Templates/template_cubit.dart';
 import '../../../../config/themes/common_styles.dart';
 import '../../../nutrition/presentation/widgets/MaelAdapt/DayDropdown.dart';
-import '../../data/datasources/mock_data_source.dart';
-import '../../data/models/day_model.dart';
-import '../../data/models/exercise_model.dart';
-import '../../data/models/temp_template_model.dart';
-import '../../data/repositories/exercise_repository_impl.dart';
-import '../../data/repositories/temp_template_repository_impl.dart';
 import '../widgets/newTamplate-newstyle/ExersciseItem.dart';
+import 'package:samla_app/features/training/training_di.dart' as di;
 
 // class NewTemplatePage extends StatefulWidget {
 //   NewTemplatePage({Key? key}) : super(key: key);
@@ -240,23 +234,34 @@ import '../widgets/newTamplate-newstyle/ExersciseItem.dart';
 // ########### New UI style start from here ####################
 
 class TemplatePage extends StatefulWidget {
-  const TemplatePage({super.key, required Template template});
+  late Template template;
+
+  TemplatePage({super.key, required this.template});
 
   @override
   _TemplatePageState createState() => _TemplatePageState();
 }
 
 class _TemplatePageState extends State<TemplatePage> {
-  late LinearGradient gradient;
+
+  final cubit = TemplateCubit(di.sl.get());
+
 
   @override
   void initState() {
     super.initState();
-    gradient = LinearGradient(
-      begin: Alignment.topLeft,
-      end: Alignment.bottomRight,
-      colors: [theme_green, Colors.blueAccent],
-    );
+
+  }
+
+  @override
+  void dispose() {
+    cubit.close();
+    super.dispose();
+  }
+
+  void _deleteTemplate() {
+    cubit.deleteTemplate(widget.template.id!);
+    Navigator.pop(context);
   }
 
   @override
@@ -265,28 +270,33 @@ class _TemplatePageState extends State<TemplatePage> {
       length: 2,
       child: Scaffold(
         appBar: AppBar(
-          toolbarHeight: 120.0,
+          toolbarHeight: 150.0,
           title: Center(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisSize: MainAxisSize.min,
               children: [
-                Row(
+                Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      'KFUPM plan',
-                      // TODO Replace with dynamic text
-                      style: TextStyle(
+                      widget.template.name,
+                      style: const TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    IconButton(
-                      icon: Icon(Icons.edit, size: 20),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        foregroundColor: Colors.black, backgroundColor: Colors.white70,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20.0),
+                        ),
+                      ),
                       onPressed: () {
-                        // Logic for editing the plan name
+                        print('Should show a dialog to update the template');
                       },
+                      child: const Text('Update', style: TextStyle(fontSize: 16)),
                     ),
                   ],
                 ),
@@ -294,7 +304,14 @@ class _TemplatePageState extends State<TemplatePage> {
             ),
           ),
           flexibleSpace: Container(
-            decoration: BoxDecoration(gradient: gradient),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [theme_pink, theme_darkblue],
+                tileMode: TileMode.clamp,
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+            ),
           ),
           backgroundColor: Colors.transparent,
           elevation: 0,
@@ -302,10 +319,10 @@ class _TemplatePageState extends State<TemplatePage> {
             indicatorColor: Colors.white,
             labelColor: primary_color,
             unselectedLabelColor: Colors.white,
-            labelStyle: TextStyle(
+            labelStyle: const TextStyle(
               fontWeight: FontWeight.bold,
             ),
-            unselectedLabelStyle: TextStyle(
+            unselectedLabelStyle: const TextStyle(
               fontWeight: FontWeight.w300,
             ),
             tabs: const [
@@ -315,9 +332,9 @@ class _TemplatePageState extends State<TemplatePage> {
           ),
           actions: [
             IconButton(
-              icon: Icon(Icons.save),
+              icon: const Icon(Icons.delete, color: Colors.white, size: 30),
               onPressed: () {
-                // Logic for saving the plan
+                _deleteTemplate();
               },
             ),
           ],
@@ -331,7 +348,6 @@ class _TemplatePageState extends State<TemplatePage> {
       ),
     );
   }
-
 }
 
 class CurrentPlanContent extends StatelessWidget {
@@ -339,7 +355,6 @@ class CurrentPlanContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     Color dropdownColor = Colors.black;
     Color dropdownBackgroundColor = Colors.grey.shade200;
 
@@ -379,7 +394,6 @@ class CurrentPlanContent extends StatelessWidget {
 
                 SizedBox(width: 16), // Spacing between the two widgets
 
-
                 Expanded(
                   flex: 1,
                   child: DayDropdown(
@@ -400,9 +414,6 @@ class CurrentPlanContent extends StatelessWidget {
   }
 }
 
-
-
-
 class FindExercisesContent extends StatelessWidget {
   const FindExercisesContent({super.key});
 
@@ -414,18 +425,22 @@ class FindExercisesContent extends StatelessWidget {
         'exerciseName': 'Exercise 1',
         'bodyPart': 'Chest',
         'equipment': 'Dumbbells',
-        'gifUrl': 'https://source.unsplash.com/featured/?gym', // Replace with actual GIF URL
+        'gifUrl': 'https://source.unsplash.com/featured/?gym',
+        // Replace with actual GIF URL
         'target': 'Strength',
-        'instructions': 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+        'instructions':
+            'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
         'secondaryMuscles': {'Triceps', 'Shoulders'},
       },
       {
         'exerciseName': 'Exercise 2',
         'bodyPart': 'Legs',
         'equipment': 'Barbell',
-        'gifUrl': 'https://source.unsplash.com/featured/?gym', // Replace with actual GIF URL
+        'gifUrl': 'https://source.unsplash.com/featured/?gym',
+        // Replace with actual GIF URL
         'target': 'Hypertrophy',
-        'instructions': 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+        'instructions':
+            'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
         'secondaryMuscles': {'Glutes', 'Hamstrings'},
       },
       // Add more exercise data as needed

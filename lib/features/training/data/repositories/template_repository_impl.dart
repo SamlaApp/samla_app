@@ -81,4 +81,23 @@ class TemplateRepositoryImpl implements TemplateRepository {
       }
     }
   }
+
+  @override
+  Future<Either<Failure, Unit>> deleteTemplate(int id) async {
+    if (await networkInfo.isConnected) {
+      try {
+        await remoteDataSource.deleteTemplate(id);
+        return Right(unit);
+      } on ServerException catch (e) {
+        return Left(ServerFailure(message: e.message));
+      }
+    } else {
+      try {
+        await localDataSource.deleteTemplate(id);
+        return Right(unit);
+      } on EmptyCacheException catch (e) {
+        return Left(CacheFailure(message: e.message));
+      }
+    }
+  }
 }

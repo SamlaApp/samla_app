@@ -15,7 +15,7 @@ class TemplateCubit extends Cubit<TemplateState> {
     emit(TemplateLoadingState());
     final result = await repository.getAllTemplates();
     result.fold(
-        (failure) => emit(TemplateErrorState('Failed to fetch templates')),
+        (failure) => emit(const TemplateErrorState('Failed to fetch templates')),
         (templates) {
       if (templates.isEmpty) {
         print('empty');
@@ -30,9 +30,9 @@ class TemplateCubit extends Cubit<TemplateState> {
     emit(TemplateLoadingState());
     final result = await repository.createTemplate(template);
     result.fold(
-        (failure) => emit(TemplateErrorState('Failed to create template')),
+        (failure) => emit(const TemplateErrorState('Failed to create template')),
         (template) {
-      emit(TemplateLoaded([template], []));
+      emit(TemplateCreatedState(template));
     });
   }
 
@@ -40,7 +40,7 @@ class TemplateCubit extends Cubit<TemplateState> {
     emit(TemplateLoadingState());
     final result = await repository.activeTemplate();
     result.fold(
-        (failure) => emit(TemplateErrorState('Failed to active template')),
+        (failure) => emit(const TemplateErrorState('Failed to active template')),
         (template) {
           if(template.id == null) {
             emit(TemplateEmptyState());
@@ -48,6 +48,14 @@ class TemplateCubit extends Cubit<TemplateState> {
           }
       emit(ActiveTemplateLoaded(template));
     });
+  }
+
+  Future<void> deleteTemplate(int id) async {
+    emit(TemplateLoadingState());
+    final result = await repository.deleteTemplate(id);
+    result.fold(
+        (failure) => emit(const TemplateErrorState('Failed to delete template')),
+        (template) {});
   }
 
 }
