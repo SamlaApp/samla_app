@@ -15,23 +15,22 @@ import 'package:samla_app/features/nutrition/domain/entities/NutritionPlanMeal.d
 import 'package:samla_app/features/nutrition/domain/entities/NutritionPlanStatus.dart';
 import 'package:samla_app/features/nutrition/domain/entities/nutritionPlan.dart';
 
-
 import 'package:samla_app/core/network/samlaAPI.dart';
-
-
 
 abstract class NutritionPlanRemoteDataSource {
   Future<List<NutritionPlan>> getAllNutritionPlans();
   Future<NutritionPlanModel> createNutritionPlan(NutritionPlan nutritionPlan);
   Future<MealLibraryModel> searchMealLibrary(String query);
   Future<MealLibraryModel> addMealLibrary(MealLibrary mealLibrary);
-  Future<NutritionPlanMeal> addNutritionPlanMeal(NutritionPlanMeal nutritionPlanMeal);
-  Future<List<NutritionPlanMeal>> getNutritionPlanMeals(String query,int id);
+  Future<NutritionPlanMeal> addNutritionPlanMeal(
+      NutritionPlanMeal nutritionPlanMeal);
+  Future<List<NutritionPlanMeal>> getNutritionPlanMeals(String query, int id);
   Future<Either<Failure, NutritionPlanMeal>> deleteNutritionPlanMeal(int id);
   Future<Either<Failure, NutritionPlan>> deleteNutritionPlan(int id);
   Future<List<NutritionPlan>> getTodayNutritionPlan(String query);
   Future<NutritionPlanStatus> getNutritionPlanStatus(int id);
-  Future<NutritionPlanStatus> updateNutritionPlanStatus(NutritionPlanStatus nutritionPlanStatus);
+  Future<NutritionPlanStatus> updateNutritionPlanStatus(
+      NutritionPlanStatus nutritionPlanStatus);
   Future<DailyNutritionPlanSummary> getDailyNutritionPlanSummary();
 }
 
@@ -45,12 +44,16 @@ class NutritionPlanRemoteDataSourceImpl
   Future<List<NutritionPlan>> getAllNutritionPlans() async {
     final res = await samlaAPI(endPoint: '/nutrition/get', method: 'GET');
     final resBody = await res.stream.bytesToString();
+
     if (res.statusCode == 200) {
-      final List<dynamic> nutritionPlans =
-          json.decode(resBody)['nutrition_plans'];
-      final List<NutritionPlanModel> convertedPlans = nutritionPlans
-          .map((e) => NutritionPlanModel.fromJson(e as Map<String, dynamic>))
-          .toList();
+      print(resBody);
+      final decodedNutritionPlans = json.decode(resBody)['nutrition_plans'];
+
+      final List<NutritionPlanModel> convertedPlans = [];
+
+      for (var nutritionPlan in decodedNutritionPlans) {
+        convertedPlans.add(NutritionPlanModel.fromJson(nutritionPlan));
+      }
       return convertedPlans;
     } else {
       throw ServerException(message: json.decode(resBody)['message']);
@@ -67,6 +70,7 @@ class NutritionPlanRemoteDataSourceImpl
       method: 'POST',
     );
     final resBody = await response.stream.bytesToString();
+    print(resBody);
     if (response.statusCode == 200) {
       final NutritionPlanModel nutritionPlan =
           NutritionPlanModel.fromJson(json.decode(resBody)['nutrition_plan']);
@@ -108,9 +112,7 @@ class NutritionPlanRemoteDataSourceImpl
     } else {
       throw ServerException(message: json.decode(resBody)['message']);
     }
-
   }
-
 
   @override
   Future<NutritionPlanMeal> addNutritionPlanMeal(
@@ -133,7 +135,8 @@ class NutritionPlanRemoteDataSourceImpl
   }
 
   @override
-  Future<List<NutritionPlanMeal>> getNutritionPlanMeals(String query,int id) async {
+  Future<List<NutritionPlanMeal>> getNutritionPlanMeals(
+      String query, int id) async {
     final response = await samlaAPI(
       endPoint: '/nutrition/plan/get/$query/$id',
       method: 'GET',
@@ -143,7 +146,8 @@ class NutritionPlanRemoteDataSourceImpl
       final List<dynamic> nutritionPlanMeals =
           json.decode(resBody)['nutrition_plan'];
       final List<NutritionPlanMealModel> convertedPlans = nutritionPlanMeals
-          .map((e) => NutritionPlanMealModel.fromJson(e as Map<String, dynamic>))
+          .map(
+              (e) => NutritionPlanMealModel.fromJson(e as Map<String, dynamic>))
           .toList();
       return convertedPlans;
     } else {
@@ -152,7 +156,8 @@ class NutritionPlanRemoteDataSourceImpl
   }
 
   @override
-  Future<Either<Failure, NutritionPlanMeal>> deleteNutritionPlanMeal(int id) async {
+  Future<Either<Failure, NutritionPlanMeal>> deleteNutritionPlanMeal(
+      int id) async {
     final response = await samlaAPI(
       endPoint: '/nutrition/plan/remove',
       method: 'POST',
@@ -161,7 +166,7 @@ class NutritionPlanRemoteDataSourceImpl
     final resBody = await response.stream.bytesToString();
     if (response.statusCode == 200) {
       final NutritionPlanMealModel nutritionPlanMeal =
-      NutritionPlanMealModel.fromJson(json.decode(resBody)['user_meal']);
+          NutritionPlanMealModel.fromJson(json.decode(resBody)['user_meal']);
       return Right(nutritionPlanMeal);
     } else {
       throw ServerException(message: json.decode(resBody)['message']);
@@ -178,7 +183,7 @@ class NutritionPlanRemoteDataSourceImpl
     final resBody = await response.stream.bytesToString();
     if (response.statusCode == 200) {
       final NutritionPlanModel nutritionPlan =
-      NutritionPlanModel.fromJson(json.decode(resBody)['nutrition_plan']);
+          NutritionPlanModel.fromJson(json.decode(resBody)['nutrition_plan']);
       return Right(nutritionPlan);
     } else {
       throw ServerException(message: json.decode(resBody)['message']);
@@ -194,7 +199,7 @@ class NutritionPlanRemoteDataSourceImpl
     final resBody = await response.stream.bytesToString();
     if (response.statusCode == 200) {
       final List<dynamic> nutritionPlans =
-      json.decode(resBody)['nutrition_plan'];
+          json.decode(resBody)['nutrition_plan'];
       final List<NutritionPlanModel> convertedPlans = nutritionPlans
           .map((e) => NutritionPlanModel.fromJson(e as Map<String, dynamic>))
           .toList();
@@ -213,7 +218,7 @@ class NutritionPlanRemoteDataSourceImpl
     final resBody = await response.stream.bytesToString();
     if (response.statusCode == 200) {
       final NutritionPlanStatusModel nutritionPlanStatus =
-      NutritionPlanStatusModel.fromJson(json.decode(resBody)['status']);
+          NutritionPlanStatusModel.fromJson(json.decode(resBody)['status']);
       return nutritionPlanStatus;
     } else {
       throw ServerException(message: json.decode(resBody)['message']);
@@ -221,7 +226,8 @@ class NutritionPlanRemoteDataSourceImpl
   }
 
   @override
-  Future<NutritionPlanStatus> updateNutritionPlanStatus(NutritionPlanStatus nutritionPlanStatus) async {
+  Future<NutritionPlanStatus> updateNutritionPlanStatus(
+      NutritionPlanStatus nutritionPlanStatus) async {
     final status = NutritionPlanStatusModel.fromEntity(nutritionPlanStatus);
     final response = await samlaAPI(
       data: status.toJson(),
@@ -231,7 +237,7 @@ class NutritionPlanRemoteDataSourceImpl
     final resBody = await response.stream.bytesToString();
     if (response.statusCode == 200) {
       final NutritionPlanStatusModel nutritionPlanStatus =
-      NutritionPlanStatusModel.fromJson(json.decode(resBody)['status']);
+          NutritionPlanStatusModel.fromJson(json.decode(resBody)['status']);
       return nutritionPlanStatus;
     } else {
       throw ServerException(message: json.decode(resBody)['message']);
@@ -247,17 +253,11 @@ class NutritionPlanRemoteDataSourceImpl
     final resBody = await response.stream.bytesToString();
     if (response.statusCode == 200) {
       final DailyNutritionPlanSummaryModel dailyNutritionPlanSummary =
-      DailyNutritionPlanSummaryModel.fromJson(json.decode(resBody)['nutrition_plan']);
+          DailyNutritionPlanSummaryModel.fromJson(
+              json.decode(resBody)['nutrition_plan']);
       return dailyNutritionPlanSummary;
     } else {
       throw ServerException(message: json.decode(resBody)['message']);
     }
   }
-
-
-
-
-
-
-
 }

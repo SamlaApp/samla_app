@@ -18,11 +18,19 @@ class NutritionPlanLocalDataSourceImpl implements NutritionPlanLocalDataSource {
         sharedPreferences.getString('my_nutritionPlans');
     if (jsonNutritionPlansString != null) {
       final jsonNutritionPlansList = json.decode(jsonNutritionPlansString);
-      final nutritionPlans = jsonNutritionPlansList
-          .map<NutritionPlanModel>(
-              (nutritionPlan) => NutritionPlanModel.fromJson(nutritionPlan))
-          .toList();
-      return Future.value(nutritionPlans);
+      // final nutritionPlans = jsonNutritionPlansList
+      //     .map<NutritionPlanModel>(
+      //         (nutritionPlan) => NutritionPlanModel.fromJson(nutritionPlan))
+      //     .toList();
+
+      print(jsonNutritionPlansList);
+
+      final List<NutritionPlanModel> convertedPlans = [];
+
+      for (var nutritionPlan in jsonNutritionPlansList) {
+        convertedPlans.add(NutritionPlanModel.fromJson(nutritionPlan));
+      }
+      return Future.value(convertedPlans);
     } else {
       throw EmptyCacheException(message: 'No cached nutritionPlans');
     }
@@ -30,7 +38,7 @@ class NutritionPlanLocalDataSourceImpl implements NutritionPlanLocalDataSource {
 
   @override
   Future<void> cacheNutritionPlans(List<NutritionPlanModel> nutritionPlans) {
-    final jsonNutritionPlans = jsonEncode(nutritionPlans);
+    final jsonNutritionPlans = json.encode(nutritionPlans);
     sharedPreferences.setString('my_nutritionPlans', jsonNutritionPlans);
     return Future.value();
   }

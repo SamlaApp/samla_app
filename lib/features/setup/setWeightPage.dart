@@ -7,15 +7,7 @@ import 'package:samla_app/features/setup/setStepsGoalPage.dart';
 import 'package:samla_app/features/setup/userMeasurment.dart';
 import 'package:numberpicker/numberpicker.dart';
 
-void main() {
-  runApp(const MaterialApp(
-    home: Scaffold(
-      body: Center(
-        child: SetWeightPage(),
-      ),
-    ),
-  ));
-}
+
 
 class SetWeightPage extends StatefulWidget {
   const SetWeightPage({Key? key}) : super(key: key);

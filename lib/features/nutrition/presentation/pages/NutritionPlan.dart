@@ -16,7 +16,7 @@ class NutritionPlan extends StatefulWidget {
 }
 
 class _NutritionPlanState extends State<NutritionPlan> {
-  final cubit = NutritionPlanCubit(di.sl.get());
+  final cubit = di.sl.get<NutritionPlanCubit>();
 
   @override
   void initState() {
@@ -26,7 +26,7 @@ class _NutritionPlanState extends State<NutritionPlan> {
 
   @override
   void dispose() {
-    cubit.close();
+    // cubit.close();
     super.dispose();
   }
 
@@ -35,8 +35,6 @@ class _NutritionPlanState extends State<NutritionPlan> {
       cubit.getAllNutritionPlans();
     });
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -79,14 +77,16 @@ class _NutritionPlanState extends State<NutritionPlan> {
           ],
         ),
       ),
-      body: SingleChildScrollView(child: Column(
+      body: SingleChildScrollView(
+          child: Column(
         children: [
           Container(
-            padding: const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 8),
+            padding:
+                const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 8),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                 Text(
+                Text(
                   'Nutrition Plans',
                   style: TextStyle(
                       color: theme_darkblue,
@@ -94,7 +94,7 @@ class _NutritionPlanState extends State<NutritionPlan> {
                       fontWeight: FontWeight.bold),
                 ),
                 IconButton(
-                  icon:  Icon(Icons.refresh, color: theme_darkblue),
+                  icon: Icon(Icons.refresh, color: theme_darkblue),
                   onPressed: () {
                     refresh();
                   },
@@ -112,6 +112,7 @@ class _NutritionPlanState extends State<NutritionPlan> {
     return BlocBuilder<NutritionPlanCubit, NutritionPlanState>(
       bloc: cubit,
       builder: (context, state) {
+        print(state);
         if (state is NutritionPlanLoadingState) {
           return Center(
             child: Padding(
@@ -139,6 +140,9 @@ class _NutritionPlanState extends State<NutritionPlan> {
           return Center(
             child: Text(state.message),
           );
+        }
+        else if (state is NutritionPlanCreated){
+          cubit.getAllNutritionPlans();
         }
         return const SizedBox.shrink();
       },

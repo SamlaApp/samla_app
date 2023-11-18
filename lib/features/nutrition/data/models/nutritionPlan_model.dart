@@ -12,7 +12,7 @@ class NutritionPlanModel extends NutritionPlan {
   @override
   factory NutritionPlanModel.fromJson(Map<String, dynamic> json) {
     return NutritionPlanModel(
-      id: json['id'],
+      id: json['id'] is int ? json['id'] : int.parse(json['id']),
       name: json['name'],
       type: json['type'],
       start_time: json['start_time'],

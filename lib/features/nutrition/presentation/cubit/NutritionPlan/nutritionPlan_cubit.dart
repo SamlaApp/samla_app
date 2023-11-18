@@ -35,13 +35,13 @@ class NutritionPlanCubit extends Cubit<NutritionPlanState> {
     final result =
         await repository.createNutritionPlan(nutritionPlan: nutritionPlan);
     result.fold(
-        (failure) =>
-            emit(const NutritionPlanErrorState('Failed to create nutrition plan')),
+        (failure) {
+            emit(NutritionPlanErrorState(failure.message));
+          },
         (nutritionPlan) {
       if (nutritionPlan == null) {
         print('empty');
         emit(NutritionPlanEmptyState());
-        return;
       }
       emit(NutritionPlanCreated(nutritionPlan));
     });

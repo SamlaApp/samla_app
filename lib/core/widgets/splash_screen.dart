@@ -62,7 +62,7 @@ class _SplashScreenState extends State<SplashScreen>
     final authBloc = di.sl.get<AuthBloc>();
     authBloc.add(CheckCachedUserEvent(callBackFunction: (isAuth) {
       if (isAuth) {
-        if (authBloc.user.hasGoal) {
+        if (!authBloc.user.hasGoal) {
             Navigator.of(context).pushNamedAndRemoveUntil(
                 '/MainPages', (Route<dynamic> route) => false);
           
