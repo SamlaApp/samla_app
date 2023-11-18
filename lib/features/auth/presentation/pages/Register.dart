@@ -44,7 +44,6 @@ class _RegisterState extends State<RegisterPage> {
         password: _passwordController.text.trim(),
       ),
     );
-    const WelcomePage(); //navigate to the welcome page
   }
 
   @override
@@ -75,10 +74,12 @@ class _RegisterState extends State<RegisterPage> {
           authBloc.add(ClearAuthEvent());
         }
         if (state is AuthenticatedState) {
-          print('AuthenticatedState');
           SchedulerBinding.instance.addPostFrameCallback((_) {
-            Navigator.of(context).pushNamedAndRemoveUntil(
-                '/MainPages', (Route<dynamic> route) => false);
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(
+                builder: (context) => WelcomePage(),
+              ),
+            );
           });
         }
         return RegisterWidget(context);
