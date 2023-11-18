@@ -13,6 +13,7 @@ import 'package:samla_app/core/widgets/loading.dart';
 import 'package:samla_app/features/auth/data/datasources/local_data_source.dart';
 import 'package:samla_app/features/auth/data/datasources/remote_data_source.dart';
 import 'package:samla_app/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:samla_app/features/setup/welcomePage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:samla_app/features/auth/auth_injection_container.dart' as di;
 
@@ -87,40 +88,7 @@ class _OTPPageState extends State<OTPPage> {
 
   final authBloc = di.sl.get<AuthBloc>();
 
-  // void _checkOtp() async {
-  //   sharedPreferences = await SharedPreferences.getInstance();
-  //   String enteredOtp = '';
-  // for (final controller in _controllers) {
-  //   enteredOtp += controller.text;
-  // }
-  //   print('check otp $enteredOtp');
-  //   try {
-  //     final userModel =
-  //         await remoteDataSourceImpl.sendOTP(widget.phone, enteredOtp);
-  //     await localDataSourceImpl.cacheUser(userModel);
-  //     await LocalAuth.init();
-  //     // await LocalAuth.user;
-  //     Navigator.pushReplacementNamed(context, '/');
-  //   } on ServerException catch (e) {
-  //     print('server exception');
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       const SnackBar(
-  //         content: Text('wrong code'),
-  //       ),
-  //     );
-  //   } catch (e) {
-  //     print(e.toString());
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       const SnackBar(
-  //         content: Text('Something went wrong'),
-  //       ),
-  //     );
-  //     print('OTP is incorrect');
-  //     setState(() => (_wrongOtp = true));
-  //   }
-
-  //   // Perform the action you want to execute when the OTP is incorrect
-  // }
+ 
 
   _checkOtp() {
     String enteredOtp = '';
@@ -225,10 +193,20 @@ class _OTPPageState extends State<OTPPage> {
           });
         }
         if (state is AuthenticatedState) {
-          SchedulerBinding.instance.addPostFrameCallback((_) {
-            Navigator.of(context).pushNamedAndRemoveUntil(
-                '/MainPages', (Route<dynamic> route) => false);
-          });
+          if (state.user.hasGoal) {
+            SchedulerBinding.instance.addPostFrameCallback((_) {
+              Navigator.of(context).pushNamedAndRemoveUntil(
+                  '/MainPages', (Route<dynamic> route) => false);
+            });
+          } else {
+            SchedulerBinding.instance.addPostFrameCallback((_) {
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(
+                  builder: (context) => WelcomePage(),
+                ),
+              );
+            });
+          }
         }
         return OTPWidget(context);
       },

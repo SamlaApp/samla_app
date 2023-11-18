@@ -7,6 +7,7 @@ import 'package:samla_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:samla_app/features/auth/presentation/pages/OTP.dart';
 import 'package:samla_app/features/auth/auth_injection_container.dart' as di;
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:samla_app/features/setup/welcomePage.dart';
 
 
 class Login extends StatefulWidget {
@@ -91,10 +92,20 @@ class _LoginState extends State<Login> {
           authBloc.add(ClearAuthEvent());
         }
         if (state is AuthenticatedState) {
-          SchedulerBinding.instance.addPostFrameCallback((_) {
-            Navigator.of(context).pushNamedAndRemoveUntil(
-                '/MainPages', (Route<dynamic> route) => false);
-          });
+          if (state.user.hasGoal) {
+            SchedulerBinding.instance.addPostFrameCallback((_) {
+              Navigator.of(context).pushNamedAndRemoveUntil(
+                  '/MainPages', (Route<dynamic> route) => false);
+            });
+          } else {
+            SchedulerBinding.instance.addPostFrameCallback((_) {
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(
+                  builder: (context) => WelcomePage(),
+                ),
+              );
+            });
+          }
         }
         if (state is OTPSentState) {
           SchedulerBinding.instance.addPostFrameCallback((_) {

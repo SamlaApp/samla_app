@@ -158,8 +158,12 @@ class _SetWeightPageState extends State<SetWeightPage> {
                       onPressed: () {
                         final userProgress = userMeasurment();
                         userProgress.updateheight(height: intWeightValue);
-                        // Navigator.pushReplacementNamed(context, '/stepsGoal'); //should navegate to next page
-                        const SetStepsGoalPage(); //should navegate to SetStepsGoalPage
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => SetStepsGoalPage(),
+                          ),
+                        );
                       },
                       // child: const Text(
                       //   '>',
