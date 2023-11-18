@@ -39,6 +39,35 @@ Future<Map<String, dynamic>> getProgress() async {
   }
 }
 
+Future<Map<String, dynamic>> getNutritionSummary() async {
+  final res = await samlaAPI(endPoint: '/nutrition/summary/total', method: 'GET');
+  final resBody = await res.stream.bytesToString();
+
+  if (res.statusCode == 200) {
+    // if resBody is empty or only one element, add empty element
+    if(json.decode(resBody)['nutrition_summary'].length == 0){
+      return {
+        "total_carbs": 0,
+        "total_protein": 0,
+        "total_fat": 0,
+        "total_calories": 0
+      };
+    }else if(json.decode(resBody)['nutrition_summary'].length == 1){
+      // add empty element at first
+      return {
+        "total_carbs": 0,
+        "total_protein": 0,
+        "total_fat": 0,
+        "total_calories": 0,
+        ...json.decode(resBody)['nutrition_summary'][0]
+      };
+    }
+    return json.decode(resBody)['nutrition_summary'];
+  } else {
+    throw ServerException(message: json.decode(resBody)['message']);
+  }
+}
+
 
 Future<String> generateResponse(String prompt,List<ChatMessage> _messages) async {
   const apiKey = apiSecretKey;
@@ -66,7 +95,15 @@ Future<String> generateResponse(String prompt,List<ChatMessage> _messages) async
         },
         {
           "role": "system",
+          "content": "app name is Samla"
+        },
+        {
+          "role": "system",
           "content": "this is my nutrition plan data: as json string => ${await getNutritionPlan()}"
+        },
+        {
+          "role": "system",
+          "content": "this is summary of taken food this week data: as json string => ${await getNutritionSummary()}"
         },
         {
           "role": "system",

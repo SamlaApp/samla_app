@@ -7,6 +7,9 @@ import 'package:samla_app/config/themes/common_styles.dart';
 import 'dart:async';
 import 'package:pedometer/pedometer.dart';
 import 'package:flutter/services.dart';
+import 'package:samla_app/features/nutrition/domain/repositories/nutritionPlan_repository.dart';
+import 'package:samla_app/features/nutrition/presentation/cubit/nutritionPlan/nutritionPlan_cubit.dart';
+import '../../nutrition_di.dart';
 
 
 class CircularIndicators extends StatefulWidget {
@@ -17,14 +20,19 @@ class CircularIndicators extends StatefulWidget {
 }
 
 class _CircularIndicatorsState extends State<CircularIndicators> {
+
+  final cubit = NutritionPlanCubit(sl<NutritionPlanRepository>());
+
+
   late Stream<StepCount> _stepCountStream;
   late Stream<PedestrianStatus> _pedestrianStatusStream;
   String _status = '?';
-  int _steps = 1700;
+  int _calories = 1700;
   late bool _animation = true;
   bool _retrived = false;
-  int _stepsGoal = 2000;
+  int _caloriesGoal = 4000;
   int _Burned = 2000;
+
 
 
 
@@ -48,14 +56,14 @@ class _CircularIndicatorsState extends State<CircularIndicators> {
                   animationDuration: 1500,
                   radius: constraints.maxWidth * 0.40,
                   lineWidth: 5.0,
-                  percent: (_steps / _stepsGoal) > 1 ? 1 : _steps / _stepsGoal,
+                  percent: (_calories / _caloriesGoal) > 1 ? 1 : _calories / _caloriesGoal,
                   center: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       !_animation
                           ? Text(
-                        _steps.toString(),
+                        _calories.toString(),
                         style: TextStyle(
                             fontSize: 27,
                             fontWeight: FontWeight.bold,
@@ -63,7 +71,7 @@ class _CircularIndicatorsState extends State<CircularIndicators> {
                       )
                           : Countup(
                         begin: 0,
-                        end: _steps.toDouble(),
+                        end: _calories.toDouble(),
                         duration: Duration(milliseconds: 1500),
                         separator: '',
                         style: TextStyle(
@@ -104,16 +112,16 @@ class _CircularIndicatorsState extends State<CircularIndicators> {
                   animationDuration: 1500,
                   radius: constraints.maxWidth * 0.40,
                   lineWidth: 5.0,
-                  percent: _steps * 0.07 / _Burned > 1
+                  percent: _calories * 0.07 / _Burned > 1
                       ? 1
-                      : _steps * 0.07 / _Burned,
+                      : _calories * 0.07 / _Burned,
                   center: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       !_animation
                           ? Text(
-                        (_steps *0.07).round().toString(),
+                        (_calories *0.07).round().toString(),
                         style: TextStyle(
                             fontSize: 27,
                             fontWeight: FontWeight.bold,
@@ -121,7 +129,7 @@ class _CircularIndicatorsState extends State<CircularIndicators> {
                       )
                           : Countup(
                         begin: 0,
-                        end: (_steps * 0.07).round().toDouble(),
+                        end: (_calories * 0.07).round().toDouble(),
                         duration: Duration(milliseconds: 1500),
                         separator: '',
                         style: TextStyle(

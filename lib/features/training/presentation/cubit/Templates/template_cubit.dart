@@ -36,4 +36,18 @@ class TemplateCubit extends Cubit<TemplateState> {
     });
   }
 
+  Future<void> activeTemplate() async {
+    emit(TemplateLoadingState());
+    final result = await repository.activeTemplate();
+    result.fold(
+        (failure) => emit(TemplateErrorState('Failed to active template')),
+        (template) {
+          if(template.id == null) {
+            emit(TemplateEmptyState());
+            return;
+          }
+      emit(ActiveTemplateLoaded(template));
+    });
+  }
+
 }

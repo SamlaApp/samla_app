@@ -15,7 +15,7 @@ class TemplateLoadingState extends TemplateState {}
 class TemplateErrorState extends TemplateState {
   final String message;
 
-  TemplateErrorState(this.message);
+  const TemplateErrorState(this.message);
 
   @override
   List<Object> get props => [message];
@@ -28,8 +28,18 @@ class TemplateLoaded extends TemplateState {
   final List<Template> templates;
   final List<Template> selectedTemplates;
 
-  TemplateLoaded(this.templates, this.selectedTemplates);
+  const TemplateLoaded(this.templates, this.selectedTemplates);
 
   @override
   List<Object> get props => [templates, selectedTemplates];
+}
+
+// ActiveTemplateLoaded
+class ActiveTemplateLoaded extends TemplateState {
+  final Template template;
+
+  const ActiveTemplateLoaded(this.template);
+
+  @override
+  List<Object> get props => [template];
 }

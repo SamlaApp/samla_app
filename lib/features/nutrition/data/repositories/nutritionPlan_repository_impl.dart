@@ -6,7 +6,9 @@ import 'package:samla_app/core/network/network_info.dart';
 
 import 'package:samla_app/features/nutrition/data/datasources/local_datasource.dart';
 import 'package:samla_app/features/nutrition/data/datasources/remote_data_source.dart';
+import 'package:samla_app/features/nutrition/domain/entities/DailyNutritionPlanSummary.dart';
 import 'package:samla_app/features/nutrition/domain/entities/NutritionPlanMeal.dart';
+import 'package:samla_app/features/nutrition/domain/entities/NutritionPlanStatus.dart';
 
 
 import 'package:samla_app/features/nutrition/domain/entities/nutritionPlan.dart';
@@ -147,6 +149,67 @@ class NutritionPlanRepositoryImpl implements NutritionPlanRepository {
       return Left(ServerFailure(message: 'No internet connection'));
     }
   }
+
+  @override
+  Future<Either<Failure, List<NutritionPlan>>> getTodayNutritionPlan({required String query}) async {
+    if (await networkInfo.isConnected) {
+      try {
+        final todayNutritionPlan = await remoteDataSource.getTodayNutritionPlan(query);
+        return Right(todayNutritionPlan);
+      } on ServerException catch (e) {
+        return Left(ServerFailure(message: e.message));
+      }
+    } else {
+      return Left(ServerFailure(message: 'No internet connection'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, NutritionPlanStatus>> getNutritionPlanStatus({required int id}) async {
+    if (await networkInfo.isConnected) {
+      try {
+        final nutritionPlanStatus = await remoteDataSource.getNutritionPlanStatus(id);
+        return Right(nutritionPlanStatus);
+      } on ServerException catch (e) {
+        return Left(ServerFailure(message: e.message));
+      }
+    } else {
+      return Left(ServerFailure(message: 'No internet connection'));
+    }
+
+  }
+
+  @override
+  Future<Either<Failure, NutritionPlanStatus>> updateNutritionPlanStatus({required NutritionPlanStatus nutritionPlanStatus}) async {
+    if (await networkInfo.isConnected) {
+      try {
+        final nutritionPlan = await remoteDataSource.updateNutritionPlanStatus(nutritionPlanStatus);
+        return Right(nutritionPlan);
+      } on ServerException catch (e) {
+        return Left(ServerFailure(message: e.message));
+      }
+    } else {
+      return Left(ServerFailure(message: 'No internet connection'));
+
+    }
+  }
+
+  @override
+  Future<Either<Failure, DailyNutritionPlanSummary>> getDailyNutritionPlanSummary() async {
+    if (await networkInfo.isConnected) {
+      try {
+        final dailyNutritionPlanSummary = await remoteDataSource.getDailyNutritionPlanSummary();
+        return Right(dailyNutritionPlanSummary);
+      } on ServerException catch (e) {
+        return Left(ServerFailure(message: e.message));
+      }
+    } else {
+      return Left(ServerFailure(message: 'No internet connection'));
+
+    }
+  }
+
+
 
 
 

@@ -9,6 +9,8 @@ abstract class LocalDataSource {
   Future<List<TemplateModel>> getCachedTemplates();
   Future<void> cacheTemplate(TemplateModel template);
   Future<TemplateModel> getCachedTemplate(String id);
+  //getCachedActiveTemplate
+  Future<TemplateModel> getCachedActiveTemplate();
 }
 
 class LocalDataSourceImpl implements LocalDataSource {
@@ -46,6 +48,18 @@ class LocalDataSourceImpl implements LocalDataSource {
 
   @override
   Future<TemplateModel> getCachedTemplate(String id) {
+    final jsonTemplateString = sharedPreferences.getString('my_template');
+    if (jsonTemplateString != null) {
+      final jsonTemplate = json.decode(jsonTemplateString);
+      final template = TemplateModel.fromJson(jsonTemplate);
+      return Future.value(template);
+    } else {
+      throw EmptyCacheException(message: 'No cached template');
+    }
+  }
+
+  @override
+  Future<TemplateModel> getCachedActiveTemplate() {
     final jsonTemplateString = sharedPreferences.getString('my_template');
     if (jsonTemplateString != null) {
       final jsonTemplate = json.decode(jsonTemplateString);

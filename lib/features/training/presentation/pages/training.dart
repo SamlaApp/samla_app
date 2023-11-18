@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:samla_app/features/training/presentation/cubit/Templates/template_cubit.dart';
 import 'package:samla_app/features/training/presentation/pages/startTrainig.dart';
 import '../../../../config/themes/common_styles.dart';
 import 'Tamplates_page.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 
 import 'package:samla_app/features/training/training_di.dart' as di;
-
 
 class TrainingPage extends StatefulWidget {
   TrainingPage({Key? key}) : super(key: key);
@@ -18,17 +19,15 @@ class _TrainingPageState extends State<TrainingPage> {
   final _controller = PageController();
   double _currentPage = 0;
 
+  late TemplateCubit cubit;
+
   @override
   void initState() {
     super.initState();
 
     di.TrainingInit(); // Initialize the training module
+    cubit = di.sl<TemplateCubit>(); // Get the cubit instance
 
-    _controller.addListener(() {
-      setState(() {
-        _currentPage = _controller.page ?? 0;
-      });
-    });
   }
 
   @override
@@ -40,45 +39,10 @@ class _TrainingPageState extends State<TrainingPage> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.all(5),
+      margin: const EdgeInsets.all(5),
       child: Column(
         children: [
-          Container(
-            height: 67,
-            padding: const EdgeInsets.all(13),
-            margin: EdgeInsets.all(16),
-            decoration: primary_decoration,
-            // ensure this is defined in your project
-            child: Row(
-              children: [
-                Text(
-                  'KFUPM Gym Template',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Spacer(),
-                GestureDetector(
-                  onTap: () {
-                    print('Icon Clicked');
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            TemplatesPage(), // This is your Templates page widget
-                      ),
-                    );
-                  },
-                  child: Icon(
-                    Icons.edit,
-                    size: 30,
-                  ),
-                )
-              ],
-            ),
-          ),
-
+          _activeTemplate(),
           Expanded(
             child: Container(
               // color: theme_darkblue,
@@ -169,8 +133,8 @@ class _TrainingPageState extends State<TrainingPage> {
                   // Build the content for the current day
                   return Container(
                     width: MediaQuery.of(context).size.width - 40,
-                    margin: EdgeInsets.all(16),
-                    padding: EdgeInsets.all(16),
+                    margin: const EdgeInsets.all(16),
+                    padding: const EdgeInsets.all(16),
                     decoration: primary_decoration,
                     // ensure this is defined in your project
                     child: Column(
@@ -178,18 +142,18 @@ class _TrainingPageState extends State<TrainingPage> {
                       children: <Widget>[
                         Text(
                           dayRoutine,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        SizedBox(height: 16),
+                        const SizedBox(height: 16),
                         ...exercises, // Insert the list of exercises
                         SizedBox(
                           width: double.infinity,
                           child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                              primary: theme_green,
+                              backgroundColor: theme_green,
                               // ensure theme_green is defined and accessible
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(8),
@@ -205,7 +169,7 @@ class _TrainingPageState extends State<TrainingPage> {
                                 ),
                               );
                             },
-                            child: Text('Start Now'),
+                            child: const Text('Start Now'),
                           ),
                         ),
                       ],
@@ -225,9 +189,84 @@ class _TrainingPageState extends State<TrainingPage> {
               activeColor: theme_green, // use your theme color here
             ),
           ),
-          SizedBox(height: 16), // for spacing
+          const SizedBox(height: 16), // for spacing
         ],
       ),
+    );
+  }
+
+  BlocBuilder<TemplateCubit, TemplateState> _activeTemplate() {
+    cubit.activeTemplate();
+    return BlocBuilder<TemplateCubit, TemplateState>(
+      bloc: cubit,
+      builder: (context, state) {
+        if (state is TemplateLoadingState) {
+          return Center(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: CircularProgressIndicator(
+                color: theme_green,
+                backgroundColor: theme_pink,
+              ),
+            ),
+          );
+        } else if (state is ActiveTemplateLoaded) {
+          return Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Container(
+              padding: const EdgeInsets.all(16.0),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [theme_red, theme_darkblue],
+                  tileMode: TileMode.clamp,
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                borderRadius: BorderRadius.circular(12),
+                backgroundBlendMode: BlendMode.darken,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    state.template.name,
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      fontFamily: 'Cairo',
+                    ),
+                  ),
+                  IconButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                const TemplatesPage(), // This is your Templates page widget
+                          ),
+                        );
+                      },
+                      icon: const Icon(Icons.edit, color: Colors.white)
+                  ),
+                ],
+              ),
+            ),
+          );
+        } else if (state is TemplateEmptyState) {
+          return const Center(
+            child: Padding(
+              padding: EdgeInsets.all(16.0),
+              child: Text('No templates found'),
+            ),
+          );
+        } else if (state is TemplateErrorState) {
+          return Center(
+            child: Text(state.message),
+          );
+        }
+        return const SizedBox.shrink();
+      },
     );
   }
 }
@@ -251,7 +290,7 @@ class ExerciseTile extends StatelessWidget {
         borderRadius: BorderRadius.circular(8),
       ),
       child: Padding(
-        padding: EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(8.0),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
@@ -267,7 +306,7 @@ class ExerciseTile extends StatelessWidget {
               ),
             ),
 
-            SizedBox(width: 16), // spacing between the image and the texts
+            const SizedBox(width: 16), // spacing between the image and the texts
 
             // Right side texts
             Expanded(
@@ -276,15 +315,15 @@ class ExerciseTile extends StatelessWidget {
                 children: <Widget>[
                   Text(
                     title,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 16, // for larger text
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  SizedBox(height: 8), // spacing between title and subtitle
+                  const SizedBox(height: 8), // spacing between title and subtitle
                   Text(
                     subtitle,
-                    style: TextStyle(fontSize: 13), // for smaller text
+                    style: const TextStyle(fontSize: 13), // for smaller text
                   ),
                 ],
               ),
@@ -295,17 +334,17 @@ class ExerciseTile extends StatelessWidget {
                   onTap: () {
                     print('more Clicked');
                   },
-                  child: Icon(
+                  child: const Icon(
                     Icons.more_vert_outlined,
                     size: 20,
                   ),
                 ),
-                SizedBox(height: 18),
+                const SizedBox(height: 18),
                 GestureDetector(
                   onTap: () {
                     print('drag Clicked');
                   },
-                  child: Icon(
+                  child: const Icon(
                     Icons.drag_handle_rounded,
                     size: 20,
                   ),
@@ -318,41 +357,3 @@ class ExerciseTile extends StatelessWidget {
     );
   }
 }
-
-//     // Quick Start and Routines section
-//     ExpandableBox(
-//       title: "Empty workout & Routines",
-//       child: Column(
-//         crossAxisAlignment: CrossAxisAlignment.start,
-//         children: [
-//           SectionTitle(title: 'Start Empty Workout'),
-//           SizedBox(height: 8),
-//           StartWorkoutButton(),
-//           SizedBox(height: 16),
-//           SectionTitle(title: 'Routines'),
-//           SizedBox(height: 8),
-//           RoutineButtons(),
-//         ],
-//       ),
-//     ),
-
-// TransparentBox(
-// child: Column(
-// crossAxisAlignment: CrossAxisAlignment.start,
-// children: [
-// SectionTitle(title: 'My Routines'),
-// SizedBox(height: 8),
-// RoutineCard(title: 'Pull Routine', exercises: [
-// Exercise(name: 'Pull-Ups'),
-// Exercise(name: 'Chin-Ups'),
-// Exercise(name: 'Deadlifts'),
-// ]),
-// SizedBox(height: 8),
-// RoutineCard(title: 'Push Routine', exercises: [
-// Exercise(name: 'Push-Ups'),
-// Exercise(name: 'Bench Press'),
-// Exercise(name: 'Dips'),
-// ]),
-// ],
-// ),
-// ),

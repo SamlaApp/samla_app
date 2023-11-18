@@ -19,6 +19,7 @@ void TrainingInit() {
 
   print('registering training dependencies');
   sl.registerLazySingleton(() => TemplateCubit(sl()));
+
   sl.registerLazySingleton<TemplateRepository>(() => TemplateRepositoryImpl(
       networkInfo: sl(), remoteDataSource: sl(), localDataSource: sl()));
   sl.registerLazySingleton<RemoteDataSource>(

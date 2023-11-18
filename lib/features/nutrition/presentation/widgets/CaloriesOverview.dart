@@ -8,9 +8,9 @@ class CaloriesOverview extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         CircularIndicators(),
-        SizedBox(width: 10),
       ],
     );
   }
