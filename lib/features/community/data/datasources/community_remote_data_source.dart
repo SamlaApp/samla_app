@@ -163,7 +163,6 @@ class CommunityRemoteDataSourceImpl implements CommunityRemoteDataSource {
     if (!updateHandle) {
       data.remove('handle');
     }
-    print(data);
     if (community.avatar != null) {
       multipartFile = http.MultipartFile(
         'avatar', // The field name in the multipart request
