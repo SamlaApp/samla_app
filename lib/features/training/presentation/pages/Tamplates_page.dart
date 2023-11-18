@@ -26,6 +26,12 @@ class _TemplatesPageState extends State<TemplatesPage> {
     cubit.getAllTemplates();
   }
 
+  @override
+  void dispose() {
+    cubit.close();
+    super.dispose();
+  }
+
   void refresh() {
     setState(() {
       cubit.getAllTemplates();
@@ -37,12 +43,17 @@ class _TemplatesPageState extends State<TemplatesPage> {
 
   void _submitForm() {
     if (formKey.currentState!.validate()) {
-      final template = Template(
+      Template template = Template(
         name: nameController.text,
         is_active: false,
       );
+
+      nameController.clear();
+
       cubit.createTemplate(template);
       Navigator.of(context).pop();
+      cubit.getAllTemplates();
+
     }
   }
 
@@ -491,8 +502,7 @@ class _TemplatesPageState extends State<TemplatesPage> {
                 );
               },
               style: ElevatedButton.styleFrom(
-                primary: Colors.white,
-                onPrimary: theme_darkblue,
+                foregroundColor: theme_darkblue, backgroundColor: Colors.white,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(32.0),
                 ),

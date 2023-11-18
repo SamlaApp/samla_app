@@ -7,4 +7,5 @@ abstract class TemplateRepository {
   Future<Either<Failure, List<Template>>> getAllTemplates();
   Future<Either<Failure, Template>> createTemplate(Template template);
   Future<Either<Failure, Template>> activeTemplate();
+  Future<Either<Failure, Unit>> deleteTemplate(int id);
 }

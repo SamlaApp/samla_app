@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:dartz/dartz.dart';
 import 'package:samla_app/core/error/exceptions.dart';
 import 'package:samla_app/features/training/data/models/template_model.dart';
 import 'package:http/http.dart' as http;
@@ -9,6 +10,7 @@ abstract class RemoteDataSource {
   Future<List<Template>> getAllTemplates();
   Future<Template> createTemplate(Template template);
   Future<Template> activeTemplate();
+  Future<void> deleteTemplate(int id);
 }
 
 class TemplateRemoteDataSourceImpl implements RemoteDataSource {
@@ -55,11 +57,24 @@ class TemplateRemoteDataSourceImpl implements RemoteDataSource {
         endPoint: '/training/template/active',
         method: 'GET');
     final resBody = await res.stream.bytesToString();
-    print(resBody);
     if (res.statusCode == 200) {
       final TemplateModel convertedTemplate =
       TemplateModel.fromJson(json.decode(resBody)['template']);
       return convertedTemplate;
+    } else {
+      throw ServerException(message: json.decode(resBody)['message']);
+    }
+  }
+
+  @override
+  Future<void> deleteTemplate(int id) async {
+    final res = await samlaAPI(
+      data: {'id': id.toString()},
+        endPoint: '/training/template/delete',
+        method: 'POST');
+    final resBody = await res.stream.bytesToString();
+    if (res.statusCode == 200) {
+      return Future.value();
     } else {
       throw ServerException(message: json.decode(resBody)['message']);
     }
