@@ -2,8 +2,31 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:samla_app/config/themes/common_styles.dart';
 import 'package:flutter/services.dart';
+import 'package:samla_app/features/nutrition/domain/repositories/nutritionPlan_repository.dart';
+import '../cubit/NutritionPlan/nutritionPlan_cubit.dart';
+import '../../nutrition_di.dart';
 
-class CustomSignedCalories extends StatelessWidget {
+
+class CustomSignedCalories extends StatefulWidget {
+  const CustomSignedCalories({super.key});
+
+  _CustomSignedCaloriesState createState() => _CustomSignedCaloriesState();
+
+}
+
+class _CustomSignedCaloriesState extends State<CustomSignedCalories> {
+
+
+  final cubit = NutritionPlanCubit(sl<NutritionPlanRepository>());
+
+  @override
+  void initState() {
+    super.initState();
+    cubit.getDailyNutritionPlanSummary();
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
     return _mealCard(
@@ -97,6 +120,7 @@ class CustomSignedCalories extends StatelessWidget {
               onPressed: () {
 
               },
+
               label: const Text('Add'),
             ),
           ),

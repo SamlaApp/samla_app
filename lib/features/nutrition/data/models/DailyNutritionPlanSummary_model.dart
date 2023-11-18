@@ -13,10 +13,10 @@ class DailyNutritionPlanSummaryModel extends DailyNutritionPlanSummary{
   factory DailyNutritionPlanSummaryModel.fromJson(Map<String, dynamic> json) {
     return DailyNutritionPlanSummaryModel(
       id: json['id'],
-      totalCarbs: json['totalCarbs'] as double,
-      totalProtein: json['totalProtein'] as double,
-      totalFat: json['totalFat'] as double,
-      totalCalories: json['totalCalories'] as double,
+      totalCarbs: json['carbs']?.toDouble(),
+      totalProtein: json['protein']?.toDouble(),
+      totalFat: json['fat']?.toDouble(),
+      totalCalories: json['calories']?.toDouble(),
     );
   }
 

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:samla_app/features/nutrition/presentation/widgets/TodayNutritionSummary.dart';
 import '../widgets/CaloriesOverview.dart';
 import '../widgets/Macronutrients.dart';
-import '../widgets/MealActions.dart';
+import '../widgets/CustomSignedCalories.dart';
 import '../widgets/TodayPlan.dart';
 import 'package:samla_app/features/nutrition/nutrition_di.dart' as di;
 

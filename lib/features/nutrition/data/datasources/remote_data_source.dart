@@ -241,14 +241,13 @@ class NutritionPlanRemoteDataSourceImpl
   @override
   Future<DailyNutritionPlanSummary> getDailyNutritionPlanSummary() async {
     final response = await samlaAPI(
-      endPoint: '/summary/get',
+      endPoint: '/nutrition/summary/get',
       method: 'GET',
     );
     final resBody = await response.stream.bytesToString();
-    print(resBody);
     if (response.statusCode == 200) {
       final DailyNutritionPlanSummaryModel dailyNutritionPlanSummary =
-      DailyNutritionPlanSummaryModel.fromJson(json.decode(resBody)['summary']);
+      DailyNutritionPlanSummaryModel.fromJson(json.decode(resBody)['nutrition_plan']);
       return dailyNutritionPlanSummary;
     } else {
       throw ServerException(message: json.decode(resBody)['message']);

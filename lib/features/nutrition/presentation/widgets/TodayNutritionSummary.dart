@@ -23,6 +23,12 @@ class _TodayNutritionSummaryState extends State<TodayNutritionSummary> {
 
   final cubit = NutritionPlanCubit(sl<NutritionPlanRepository>());
 
+  @override
+  void initState() {
+    super.initState();
+    cubit.getDailyNutritionPlanSummary();
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -40,15 +46,7 @@ class _TodayNutritionSummaryState extends State<TodayNutritionSummary> {
           ),
         ],
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          NutrientColumn(value: _totalCarbs, label: 'Carbs', color: color),
-          NutrientColumn(value: _totalProtein, label: 'Protein', color: color),
-          NutrientColumn(value: _totalFat, label: 'Fat', color: color),
-          NutrientColumn(value: _totalCalories, label: 'Calories', color: color),
-        ],
-      ),
+      child:getSummary(),
     );
   }
 
@@ -56,7 +54,30 @@ class _TodayNutritionSummaryState extends State<TodayNutritionSummary> {
     return BlocBuilder<NutritionPlanCubit, NutritionPlanState>(
       bloc: cubit,
       builder: (context, state) {
-          return Text('test');
+        if (state is NutritionPlanLoadingState) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (state is NutritionPlanEmptyState) {
+          return const Center(child: Text('No data'));
+        }
+        else if (state is NutritionPlanDailySummaryLoaded) {
+          _totalCarbs = state.dailyNutritionPlanSummary.totalCarbs;
+          _totalProtein = state.dailyNutritionPlanSummary.totalProtein;
+          _totalFat = state.dailyNutritionPlanSummary.totalFat;
+          _totalCalories = state.dailyNutritionPlanSummary.totalCalories;
+          return Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              NutrientColumn(value: _totalCarbs, label: 'Carbs', color: color),
+              NutrientColumn(value: _totalProtein, label: 'Protein', color: color),
+              NutrientColumn(value: _totalFat, label: 'Fat', color: color),
+              NutrientColumn(value: _totalCalories, label: 'Calories', color: color),
+            ],
+          );
+        } else if (state is NutritionPlanErrorState) {
+          return Text(state.message);
+        } else {
+          return const Center(child: CircularProgressIndicator());
+        }
       }
     );
   }
