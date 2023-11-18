@@ -23,7 +23,8 @@ class CommunityCubit extends Cubit<CommunityState> {
       } else {
         myCommunities = communities[0];
         allCommunities = communities[1];
-        emit(CommunitiesLoaded(communities[0]));}
+        emit(CommunitiesLoaded(communities[0]));
+      }
     });
   }
 
@@ -46,13 +47,5 @@ class CommunityCubit extends Cubit<CommunityState> {
       getMyCommunities();
       callback();
     }); //
-  }
-
-  Future<void> updateCommunity(int communityID) async {
-    final result = await repository.updateCommunity(communityID: communityID);
-    result.fold(
-      (failure) => emit(CommunityError('Failed to update community')),
-      (_) => getMyCommunities(), // Refresh the list of communities
-    );
   }
 }

@@ -113,9 +113,17 @@ class CommunityRepositoryImpl implements CommunityRepository {
 
   @override
   Future<Either<Failure, Community>> updateCommunity(
-      {required int communityID}) {
-    // TODO: implement updateCommunity
-    throw UnimplementedError();
+      Community community, bool updateHandle) async  {
+    if (await networkInfo.isConnected) {
+      try {
+        final  updatedCommunity = await remoteDataSource.updateCommunity(community, updateHandle);
+        return Right(updatedCommunity);
+      } on ServerException catch (e) {
+        return Left(ServerFailure(message: e.message));
+      }
+    } else {
+      return Left(ServerFailure(message: 'No internet connection'));
+      }
   }
   
   @override

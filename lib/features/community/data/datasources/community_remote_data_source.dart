@@ -15,7 +15,8 @@ abstract class CommunityRemoteDataSource {
 
   Future<CommunityModel> createCommunity(Community community);
 
-  Future<CommunityModel> updateCommunity(CommunityModel community);
+  Future<CommunityModel> updateCommunity(
+      Community community, bool updateHandle);
 
   Future<void> deleteCommunity({required int communityID});
 
@@ -154,9 +155,53 @@ class CommunityRemoteDataSourceImpl implements CommunityRemoteDataSource {
   }
 
   @override
-  Future<CommunityModel> updateCommunity(CommunityModel community) {
-    // TODO: implement updateCommunity
-    throw UnimplementedError();
+  Future<CommunityModel> updateCommunity(
+      Community community_, bool updateHandle) async {
+    final community = CommunityModel.fromEntity(community_);
+    http.MultipartFile? multipartFile;
+    final data = community.toJson();
+    if (!updateHandle) {
+      data.remove('handle');
+    }
+    print(data);
+    if (community.avatar != null) {
+      multipartFile = http.MultipartFile(
+        'avatar', // The field name in the multipart request
+        http.ByteStream(community.avatar!.openRead()),
+        await community.avatar!.length(),
+        filename: 'avatar.jpg',
+        contentType: MediaType('image', 'jpeg'),
+      );
+    } else{
+      data.remove('avatar');
+      
+    }
+
+   
+
+    data['community_id'] = community.id.toString();
+
+    final response = await samlaAPI(
+        data: data,
+        endPoint: '/community/update',
+        method: 'POST',
+        file: multipartFile);
+    final resBody = await response.stream.bytesToString();
+
+    if (response.statusCode == 200) {
+      final communityJson = json.decode(resBody)['community'];
+
+      communityJson['is_member'] = true;
+      if (communityJson['avatar'] != null) {
+        communityJson['avatar'] =
+            BASE_URL + '/community_avatar/' + communityJson['avatar'];
+      }
+      final community = CommunityModel.fromJson(communityJson);
+      return community;
+    } else {
+      print(json.decode(resBody)['message']);
+      throw ServerException(message: json.decode(resBody)['message']);
+    }
   }
 
   @override
@@ -188,6 +233,7 @@ class CommunityRemoteDataSourceImpl implements CommunityRemoteDataSource {
         communityJson['avatar'] =
             BASE_URL + '/community_avatar/' + communityJson['avatar'];
       }
+
       final community = CommunityModel.fromJson(communityJson);
       return community;
     } else {

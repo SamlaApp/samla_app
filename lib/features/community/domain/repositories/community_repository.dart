@@ -18,7 +18,7 @@ abstract class CommunityRepository {
   Future<Either<Failure, Unit>> deleteCommunity({required int communityID});
 
   Future<Either<Failure, Community>> updateCommunity(
-      {required int communityID});
+      Community community, bool updateHandle);
 
   Future<Either<Failure, int>> getCommunityMemebersNumber(
       {required int communityID});

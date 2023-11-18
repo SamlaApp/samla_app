@@ -19,12 +19,36 @@ import 'package:samla_app/features/community/presentation/cubits/PostCubit/post_
 import 'package:samla_app/features/community/presentation/pages/community_detail.dart';
 
 // ignore: must_be_immutable
-class CommunityPage extends StatelessWidget {
-  final Community community;
+class CommunityPage extends StatefulWidget {
+  Community community;
   CommunityPage({super.key, required this.community});
+
+  @override
+  State<CommunityPage> createState() => _CommunityPageState();
+}
+
+class _CommunityPageState extends State<CommunityPage> {
+  late Community community;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    community = widget.community;
+  }
+
+
+  void updateNameAndImageCallback(String newName, String? imageURL) {
+    setState(() {
+      community = community.copyWith(name: newName, imageURL: imageURL);
+    });
+  }
+
   // ignore: non_constant_identifier_names
   late CrudPostCubit CRUDCubit;
+
   final userID = sl.get<AuthBloc>().user.id!;
+
   @override
   Widget build(BuildContext context) {
     CRUDCubit = sl.get<CrudPostCubit>(param1: community.id!);
@@ -60,12 +84,11 @@ class CommunityPage extends StatelessWidget {
                 Navigator.of(context).pop();
               },
             ),
-            title: titleWidget(context),
+            title: titleWidget(context, updateNameAndImageCallback),
           ),
           body: BlocBuilder<GetPostsCubit, GetPostsState>(
             bloc: sl.get<GetPostsCubit>()..getPosts(community.id!),
             builder: (context, state) {
-              
               if (state is GetPostsLoading) {
                 return const Center(child: CircularProgressIndicator());
               }
@@ -80,7 +103,6 @@ class CommunityPage extends StatelessWidget {
                   child: ListView(
                     children: [
                       () {
-                        
                         return ListView.builder(
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
@@ -350,7 +372,7 @@ class CommunityPage extends StatelessWidget {
           scrollDirection: Axis.vertical,
           itemCount: post.comments.length + 2,
           itemBuilder: (context, index) {
-            if (index == 0){
+            if (index == 0) {
               return const SizedBox(height: 10);
             }
             index -= 1; // to skip the first item
@@ -437,14 +459,14 @@ class CommunityPage extends StatelessWidget {
     );
   }
 
-  GestureDetector titleWidget(BuildContext context) {
+  GestureDetector titleWidget(BuildContext context, Function(String name, String? imageURL) callback) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
           context,
           PageRouteBuilder(
             pageBuilder: (context, animation, secondaryAnimation) =>
-                CommunityDetail(community: community),
+                CommunityDetail(community: community, updateNameAndImageCallback: callback),
             transitionsBuilder:
                 (context, animation, secondaryAnimation, child) {
               const begin = Offset(0.0, -1.0); // Slide from the top

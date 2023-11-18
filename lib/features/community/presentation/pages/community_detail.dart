@@ -7,6 +7,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:samla_app/config/themes/common_styles.dart';
 import 'package:samla_app/core/widgets/ConfirmationModal.dart';
+import 'package:samla_app/core/widgets/CustomTextFormField.dart';
 import 'package:samla_app/core/widgets/image_viewer.dart';
 import 'package:samla_app/features/auth/auth_injection_container.dart';
 import 'package:samla_app/features/auth/domain/entities/user.dart';
@@ -24,15 +25,99 @@ import 'package:samla_app/features/community/presentation/widgets/route_transiti
 enum userRoleOptions { owner, member, notMember }
 
 class CommunityDetail extends StatelessWidget {
-  final Community community;
+  Community community;
 
-  CommunityDetail({super.key, required this.community});
+  CommunityDetail({super.key, required this.community , this.updateNameAndImageCallback});
+  final Function(String name, String? imageURL)? updateNameAndImageCallback;
   final specificCubit = sl.get<SpecificCommunityCubit>();
   final communityCubit = sl.get<CommunityCubit>();
   final exploreCubit = sl.get<ExploreCubit>();
   final user = sl.get<AuthBloc>().user;
   final memebersCubit = sl.get<MemebersCubit>();
   final requestsCubit = sl.get<RequestsCubit>();
+
+  void updateCommunity(newCommunityInfo, {bool updateHandle = true}) {
+    specificCubit.updateCommunity(newCommunityInfo, (newCommunity) {
+      community = newCommunity.copyWith(imageURL: community.imageURL);// do not change the image
+      
+      if (updateNameAndImageCallback != null) {
+        updateNameAndImageCallback!(newCommunity.name, newCommunity.imageURL);
+      }
+      communityCubit.getMyCommunities();
+
+    }, updateHandle: updateHandle);
+  }
+
+  showUpdateCommunityModal(context, var validator, String title, String label,
+      String initialValue, Function(String) callback) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          final controller = TextEditingController(text: initialValue);
+          return AlertDialog(
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text(
+                    'Close',
+                    style: TextStyle(color: theme_grey),
+                  ))
+            ],
+            content: Container(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    title,
+                    style: TextStyle(
+                        fontWeight: FontWeight.w400,
+                        fontSize: 16,
+                        decoration: TextDecoration.none,
+                        color: theme_darkblue.withOpacity(0.95)),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  CustomTextFormField(
+                    controller: controller,
+                    validator: validator,
+                    label: label,
+                    iconData: Icons.edit,
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Container(
+                    width: 250,
+                    height: 40,
+                    decoration: primary_decoration.copyWith(color: theme_green),
+                    child: TextButton.icon(
+                      // stretch the button
+
+                      icon: Icon(
+                        Icons.save,
+                        color: Colors.white,
+                      ),
+                      onPressed: () {
+                        if (controller.text.isNotEmpty) {
+                          callback(controller.text);
+                          Navigator.pop(context);
+                        }
+                      },
+                      label: Text(
+                        'Save',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,17 +127,14 @@ class CommunityDetail extends StatelessWidget {
         : community.isMemeber
             ? userRoleOptions.member
             : userRoleOptions.notMember;
-    // if (userRole == userRoleOptions.owner || community.isPublic) {
-    //   memebersCubit.getMemebers(community.id!, community.isPublic);
-    // }
-    if (!community.isPublic && userRole == userRoleOptions.owner) {
-      requestsCubit.getJoinRequests(community.id!);
-    }
 
     return BlocProvider(
       create: (context) => specificCubit,
       child: BlocBuilder<SpecificCommunityCubit, SpecificCommunityState>(
         builder: (context, state) {
+          if (!community.isPublic && userRole == userRoleOptions.owner) {
+            requestsCubit.getJoinRequests(community.id!);
+          }
           if (state is SpecificCommunityError) {
             SchedulerBinding.instance.addPostFrameCallback((_) {
               ScaffoldMessenger.of(context).showSnackBar(
@@ -65,91 +147,172 @@ class CommunityDetail extends StatelessWidget {
 
           return Scaffold(
             // appBar: GradientAppBar(context),
-            body: Stack(
-              children: [
-                Positioned(
-                  child: GradientAppBar(
-                      context, userRole, community, requestsCubit),
-                ),
-                Container(
-                  padding: EdgeInsets.all(20),
-                  width: double.infinity,
-                  child: SafeArea(
-                    child: Flex(
-                        direction: Axis.vertical,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          // main contents
-                          SizedBox(
-                            height: 80,
-                          ),
-
-                          ImageViewer.network(
-                            placeholderImagePath:
-                                'images/defaults/community.png',
-                            imageURL: community.imageURL,
-                            editableCallback:
-                                userRole == userRoleOptions.member ||
-                                        userRole == userRoleOptions.owner
-                                    ? (image) {}
-                                    : null,
-                            title: community.name,
-                            animationTag: 'imageHero',
-                          ),
-
-                          SizedBox(height: 10),
-
-                          Text(community.name!,
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: 20,
-                                  decoration: TextDecoration.none,
-                                  color: theme_darkblue.withOpacity(0.95))),
-
-                          SizedBox(height: 5),
-
-                          // community handle
-                          Text(community.handle!,
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: 14,
-                                  decoration: TextDecoration.none,
-                                  color: theme_darkblue.withOpacity(0.5))),
-
-                          SizedBox(height: 30),
-
-                          // row of number of memebers and public/private
-                          MermbersCountWidget(
-                            numOfMembers: state is SpecificCommunityNumberLoaded
-                                ? state.numOfMembers.toString()
-                                : '0',
-                            publicOrPrivate:
-                                community.isPublic ? 'PUBLIC' : 'PRIVATE',
-                            requestsCubit: requestsCubit,
-                            communityID: community.id!,
-                          ),
-                          SizedBox(height: 10),
-
-                          OverViewWidget(overview: community.description),
-                          SizedBox(
-                            height: 10,
-                          ),
-
-                          // TODO: show community memebers
-
-                          userRole == userRoleOptions.owner
-                              ? _builderMembersWidget(memebersCubit, user)
-                              : Container(),
-                          SizedBox(
-                            height: 30,
-                          ),
-
-                          mainButton(
-                              userRole, context, exploreCubit, communityCubit),
-                        ]),
+            body: SingleChildScrollView(
+              child: Stack(
+                children: [
+                  Positioned(
+                    child: GradientAppBar(
+                        context, userRole, community, requestsCubit),
                   ),
-                ),
-              ],
+                  Container(
+                    padding: EdgeInsets.all(20),
+                    width: double.infinity,
+                    child: SafeArea(
+                      child: Flex(
+                          direction: Axis.vertical,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            // main contents
+                            SizedBox(
+                              height: 80,
+                            ),
+            
+                            ImageViewer.network(
+                              placeholderImagePath:
+                                  'images/defaults/community.png',
+                              imageURL: community.imageURL,
+                              editableCallback:
+                                  userRole == userRoleOptions.member ||
+                                          userRole == userRoleOptions.owner
+                                      ? (image) {
+                                          updateCommunity(
+                                              community.copyWith(avatar: image));
+                                        }
+                                      : null,
+                              title: community.name,
+                              animationTag: 'imageHero',
+                            ),
+            
+                            SizedBox(height: 10),
+            
+                            GestureDetector(
+                              onTap: () {
+                                if (userRole == userRoleOptions.owner) {
+                                  showUpdateCommunityModal(
+                                      context,
+                                      (value) {
+                                        if (value.length < 3) {
+                                          return 'Name must be at least 3 characters';
+                                        }
+                                        return null;
+                                      },
+                                      'Update Community Name',
+                                      'Name',
+                                      community.name!,
+                                      (value) {
+                                        updateCommunity(
+                                            community.copyWith(name: value));
+                                        
+                                      });
+                                }
+                              },
+                              child: Text(community.name!,
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 20,
+                                      decoration: TextDecoration.none,
+                                      color: theme_darkblue.withOpacity(0.95))),
+                            ),
+            
+                            SizedBox(height: 5),
+            
+                            // community handle
+                            GestureDetector(
+                              onTap: () {
+                                if (userRole == userRoleOptions.owner) {
+                                  showUpdateCommunityModal(
+                                      context,
+                                      (value) {
+                                        if (value.length < 3) {
+                                          return 'Handle must be at least 3 characters';
+                                        }
+                                        return null;
+                                      },
+                                      'Update Community Handle',
+                                      'Handle',
+                                      community.handle,
+                                      (value) {
+                                        if (value != community.handle) {
+                                          updateCommunity(
+                                              community.copyWith(handle: value),
+                                              updateHandle: true);
+                                        } else {
+                                          SchedulerBinding.instance
+                                              .addPostFrameCallback((_) {
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(
+                                              SnackBar(
+                                                content: Text(
+                                                    'Handle is already the same'),
+                                              ),
+                                            );
+                                          });
+                                        }
+                                      });
+                                }
+                              },
+                              child: Text(community.handle!,
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 14,
+                                      decoration: TextDecoration.none,
+                                      color: theme_darkblue.withOpacity(0.5))),
+                            ),
+            
+                            SizedBox(height: 30),
+            
+                            // row of number of memebers and public/private
+                            MermbersCountWidget(
+                              numOfMembers: state is SpecificCommunityNumberLoaded
+                                  ? state.numOfMembers.toString()
+                                  : '0',
+                              publicOrPrivate:
+                                  community.isPublic ? 'PUBLIC' : 'PRIVATE',
+                              requestsCubit: requestsCubit,
+                              communityID: community.id!,
+                            ),
+                            SizedBox(height: 10),
+            
+                            GestureDetector(
+                                onTap: () {
+                                  if (userRole == userRoleOptions.owner) {
+                                    showUpdateCommunityModal(
+                                        context,
+                                        (value) {
+                                          if (value.length < 3) {
+                                            return 'Description must be at least 3 characters';
+                                          }
+                                          return null;
+                                        },
+                                        'Update Community Description',
+                                        'Description',
+                                        community.description!,
+                                        (value) {
+                                          updateCommunity(community.copyWith(
+                                              description: value));
+                                        });
+                                  }
+                                },
+                                child: OverViewWidget(
+                                    overview: community.description)),
+                            SizedBox(
+                              height: 10,
+                            ),
+            
+                            userRole == userRoleOptions.owner
+                                ? _builderMembersWidget(memebersCubit, user)
+                                : Container(),
+                            SizedBox(
+                              height: 30,
+                            ),
+            
+                            mainButton(
+                                userRole, context, exploreCubit, communityCubit),
+                          ]),
+                    ),
+                  ),
+                ],
+              ),
             ),
           );
         },
@@ -526,8 +689,10 @@ class MermbersCountWidget extends StatelessWidget {
                     bloc: sl.get<SpecificCommunityCubit>()
                       ..getCommunitynumOfMemebers(communityID),
                     builder: (context, state) {
-                      return Text(state is SpecificCommunityNumberLoaded ?
-                              state.numOfMembers.toString() : numOfMembers,
+                      return Text(
+                          state is SpecificCommunityNumberLoaded
+                              ? state.numOfMembers.toString()
+                              : numOfMembers,
                           style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 20,

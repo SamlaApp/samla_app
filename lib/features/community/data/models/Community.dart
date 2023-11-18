@@ -45,6 +45,7 @@ class CommunityModel extends Community {
 // used when create a new community
   factory CommunityModel.fromEntity(Community community) {
     return CommunityModel(
+      id: community.id,
       name: community.name,
       description: community.description,
       isPublic: community.isPublic,
