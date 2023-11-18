@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:samla_app/features/training/domain/entities/Template.dart';
 
 import '../../../../config/themes/common_styles.dart';
 import '../../../nutrition/presentation/widgets/MaelAdapt/DayDropdown.dart';
@@ -238,12 +239,14 @@ import '../widgets/newTamplate-newstyle/ExersciseItem.dart';
 
 // ########### New UI style start from here ####################
 
-class NewTemplatePage extends StatefulWidget {
+class TemplatePage extends StatefulWidget {
+  const TemplatePage({super.key, required Template template});
+
   @override
-  _NewTemplatePageState createState() => _NewTemplatePageState();
+  _TemplatePageState createState() => _TemplatePageState();
 }
 
-class _NewTemplatePageState extends State<NewTemplatePage> {
+class _TemplatePageState extends State<TemplatePage> {
   late LinearGradient gradient;
 
   @override
@@ -332,6 +335,8 @@ class _NewTemplatePageState extends State<NewTemplatePage> {
 }
 
 class CurrentPlanContent extends StatelessWidget {
+  const CurrentPlanContent({super.key});
+
   @override
   Widget build(BuildContext context) {
 
@@ -399,6 +404,8 @@ class CurrentPlanContent extends StatelessWidget {
 
 
 class FindExercisesContent extends StatelessWidget {
+  const FindExercisesContent({super.key});
+
   @override
   Widget build(BuildContext context) {
     // Sample exercise data

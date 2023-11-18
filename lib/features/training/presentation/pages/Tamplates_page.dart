@@ -4,12 +4,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:samla_app/config/themes/common_styles.dart';
 import 'package:samla_app/features/training/domain/entities/Template.dart';
 import 'package:samla_app/features/training/presentation/cubit/Templates/template_cubit.dart';
+import 'package:samla_app/features/training/presentation/pages/tamplate_page.dart';
 import 'package:samla_app/features/training/training_di.dart' as di;
 
-import 'new_tamplate_page.dart';
 
 class TemplatesPage extends StatefulWidget {
-  TemplatesPage({Key? key}) : super(key: key);
+  const TemplatesPage({Key? key}) : super(key: key);
 
   @override
   _TemplatesPageState createState() => _TemplatesPageState();
@@ -18,62 +18,31 @@ class TemplatesPage extends StatefulWidget {
 class _TemplatesPageState extends State<TemplatesPage> {
   final cubit = TemplateCubit(di.sl.get());
 
-  final List<Map<String, dynamic>> templates = [
-    {
-      'templateName': 'Template 1',
-      'days': [
-        {
-          'dayName': 'Day 1 - Pull Routine',
-          'exercises': 'Pull-Ups, Chin-Ups, Rows',
-        },
-        {
-          'dayName': 'Day 2 - Leg Routine',
-          'exercises': 'Squats, Lunges, Deadlifts',
-        },
-        {
-          'dayName': 'Day 3 - Chest Workout',
-          'exercises': 'Bench Press, Push-Ups, Dumbbell Flyes',
-        },
-        {
-          'dayName': 'Day 4 - Cardio',
-          'exercises': 'Running, Cycling, Jumping Jacks',
-        },
-        // Add more days here
-      ],
-    },
-    {
-      'templateName': 'Template 2',
-      'days': [
-        {
-          'dayName': 'Day 1 - Push Routine',
-          'exercises': 'Push-Ups, Dips, Bench Press',
-        },
-        {
-          'dayName': 'Day 2 - Core Workout',
-          'exercises': 'Planks, Sit-Ups, Russian Twists, Leg Raises',
-        },
-        {
-          'dayName': 'Day 3 - Back',
-          'exercises': 'Pull-Ups, Rows, Shoulder Press',
-        },
-        {
-          'dayName': 'Day 4 - Leg Day',
-          'exercises': 'Squats, Lunges, Leg Curls, Calf Raises',
-        },
-        // Add more days here
-      ],
-    },
-    // Add more templates here
-  ];
-
   Map<String, bool> addedTemplates = {};
 
   @override
   void initState() {
     super.initState();
-    // Initialize the addedTemplates map based on your templates list
-    for (var template in templates) {
-      addedTemplates[template['templateName']] = false;
+    cubit.getAllTemplates();
+  }
+
+  void refresh() {
+    setState(() {
+      cubit.getAllTemplates();
+    });
+  }
+
+  final formKey = GlobalKey<FormState>();
+  final nameController = TextEditingController();
+
+  void _submitForm() {
+    if (formKey.currentState!.validate()) {
+      final template = Template(
+        name: nameController.text,
+        is_active: false,
+      );
+      cubit.createTemplate(template);
+      Navigator.of(context).pop();
     }
   }
 
@@ -186,17 +155,17 @@ class _TemplatesPageState extends State<TemplatesPage> {
           secondaryBegin: Alignment.bottomRight,
           secondaryEnd: Alignment.topLeft,
           primaryColors: [
-            theme_green,
-            Colors.blueAccent,
+            theme_darkblue,
+            theme_red,
           ],
           secondaryColors: [
-            theme_green,
-            const Color.fromARGB(255, 120, 90, 255)
+            theme_pink,
+            theme_red,
           ],
         ),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(12.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -246,31 +215,32 @@ class _TemplatesPageState extends State<TemplatesPage> {
   //   );
   // }
   //
+
+  // Done
   Widget buildTemplatesHeader(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          'Templates',
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-        ),
-        ElevatedButton(
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) =>
-                      NewTemplatePage()), // Navigate to the new template page
-            );
-          },
-          child: Text('+ Add Template'),
-          style: ElevatedButton.styleFrom(
-            primary: theme_green, // Define your theme_green color in your theme
+    return Container(
+      padding: const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 8),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            'Templates',
+            style: TextStyle(
+                color: theme_darkblue,
+                fontSize: 16,
+                fontWeight: FontWeight.bold),
           ),
-        ),
-      ],
+          IconButton(
+            icon: Icon(Icons.refresh, color: theme_darkblue),
+            onPressed: () {
+              refresh();
+            },
+          ),
+        ],
+      ),
     );
   }
+
   //
   // Widget buildTemplateList() {
   //   return ListView.builder(
@@ -363,41 +333,41 @@ class _TemplatesPageState extends State<TemplatesPage> {
   //   );
   // }
 
-  // Pup up for new template, just name
+  // Create new Template
   Widget buildNewTemplateDialog() {
-    final _formKey = GlobalKey<FormState>();
-    final _nameController = TextEditingController();
-
-    void _submitForm() {
-      if (_formKey.currentState!.validate()) {
-        final template = Template(
-            name: _nameController.text,
-            is_active: false,
-        );
-        cubit.createTemplate(template);
-        Navigator.of(context).pop();
-      }
-    }
 
     return Dialog(
-      insetPadding: EdgeInsets.all(13),
+      insetPadding: const EdgeInsets.all(16),
       child: Container(
         width: MediaQuery.of(context).size.width * 0.9,
-        padding: EdgeInsets.all(20.0),
+        padding: const EdgeInsets.all(20.0),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20),
+        ),
         child: Form(
-          key: _formKey,
+          key: formKey,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              const Text('New Template',
-                  style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold)),
+               Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                 children: [
+                   Icon(Icons.file_present_rounded, color: theme_darkblue, size: 25),
+                   const SizedBox(width: 10),
+                   Text('New Template',
+                      style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold, fontFamily: 'Cairo',color: theme_darkblue),
+                      overflow: TextOverflow.ellipsis,),
+                 ],
+               ),
               const SizedBox(height: 20.0),
               TextFormField(
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
+                decoration:  InputDecoration(
+                  border: const OutlineInputBorder(),
                   labelText: 'Template Name',
+                  focusColor: theme_green,
                 ),
-                controller: _nameController,
+                controller: nameController,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter a name';
@@ -406,11 +376,38 @@ class _TemplatesPageState extends State<TemplatesPage> {
                 },
               ),
               const SizedBox(height: 20.0),
-              TextButton(
-                child: Text('Create'),
-                onPressed: () {
-                  _submitForm();
-                },
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton.icon(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    icon: const Icon(Icons.cancel),
+                    label: const Text('Cancel'),
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: theme_red, backgroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(32.0),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 10.0),
+                  ElevatedButton.icon(
+                    onPressed: () {
+                      _submitForm();
+                    },
+                    icon: const Icon(Icons.add),
+                    label: const Text('Create'),
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.white, backgroundColor: theme_darkblue,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(32.0),
+                      ),
+                    ),
+                  ),
+
+                ],
               ),
             ],
           ),
@@ -419,8 +416,8 @@ class _TemplatesPageState extends State<TemplatesPage> {
     );
   }
 
+  // Display Templates
   BlocBuilder<TemplateCubit, TemplateState> buildBlocBuilder() {
-    cubit.getAllTemplates();
     return BlocBuilder<TemplateCubit, TemplateState>(
       bloc: cubit,
       builder: (context, state) {
@@ -445,46 +442,65 @@ class _TemplatesPageState extends State<TemplatesPage> {
     );
   }
 
+  // Display Template Card
   Widget _buildTemplateCard(Template template) {
-    String templateName = template.name;
-    bool isTemplateAdded = addedTemplates[templateName] ?? false;
-
-    return Card(
-      child: Stack(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+    bool isActive = template.is_active;
+    return Container(
+      padding: const EdgeInsets.all(8),
+      margin: const EdgeInsets.only(bottom: 16),
+      height: 75,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            theme_darkblue,
+            theme_pink,
+          ],
+        ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Row(
+          children: [
+            Row(
               children: [
                 Text(
                   template.name,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 18,
+                    color: Colors.white,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                SizedBox(height: 16),
+                const SizedBox(width: 10),
+                if(isActive)
+                  const Icon(Icons.check_circle, color: Colors.white, size: 20),
               ],
             ),
-          ),
-          Positioned(
-            top: 8,
-            right: 8,
-            child: IconButton(
+            const Spacer(),
+            // view
+            ElevatedButton(
               onPressed: () {
-                setState(() {
-                  addedTemplates[templateName] = !isTemplateAdded;
-                });
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => TemplatePage(template: template),
+                  ),
+                );
               },
-              icon: Icon(
-                isTemplateAdded ? Icons.toggle_on : Icons.toggle_off,
-                size: 40,
-                color: isTemplateAdded ? theme_green : Colors.grey,
+              style: ElevatedButton.styleFrom(
+                primary: Colors.white,
+                onPrimary: theme_darkblue,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(32.0),
+                ),
               ),
+              child: const Text('View'),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
