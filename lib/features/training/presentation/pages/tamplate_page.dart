@@ -458,7 +458,7 @@ class FindExercisesContent extends StatelessWidget {
         secondaryMuscles: Set<String>.from(exerciseData['secondaryMuscles']),
         gradient: LinearGradient(
           // Define the gradient as needed
-          colors: [Colors.blue, theme_green],
+          colors: [theme_darkblue, theme_pink],
         ),
         onRemove: () {
           // Handle the removal of the exercise item
