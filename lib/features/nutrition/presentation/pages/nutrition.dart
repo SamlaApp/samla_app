@@ -36,7 +36,7 @@ class _NutritionPageState extends State<NutritionPage> {
             const SizedBox(height: 20),
             CustomSignedCalories(),
             const SizedBox(height: 20),
-            // Macronutrients(),
+            Macronutrients(),
             
             const SizedBox(height: 20),
           ],
