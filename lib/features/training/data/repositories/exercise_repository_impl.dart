@@ -1,12 +1,34 @@
-import '../datasources/mock_data_source.dart';
-import '../models/exercise_model.dart';
+import 'package:dartz/dartz.dart';
+import 'package:samla_app/core/error/exceptions.dart';
+import 'package:samla_app/core/error/failures.dart';
+import 'package:samla_app/core/network/network_info.dart';
+import 'package:samla_app/features/training/data/datasources/local_data_source.dart';
+import 'package:samla_app/features/training/data/datasources/remote_data_source.dart';
+import 'package:samla_app/features/training/domain/entities/ExerciseLibrary.dart';
+import 'package:samla_app/features/training/domain/repositories/exercise_repository.dart';
 
-class ExerciseRepository {
-  final MockDataSource _dataSource;
+class ExerciseRepositoryImpl implements ExerciseRepository {
+  final RemoteDataSource remoteDataSource;
+  final LocalDataSource localDataSource;
+  final NetworkInfo networkInfo;
 
-  ExerciseRepository(this._dataSource);
+  ExerciseRepositoryImpl({
+    required this.remoteDataSource,
+    required this.localDataSource,
+    required this.networkInfo,
+  });
 
-  Future<List<ExerciseModel>> getExercises() async {
-    return _dataSource.getExercises();
+  @override
+  Future<Either<Failure, List<ExerciseLibrary>>> getBodyPartExerciseLibrary({required String part}) async {
+    if (await networkInfo.isConnected) {
+      try {
+        final remoteExercises = await remoteDataSource.getBodyPartExerciseLibrary(part: part);
+        return Right(remoteExercises);
+      } on ServerException catch (e) {
+        return Left(ServerFailure(message: e.message));
+      }
+    } else {
+      return Left(ServerFailure(message: "No Internet Connection"));
+    }
   }
 }

@@ -25,7 +25,7 @@ class _TrainingPageState extends State<TrainingPage> {
   void initState() {
     super.initState();
 
-    di.TrainingInit(); // Initialize the training module
+    di.trainingInit(); // Initialize the training module
     cubit = di.sl<TemplateCubit>(); // Get the cubit instance
 
   }

@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:samla_app/features/training/domain/entities/Template.dart';
+import 'package:samla_app/features/training/presentation/cubit/Exercises/exercise_cubit.dart';
 import 'package:samla_app/features/training/presentation/cubit/Templates/template_cubit.dart';
+import 'package:samla_app/features/training/presentation/widgets/bodyPartsDropDown.dart';
+import 'package:samla_app/features/training/presentation/widgets/ExersciseItem.dart';
 import '../../../../config/themes/common_styles.dart';
 import '../../../nutrition/presentation/widgets/MaelAdapt/DayDropdown.dart';
-import '../widgets/newTamplate-newstyle/ExersciseItem.dart';
 import 'package:samla_app/features/training/training_di.dart' as di;
 
 // class NewTemplatePage extends StatefulWidget {
@@ -243,24 +246,19 @@ class TemplatePage extends StatefulWidget {
 }
 
 class _TemplatePageState extends State<TemplatePage> {
+  final templateCubit = di.sl.get<TemplateCubit>();
+  final exercisesCubit = di.sl.get<ExerciseCubit>();
 
-  final cubit = TemplateCubit(di.sl.get());
-
+  String _selectedBodyPart = 'Back';
 
   @override
   void initState() {
     super.initState();
-
-  }
-
-  @override
-  void dispose() {
-    cubit.close();
-    super.dispose();
+    exercisesCubit.getBodyPartExerciseLibrary(part: _selectedBodyPart);
   }
 
   void _deleteTemplate() {
-    cubit.deleteTemplate(widget.template.id!);
+    templateCubit.deleteTemplate(widget.template.id!);
     Navigator.pop(context);
   }
 
@@ -288,7 +286,8 @@ class _TemplatePageState extends State<TemplatePage> {
                     ),
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        foregroundColor: Colors.black, backgroundColor: Colors.white70,
+                        foregroundColor: Colors.black,
+                        backgroundColor: Colors.white70,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20.0),
                         ),
@@ -296,7 +295,8 @@ class _TemplatePageState extends State<TemplatePage> {
                       onPressed: () {
                         print('Should show a dialog to update the template');
                       },
-                      child: const Text('Update', style: TextStyle(fontSize: 16)),
+                      child:
+                          const Text('Update', style: TextStyle(fontSize: 16)),
                     ),
                   ],
                 ),
@@ -341,23 +341,16 @@ class _TemplatePageState extends State<TemplatePage> {
         ),
         body: TabBarView(
           children: [
-            CurrentPlanContent(),
-            FindExercisesContent(),
+            _currentPlanContent(),
+            _findExercisesContent(),
           ],
         ),
       ),
     );
   }
-}
 
-class CurrentPlanContent extends StatelessWidget {
-  const CurrentPlanContent({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    Color dropdownColor = Colors.black;
-    Color dropdownBackgroundColor = Colors.grey.shade200;
-
+// First tab
+  Widget _currentPlanContent() {
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -375,14 +368,14 @@ class CurrentPlanContent extends StatelessWidget {
                       ),
                       hintText: 'Your daily plan name',
                       focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
+                        borderSide: const BorderSide(
                           color: Colors.blue,
                           width: 2.0,
                         ),
                         borderRadius: BorderRadius.circular(10.0),
                       ),
                       enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
+                        borderSide: const BorderSide(
                           color: Colors.grey,
                           width: 1.0,
                         ),
@@ -392,7 +385,7 @@ class CurrentPlanContent extends StatelessWidget {
                   ),
                 ),
 
-                SizedBox(width: 16), // Spacing between the two widgets
+                const SizedBox(width: 16), // Spacing between the two widgets
 
                 Expanded(
                   flex: 1,
@@ -401,8 +394,8 @@ class CurrentPlanContent extends StatelessWidget {
                     onChanged: (String newValue) {
                       // Handle changes here
                     },
-                    color: dropdownColor,
-                    backgroundColor: dropdownBackgroundColor,
+                    color: Colors.black,
+                    backgroundColor: Colors.grey.shade200,
                   ),
                 ),
               ],
@@ -412,68 +405,86 @@ class CurrentPlanContent extends StatelessWidget {
       ),
     );
   }
-}
 
-class FindExercisesContent extends StatelessWidget {
-  const FindExercisesContent({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    // Sample exercise data
-    List<Map<String, dynamic>> exercisesData = [
-      {
-        'exerciseName': 'Exercise 1',
-        'bodyPart': 'Chest',
-        'equipment': 'Dumbbells',
-        'gifUrl': 'https://source.unsplash.com/featured/?gym',
-        // Replace with actual GIF URL
-        'target': 'Strength',
-        'instructions':
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-        'secondaryMuscles': {'Triceps', 'Shoulders'},
-      },
-      {
-        'exerciseName': 'Exercise 2',
-        'bodyPart': 'Legs',
-        'equipment': 'Barbell',
-        'gifUrl': 'https://source.unsplash.com/featured/?gym',
-        // Replace with actual GIF URL
-        'target': 'Hypertrophy',
-        'instructions':
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-        'secondaryMuscles': {'Glutes', 'Hamstrings'},
-      },
-      // Add more exercise data as needed
-    ];
-
-    // Create a list of ExerciseItem widgets based on the exercise data
-    List<ExerciseItem> exerciseItems = exercisesData.map((exerciseData) {
-      return ExerciseItem(
-        name: exerciseData['exerciseName'],
-        bodyPart: exerciseData['bodyPart'],
-        equipment: exerciseData['equipment'],
-        gifUrl: exerciseData['gifUrl'],
-        target: exerciseData['target'],
-        instructions: exerciseData['instructions'],
-        secondaryMuscles: Set<String>.from(exerciseData['secondaryMuscles']),
-        gradient: LinearGradient(
-          // Define the gradient as needed
-          colors: [theme_darkblue, theme_pink],
-        ),
-        onRemove: () {
-          // Handle the removal of the exercise item
-          // You can implement the removal logic here
-        },
-      );
-    }).toList();
-
+// Second tab
+  Widget _findExercisesContent() {
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
-          children: exerciseItems, // Add the list of exercise items here
+          children: [
+            Row(
+              children: [
+                const Text(
+                  'Body Part',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.normal,
+                  ),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: BodyPartDropdown(
+                    initialValue: null,
+                    onChanged: (String newValue) {
+                      _selectedBodyPart = newValue;
+                      exercisesCubit.getBodyPartExerciseLibrary(part: newValue);
+                    },
+                    color: Colors.black,
+                    backgroundColor: Colors.grey.shade200,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            _buildBodyPartExercises(),
+          ],
         ),
       ),
+    );
+  }
+
+  BlocBuilder<ExerciseCubit, ExerciseState> _buildBodyPartExercises() {
+    return BlocBuilder<ExerciseCubit, ExerciseState>(
+      bloc: exercisesCubit,
+      builder: (context, state) {
+        if (state is ExerciseLoadingState) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (state is ExerciseLoadedState) {
+          return SingleChildScrollView(
+            child: Column(
+              children: [
+                for (var exercise in state.exercises)
+                  ExerciseItem(
+                    id: exercise.id,
+                    name: exercise.name,
+                    bodyPart: exercise.bodyPart,
+                    equipment: exercise.equipment,
+                    gifUrl: exercise.gifUrl,
+                    target: exercise.target,
+                    instructions: exercise.instructions,
+                    secondaryMuscles: exercise.secondaryMuscles,
+                    gradient: LinearGradient(
+                      colors: [theme_pink, theme_darkblue],
+                      tileMode: TileMode.clamp,
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                    onRemove: () {
+                      print('Remove exercise');
+                    },
+                  ),
+              ],
+            ),
+          );
+        } else if (state is ExerciseErrorState) {
+          return Center(
+            child: Text(state.message),
+          );
+        } else {
+          return const Center(child: Text('Something went wrong'));
+        }
+      },
     );
   }
 }
