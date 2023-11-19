@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:samla_app/features/main/presentation/widgets/CircularIndicators.dart';
-import 'package:samla_app/features/main/presentation/widgets/DailyChallenge.dart';
 import 'package:samla_app/features/main/presentation/widgets/WeeklyProgress.dart';
 import 'package:samla_app/features/main/home_di.dart' as di;
 import 'package:samla_app/features/auth/presentation/bloc/auth_bloc.dart';
-
-import '../../../../config/themes/common_styles.dart';
 import '../cubits/ProgressCubit/progress_cubit.dart';
 
 class HomePage extends StatefulWidget {
@@ -46,16 +42,8 @@ class _HomeState extends State<HomePage> {
         child: Wrap(direction: Axis.horizontal, runSpacing: 25, children: [
           //  circular indicators
           CircularIndicators(),
-          //  check if there adaily challenge
-          if (dailyChallengeStatus)
-            DailyChallenge(
-              challengeName: 'RUNNING',
-              challengeProgress: '2 Times  |  45 Min',
-              challengeImage: 'images/runner.svg',
-              statusUpdate: deactivateDailyChallengeStatus,
-            ),
+
           WeeklyProgress(),
-          progressBuilder()
 
         ]),
       ),
@@ -63,30 +51,4 @@ class _HomeState extends State<HomePage> {
     // persistentFooterButtons: [MainButtons()],
   }
 
-  BlocBuilder<ProgressCubit, ProgressState> progressBuilder() {
-    progressCubit.getProgress();
-    return BlocBuilder<ProgressCubit, ProgressState>(
-      bloc: progressCubit,
-      builder: (context, state) {
-        if (state is ProgressInitial) {
-          return Center(
-            child: CircularProgressIndicator(
-              color: theme_green,
-              backgroundColor: theme_pink,
-            ),
-          );
-        } else if (state is ProgressLoadedState) {
-          return Container(
-            child: Text(state.progress.toString()),
-          );
-        } else if (state is ProgressErrorState){
-          return Center(
-            child: Text('Error ${state.message}'),
-          );
-        } else {
-          return Text('Initial');
-        }
-      },
-    );
-  }
 }
