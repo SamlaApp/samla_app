@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:samla_app/features/training/domain/entities/Template.dart';
@@ -295,6 +296,8 @@ class _TemplatePageState extends State<TemplatePage> {
                       ),
                       onPressed: () {
                         print('Should show a dialog to update the template');
+                        // _showUpdateTemplateDialog(context);
+                        _showUpdateTemplateDialog(context);
                       },
                       child:
                           const Text('Update', style: TextStyle(fontSize: 16)),
@@ -452,4 +455,99 @@ class _TemplatePageState extends State<TemplatePage> {
       },
     );
   }
+}
+
+void _showUpdateTemplateDialog(BuildContext context) {
+  TextEditingController nameController = TextEditingController();
+  bool isActivated = false;
+
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text('Update The Template'
+            ,style: TextStyle(color: theme_darkblue),),
+        content: Stack(
+          clipBehavior: Clip.none,
+          children: [
+            Container(
+              width: MediaQuery.of(context).size.width * 0.7,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  TextField(
+                    controller: nameController,
+                    decoration: InputDecoration(
+                      hintText: 'Enter new template name',
+                      fillColor: inputField_color,
+                      filled: true,
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide.none,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text('Activate Plan?',
+                          style: TextStyle(color: theme_grey)),
+                      Switch(
+                        value: isActivated,
+                        onChanged: (bool value) {
+                          isActivated = value;
+                          (context as Element).markNeedsBuild();
+                        },
+                        activeColor: theme_green,
+                        inactiveThumbColor: theme_grey,
+                        inactiveTrackColor: theme_grey.withOpacity(0.5),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            Positioned(
+              right: -45,
+              top: -100,
+              child: Container(
+                width: 75,
+                height: 75,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: LinearGradient(
+                    colors: [theme_pink, theme_darkblue],
+                    tileMode: TileMode.clamp,
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                ),
+                child: Icon(
+                  Icons.edit,
+                  color: primary_color,
+                  size: 34.0,
+                ),
+              ),
+            ),
+          ],
+        ),
+        actions: <Widget>[
+          TextButton(
+            child: Text('Cancel', style: TextStyle(color: theme_red)),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+          TextButton(
+            child: Text('Submit', style: TextStyle(color: theme_green)),
+            onPressed: () {
+              // TOdo submit logic here
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
+      );
+    },
+  );
 }
