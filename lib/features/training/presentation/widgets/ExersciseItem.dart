@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:samla_app/config/themes/common_styles.dart';
 
 class ExerciseItem extends StatefulWidget {
   final int? id;
@@ -8,7 +9,7 @@ class ExerciseItem extends StatefulWidget {
   final String gifUrl;
   final String target;
   final String instructions;
-  final Set<String> secondaryMuscles;
+  final List<String> secondaryMuscles;
   final LinearGradient gradient;
   final VoidCallback onRemove;
 
@@ -31,6 +32,9 @@ class ExerciseItem extends StatefulWidget {
 }
 
 class _ExerciseItemState extends State<ExerciseItem> {
+
+  final String _baseURL = 'https://samla.mohsowa.com/api/training/image/';
+
   bool _isRemoved = false;
   bool _isExpanded = false;
   bool _isAddedToPlan = false;
@@ -94,6 +98,7 @@ class _ExerciseItemState extends State<ExerciseItem> {
     return Container(
       margin: const EdgeInsets.only(bottom: 10),
       decoration: BoxDecoration(
+        backgroundBlendMode: BlendMode.darken,
         borderRadius: BorderRadius.circular(10),
         gradient: widget.gradient,
       ),
@@ -101,24 +106,12 @@ class _ExerciseItemState extends State<ExerciseItem> {
         children: [
           ListTile(
             contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-            leading: ClipRRect(
-              borderRadius: BorderRadius.circular(8),
-              child: Image.network(
-                widget.gifUrl,
-                width: 120,
-                height: 130,
-                fit: BoxFit.cover,
-              ),
-            ),
-            title: Padding(
-              padding: const EdgeInsets.only(bottom: 15),
-              child: Text(
-                widget.name,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w800,
-                  fontSize: 18,
-                ),
+            title: Text(
+              widget.name,
+              style: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w800,
+                fontSize: 18,
               ),
             ),
             trailing: Row(
@@ -133,12 +126,13 @@ class _ExerciseItemState extends State<ExerciseItem> {
                   icon: Icon(
                     _isExpanded ? Icons.expand_less : Icons.expand_more,
                     color: Colors.white,
+                    size: 30,
                   ),
                 ),
                 IconButton(
                   onPressed: _handleAddToPlan,
                   icon: const Icon(
-                    Icons.add,
+                    Icons.add_circle_outline,
                     color: Colors.white,
                   ),
                 ),
@@ -154,7 +148,7 @@ class _ExerciseItemState extends State<ExerciseItem> {
 
   Widget _buildSummaryRow() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -171,9 +165,9 @@ class _ExerciseItemState extends State<ExerciseItem> {
       alignment: Alignment.center,
       children: [
         Padding(
-          padding: const EdgeInsets.all(5.0),
+          padding: const EdgeInsets.only(top: 10, bottom: 20),
           child: Container(
-            width: 150,
+            width: 160,
             padding: const EdgeInsets.fromLTRB(16, 20, 16, 16),
             decoration: BoxDecoration(
               border: Border.all(color: Colors.white),
@@ -191,7 +185,7 @@ class _ExerciseItemState extends State<ExerciseItem> {
         ),
         Positioned(
           top: 0,
-          left: 15,
+          left: 0,
           child: ClipRRect(
             borderRadius: BorderRadius.circular(6),
             child: Container(
@@ -199,10 +193,10 @@ class _ExerciseItemState extends State<ExerciseItem> {
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 1),
               child: Text(
                 label,
-                style: const TextStyle(
-                  color: Colors.lightBlue,
+                style: TextStyle(
+                  color: theme_darkblue,
                   fontSize: 14,
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.normal,
                 ),
               ),
             ),
@@ -220,31 +214,61 @@ class _ExerciseItemState extends State<ExerciseItem> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              Text('Target: ', style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.bold),),
-              _buildDetailText('${widget.target}'),
-            ],
-          ),
-          Row(
-            children: [
-              Text('Secondary Muscles: ', style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.bold),),
-              _buildDetailText('${widget.secondaryMuscles.join(', ')}'),
-            ],
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start, // Aligns children to the start of the column
-            children: [
-              Text(
-                'Instructions:',
-                style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold
-                ),
+
+
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: Image.network(
+                _baseURL + widget.gifUrl,
+                fit: BoxFit.cover,
               ),
-              _buildDetailText(widget.instructions),
-            ],
+            ),
+          ),
+
+          const SizedBox(height: 10),
+
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    const Text('Target: ', style: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.bold),),
+                    _buildDetailText('${widget.target}.'),
+                  ],
+                ),
+                const SizedBox(height: 5),
+                Row(
+                  children: [
+                    const Text('Secondary Muscles: ', style: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.bold),),
+                    _buildDetailText('${widget.secondaryMuscles.join(', ')}.'),
+                  ],
+                ),
+              ],
+            ),
+          ),
+
+
+
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start, // Aligns children to the start of the column
+              children: [
+                const Text(
+                  'Instructions:',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 5),
+                _buildDetailText(widget.instructions),
+              ],
+            ),
           ),
         ],
       ),
@@ -257,9 +281,13 @@ class _ExerciseItemState extends State<ExerciseItem> {
       style: const TextStyle(
         color: Colors.white,
         fontSize: 14,
+        fontWeight: FontWeight.normal,
+        overflow: TextOverflow.visible,
+        decoration: TextDecoration.none,
       ),
       softWrap: true,
       overflow: TextOverflow.visible,
+      textAlign: TextAlign.justify
     );
   }
 

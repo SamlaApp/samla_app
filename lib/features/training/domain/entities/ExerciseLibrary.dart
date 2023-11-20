@@ -8,7 +8,7 @@ class ExerciseLibrary extends Equatable {
   final String gifUrl;
   final String target;
   final String instructions;
-  final Set<String> secondaryMuscles;
+  final List<String> secondaryMuscles;
 
   const ExerciseLibrary({
     this.id,
@@ -32,7 +32,7 @@ class ExerciseLibrary extends Equatable {
     String? gifUrl,
     String? target,
     String? instructions,
-    Set<String>? secondaryMuscles,
+    List<String>? secondaryMuscles,
   }) {
     return ExerciseLibrary(
       id: id ?? this.id,

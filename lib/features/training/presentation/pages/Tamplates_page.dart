@@ -16,7 +16,7 @@ class TemplatesPage extends StatefulWidget {
 }
 
 class _TemplatesPageState extends State<TemplatesPage> {
-  final cubit = TemplateCubit(di.sl.get());
+  final cubit = di.sl.get<TemplateCubit>();
 
   Map<String, bool> addedTemplates = {};
 
@@ -26,11 +26,6 @@ class _TemplatesPageState extends State<TemplatesPage> {
     cubit.getAllTemplates();
   }
 
-  @override
-  void dispose() {
-    cubit.close();
-    super.dispose();
-  }
 
   void refresh() {
     setState(() {

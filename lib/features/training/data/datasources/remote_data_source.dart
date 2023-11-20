@@ -1,16 +1,24 @@
 import 'dart:convert';
 import 'package:dartz/dartz.dart';
 import 'package:samla_app/core/error/exceptions.dart';
+import 'package:samla_app/features/training/data/models/exerciseLibrary_model.dart';
 import 'package:samla_app/features/training/data/models/template_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:samla_app/core/network/samlaAPI.dart';
+import 'package:samla_app/features/training/domain/entities/ExerciseLibrary.dart';
 import 'package:samla_app/features/training/domain/entities/Template.dart';
 
 abstract class RemoteDataSource {
   Future<List<Template>> getAllTemplates();
+
   Future<Template> createTemplate(Template template);
+
   Future<Template> activeTemplate();
+
   Future<void> deleteTemplate(int id);
+
+  Future<List<ExerciseLibrary>> getBodyPartExerciseLibrary(
+      {required String part});
 }
 
 class TemplateRemoteDataSourceImpl implements RemoteDataSource {
@@ -44,7 +52,7 @@ class TemplateRemoteDataSourceImpl implements RemoteDataSource {
     final resBody = await res.stream.bytesToString();
     if (res.statusCode == 200) {
       final TemplateModel convertedTemplate =
-      TemplateModel.fromJson(json.decode(resBody)['template']);
+          TemplateModel.fromJson(json.decode(resBody)['template']);
       return convertedTemplate;
     } else {
       throw ServerException(message: json.decode(resBody)['message']);
@@ -53,13 +61,12 @@ class TemplateRemoteDataSourceImpl implements RemoteDataSource {
 
   @override
   Future<Template> activeTemplate() async {
-    final res = await samlaAPI(
-        endPoint: '/training/template/active',
-        method: 'GET');
+    final res =
+        await samlaAPI(endPoint: '/training/template/active', method: 'GET');
     final resBody = await res.stream.bytesToString();
     if (res.statusCode == 200) {
       final TemplateModel convertedTemplate =
-      TemplateModel.fromJson(json.decode(resBody)['template']);
+          TemplateModel.fromJson(json.decode(resBody)['template']);
       return convertedTemplate;
     } else {
       throw ServerException(message: json.decode(resBody)['message']);
@@ -69,7 +76,7 @@ class TemplateRemoteDataSourceImpl implements RemoteDataSource {
   @override
   Future<void> deleteTemplate(int id) async {
     final res = await samlaAPI(
-      data: {'id': id.toString()},
+        data: {'id': id.toString()},
         endPoint: '/training/template/delete',
         method: 'POST');
     final resBody = await res.stream.bytesToString();
@@ -80,5 +87,21 @@ class TemplateRemoteDataSourceImpl implements RemoteDataSource {
     }
   }
 
-
+  @override
+  Future<List<ExerciseLibrary>> getBodyPartExerciseLibrary(
+      {required String part}) async {
+    final res = await samlaAPI(
+        endPoint: '/training/exercise/get/$part', method: 'GET');
+    final resBody = await res.stream.bytesToString();
+    print(resBody);
+    if (res.statusCode == 200) {
+      final List<dynamic> exercises = json.decode(resBody)['exercises'];
+      final List<ExerciseLibraryModel> convertedExercises = exercises
+          .map((e) => ExerciseLibraryModel.fromJson(e as Map<String, dynamic>))
+          .toList();
+      return convertedExercises;
+    } else {
+      throw ServerException(message: json.decode(resBody)['message']);
+    }
+  }
 }

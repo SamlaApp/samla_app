@@ -10,13 +10,11 @@ import 'package:samla_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:samla_app/features/profile/presentation/pages/PersonalInfo.dart';
 import 'package:samla_app/features/profile/presentation/widgets/AppBar_Widget01.dart';
 import 'package:samla_app/features/profile/presentation/widgets/profile_widget.dart';
-import 'package:samla_app/features/profile/presentation/widgets/Achievments.dart';
 
 // import '../widgets/InfoWidget01.dart';
 import '../widgets/InfoWidget.dart';
 
 import '../widgets/SettingsWidget.dart';
-import '../widgets/numbers.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -55,8 +53,6 @@ class _ProfilePageState extends State<ProfilePage> {
             SizedBox(
               height: 20,
             ),
-
-            NumbersWidget(),
 
             Container(
               padding: EdgeInsets.symmetric(horizontal: 20),
@@ -97,7 +93,8 @@ class _ProfilePageState extends State<ProfilePage> {
                         ),
                       ),
 
-                      // Achievements Button
+
+                      // Phone Button
                       Expanded(
                         child: Container(
                           decoration: BoxDecoration(
@@ -115,39 +112,6 @@ class _ProfilePageState extends State<ProfilePage> {
                             onPressed: () {
                               setState(() {
                                 _selectedIndex = 1;
-                              });
-                            },
-                            child: const Text(
-                              'Achievements',
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: Color.fromRGBO(10, 44, 64, 1),
-                                fontWeight: FontWeight.bold,
-                                decoration: TextDecoration.none,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-
-                      // Phone Button
-                      Expanded(
-                        child: Container(
-                          decoration: BoxDecoration(
-                            border: Border(
-                              bottom: BorderSide(
-                                color: (_selectedIndex == 2)
-                                    ? const Color.fromRGBO(64, 194, 210, 1)
-                                    : Colors.grey,
-                                width: 3,
-                                style: BorderStyle.solid,
-                              ),
-                            ),
-                          ),
-                          child: TextButton(
-                            onPressed: () {
-                              setState(() {
-                                _selectedIndex = 2;
                               });
                             },
                             child: const Text(
@@ -178,11 +142,6 @@ class _ProfilePageState extends State<ProfilePage> {
                     // Info
                     InfoWidget(),
                   ] else if (_selectedIndex == 1) ...[
-                    // Achievements
-                    Achievments(
-                      challengeName: 'dummy',
-                    ),
-                  ] else if (_selectedIndex == 2) ...[
                     // Settings
                     SettingsWidget(),
                   ],
