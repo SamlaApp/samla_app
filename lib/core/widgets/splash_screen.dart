@@ -5,6 +5,7 @@ import 'package:samla_app/config/themes/common_styles.dart';
 import 'package:samla_app/core/error/exceptions.dart';
 import 'package:samla_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:samla_app/features/notifications/notification_injection_container.dart';
+import 'package:samla_app/features/nutrition/nutrition_di.dart';
 import 'package:samla_app/features/profile/profile_di.dart';
 import 'package:samla_app/features/setup/welcomePage.dart';
 import 'package:samla_app/firebase_options.dart';
@@ -58,6 +59,8 @@ class _SplashScreenState extends State<SplashScreen>
     await di.AuthInit();
     // initlizeing profile service
     ProfileInit();
+    // initlizeing nutrition service
+    nutritionInit();
     // authentication handling
     await _checkCachedUserAndNavigate();
   }

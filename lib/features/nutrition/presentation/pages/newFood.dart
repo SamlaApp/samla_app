@@ -3,7 +3,7 @@ import 'package:samla_app/config/themes/common_styles.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:samla_app/features/nutrition/domain/entities/MealLibrary.dart';
 import 'package:samla_app/features/nutrition/domain/repositories/nutritionPlan_repository.dart';
-import 'package:samla_app/features/nutrition/presentation/cubit/nutritionPlan/nutritionPlan_cubit.dart';
+import 'package:samla_app/features/nutrition/presentation/cubit/nutritionPlan_cubit.dart';
 import '../../nutrition_di.dart';
 
 class NewFoodPage extends StatefulWidget {

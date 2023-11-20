@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:samla_app/features/nutrition/presentation/cubit/nutritionPlan_cubit.dart';
 import 'package:samla_app/features/nutrition/presentation/widgets/TodayNutritionSummary.dart';
-import '../widgets/CaloriesOverview.dart';
-import '../widgets/Macronutrients.dart';
-import '../widgets/CustomSignedCalories.dart';
-import '../widgets/TodayPlan.dart';
+import 'package:samla_app/features/nutrition/presentation/widgets/TodayPlan.dart';
+import 'package:samla_app/features/nutrition/presentation/widgets/CustomSignedCalories.dart';
+import 'package:samla_app/features/nutrition/presentation/widgets/Macronutrients.dart';
 import 'package:samla_app/features/nutrition/nutrition_di.dart' as di;
 
-class NutritionPage extends StatefulWidget{
-
+class NutritionPage extends StatefulWidget {
   const NutritionPage({Key? key}) : super(key: key);
 
   @override
@@ -15,12 +14,12 @@ class NutritionPage extends StatefulWidget{
 }
 
 class _NutritionPageState extends State<NutritionPage> {
-
   @override
   void initState() {
     super.initState();
-    di.NutritionInit();
   }
+
+  final cubit = di.sl.get<NutritionPlanCubit>();
 
   @override
   Widget build(BuildContext context) {
@@ -30,14 +29,13 @@ class _NutritionPageState extends State<NutritionPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const TodayPlan(),
+            TodayPlan(),
             const SizedBox(height: 20),
             const TodayNutritionSummary(),
             const SizedBox(height: 20),
             CustomSignedCalories(),
             const SizedBox(height: 20),
             Macronutrients(),
-            
             const SizedBox(height: 20),
           ],
         ),

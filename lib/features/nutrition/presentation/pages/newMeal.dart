@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:samla_app/config/themes/common_styles.dart';
 import 'package:day_night_time_picker/day_night_time_picker.dart';
 import 'package:samla_app/features/nutrition/data/models/nutritionPlan_model.dart';
-import 'package:samla_app/features/nutrition/domain/repositories/nutritionPlan_repository.dart';
-import 'package:samla_app/features/nutrition/presentation/cubit/nutritionPlan/nutritionPlan_cubit.dart';
+import 'package:samla_app/features/nutrition/presentation/cubit/nutritionPlan_cubit.dart';
 import '../../nutrition_di.dart' as di;
 
 class NewMeal extends StatefulWidget {

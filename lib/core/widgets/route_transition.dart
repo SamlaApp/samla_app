@@ -18,3 +18,5 @@ Route slideRouteTransition(Widget page) {
     },
   );
 }
+
+//HOW TO USE: Navigator.of(context).push(slideRouteTransition(YourPage()));

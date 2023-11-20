@@ -1,0 +1,3 @@
+class DummyClass {
+  void someMethod() {}
+}

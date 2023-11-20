@@ -73,7 +73,7 @@ class NutritionPlanRemoteDataSourceImpl
     print(resBody);
     if (response.statusCode == 200) {
       final NutritionPlanModel nutritionPlan =
-          NutritionPlanModel.fromJson(json.decode(resBody)['nutrition_plan']);
+          NutritionPlanModel.fromJson(json.decode(resBody)['nutrition_plan'][0]);
       return nutritionPlan;
     } else {
       throw ServerException(message: json.decode(resBody)['message']);

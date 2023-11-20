@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:samla_app/features/auth/auth_injection_container.dart';
+import 'package:samla_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:samla_app/features/nutrition/data/models/nutritionPlan_model.dart';
 import 'package:samla_app/features/nutrition/domain/entities/NutritionPlanStatus.dart';
 import 'package:samla_app/features/nutrition/domain/repositories/nutritionPlan_repository.dart';
+import 'package:samla_app/features/nutrition/presentation/cubit/nutritionPlan_cubit.dart';
+// import 'package:samla_app/features/nutrition/nutrition_di.dart' as di;
 import 'package:samla_app/features/nutrition/presentation/pages/MealAdapt.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import '../../../../config/themes/common_styles.dart';
-import '../cubit/NutritionPlan/nutritionPlan_cubit.dart';
-import '../../nutrition_di.dart' as di;
-import '../pages/NutritionPlan.dart';
+import 'package:samla_app/config/themes/common_styles.dart';
+import 'package:samla_app/features/nutrition/presentation/pages/NutritionPlan.dart';
 
 class TodayPlan extends StatefulWidget {
-  const TodayPlan({super.key});
+  TodayPlan({super.key});
 
   @override
   _TodayPlanState createState() => _TodayPlanState();
@@ -22,18 +24,12 @@ class _TodayPlanState extends State<TodayPlan> {
   final PageController _pageController =
       PageController(viewportFraction: 1, initialPage: 0, keepPage: true);
 
-  final cubit = di.sl.get<NutritionPlanCubit>();
+  final cubit = sl.get<NutritionPlanCubit>();
 
   @override
   void initState() {
     super.initState();
     cubit.getTodayNutritionPlan(DateFormat('EEEE').format(DateTime.now()));
-  }
-
-  @override
-  void dispose() {
-    cubit.close();
-    super.dispose();
   }
 
   BlocBuilder<NutritionPlanCubit, NutritionPlanState> getTodayPlans(gradient) {
@@ -214,7 +210,6 @@ class _TodayPlanState extends State<TodayPlan> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
           children: [
             Column(
               children: [
@@ -276,7 +271,6 @@ class _TodayPlanState extends State<TodayPlan> {
                 displayedMeals(nutritionPlan.id!),
               ],
             ),
-
             _planStatus(nutritionPlan.id!),
           ],
         ),
@@ -286,7 +280,7 @@ class _TodayPlanState extends State<TodayPlan> {
 
   BlocBuilder<NutritionPlanCubit, NutritionPlanState> displayedMeals(int id) {
     String today = DateFormat('EEEE').format(DateTime.now());
-    final tempCubit = di.sl.get<NutritionPlanCubit>();
+    final tempCubit = sl.get<NutritionPlanCubit>();
     tempCubit.getNutritionPlanMeals(today, id);
     return BlocBuilder<NutritionPlanCubit, NutritionPlanState>(
       bloc: tempCubit,
@@ -344,11 +338,8 @@ class _TodayPlanState extends State<TodayPlan> {
     );
   }
 
-
-
-
   BlocBuilder<NutritionPlanCubit, NutritionPlanState> _planStatus(int id) {
-    final statusCubit = di.sl.get<NutritionPlanCubit>();
+    final statusCubit = sl.get<NutritionPlanCubit>();
     statusCubit.getNutritionPlanStatus(id);
 
     void _mealTaken() {
@@ -358,7 +349,6 @@ class _TodayPlanState extends State<TodayPlan> {
       );
       statusCubit.updateNutritionPlanStatus(status);
       statusCubit.getNutritionPlanStatus(id);
-
     }
 
     void _mealSkipped() {
@@ -368,15 +358,12 @@ class _TodayPlanState extends State<TodayPlan> {
       );
       statusCubit.updateNutritionPlanStatus(status);
       statusCubit.getNutritionPlanStatus(id);
-
     }
-
-
 
     return BlocBuilder<NutritionPlanCubit, NutritionPlanState>(
       bloc: statusCubit,
       builder: (context, state) {
-        if(state is NutritionPlanLoadingState){
+        if (state is NutritionPlanLoadingState) {
           return const Center(
             child: Padding(
               padding: EdgeInsets.all(16.0),
@@ -385,9 +372,8 @@ class _TodayPlanState extends State<TodayPlan> {
               ),
             ),
           );
-        }else if(state is NutritionPlanStatusLoaded){
-
-          if(state.nutritionPlanStatus.status == 'pending') {
+        } else if (state is NutritionPlanStatusLoaded) {
+          if (state.nutritionPlanStatus.status == 'pending') {
             return Padding(
               padding: const EdgeInsets.all(8.0),
               child: Row(
@@ -435,7 +421,7 @@ class _TodayPlanState extends State<TodayPlan> {
             );
           }
 
-          return  Padding(
+          return Padding(
             padding: EdgeInsets.all(16.0),
             child: Container(
               width: 100,
@@ -445,19 +431,17 @@ class _TodayPlanState extends State<TodayPlan> {
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Center(
-                child: Text(
-                    state.nutritionPlanStatus.status
-                    , style: TextStyle(color: theme_darkblue)),
+                child: Text(state.nutritionPlanStatus.status,
+                    style: TextStyle(color: theme_darkblue)),
               ),
             ),
           );
-
-        }else {
+        } else {
           return const Center(
             child: Padding(
               padding: EdgeInsets.all(16.0),
-              child: Text(
-                  'Status Unknown', style: TextStyle(color: Colors.white70)),
+              child: Text('Status Unknown',
+                  style: TextStyle(color: Colors.white70)),
             ),
           );
         }

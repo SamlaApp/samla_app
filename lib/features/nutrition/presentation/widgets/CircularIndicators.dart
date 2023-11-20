@@ -7,10 +7,8 @@ import 'package:samla_app/config/themes/common_styles.dart';
 import 'dart:async';
 import 'package:pedometer/pedometer.dart';
 import 'package:flutter/services.dart';
-import 'package:samla_app/features/nutrition/domain/repositories/nutritionPlan_repository.dart';
-import 'package:samla_app/features/nutrition/presentation/cubit/nutritionPlan/nutritionPlan_cubit.dart';
-import '../../nutrition_di.dart';
-
+import 'package:samla_app/features/nutrition/nutrition_di.dart';
+import 'package:samla_app/features/nutrition/presentation/cubit/nutritionPlan_cubit.dart';
 
 class CircularIndicators extends StatefulWidget {
   CircularIndicators({super.key});
@@ -21,7 +19,8 @@ class CircularIndicators extends StatefulWidget {
 
 class _CircularIndicatorsState extends State<CircularIndicators> {
 
-  final cubit = NutritionPlanCubit(sl<NutritionPlanRepository>());
+//  final cubit = sl.get<NutritionPlanCubit>();
+
 
 
   late Stream<StepCount> _stepCountStream;

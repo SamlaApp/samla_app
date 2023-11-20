@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:samla_app/features/nutrition/domain/entities/DailyNutritionPlanSummary.dart';
@@ -12,13 +14,18 @@ class NutritionPlanCubit extends Cubit<NutritionPlanState> {
   NutritionPlanCubit(this.repository) : super(NutritionPlanInitial());
   final NutritionPlanRepository repository;
 
+  @override
+  Future<void> close() async {
+    print('someone tried to close the nutrition plan cubit');
+  }
+
   // getAllNutritionPlans
   Future<void> getAllNutritionPlans() async {
     emit(NutritionPlanLoadingState()); // Show loading state
     final result = await repository.getAllNutritionPlans();
     result.fold(
-        (failure) =>
-            emit(const NutritionPlanErrorState('Failed to fetch nutrition plans')),
+        (failure) => emit(
+            const NutritionPlanErrorState('Failed to fetch nutrition plans')),
         (nutritionPlans) {
       if (nutritionPlans.isEmpty) {
         print('empty');
@@ -29,16 +36,13 @@ class NutritionPlanCubit extends Cubit<NutritionPlanState> {
     });
   }
 
-
   Future<void> createNutritionPlan(NutritionPlan nutritionPlan) async {
     emit(NutritionPlanLoadingState()); // Show loading state
     final result =
         await repository.createNutritionPlan(nutritionPlan: nutritionPlan);
-    result.fold(
-        (failure) {
-            emit(NutritionPlanErrorState(failure.message));
-          },
-        (nutritionPlan) {
+    result.fold((failure) {
+      emit(NutritionPlanErrorState(failure.message));
+    }, (nutritionPlan) {
       if (nutritionPlan == null) {
         print('empty');
         emit(NutritionPlanEmptyState());
@@ -51,8 +55,8 @@ class NutritionPlanCubit extends Cubit<NutritionPlanState> {
     emit(NutritionPlanLoadingState()); // Show loading state
     final result = await repository.searchMealLibrary(query: query);
     result.fold(
-        (failure) =>
-            emit(const NutritionPlanErrorState('Failed to search meal library')),
+        (failure) => emit(
+            const NutritionPlanErrorState('Failed to search meal library')),
         (mealLibrary) {
       if (mealLibrary == null) {
         print('empty');
@@ -82,11 +86,11 @@ class NutritionPlanCubit extends Cubit<NutritionPlanState> {
   //addNutritionPlanMeal
   Future<void> addNutritionPlanMeal(NutritionPlanMeal nutritionPlanMeal) async {
     emit(NutritionPlanLoadingState()); // Show loading state
-    final result = await repository.addNutritionPlanMeal(nutritionPlanMeal: nutritionPlanMeal);
+    final result = await repository.addNutritionPlanMeal(
+        nutritionPlanMeal: nutritionPlanMeal);
     result.fold(
-        (failure) =>
-            emit(const NutritionPlanMealErrorState('Failed to add nutrition plan meal')),
-        (nutritionPlanMeal) {
+        (failure) => emit(const NutritionPlanMealErrorState(
+            'Failed to add nutrition plan meal')), (nutritionPlanMeal) {
       if (nutritionPlanMeal == null) {
         emit(NutritionPlanMealEmptyState());
         return;
@@ -100,9 +104,8 @@ class NutritionPlanCubit extends Cubit<NutritionPlanState> {
     emit(NutritionPlanLoadingState()); // Show loading state
     final result = await repository.deleteNutritionPlanMeal(id: id);
     result.fold(
-        (failure) =>
-            emit(const NutritionPlanMealErrorState('Failed to delete nutrition plan meal')),
-        (nutritionPlanMeal) {
+        (failure) => emit(const NutritionPlanMealErrorState(
+            'Failed to delete nutrition plan meal')), (nutritionPlanMeal) {
       if (nutritionPlanMeal == null) {
         emit(NutritionPlanMealEmptyState());
         return;
@@ -114,11 +117,10 @@ class NutritionPlanCubit extends Cubit<NutritionPlanState> {
   // getNutritionPlanMeals
   Future<void> getNutritionPlanMeals(String query, int id) async {
     emit(NutritionPlanMealsLoadingState()); // Show loading state
-    final result = await repository.getNutritionPlanMeals(query: query, id:id);
+    final result = await repository.getNutritionPlanMeals(query: query, id: id);
     result.fold(
-        (failure) =>
-            emit(const NutritionPlanMealErrorState('Failed to get nutrition plan meals')),
-        (nutritionPlanMeal) {
+        (failure) => emit(const NutritionPlanMealErrorState(
+            'Failed to get nutrition plan meals')), (nutritionPlanMeal) {
       if (nutritionPlanMeal.isEmpty) {
         emit(NutritionPlanMealEmptyState());
         return;
@@ -132,8 +134,8 @@ class NutritionPlanCubit extends Cubit<NutritionPlanState> {
     emit(NutritionPlanLoadingState()); // Show loading state
     final result = await repository.deleteNutritionPlan(id: id);
     result.fold(
-        (failure) =>
-            emit(const NutritionPlanErrorState('Failed to delete nutrition plan')),
+        (failure) => emit(
+            const NutritionPlanErrorState('Failed to delete nutrition plan')),
         (nutritionPlan) {
       if (nutritionPlan == null) {
         emit(NutritionPlanEmptyState());
@@ -143,14 +145,12 @@ class NutritionPlanCubit extends Cubit<NutritionPlanState> {
     });
   }
 
-
   Future<void> getTodayNutritionPlan(String query) async {
     emit(NutritionPlanLoadingState()); // Show loading state
     final result = await repository.getTodayNutritionPlan(query: query);
     result.fold(
-        (failure) =>
-            emit(const NutritionPlanErrorState('Failed to get today nutrition plan')),
-        (nutritionPlan) {
+        (failure) => emit(const NutritionPlanErrorState(
+            'Failed to get today nutrition plan')), (nutritionPlan) {
       if (nutritionPlan.isEmpty) {
         emit(NutritionPlanEmptyState());
         return;
@@ -162,10 +162,12 @@ class NutritionPlanCubit extends Cubit<NutritionPlanState> {
   Future<void> getNutritionPlanStatus(int id) async {
     emit(NutritionPlanLoadingState()); // Show loading state
     final result = await repository.getNutritionPlanStatus(id: id);
-    result.fold(
-        (failure) =>
-            emit(const NutritionPlanErrorState('Failed to get nutrition plan status')),
-        (nutritionPlanStatus) {
+    result.fold((failure) {
+      print(failure.message);
+
+      emit(
+          const NutritionPlanErrorState('Failed to get nutrition plan status'));
+    }, (nutritionPlanStatus) {
       if (nutritionPlanStatus == null) {
         emit(NutritionPlanEmptyState());
         return;
@@ -175,13 +177,14 @@ class NutritionPlanCubit extends Cubit<NutritionPlanState> {
   }
 
   //updateNutritionPlanStatus
-  Future<void> updateNutritionPlanStatus(NutritionPlanStatus nutritionPlanStatus) async {
+  Future<void> updateNutritionPlanStatus(
+      NutritionPlanStatus nutritionPlanStatus) async {
     emit(NutritionPlanLoadingState()); // Show loading state
-    final result = await repository.updateNutritionPlanStatus(nutritionPlanStatus: nutritionPlanStatus);
+    final result = await repository.updateNutritionPlanStatus(
+        nutritionPlanStatus: nutritionPlanStatus);
     result.fold(
-        (failure) =>
-            emit(const NutritionPlanErrorState('Failed to update nutrition plan status')),
-        (nutritionPlanStatus) {
+        (failure) => emit(const NutritionPlanErrorState(
+            'Failed to update nutrition plan status')), (nutritionPlanStatus) {
       if (nutritionPlanStatus == null) {
         emit(NutritionPlanEmptyState());
         return;
@@ -194,8 +197,8 @@ class NutritionPlanCubit extends Cubit<NutritionPlanState> {
     emit(NutritionPlanLoadingState()); // Show loading state
     final result = await repository.getDailyNutritionPlanSummary();
     result.fold(
-        (failure) =>
-            emit(const NutritionPlanErrorState('Failed to get daily nutrition plan summary')),
+        (failure) => emit(const NutritionPlanErrorState(
+            'Failed to get daily nutrition plan summary')),
         (dailyNutritionPlanSummary) {
       if (dailyNutritionPlanSummary == null) {
         emit(NutritionPlanEmptyState());
@@ -204,11 +207,4 @@ class NutritionPlanCubit extends Cubit<NutritionPlanState> {
       emit(NutritionPlanDailySummaryLoaded(dailyNutritionPlanSummary));
     });
   }
-
-
-
-
-
-
-
 }

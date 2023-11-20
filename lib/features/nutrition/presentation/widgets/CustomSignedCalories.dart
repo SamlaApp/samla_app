@@ -3,29 +3,23 @@ import 'package:flutter/cupertino.dart';
 import 'package:samla_app/config/themes/common_styles.dart';
 import 'package:flutter/services.dart';
 import 'package:samla_app/features/nutrition/domain/repositories/nutritionPlan_repository.dart';
-import '../cubit/NutritionPlan/nutritionPlan_cubit.dart';
-import '../../nutrition_di.dart';
-
+import 'package:samla_app/features/nutrition/nutrition_di.dart';
+import 'package:samla_app/features/nutrition/presentation/cubit/nutritionPlan_cubit.dart';
 
 class CustomSignedCalories extends StatefulWidget {
   const CustomSignedCalories({super.key});
 
   _CustomSignedCaloriesState createState() => _CustomSignedCaloriesState();
-
 }
 
 class _CustomSignedCaloriesState extends State<CustomSignedCalories> {
-
-
-  final cubit = NutritionPlanCubit(sl<NutritionPlanRepository>());
+  final cubit = sl.get<NutritionPlanCubit>();
 
   @override
   void initState() {
     super.initState();
     cubit.getDailyNutritionPlanSummary();
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -86,7 +80,7 @@ class _CustomSignedCaloriesState extends State<CustomSignedCalories> {
                       fontSize: 15,
                       color: theme_darkblue.withOpacity(0.7),
                     ),
-                    border:  OutlineInputBorder(
+                    border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
                       borderSide: BorderSide(
                         color: theme_green,
@@ -117,10 +111,7 @@ class _CustomSignedCaloriesState extends State<CustomSignedCalories> {
                   borderRadius: BorderRadius.circular(10),
                 ),
               ),
-              onPressed: () {
-
-              },
-
+              onPressed: () {},
               label: const Text('Add'),
             ),
           ),

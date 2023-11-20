@@ -105,7 +105,9 @@ class GoalsRepository {
         return Right(UserGoals.fromJson(resBody['user_goals']));
       } on ServerException catch (e) {
         return Left(ServerFailure(message: e.message));
-      } 
+      } catch (e) {
+        return Left(ServerFailure(message: 'Something went wrong'));
+      }
     } else {
       return Left(ServerFailure(message: 'No Internet Connection'));
     }

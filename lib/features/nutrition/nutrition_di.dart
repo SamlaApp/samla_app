@@ -3,18 +3,18 @@ import 'package:samla_app/features/nutrition/data/datasources/local_datasource.d
 import 'package:samla_app/features/nutrition/data/datasources/remote_data_source.dart';
 import 'package:samla_app/features/nutrition/data/repositories/nutritionPlan_repository_impl.dart';
 import 'package:samla_app/features/nutrition/domain/repositories/nutritionPlan_repository.dart';
-import 'package:samla_app/features/nutrition/presentation/cubit/nutritionPlan/nutritionPlan_cubit.dart';
-
+import 'package:samla_app/features/nutrition/presentation/cubit/nutritionPlan_cubit.dart';
 
 final sl = GetIt.instance;
 bool _isInitialized = false;
 
-void NutritionInit() {
+void nutritionInit() {
   if (_isInitialized) {
     // Registration has already occurred, so do nothing.
 
     return;
   }
+  // }
   // Features - Nutrition
   /*  note that some of the following are factories, not singletons.
       this will allow us to create new instances of the cubits
@@ -26,14 +26,17 @@ void NutritionInit() {
   print('registering nutrition dependencies');
 
   sl.registerLazySingleton<NutritionPlanCubit>(() => NutritionPlanCubit(sl()));
-  sl.registerLazySingleton<NutritionPlanRepository>(() => NutritionPlanRepositoryImpl(
-      networkInfo: sl(), remoteDataSource: sl(), localDataSource: sl()));
+
+  sl.registerLazySingleton<NutritionPlanRepository>(() =>
+      NutritionPlanRepositoryImpl(
+          networkInfo: sl(), remoteDataSource: sl(), localDataSource: sl()));
   sl.registerLazySingleton<NutritionPlanRemoteDataSource>(
       () => NutritionPlanRemoteDataSourceImpl(client: sl()));
   sl.registerLazySingleton<NutritionPlanLocalDataSource>(
       () => NutritionPlanLocalDataSourceImpl(sl()));
+
   _isInitialized = true;
-
-
 }
+
+
 

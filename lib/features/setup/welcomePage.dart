@@ -74,11 +74,20 @@ class _WelcomePageState extends State<WelcomePage> {
                 appBar: AppBar(
                   toolbarHeight: 200.0,
                   //TODO: DO NOT ALLOW THE USER TO GO BACK OR ANYWHERE UNTIL HE FINISH THE SETUP
-                  leading: IconButton(
-                      icon: Icon(Icons.arrow_back, color: Colors.white),
-                      onPressed: () => _pageController.previousPage(
-                          duration: animationDuration,
-                          curve: Curves.fastEaseInToSlowEaseOut)),
+                  leading: currentPage != 0
+                      ? IconButton(
+                          icon: Icon(Icons.arrow_back, color: Colors.white),
+                          onPressed: () {
+                            _pageController.previousPage(
+                                duration: animationDuration,
+                                curve: Curves.fastEaseInToSlowEaseOut);
+                            setState(() {
+                              appBarColor1 = theme_darkblue;
+                              appBarColor2 = theme_pink;
+                              currentPage = currentPage - 1;
+                            });
+                          })
+                      : null,
                   title: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -128,6 +137,7 @@ class _WelcomePageState extends State<WelcomePage> {
                                 setState(() {
                                   appBarColor1 = theme_green;
                                   appBarColor2 = theme_darkblue;
+                                  currentPage = 2;
                                 });
                               }),
                               HeightWidget(height, width, (height) {
@@ -138,6 +148,7 @@ class _WelcomePageState extends State<WelcomePage> {
                                 setState(() {
                                   appBarColor2 = Colors.blue[900]!;
                                   appBarColor1 = Colors.blue[100]!;
+                                  currentPage = 3;
                                 });
                               }),
                               WeightWidget(height, width, (weight) {
@@ -148,6 +159,7 @@ class _WelcomePageState extends State<WelcomePage> {
                                 setState(() {
                                   appBarColor2 = theme_orange;
                                   appBarColor1 = theme_pink;
+                                  currentPage = 4;
                                 });
                               }),
                               CaloriesGoalWidget(height, width, (calroies) {
@@ -159,6 +171,7 @@ class _WelcomePageState extends State<WelcomePage> {
                                   appBarColor2 =
                                       Color.fromARGB(255, 110, 73, 24);
                                   appBarColor1 = theme_orange;
+                                  currentPage = 5;
                                 });
                               }),
                               StepsGoalWidget(height, width, (stepsGoal) async {
@@ -233,6 +246,7 @@ class _WelcomePageState extends State<WelcomePage> {
               setState(() {
                 appBarColor1 = theme_pink;
                 appBarColor2 = theme_green;
+                currentPage = 1;
               });
             },
             child: const Icon(

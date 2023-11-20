@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:samla_app/config/themes/common_styles.dart';
-import 'package:samla_app/features/nutrition/domain/repositories/nutritionPlan_repository.dart';
+import 'package:samla_app/features/nutrition/nutrition_di.dart';
+import 'package:samla_app/features/nutrition/presentation/cubit/nutritionPlan_cubit.dart';
 import 'package:samla_app/features/nutrition/presentation/widgets/MaelAdapt/NutrientColumn.dart';
-import '../cubit/NutritionPlan/nutritionPlan_cubit.dart';
-import '../../nutrition_di.dart';
 
 class TodayNutritionSummary extends StatefulWidget {
   const TodayNutritionSummary({Key? key}) : super(key: key);
@@ -21,14 +20,13 @@ class _TodayNutritionSummaryState extends State<TodayNutritionSummary> {
 
   Color color = theme_orange;
 
-  final cubit = NutritionPlanCubit(sl<NutritionPlanRepository>());
+  final cubit = sl.get<NutritionPlanCubit>();
 
   @override
   void initState() {
     super.initState();
     cubit.getDailyNutritionPlanSummary();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -46,39 +44,40 @@ class _TodayNutritionSummaryState extends State<TodayNutritionSummary> {
           ),
         ],
       ),
-      child:getSummary(),
+      child: getSummary(),
     );
   }
 
-  BlocBuilder<NutritionPlanCubit, NutritionPlanState> getSummary(){
+  BlocBuilder<NutritionPlanCubit, NutritionPlanState> getSummary() {
     return BlocBuilder<NutritionPlanCubit, NutritionPlanState>(
-      bloc: cubit,
-      builder: (context, state) {
-        if (state is NutritionPlanLoadingState) {
-          return const Center(child: CircularProgressIndicator());
-        } else if (state is NutritionPlanEmptyState) {
-          return const Center(child: Text('No data'));
-        }
-        else if (state is NutritionPlanDailySummaryLoaded) {
-          _totalCarbs = state.dailyNutritionPlanSummary.totalCarbs;
-          _totalProtein = state.dailyNutritionPlanSummary.totalProtein;
-          _totalFat = state.dailyNutritionPlanSummary.totalFat;
-          _totalCalories = state.dailyNutritionPlanSummary.totalCalories;
-          return Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              NutrientColumn(value: _totalCarbs, label: 'Carbs', color: color),
-              NutrientColumn(value: _totalProtein, label: 'Protein', color: color),
-              NutrientColumn(value: _totalFat, label: 'Fat', color: color),
-              NutrientColumn(value: _totalCalories, label: 'Calories', color: color),
-            ],
-          );
-        } else if (state is NutritionPlanErrorState) {
-          return Text(state.message);
-        } else {
-          return const Center(child: CircularProgressIndicator());
-        }
-      }
-    );
+        bloc: cubit,
+        builder: (context, state) {
+          if (state is NutritionPlanLoadingState) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (state is NutritionPlanEmptyState) {
+            return const Center(child: Text('No data'));
+          } else if (state is NutritionPlanDailySummaryLoaded) {
+            _totalCarbs = state.dailyNutritionPlanSummary.totalCarbs;
+            _totalProtein = state.dailyNutritionPlanSummary.totalProtein;
+            _totalFat = state.dailyNutritionPlanSummary.totalFat;
+            _totalCalories = state.dailyNutritionPlanSummary.totalCalories;
+            return Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                NutrientColumn(
+                    value: _totalCarbs, label: 'Carbs', color: color),
+                NutrientColumn(
+                    value: _totalProtein, label: 'Protein', color: color),
+                NutrientColumn(value: _totalFat, label: 'Fat', color: color),
+                NutrientColumn(
+                    value: _totalCalories, label: 'Calories', color: color),
+              ],
+            );
+          } else if (state is NutritionPlanErrorState) {
+            return Text(state.message);
+          } else {
+            return const Center(child: CircularProgressIndicator());
+          }
+        });
   }
 }

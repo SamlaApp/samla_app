@@ -166,7 +166,9 @@ class NutritionPlanRepositoryImpl implements NutritionPlanRepository {
 
   @override
   Future<Either<Failure, NutritionPlanStatus>> getNutritionPlanStatus({required int id}) async {
-    if (await networkInfo.isConnected) {
+    bool isConnected = await networkInfo.isConnected;
+    print('isConnected: $isConnected');
+    if (isConnected) {
       try {
         final nutritionPlanStatus = await remoteDataSource.getNutritionPlanStatus(id);
         return Right(nutritionPlanStatus);

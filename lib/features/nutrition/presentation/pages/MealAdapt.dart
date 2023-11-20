@@ -6,13 +6,12 @@ import 'package:samla_app/config/themes/common_styles.dart';
 import 'package:samla_app/features/nutrition/domain/entities/MealLibrary.dart';
 import 'package:samla_app/features/nutrition/domain/entities/NutritionPlanMeal.dart';
 import 'package:samla_app/features/nutrition/domain/entities/nutritionPlan.dart';
-import 'package:samla_app/features/nutrition/presentation/cubit/NutritionPlan/nutritionPlan_cubit.dart';
+import 'package:samla_app/features/nutrition/presentation/cubit/nutritionPlan_cubit.dart';
 import 'package:samla_app/features/nutrition/presentation/pages/newFood.dart';
 import '../../../../core/widgets/CustomTextFormField.dart';
 import '../widgets/MaelAdapt/DayDropdown.dart';
 import '../widgets/MaelAdapt/NutrientColumn.dart';
 import '../widgets/MaelAdapt/foodItem.dart';
-import 'package:samla_app/features/nutrition/domain/repositories/nutritionPlan_repository.dart';
 import '../../nutrition_di.dart';
 
 class MealAdapt extends StatefulWidget {
@@ -177,7 +176,8 @@ class _MealAdaptState extends State<MealAdapt> {
               children: [
                 const SizedBox(height: 20),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
                   decoration: BoxDecoration(
                     gradient: gradient,
                     borderRadius: BorderRadius.circular(20),
@@ -512,7 +512,7 @@ class _MealAdaptState extends State<MealAdapt> {
               children: [
                 Container(
                   padding:
-                  const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                      const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(20),
@@ -605,7 +605,7 @@ class _MealAdaptState extends State<MealAdapt> {
               Text(
                 nutritionPlan.name,
                 style:
-                const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                    const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 10),
               Text(
