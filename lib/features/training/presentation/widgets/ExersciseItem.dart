@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:samla_app/config/themes/common_styles.dart';
+import 'package:samla_app/features/training/domain/entities/ExerciseDay.dart';
+import 'package:samla_app/features/training/presentation/cubit/Exercises/exercise_cubit.dart';
+import 'package:samla_app/features/training/training_di.dart' as di;
+
 
 class ExerciseItem extends StatefulWidget {
   final int? id;
@@ -12,6 +16,7 @@ class ExerciseItem extends StatefulWidget {
   final List<String> secondaryMuscles;
   final LinearGradient gradient;
   final VoidCallback onRemove;
+  final int templateId;
 
   const ExerciseItem({
     Key? key,
@@ -25,6 +30,7 @@ class ExerciseItem extends StatefulWidget {
     required this.secondaryMuscles,
     required this.gradient,
     required this.onRemove,
+    required this.templateId,
   }) : super(key: key);
 
   @override
@@ -32,10 +38,10 @@ class ExerciseItem extends StatefulWidget {
 }
 
 class _ExerciseItemState extends State<ExerciseItem> {
-  final String _baseURL =
-      'https://samla.mohsowa.com/api/training/image/'; // api url for images
-  String capitalize(String s) =>
-      s[0].toUpperCase() + s.substring(1); // capitalize first letter of string
+  final String _baseURL = 'https://samla.mohsowa.com/api/training/image/'; // api url for images
+  String capitalize(String s) => s[0].toUpperCase() + s.substring(1); // capitalize first letter of string
+
+  final exercisesCubit = di.sl.get<ExerciseCubit>();
 
   bool _isExpanded = false;
   bool _isAddedToPlan = false;
@@ -59,10 +65,29 @@ class _ExerciseItemState extends State<ExerciseItem> {
             content: Text('Please select at least one day'),
           ),
         );
+      }else{
+        ExerciseDay exerciseDay = ExerciseDay(
+          id: widget.id,
+          sunday: sun,
+          monday: mon,
+          tuesday: tue,
+          wednesday: wed,
+          thursday: thu,
+          friday: fri,
+          saturday: sat,
+          exercise_template_id: widget.templateId,
+          exercise_library_id: widget.id!,
+        );
+
+        exercisesCubit.addExerciseToPlan(exerciseDay);
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Exercise added to plan'),
+          ),
+        );
+
       }
-
-
-
 
     }
   }

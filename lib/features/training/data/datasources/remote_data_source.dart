@@ -19,7 +19,7 @@ abstract class RemoteDataSource {
 
   Future<void> deleteTemplate(int id);
 
-  Future<List<ExerciseLibrary>> getBodyPartExerciseLibrary({required String part});
+  Future<List<ExerciseLibrary>> getBodyPartExerciseLibrary({required String part, required int templateID});
 
   Future<ExerciseDay> addExerciseToPlan(ExerciseDay exerciseDay);
 }
@@ -92,9 +92,9 @@ class TemplateRemoteDataSourceImpl implements RemoteDataSource {
 
   @override
   Future<List<ExerciseLibrary>> getBodyPartExerciseLibrary(
-      {required String part}) async {
+      {required String part, required int templateID}) async {
     final res =
-        await samlaAPI(endPoint: '/training/exercise/get/$part', method: 'GET');
+        await samlaAPI(endPoint: '/training/exercise/get/$part/$templateID', method: 'GET');
     final resBody = await res.stream.bytesToString();
     if (res.statusCode == 200) {
       final List<dynamic> exercises = json.decode(resBody)['exercises'];
@@ -111,13 +111,14 @@ class TemplateRemoteDataSourceImpl implements RemoteDataSource {
   Future<ExerciseDay> addExerciseToPlan(ExerciseDay exerciseDay) async {
     final n_exerciseDay = ExerciseDayModel.fromEntity(exerciseDay);
     final res = await samlaAPI(
-        endPoint: '/training/exerciseDay/create',
+        endPoint: '/training/exercise/plan/add',
         method: 'POST',
         data: n_exerciseDay.toJson());
     final resBody = await res.stream.bytesToString();
-    if (res.statusCode == 200) {
+    print(resBody);
+    if (res.statusCode == 201) {
       final ExerciseDayModel convertedExerciseDay =
-          ExerciseDayModel.fromJson(json.decode(resBody)['exerciseDay']);
+          ExerciseDayModel.fromJson(json.decode(resBody)['exercise_day']);
       return convertedExerciseDay;
     } else {
       throw ServerException(message: json.decode(resBody)['message']);

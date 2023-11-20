@@ -10,9 +10,9 @@ class ExerciseCubit extends Cubit<ExerciseState> {
   ExerciseCubit(this.repository) : super(ExerciseInitial());
 
   @override
-  Future<void> getBodyPartExerciseLibrary({required String part}) async {
+  Future<void> getBodyPartExerciseLibrary({required String part, required int templateID}) async {
     emit(ExerciseLoadingState());
-    final result = await repository.getBodyPartExerciseLibrary(part: part);
+    final result = await repository.getBodyPartExerciseLibrary(part: part, templateID: templateID);
     result.fold(
         (failure) => emit(const ExerciseErrorState('Failed to fetch exercises')),
         (exercises) {
@@ -31,9 +31,9 @@ class ExerciseCubit extends Cubit<ExerciseState> {
     final result = await repository.addExerciseToPlan(exerciseDay);
     result.fold(
         (failure) => emit(const ExerciseErrorState('Failed to add exercise')),
-        (exercise) {
-      emit(ExerciseAddedState(exercise));
+        (exercise) {emit(ExerciseAddedState(exercise));
     });
   }
+
 
 }

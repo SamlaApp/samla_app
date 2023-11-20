@@ -1,5 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:samla_app/core/widgets/CustomTextFormField.dart';
 import 'package:samla_app/features/training/domain/entities/Template.dart';
 import 'package:samla_app/features/training/presentation/cubit/Exercises/exercise_cubit.dart';
 import 'package:samla_app/features/training/presentation/cubit/Templates/template_cubit.dart';
@@ -252,10 +254,14 @@ class _TemplatePageState extends State<TemplatePage> {
   String _selectedBodyPart = 'Back';
   String _selectedDay = 'Sunday';
 
+  final _editNamedDayController = TextEditingController();
+
+
   @override
   void initState() {
     super.initState();
-    exercisesCubit.getBodyPartExerciseLibrary(part: _selectedBodyPart);
+    exercisesCubit.getBodyPartExerciseLibrary(part: _selectedBodyPart, templateID: widget.template.id!);
+    _editNamedDayController.text = _selectedDay;
   }
 
   void _deleteTemplate() {
@@ -295,6 +301,8 @@ class _TemplatePageState extends State<TemplatePage> {
                       ),
                       onPressed: () {
                         print('Should show a dialog to update the template');
+                        // _showUpdateTemplateDialog(context);
+                        _showUpdateTemplateDialog(context);
                       },
                       child:
                           const Text('Update', style: TextStyle(fontSize: 16)),
@@ -365,6 +373,45 @@ class _TemplatePageState extends State<TemplatePage> {
               color: Colors.black,
               backgroundColor: Colors.grey.shade200,
             ),
+            const SizedBox(height: 10),
+            Container(
+              decoration: primary_decoration,
+              padding: const EdgeInsets.all(20.0),
+              child: Column(
+                // search field
+                children: [
+                  // adding floating button
+
+                  Row(
+                    children: [
+                      Expanded(
+                        child: CustomTextFormField(
+                          onChanged: (value) {
+                            //searchCubit.search(value);
+                          },
+                          controller: _editNamedDayController,
+                          label: 'e.g. Bench Press Day',
+                          iconData: Icons.whatshot,
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return 'Please enter a name';
+                            }
+                            return null;
+                          },
+                        ),
+                      ),
+                      IconButton.filled(
+                        onPressed: () {
+                          //
+                        },
+                        icon: const Icon(Icons.edit),
+                        color: theme_green,
+                      )
+                    ],
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       ),
@@ -393,7 +440,8 @@ class _TemplatePageState extends State<TemplatePage> {
                     initialValue: null,
                     onChanged: (String newValue) {
                       _selectedBodyPart = newValue;
-                      exercisesCubit.getBodyPartExerciseLibrary(part: newValue);
+                      exercisesCubit.getBodyPartExerciseLibrary(
+                          part: newValue, templateID: widget.template.id!);
                     },
                     color: Colors.black,
                     backgroundColor: Colors.grey.shade200,
@@ -421,6 +469,7 @@ class _TemplatePageState extends State<TemplatePage> {
               children: [
                 for (var exercise in state.exercises)
                   ExerciseItem(
+                    templateId: widget.template.id!,
                     id: exercise.id,
                     name: exercise.name,
                     bodyPart: exercise.bodyPart,
@@ -446,10 +495,109 @@ class _TemplatePageState extends State<TemplatePage> {
           return Center(
             child: Text(state.message),
           );
+        } else if (state is ExerciseAddedState) {
+          exercisesCubit.getBodyPartExerciseLibrary(
+              part: _selectedBodyPart, templateID: widget.template.id!);
+          return const Center(child: CircularProgressIndicator());
         } else {
           return const Center(child: Text('Something went wrong'));
         }
       },
     );
   }
+}
+
+void _showUpdateTemplateDialog(BuildContext context) {
+  TextEditingController nameController = TextEditingController();
+  bool isActivated = false;
+
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text('Update The Template'
+            ,style: TextStyle(color: theme_darkblue),),
+        content: Stack(
+          clipBehavior: Clip.none,
+          children: [
+            Container(
+              width: MediaQuery.of(context).size.width * 0.7,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  TextField(
+                    controller: nameController,
+                    decoration: InputDecoration(
+                      hintText: 'Enter new template name',
+                      fillColor: inputField_color,
+                      filled: true,
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide.none,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text('Activate Plan?',
+                          style: TextStyle(color: theme_grey)),
+                      Switch(
+                        value: isActivated,
+                        onChanged: (bool value) {
+                          isActivated = value;
+                          (context as Element).markNeedsBuild();
+                        },
+                        activeColor: theme_green,
+                        inactiveThumbColor: theme_grey,
+                        inactiveTrackColor: theme_grey.withOpacity(0.5),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            Positioned(
+              right: -45,
+              top: -100,
+              child: Container(
+                width: 75,
+                height: 75,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: LinearGradient(
+                    colors: [theme_pink, theme_darkblue],
+                    tileMode: TileMode.clamp,
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                ),
+                child: Icon(
+                  Icons.edit,
+                  color: primary_color,
+                  size: 34.0,
+                ),
+              ),
+            ),
+          ],
+        ),
+        actions: <Widget>[
+          TextButton(
+            child: Text('Cancel', style: TextStyle(color: theme_red)),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+          TextButton(
+            child: Text('Submit', style: TextStyle(color: theme_green)),
+            onPressed: () {
+              // TOdo submit logic here
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
+      );
+    },
+  );
 }
