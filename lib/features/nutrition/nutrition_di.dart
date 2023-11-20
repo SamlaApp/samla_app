@@ -12,6 +12,7 @@ bool _isInitialized = false;
 void NutritionInit() {
   if (_isInitialized) {
     // Registration has already occurred, so do nothing.
+
     return;
   }
   // Features - Nutrition
@@ -24,7 +25,7 @@ void NutritionInit() {
 
   print('registering nutrition dependencies');
 
-  sl.registerLazySingleton(() => NutritionPlanCubit(sl()));
+  sl.registerLazySingleton<NutritionPlanCubit>(() => NutritionPlanCubit(sl()));
   sl.registerLazySingleton<NutritionPlanRepository>(() => NutritionPlanRepositoryImpl(
       networkInfo: sl(), remoteDataSource: sl(), localDataSource: sl()));
   sl.registerLazySingleton<NutritionPlanRemoteDataSource>(

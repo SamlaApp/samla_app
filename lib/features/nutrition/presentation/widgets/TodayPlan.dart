@@ -8,7 +8,7 @@ import 'package:samla_app/features/nutrition/presentation/pages/MealAdapt.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import '../../../../config/themes/common_styles.dart';
 import '../cubit/NutritionPlan/nutritionPlan_cubit.dart';
-import '../../nutrition_di.dart';
+import '../../nutrition_di.dart' as di;
 import '../pages/NutritionPlan.dart';
 
 class TodayPlan extends StatefulWidget {
@@ -22,7 +22,7 @@ class _TodayPlanState extends State<TodayPlan> {
   final PageController _pageController =
       PageController(viewportFraction: 1, initialPage: 0, keepPage: true);
 
-  final cubit = NutritionPlanCubit(sl<NutritionPlanRepository>());
+  final cubit = di.sl.get<NutritionPlanCubit>();
 
   @override
   void initState() {
@@ -286,7 +286,7 @@ class _TodayPlanState extends State<TodayPlan> {
 
   BlocBuilder<NutritionPlanCubit, NutritionPlanState> displayedMeals(int id) {
     String today = DateFormat('EEEE').format(DateTime.now());
-    final tempCubit = NutritionPlanCubit(sl<NutritionPlanRepository>());
+    final tempCubit = di.sl.get<NutritionPlanCubit>();
     tempCubit.getNutritionPlanMeals(today, id);
     return BlocBuilder<NutritionPlanCubit, NutritionPlanState>(
       bloc: tempCubit,
@@ -348,7 +348,7 @@ class _TodayPlanState extends State<TodayPlan> {
 
 
   BlocBuilder<NutritionPlanCubit, NutritionPlanState> _planStatus(int id) {
-    final statusCubit = NutritionPlanCubit(sl<NutritionPlanRepository>());
+    final statusCubit = di.sl.get<NutritionPlanCubit>();
     statusCubit.getNutritionPlanStatus(id);
 
     void _mealTaken() {
