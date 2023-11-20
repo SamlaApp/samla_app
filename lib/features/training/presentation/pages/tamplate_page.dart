@@ -465,7 +465,7 @@ class _TemplatePageState extends State<TemplatePage> {
                     instructions: exercise.instructions,
                     secondaryMuscles: exercise.secondaryMuscles,
                     gradient: LinearGradient(
-                      colors: [theme_pink, theme_darkblue],
+                      colors: [theme_pink, theme_green],
                       tileMode: TileMode.clamp,
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,

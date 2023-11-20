@@ -32,69 +32,26 @@ class ExerciseItem extends StatefulWidget {
 }
 
 class _ExerciseItemState extends State<ExerciseItem> {
+  final String _baseURL =
+      'https://samla.mohsowa.com/api/training/image/'; // api url for images
+  String capitalize(String s) =>
+      s[0].toUpperCase() + s.substring(1); // capitalize first letter of string
 
-  final String _baseURL = 'https://samla.mohsowa.com/api/training/image/';
-
-  bool _isRemoved = false;
   bool _isExpanded = false;
   bool _isAddedToPlan = false;
-  void _handleRemove() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text("Confirm"),
-          content: const Text("Are you sure you want to remove this item?"),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: const Text("Cancel"),
-            ),
-            TextButton(
-              onPressed: () {
-                widget.onRemove();
-                setState(() {
-                  _isRemoved = true;
-                });
-                Navigator.of(context).pop();
-              },
-              child: const Text("Remove"),
-            ),
-          ],
-        );
-      },
-    );
-  }
 
-  void _handleAddToPlan() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text("Add to Plan"),
-          content: const Text("Do you want to add this exercise to your plan?"),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: const Text("Cancel"),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text("Add"),
-            ),
-          ],
-        );
-      },
-    );
-  }
+  // days of the week
+  final _formKey = GlobalKey<FormState>();
+  bool sun = false;
+  bool mon = false;
+  bool tue = false;
+  bool wed = false;
+  bool thu = false;
+  bool fri = false;
+  bool sat = false;
 
   @override
   Widget build(BuildContext context) {
-    if (_isAddedToPlan) {
-      return Container();
-    }
     return Container(
       margin: const EdgeInsets.only(bottom: 10),
       decoration: BoxDecoration(
@@ -105,7 +62,8 @@ class _ExerciseItemState extends State<ExerciseItem> {
       child: Column(
         children: [
           ListTile(
-            contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+            contentPadding:
+                const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
             title: Text(
               widget.name,
               style: const TextStyle(
@@ -129,22 +87,239 @@ class _ExerciseItemState extends State<ExerciseItem> {
                     size: 30,
                   ),
                 ),
-                IconButton(
-                  onPressed: _handleAddToPlan,
-                  icon: const Icon(
-                    Icons.add_circle_outline,
+              ],
+            ),
+          ),
+
+          _buildSummaryRow(),
+
+          const SizedBox(height: 5),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 22.5),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                const Text(
+                  'Select Days: ',
+                  style: TextStyle(
                     color: Colors.white,
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
                   ),
+                ),
+                const Spacer(),
+                SizedBox(
+                  height: 25,
+                  child: ElevatedButton.icon(
+                      onPressed: () {
+                        //
+                      },
+                      icon: Icon(Icons.add, color: theme_darkblue, size: 20),
+                      label: Text('Add ',
+                          style: TextStyle(
+                              color: theme_darkblue,
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold)),
+                      style: ElevatedButton.styleFrom(
+                        primary: Colors.white,
+                        onPrimary: theme_darkblue,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(32.0),
+                        ),
+                      )),
+                ),
+
+              ],
+            ),
+          ),
+          const SizedBox(height: 5),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const Text(
+                      'Sun',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    Checkbox(
+                      value: sun,
+                      onChanged: (bool? value) {
+                        setState(() {
+                          sun = value!;
+                        });
+                      },
+                      shape: const CircleBorder(),
+                      activeColor: theme_darkblue,
+                    ),
+                  ],
+                ),
+
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const Text(
+                      'Mon',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    Checkbox(
+                      value: mon,
+                      onChanged: (bool? value) {
+                        setState(() {
+                          mon = value!;
+                        });
+                      },
+                      shape: const CircleBorder(),
+                      activeColor: theme_darkblue,
+                    ),
+                  ],
+                ),
+
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const Text(
+                      'Tue',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    Checkbox(
+                      value: tue,
+                      onChanged: (bool? value) {
+                        setState(() {
+                          tue = value!;
+                        });
+                      },
+                      shape: const CircleBorder(),
+                      activeColor: theme_darkblue,
+                    ),
+                  ],
+                ),
+
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const Text(
+                      'Wed',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    Checkbox(
+                      value: wed,
+                      onChanged: (bool? value) {
+                        setState(() {
+                          wed = value!;
+                        });
+                      },
+                      shape: const CircleBorder(),
+                      activeColor: theme_darkblue,
+                    ),
+                  ],
+                ),
+
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const Text(
+                      'Thu',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    Checkbox(
+                      value: thu,
+                      onChanged: (bool? value) {
+                        setState(() {
+                          thu = value!;
+                        });
+                      },
+                      shape: const CircleBorder(),
+                      activeColor: theme_darkblue,
+                    ),
+                  ],
+                ),
+
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const Text(
+                      'Fri',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    Checkbox(
+                      value: fri,
+                      onChanged: (bool? value) {
+                        setState(() {
+                          fri = value!;
+                        });
+                      },
+                      shape: const CircleBorder(),
+                      activeColor: theme_darkblue,
+                    ),
+                  ],
+                ),
+
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const Text(
+                      'Sat',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    Checkbox(
+                      value: sat,
+                      onChanged: (bool? value) {
+                        setState(() {
+                          sat = value!;
+                        });
+                      },
+                      shape: const CircleBorder(),
+                      activeColor: theme_darkblue,
+                    ),
+                  ],
                 ),
               ],
             ),
           ),
-          _buildSummaryRow(),
+
+
+
           if (_isExpanded) _buildExpandedContent(),
         ],
       ),
     );
   }
+
+
 
   Widget _buildSummaryRow() {
     return Padding(
@@ -158,7 +333,6 @@ class _ExerciseItemState extends State<ExerciseItem> {
       ),
     );
   }
-
 
   Widget _buildDetailContainer(String label, String value) {
     return Stack(
@@ -206,8 +380,6 @@ class _ExerciseItemState extends State<ExerciseItem> {
     );
   }
 
-
-
   Widget _buildExpandedContent() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
@@ -226,43 +398,51 @@ class _ExerciseItemState extends State<ExerciseItem> {
               ),
             ),
           ),
-
           const SizedBox(height: 10),
-
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Column(
               children: [
                 Row(
                   children: [
-                    const Text('Target: ', style: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.bold),),
+                    const Text(
+                      'Target: ',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold),
+                    ),
                     _buildDetailText('${widget.target}.'),
                   ],
                 ),
                 const SizedBox(height: 5),
                 Row(
                   children: [
-                    const Text('Secondary Muscles: ', style: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.bold),),
+                    const Text(
+                      'Secondary Muscles: ',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold),
+                    ),
                     _buildDetailText('${widget.secondaryMuscles.join(', ')}.'),
                   ],
                 ),
               ],
             ),
           ),
-
-
-
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start, // Aligns children to the start of the column
+              crossAxisAlignment: CrossAxisAlignment.start,
+              // Aligns children to the start of the column
               children: [
                 const Text(
                   'Instructions:',
                   style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
                 const SizedBox(height: 5),
@@ -276,19 +456,16 @@ class _ExerciseItemState extends State<ExerciseItem> {
   }
 
   Widget _buildDetailText(String text) {
-    return Text(
-      text,
-      style: const TextStyle(
-        color: Colors.white,
-        fontSize: 14,
-        fontWeight: FontWeight.normal,
+    return Text(text,
+        style: const TextStyle(
+          color: Colors.white,
+          fontSize: 14,
+          fontWeight: FontWeight.normal,
+          overflow: TextOverflow.visible,
+          decoration: TextDecoration.none,
+        ),
+        softWrap: true,
         overflow: TextOverflow.visible,
-        decoration: TextDecoration.none,
-      ),
-      softWrap: true,
-      overflow: TextOverflow.visible,
-      textAlign: TextAlign.justify
-    );
+        textAlign: TextAlign.justify);
   }
-
 }
