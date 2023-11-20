@@ -43,3 +43,4 @@ class ExerciseAddedState extends ExerciseState {
   @override
   List<Object> get props => [exerciseDay];
 }
+

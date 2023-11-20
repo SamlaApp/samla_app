@@ -20,10 +20,10 @@ class ExerciseRepositoryImpl implements ExerciseRepository {
   });
 
   @override
-  Future<Either<Failure, List<ExerciseLibrary>>> getBodyPartExerciseLibrary({required String part}) async {
+  Future<Either<Failure, List<ExerciseLibrary>>> getBodyPartExerciseLibrary({required String part, required int templateID}) async {
     if (await networkInfo.isConnected) {
       try {
-        final remoteExercises = await remoteDataSource.getBodyPartExerciseLibrary(part: part);
+        final remoteExercises = await remoteDataSource.getBodyPartExerciseLibrary(part: part, templateID: templateID);
         return Right(remoteExercises);
       } on ServerException catch (e) {
         return Left(ServerFailure(message: e.message));
@@ -46,4 +46,5 @@ class ExerciseRepositoryImpl implements ExerciseRepository {
       return Left(ServerFailure(message: "No Internet Connection"));
     }
   }
+
 }

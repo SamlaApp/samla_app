@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:samla_app/core/widgets/CustomTextFormField.dart';
 import 'package:samla_app/features/training/domain/entities/Template.dart';
 import 'package:samla_app/features/training/presentation/cubit/Exercises/exercise_cubit.dart';
 import 'package:samla_app/features/training/presentation/cubit/Templates/template_cubit.dart';
@@ -252,10 +253,14 @@ class _TemplatePageState extends State<TemplatePage> {
   String _selectedBodyPart = 'Back';
   String _selectedDay = 'Sunday';
 
+  final _editNamedDayController = TextEditingController();
+
+
   @override
   void initState() {
     super.initState();
-    exercisesCubit.getBodyPartExerciseLibrary(part: _selectedBodyPart);
+    exercisesCubit.getBodyPartExerciseLibrary(part: _selectedBodyPart, templateID: widget.template.id!);
+    _editNamedDayController.text = _selectedDay;
   }
 
   void _deleteTemplate() {
@@ -365,6 +370,45 @@ class _TemplatePageState extends State<TemplatePage> {
               color: Colors.black,
               backgroundColor: Colors.grey.shade200,
             ),
+            const SizedBox(height: 10),
+            Container(
+              decoration: primary_decoration,
+              padding: const EdgeInsets.all(20.0),
+              child: Column(
+                // search field
+                children: [
+                  // adding floating button
+
+                  Row(
+                    children: [
+                      Expanded(
+                        child: CustomTextFormField(
+                          onChanged: (value) {
+                            //searchCubit.search(value);
+                          },
+                          controller: _editNamedDayController,
+                          label: 'e.g. Bench Press Day',
+                          iconData: Icons.whatshot,
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return 'Please enter a name';
+                            }
+                            return null;
+                          },
+                        ),
+                      ),
+                      IconButton.filled(
+                        onPressed: () {
+                          //
+                        },
+                        icon: const Icon(Icons.edit),
+                        color: theme_green,
+                      )
+                    ],
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       ),
@@ -393,7 +437,8 @@ class _TemplatePageState extends State<TemplatePage> {
                     initialValue: null,
                     onChanged: (String newValue) {
                       _selectedBodyPart = newValue;
-                      exercisesCubit.getBodyPartExerciseLibrary(part: newValue);
+                      exercisesCubit.getBodyPartExerciseLibrary(
+                          part: newValue, templateID: widget.template.id!);
                     },
                     color: Colors.black,
                     backgroundColor: Colors.grey.shade200,
@@ -421,6 +466,7 @@ class _TemplatePageState extends State<TemplatePage> {
               children: [
                 for (var exercise in state.exercises)
                   ExerciseItem(
+                    templateId: widget.template.id!,
                     id: exercise.id,
                     name: exercise.name,
                     bodyPart: exercise.bodyPart,
@@ -446,6 +492,10 @@ class _TemplatePageState extends State<TemplatePage> {
           return Center(
             child: Text(state.message),
           );
+        } else if (state is ExerciseAddedState) {
+          exercisesCubit.getBodyPartExerciseLibrary(
+              part: _selectedBodyPart, templateID: widget.template.id!);
+          return const Center(child: CircularProgressIndicator());
         } else {
           return const Center(child: Text('Something went wrong'));
         }

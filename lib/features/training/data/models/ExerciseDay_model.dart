@@ -17,16 +17,16 @@ class ExerciseDayModel extends ExerciseDay{
   @override
   factory ExerciseDayModel.fromJson(Map<String, dynamic> json) {
     return ExerciseDayModel(
-      id: json['id'] as int,
-      sunday: json['sunday'] as bool,
-      monday: json['monday'] as bool,
-      tuesday: json['tuesday'] as bool,
-      wednesday: json['wednesday'] as bool,
-      thursday: json['thursday'] as bool,
-      friday: json['friday'] as bool,
-      saturday: json['saturday'] as bool,
-      exercise_template_id: json['exercise_template_id'] as int,
-      exercise_library_id: json['exercise_library_id'] as int,
+      id: json['id'],
+      sunday: json['sunday']  == 1 ? true : false,
+      monday: json['monday']  == 1 ? true : false,
+      tuesday: json['tuesday']  == 1 ? true : false,
+      wednesday: json['wednesday']  == 1 ? true : false,
+      thursday: json['thursday']  == 1 ? true : false,
+      friday: json['friday']  == 1 ? true : false,
+      saturday: json['saturday']  == 1 ? true : false,
+      exercise_template_id: int.parse(json['exercise_template_id']),
+      exercise_library_id: int.parse(json['exercise_library_id']),
     );
   }
 
@@ -48,14 +48,14 @@ class ExerciseDayModel extends ExerciseDay{
 
   Map<String, String> toJson() {
     return {
-      'id': id as String,
-      'sunday': sunday.toString(),
-      'monday': monday.toString(),
-      'tuesday': tuesday.toString(),
-      'wednesday': wednesday.toString(),
-      'thursday': thursday.toString(),
-      'friday': friday.toString(),
-      'saturday': saturday.toString(),
+      'id': int.parse(id.toString()).toString(),
+      'sunday': sunday? '1' : '0',
+      'monday': monday? '1' : '0',
+      'tuesday': tuesday? '1' : '0',
+      'wednesday': wednesday? '1' : '0',
+      'thursday': thursday? '1' : '0',
+      'friday': friday? '1' : '0',
+      'saturday': saturday? '1' : '0',
       'exercise_template_id': exercise_template_id.toString(),
       'exercise_library_id': exercise_library_id.toString(),
     };
