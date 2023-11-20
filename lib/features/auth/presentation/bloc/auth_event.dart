@@ -18,22 +18,20 @@ class LogOutEvent extends AuthEvent {
 }
 
 class UpdateUserEvent extends AuthEvent {
-  String? name;
-  String? email;
-  String? username;
-  String? phone;
-  String? dateOfBirth;
-  String? password;
-
-  UpdateUserEvent({String? this.name,
-      String? this.email,
-      String? this.username,
-      String? this.phone,
-      String? this.dateOfBirth,
-      String? this.password});
+  final User user;
+  UpdateUserEvent(this.user);
 
   @override
-  List<Object> get props => [name!, email!, username!, phone!, dateOfBirth!, password!];
+  List<Object> get props => [user];
+}
+
+class UpdateUserImageEvent extends AuthEvent {
+  final File image;
+
+  UpdateUserImageEvent(this.image);
+
+  @override
+  List<Object> get props => [image];
 }
 
 class LoginWithEmailEvent extends AuthEvent {

@@ -80,7 +80,7 @@ class AuthRepositoryImpl implements AuthRepository {
         return Right(user);
       } on ServerException catch (e) {
         return Left(ServerFailure(message: e.message));
-      //  on Firebase
+        //  on Firebase
       } catch (e) {
         return Left(ServerFailure(message: 'Something went wrong'));
       }
@@ -200,6 +200,7 @@ class AuthRepositoryImpl implements AuthRepository {
         final user =
             await remoteDataSource.update(UserModel.fromEntity(newUser));
         //cache user
+        print('this is the updated user $user.hasGoal');
         await localDataSource.cacheUser(user);
         return Right(user);
       } on ServerException catch (e) {

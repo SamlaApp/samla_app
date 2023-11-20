@@ -32,7 +32,7 @@ class _MealAdaptState extends State<MealAdapt> {
   DateTime date = DateTime.now();
   String today = DateFormat('EEEE').format(DateTime.now());
 
-  final cubit = NutritionPlanCubit(sl<NutritionPlanRepository>());
+  final cubit = sl.get<NutritionPlanCubit>();
   late MealLibrary mealLibrary;
 
   final _displayedDay = TextEditingController();

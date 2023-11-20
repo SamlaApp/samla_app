@@ -4,7 +4,7 @@ import 'package:samla_app/features/community/domain/entities/Community.dart';
 import 'package:samla_app/features/community/presentation/pages/communities.dart';
 import 'package:samla_app/features/community/presentation/pages/community_detail.dart';
 import 'package:samla_app/features/community/presentation/pages/community_page.dart';
-import 'package:samla_app/features/community/presentation/widgets/route_transition.dart';
+import 'package:samla_app/core/widgets/route_transition.dart';
 
 class CustomTile extends StatelessWidget {
   final String title;
@@ -30,11 +30,11 @@ class CustomTile extends StatelessWidget {
       horizontalTitleGap: 20,
       onTap: () {
         // navigate to the community page
-        Navigator.of(context).push(createRoute(
-          
-          community.isMemeber ? CommunityPage(community:community) : CommunityDetail(
-          community:community,
-        )));
+        Navigator.of(context).push(slideRouteTransition(community.isMemeber
+            ? CommunityPage(community: community)
+            : CommunityDetail(
+                community: community,
+              )));
       },
       // trailing: Column(
       //   mainAxisAlignment: MainAxisAlignment.center,
@@ -60,7 +60,7 @@ class CustomTile extends StatelessWidget {
           overflow: TextOverflow.ellipsis,
         ),
       ),
-      leading:  ImageViewer.network(
+      leading: ImageViewer.network(
         imageURL: community.imageURL,
         viewerMode: false,
         placeholderImagePath: 'images/defaults/community.png',
@@ -75,7 +75,6 @@ class CustomTile extends StatelessWidget {
 }
 
 List<Widget> buildCommunitiesList(communities, bool doNotShowMyCommunities) {
-
   List<Widget> list = [];
   for (var community in communities) {
     // if (doNotShowMyCommunities && community.isMemeber) {
@@ -92,5 +91,3 @@ List<Widget> buildCommunitiesList(communities, bool doNotShowMyCommunities) {
   }
   return list;
 }
-
-

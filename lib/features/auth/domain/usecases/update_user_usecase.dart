@@ -8,23 +8,7 @@ class UpdateUsecase {
 
   UpdateUsecase({required this.repository});
 
-  Future<Either<Failure, User>> call(
-      {String? name,
-      String? email,
-      String? username,
-      String? phone,
-      String? dateOfBirth,
-      String? password,
-      required User currentUser}) async {
-    User newUser = User(
-      id: currentUser.id,
-      accessToken: currentUser.accessToken,
-      name: name ?? currentUser.name,
-      email: email ?? currentUser.email,
-      username: username ?? currentUser.username,
-      phone: phone ?? currentUser.phone,
-      dateOfBirth: dateOfBirth ?? currentUser.dateOfBirth,
-    );
+  Future<Either<Failure, User>> call(User newUser) async {
     return repository.update(newUser);
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:samla_app/config/themes/common_styles.dart';
 
 class CustomTextFormField extends StatelessWidget {
@@ -9,6 +10,7 @@ class CustomTextFormField extends StatelessWidget {
   final Key? formKey;
   bool textArealike;
   final Function(String)? onChanged;
+  final TextInputType? keyboardType;
 
   CustomTextFormField(
       {super.key,
@@ -17,7 +19,9 @@ class CustomTextFormField extends StatelessWidget {
       this.controller,
       this.validator,
       this.formKey,
-      this.textArealike = false, this.onChanged});
+      this.keyboardType,
+      this.textArealike = false,
+      this.onChanged});
 
   @override
   Widget build(BuildContext context) {
@@ -26,8 +30,13 @@ class CustomTextFormField extends StatelessWidget {
       child: TextFormField(
         onChanged: onChanged,
         maxLines: textArealike ? null : 1,
-        keyboardType: textArealike ? TextInputType.multiline : null,
+        keyboardType: textArealike ? TextInputType.multiline : keyboardType,
         autovalidateMode: AutovalidateMode.onUserInteraction,
+        inputFormatters: () {
+          if (keyboardType == TextInputType.number) {
+            return [FilteringTextInputFormatter.digitsOnly];
+          } 
+        }(),
         controller: controller,
         validator: validator,
         key: formKey,

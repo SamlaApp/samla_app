@@ -24,7 +24,7 @@ class CustomRectangularButton extends StatelessWidget {
         userProgress.updateGender(gender: buttonText);
       },
       child: Container(
-        width: 220,
+        // width: 220,
         height: 60,
         decoration: BoxDecoration(
           color: buttonColor,
@@ -83,7 +83,7 @@ class CustomRectangularButton2 extends StatelessWidget {
         userProgress.updateGender(gender: buttonText);
       },
       child: Container(
-        width: 220,
+        // width: 220,
         height: 60,
         decoration: BoxDecoration(
           color: buttonColor,

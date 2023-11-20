@@ -20,14 +20,15 @@ import 'package:samla_app/features/community/presentation/cubits/RequestsManager
 import 'package:samla_app/features/community/presentation/cubits/SpecificCommunityCubit/specific_community_cubit.dart';
 import 'package:samla_app/features/community/presentation/pages/community_page.dart';
 import 'package:samla_app/features/community/presentation/pages/join_requests.dart';
-import 'package:samla_app/features/community/presentation/widgets/route_transition.dart';
+import 'package:samla_app/core/widgets/route_transition.dart';
 
 enum userRoleOptions { owner, member, notMember }
 
 class CommunityDetail extends StatelessWidget {
   Community community;
 
-  CommunityDetail({super.key, required this.community , this.updateNameAndImageCallback});
+  CommunityDetail(
+      {super.key, required this.community, this.updateNameAndImageCallback});
   final Function(String name, String? imageURL)? updateNameAndImageCallback;
   final specificCubit = sl.get<SpecificCommunityCubit>();
   final communityCubit = sl.get<CommunityCubit>();
@@ -38,13 +39,13 @@ class CommunityDetail extends StatelessWidget {
 
   void updateCommunity(newCommunityInfo, {bool updateHandle = true}) {
     specificCubit.updateCommunity(newCommunityInfo, (newCommunity) {
-      community = newCommunity.copyWith(imageURL: community.imageURL);// do not change the image
-      
+      community = newCommunity.copyWith(
+          imageURL: community.imageURL); // do not change the image
+
       if (updateNameAndImageCallback != null) {
         updateNameAndImageCallback!(newCommunity.name, newCommunity.imageURL);
       }
       communityCubit.getMyCommunities();
-
     }, updateHandle: updateHandle);
   }
 
@@ -166,25 +167,25 @@ class CommunityDetail extends StatelessWidget {
                             SizedBox(
                               height: 80,
                             ),
-            
+
                             ImageViewer.network(
                               placeholderImagePath:
                                   'images/defaults/community.png',
                               imageURL: community.imageURL,
-                              editableCallback:
-                                  userRole == userRoleOptions.member ||
-                                          userRole == userRoleOptions.owner
-                                      ? (image) {
-                                          updateCommunity(
-                                              community.copyWith(avatar: image));
-                                        }
-                                      : null,
+                              editableCallback: userRole ==
+                                          userRoleOptions.member ||
+                                      userRole == userRoleOptions.owner
+                                  ? (image) {
+                                      updateCommunity(
+                                          community.copyWith(avatar: image));
+                                    }
+                                  : null,
                               title: community.name,
                               animationTag: 'imageHero',
                             ),
-            
+
                             SizedBox(height: 10),
-            
+
                             GestureDetector(
                               onTap: () {
                                 if (userRole == userRoleOptions.owner) {
@@ -202,7 +203,6 @@ class CommunityDetail extends StatelessWidget {
                                       (value) {
                                         updateCommunity(
                                             community.copyWith(name: value));
-                                        
                                       });
                                 }
                               },
@@ -213,9 +213,9 @@ class CommunityDetail extends StatelessWidget {
                                       decoration: TextDecoration.none,
                                       color: theme_darkblue.withOpacity(0.95))),
                             ),
-            
+
                             SizedBox(height: 5),
-            
+
                             // community handle
                             GestureDetector(
                               onTap: () {
@@ -258,21 +258,22 @@ class CommunityDetail extends StatelessWidget {
                                       decoration: TextDecoration.none,
                                       color: theme_darkblue.withOpacity(0.5))),
                             ),
-            
+
                             SizedBox(height: 30),
-            
+
                             // row of number of memebers and public/private
                             MermbersCountWidget(
-                              numOfMembers: state is SpecificCommunityNumberLoaded
-                                  ? state.numOfMembers.toString()
-                                  : '0',
+                              numOfMembers:
+                                  state is SpecificCommunityNumberLoaded
+                                      ? state.numOfMembers.toString()
+                                      : '0',
                               publicOrPrivate:
                                   community.isPublic ? 'PUBLIC' : 'PRIVATE',
                               requestsCubit: requestsCubit,
                               communityID: community.id!,
                             ),
                             SizedBox(height: 10),
-            
+
                             GestureDetector(
                                 onTap: () {
                                   if (userRole == userRoleOptions.owner) {
@@ -298,16 +299,16 @@ class CommunityDetail extends StatelessWidget {
                             SizedBox(
                               height: 10,
                             ),
-            
+
                             userRole == userRoleOptions.owner
                                 ? _builderMembersWidget(memebersCubit, user)
                                 : Container(),
                             SizedBox(
                               height: 30,
                             ),
-            
-                            mainButton(
-                                userRole, context, exploreCubit, communityCubit),
+
+                            mainButton(userRole, context, exploreCubit,
+                                communityCubit),
                           ]),
                     ),
                   ),
@@ -759,7 +760,8 @@ PreferredSize GradientAppBar(context, userRoleOptions userRole,
                         size: 30,
                       ),
                       onPressed: () {
-                        Navigator.of(context).push(createRoute(JoinRequestsPage(
+                        Navigator.of(context)
+                            .push(slideRouteTransition(JoinRequestsPage(
                           community: community,
                           joinRequestsCubit: requestsCubit,
                         )));

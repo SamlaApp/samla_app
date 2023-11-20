@@ -16,10 +16,13 @@ class LocalDataSourceImpl implements LocalDataSource {
   final SharedPreferences sharedPreferences;
 
   LocalDataSourceImpl({required this.sharedPreferences});
-  
+
   @override
   Future<Unit> cacheUser(UserModel userToCache) {
+    print('has goals ${userToCache.hasGoal}');
     final jsonUser = userToCache.toJson();
+    print('this is the updated cached user $jsonUser');
+
     sharedPreferences.setString('user', json.encode(jsonUser));
     return Future.value(unit);
   }
@@ -34,7 +37,7 @@ class LocalDataSourceImpl implements LocalDataSource {
       throw EmptyCacheException(message: 'no cached user found');
     }
   }
-  
+
   @override
   void clearCache() {
     sharedPreferences.clear();

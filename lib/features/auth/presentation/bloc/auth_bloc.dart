@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -45,14 +47,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       // update user
       else if (event is UpdateUserEvent) {
         emit(LoadingAuthState());
-        final failuredOrDone = await update.call(
-            name: event.name,
-            email: event.email,
-            username: event.username,
-            phone: event.phone,
-            dateOfBirth: event.dateOfBirth,
-            password: event.password,
-            currentUser: user);
+        final failuredOrDone = await update.call(event.user);
 
         failuredOrDone.fold((failure) {
           emit(ErrorAuthState(message: failure.message));
@@ -72,7 +67,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           event.callBackFunction(false);
         }, (returnedUser) {
           user = returnedUser;
-          print('user is $user.name');
           emit(AuthenticatedState(user: returnedUser));
           event.callBackFunction(true);
         });
@@ -178,5 +172,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     user.phone = newUser.phone;
     user.dateOfBirth = newUser.dateOfBirth;
     user.accessToken = newUser.accessToken;
+    user.gender = newUser.gender;
+    user.height = newUser.height;
+    user.hasGoal = newUser.hasGoal;
+    user.photoUrl = newUser.photoUrl;
   }
 }

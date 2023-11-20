@@ -8,3 +8,15 @@ abstract class ProfileState extends Equatable {
 }
 
 class ProfileInitial extends ProfileState {}
+
+class ProfileError extends ProfileState {
+  final String message;
+
+  ProfileError({required this.message});
+}
+
+class ProfileLoading extends ProfileState {}
+
+
+
+

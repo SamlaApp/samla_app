@@ -5,6 +5,7 @@ import 'package:samla_app/config/themes/common_styles.dart';
 import 'package:samla_app/core/error/exceptions.dart';
 import 'package:samla_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:samla_app/features/notifications/notification_injection_container.dart';
+import 'package:samla_app/features/profile/profile_di.dart';
 import 'package:samla_app/features/setup/welcomePage.dart';
 import 'package:samla_app/firebase_options.dart';
 import 'package:samla_app/features/auth/auth_injection_container.dart' as di;
@@ -51,27 +52,30 @@ class _SplashScreenState extends State<SplashScreen>
     before handling the authentication
     */
 
+    // initlizeing notification service
+    await NotificationInit();
+    // initlizeing auth service
+    await di.AuthInit();
+    // initlizeing profile service
+    ProfileInit();
     // authentication handling
     await _checkCachedUserAndNavigate();
   }
 
   Future<void> _checkCachedUserAndNavigate() async {
-    await di.AuthInit();
-    await NotificationInit();
-
     final authBloc = di.sl.get<AuthBloc>();
     authBloc.add(CheckCachedUserEvent(callBackFunction: (isAuth) {
       if (isAuth) {
-        if (!authBloc.user.hasGoal) {
-            Navigator.of(context).pushNamedAndRemoveUntil(
-                '/MainPages', (Route<dynamic> route) => false);
-          
+        print(authBloc.user.hasGoal);
+        if (authBloc.user.hasGoal) {
+          Navigator.of(context).pushNamedAndRemoveUntil(
+              '/MainPages', (Route<dynamic> route) => false);
         } else {
-            Navigator.of(context).pushReplacement(
-              MaterialPageRoute(
-                builder: (context) => WelcomePage(),
-              ),
-            );
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+              builder: (context) => WelcomePage(),
+            ),
+          );
         }
       } else {
         Navigator.of(context)

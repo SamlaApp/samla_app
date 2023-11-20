@@ -35,11 +35,9 @@ class _NewFoodState extends State<NewFoodPage> {
     _fatController.text = _fat.toString();
   }
 
-  final cubit = NutritionPlanCubit(sl<NutritionPlanRepository>());
-
+  final cubit = sl<NutritionPlanCubit>();
   void _submitForm() {
     if (_formKey.currentState!.validate()) {
-
       final meal = MealLibrary(
         name: _nameController.text,
         calories: _calories,
@@ -371,7 +369,7 @@ class _NewFoodState extends State<NewFoodPage> {
     );
   }
 
-  Widget _buttonAddCustomMeal(){
+  Widget _buttonAddCustomMeal() {
     return SizedBox(
       width: double.infinity,
       child: ElevatedButton(

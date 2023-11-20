@@ -21,7 +21,7 @@ class UserModel extends User {
       height: json['height'] == null || json['height'].toString().isEmpty
           ? 0.0
           : double.parse(json['height'].toString()),
-      hasGoal: json['has_goal'] == 1 ? true : false,
+      hasGoal: json['has_goal'] == 1 || json['has_goal'] == '1' ? true : false,
       photoUrl: json['photo'],
       id: json['id'].toString(),
       name: json['name'],

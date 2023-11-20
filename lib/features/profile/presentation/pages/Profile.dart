@@ -228,7 +228,9 @@ class _ProfilePageState extends State<ProfilePage> {
 // if backend return success, update the user in the local storage
 // dummy update for testing
               String newName = 'user ${DateTime.now().millisecondsSinceEpoch}';
-              authDI.sl.get<AuthBloc>().add(UpdateUserEvent(name: newName));
+              authDI.sl
+                  .get<AuthBloc>()
+                  .add(UpdateUserEvent(authBloc.user.copyWith(name: newName)));
 
               // Navigator.pushNamed(context, '/PersonalInfo');
               // await Navigator.pushNamedAndRemoveUntil(
