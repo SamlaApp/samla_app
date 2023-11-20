@@ -16,13 +16,13 @@ class DayDropdown extends StatefulWidget {
 class _DayDropdownState extends State<DayDropdown> {
   late String _currentDay;
   final List<String> days = const [
+    'Sunday',
     'Monday',
     'Tuesday',
     'Wednesday',
     'Thursday',
     'Friday',
     'Saturday',
-    'Sunday'
   ];
 
   @override

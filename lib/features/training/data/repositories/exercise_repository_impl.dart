@@ -4,6 +4,7 @@ import 'package:samla_app/core/error/failures.dart';
 import 'package:samla_app/core/network/network_info.dart';
 import 'package:samla_app/features/training/data/datasources/local_data_source.dart';
 import 'package:samla_app/features/training/data/datasources/remote_data_source.dart';
+import 'package:samla_app/features/training/domain/entities/ExerciseDay.dart';
 import 'package:samla_app/features/training/domain/entities/ExerciseLibrary.dart';
 import 'package:samla_app/features/training/domain/repositories/exercise_repository.dart';
 
@@ -23,6 +24,20 @@ class ExerciseRepositoryImpl implements ExerciseRepository {
     if (await networkInfo.isConnected) {
       try {
         final remoteExercises = await remoteDataSource.getBodyPartExerciseLibrary(part: part);
+        return Right(remoteExercises);
+      } on ServerException catch (e) {
+        return Left(ServerFailure(message: e.message));
+      }
+    } else {
+      return Left(ServerFailure(message: "No Internet Connection"));
+    }
+  }
+
+  @override
+  Future<Either<Failure, ExerciseDay>> addExerciseToPlan(ExerciseDay exerciseDay) async {
+    if (await networkInfo.isConnected) {
+      try {
+        final remoteExercises = await remoteDataSource.addExerciseToPlan(exerciseDay);
         return Right(remoteExercises);
       } on ServerException catch (e) {
         return Left(ServerFailure(message: e.message));

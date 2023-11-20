@@ -30,3 +30,16 @@ class ExerciseErrorState extends ExerciseState {
   @override
   List<Object> get props => [message];
 }
+
+// ExerciseDayLoadingState
+class ExerciseDayLoadingState extends ExerciseState {}
+
+// ExerciseAddedState
+class ExerciseAddedState extends ExerciseState {
+  final ExerciseDay exerciseDay;
+
+  const ExerciseAddedState(this.exerciseDay);
+
+  @override
+  List<Object> get props => [exerciseDay];
+}

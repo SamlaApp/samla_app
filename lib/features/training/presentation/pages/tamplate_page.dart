@@ -250,6 +250,7 @@ class _TemplatePageState extends State<TemplatePage> {
   final exercisesCubit = di.sl.get<ExerciseCubit>();
 
   String _selectedBodyPart = 'Back';
+  String _selectedDay = 'Sunday';
 
   @override
   void initState() {
@@ -356,49 +357,13 @@ class _TemplatePageState extends State<TemplatePage> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            Row(
-              children: [
-                // Text area box
-                Expanded(
-                  flex: 1,
-                  child: TextField(
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      hintText: 'Your daily plan name',
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(
-                          color: Colors.blue,
-                          width: 2.0,
-                        ),
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(
-                          color: Colors.grey,
-                          width: 1.0,
-                        ),
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                    ),
-                  ),
-                ),
-
-                const SizedBox(width: 16), // Spacing between the two widgets
-
-                Expanded(
-                  flex: 1,
-                  child: DayDropdown(
-                    initialValue: null,
-                    onChanged: (String newValue) {
-                      // Handle changes here
-                    },
-                    color: Colors.black,
-                    backgroundColor: Colors.grey.shade200,
-                  ),
-                ),
-              ],
+            DayDropdown(
+              onChanged: (String newValue) {
+                _selectedDay = newValue;
+                print('Selected day: $_selectedDay');
+              },
+              color: Colors.black,
+              backgroundColor: Colors.grey.shade200,
             ),
           ],
         ),
