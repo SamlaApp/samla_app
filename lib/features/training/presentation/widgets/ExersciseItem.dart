@@ -3,6 +3,7 @@ import 'package:samla_app/config/themes/common_styles.dart';
 import 'package:samla_app/features/training/domain/entities/ExerciseDay.dart';
 import 'package:samla_app/features/training/presentation/cubit/Exercises/exercise_cubit.dart';
 import 'package:samla_app/features/training/training_di.dart' as di;
+import 'package:cached_network_image/cached_network_image.dart';
 
 
 class ExerciseItem extends StatefulWidget {
@@ -15,7 +16,6 @@ class ExerciseItem extends StatefulWidget {
   final String instructions;
   final List<String> secondaryMuscles;
   final LinearGradient gradient;
-  final VoidCallback onRemove;
   final int templateId;
 
   const ExerciseItem({
@@ -29,7 +29,6 @@ class ExerciseItem extends StatefulWidget {
     required this.instructions,
     required this.secondaryMuscles,
     required this.gradient,
-    required this.onRemove,
     required this.templateId,
   }) : super(key: key);
 
@@ -44,7 +43,6 @@ class _ExerciseItemState extends State<ExerciseItem> {
   final exercisesCubit = di.sl.get<ExerciseCubit>();
 
   bool _isExpanded = false;
-  bool _isAddedToPlan = false;
 
   // days of the week
   final _formKey = GlobalKey<FormState>();
@@ -444,15 +442,32 @@ class _ExerciseItemState extends State<ExerciseItem> {
               child: Image.network(
                 _baseURL + widget.gifUrl,
                 fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) {
+                  return Container();
+                },
+                loadingBuilder: (context, child, loadingProgress) {
+                  if (loadingProgress == null) return child;
+                  return  const Center(
+                    child: CircularProgressIndicator(
+                      color: Colors.white,
+                    ),
+                  );
+                }
               ),
             ),
           ),
+
+
           const SizedBox(height: 10),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
                       'Target: ',
@@ -465,7 +480,9 @@ class _ExerciseItemState extends State<ExerciseItem> {
                   ],
                 ),
                 const SizedBox(height: 5),
-                Row(
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
                       'Secondary Muscles: ',
