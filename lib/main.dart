@@ -9,6 +9,7 @@ import 'package:firebase_in_app_messaging/firebase_in_app_messaging.dart';
 import 'package:samla_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:samla_app/features/notifications/presentation/bloc/notification_bloc.dart';
 import 'config/router/app_router.dart';
+import 'config/themes/common_styles.dart';
 import 'firebase_options.dart'; // Import your logical code
 import 'features/auth/auth_injection_container.dart' as auth_di;
 import 'features/notifications/notification_injection_container.dart'
@@ -82,6 +83,7 @@ class MyApp extends StatelessWidget {
       child: BlocProvider(
         create: (context) => notifi_di.sl<NotificationBloc>(),
         child: MaterialApp(
+          // theme:lightTheme,
             navigatorKey: navigatorKey,
             debugShowCheckedModeBanner: false,
             title: 'Samla App',
@@ -115,3 +117,4 @@ class MyApp extends StatelessWidget {
 //           (X509Certificate cert, String host, int port) => true;
 //   }
 // }
+

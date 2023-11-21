@@ -51,3 +51,26 @@ BoxDecoration textField_decoration = BoxDecoration(
 );
 
 TextStyle inputText = TextStyle(color: Colors.black54, fontSize: 15);
+
+
+// ThemeData lightTheme = ThemeData(
+//   primaryColor: Colors.white,
+//   scaffoldBackgroundColor: Colors.white,
+//     highlightColor: Colors.green,
+//     buttonBarTheme: ButtonBarThemeData(
+//       buttonTextTheme: ButtonTextTheme.accent,
+//         layoutBehavior: ButtonBarLayoutBehavior.constrained,
+//     ),
+//   iconTheme: IconThemeData(color: theme_green),
+//   brightness: Brightness.light,
+//   useMaterial3: false,
+//   textTheme: TextTheme(
+//     displayLarge: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+//     bodyLarge: TextStyle(fontSize: 18, color: Colors.black87),
+//   ),
+//   appBarTheme:  AppBarTheme(
+//     color: theme_grey,
+//     iconTheme: IconThemeData(color: theme_green),
+//   ),
+//   colorScheme: ColorScheme.fromSeed(seedColor: theme_grey),
+// );
