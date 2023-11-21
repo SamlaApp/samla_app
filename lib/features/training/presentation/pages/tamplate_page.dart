@@ -422,9 +422,12 @@ class _TemplatePageState extends State<TemplatePage> {
   }
 
   BlocBuilder<ExerciseCubit, ExerciseState> _buildBodyPartExercises() {
+    //print gifurl
+
     return BlocBuilder<ExerciseCubit, ExerciseState>(
       bloc: exercisesCubit,
       builder: (context, state) {
+        print(exercisesCubit.state);
         if (state is ExerciseLoadingState) {
           return const Center(child: CircularProgressIndicator());
         } else if (state is ExerciseLoadedState) {

@@ -345,7 +345,10 @@ class _TemplatesPageState extends State<TemplatesPage> {
                   MaterialPageRoute(
                     builder: (context) => TemplatePage(template: template, length: length),
                   ),
-                );
+                ).then((_) {
+                  // This block runs when you pop back to TemplatesPage
+                  refresh(); // Refresh your TemplatesPage here
+                });
               },
               style: ElevatedButton.styleFrom(
                 foregroundColor: theme_darkblue,
