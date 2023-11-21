@@ -40,19 +40,19 @@ class _NutritionPlanState extends State<NutritionPlan> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
+        title: Text(
           "Nutrition Plan",
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          style: TextStyle(color: primary_color, fontWeight: FontWeight.bold),
         ),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios),
+          icon: Icon(Icons.arrow_back_ios , color: primary_color),
           onPressed: () {
             Navigator.of(context).pop();
           },
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.add_circle_outline),
+            icon: Icon(Icons.add_circle_outline , color: primary_color),
             onPressed: () {
               Navigator.of(context).push(
                 MaterialPageRoute(

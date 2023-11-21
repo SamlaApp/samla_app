@@ -199,10 +199,10 @@ class _MealAdaptState extends State<MealAdapt> {
                           children: [
                             Text(
                               state.mealLibrary.name,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold,
-                                color: Colors.white,
+                                color: primary_color,
                               ),
                             ),
                             // button to add meal to plan
@@ -210,8 +210,8 @@ class _MealAdaptState extends State<MealAdapt> {
                               onPressed: () {
                                 _addMealToPlan(state.mealLibrary);
                               },
-                              icon: const Icon(Icons.add),
-                              label: const Text('Add'),
+                              icon: Icon(Icons.add, color: theme_darkblue),
+                              label:  Text('Add'),
                               style: ElevatedButton.styleFrom(
                                 foregroundColor: theme_darkblue,
                                 backgroundColor: Colors.white,
@@ -594,7 +594,7 @@ class _MealAdaptState extends State<MealAdapt> {
                     ),
                   );
                 },
-                icon: const Icon(Icons.delete),
+                icon: Icon(Icons.delete, color: theme_darkblue),
               ),
             ),
           ],
@@ -605,8 +605,8 @@ class _MealAdaptState extends State<MealAdapt> {
               Text(
                 nutritionPlan.name,
                 style:
-                    const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-              ),
+                TextStyle(fontSize: 24, fontWeight: FontWeight.bold,
+              ),  ),
               const SizedBox(height: 10),
               Text(
                 '${nutritionPlan.start_time} - ${nutritionPlan.end_time}',
@@ -615,9 +615,9 @@ class _MealAdaptState extends State<MealAdapt> {
             ],
           ),
           bottom: TabBar(
-            indicatorColor: Colors.white,
+            indicatorColor: primary_color,
             labelColor: primary_color,
-            unselectedLabelColor: Colors.white,
+            unselectedLabelColor: primary_color,
             labelStyle: const TextStyle(
               fontWeight: FontWeight.bold,
             ),
@@ -642,7 +642,7 @@ class _MealAdaptState extends State<MealAdapt> {
                     Form(
                       child: DayDropdown(
                         color: theme_darkblue,
-                        backgroundColor: Colors.white,
+                        backgroundColor: primary_color,
                         initialValue: today,
                         onChanged: (value) {
                           setState(() {
@@ -669,9 +669,7 @@ class _MealAdaptState extends State<MealAdapt> {
                       decoration: primary_decoration,
                       padding: const EdgeInsets.all(20.0),
                       child: Column(
-                        // search field
                         children: [
-                          // adding floating button
                           Row(
                             children: [
                               Expanded(
@@ -681,18 +679,18 @@ class _MealAdaptState extends State<MealAdapt> {
                                   controller: _searchController,
                                 ),
                               ),
-                              IconButton.filled(
-                                  onPressed: () {
-                                    cubit.searchMealLibrary(
-                                        _searchController.text);
-                                  },
-                                  icon: const Icon(Icons.search),
-                                  color: theme_green,
-                                  style: ElevatedButton.styleFrom(
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(32.0),
-                                    ),
-                                  )),
+                              IconButton(
+                                onPressed: () {
+                                  cubit.searchMealLibrary(_searchController.text);
+                                },
+                                icon: Container(
+                                  decoration: BoxDecoration(
+                                    color: primary_color, // Set your desired background color here
+                                    shape: BoxShape.circle, // Makes the container circular
+                                  ),
+                                  child: Icon(Icons.search, color: theme_green , size: 35),
+                                ),
+                              ),
                             ],
                           ),
                         ],
@@ -724,7 +722,7 @@ class _MealAdaptState extends State<MealAdapt> {
       label: const Text('Add custom food'),
       style: ElevatedButton.styleFrom(
         foregroundColor: theme_darkblue,
-        backgroundColor: Colors.white,
+        backgroundColor: primary_color,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(32.0),
         ),
