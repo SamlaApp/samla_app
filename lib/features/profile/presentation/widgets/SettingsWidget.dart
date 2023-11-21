@@ -282,6 +282,9 @@ class _SettingsWidgetState extends State<SettingsWidget> {
               onPressed: _saveInfo,
               child: Text(
                 'Save Info',
+                style: TextStyle(
+                  color: primary_color,
+                ),
               ),
             ),
           ),
@@ -305,6 +308,9 @@ class _SettingsWidgetState extends State<SettingsWidget> {
               onPressed: _saveInfo,
               child: Text(
                 'Deactive Account',
+                style: TextStyle(
+                  color: primary_color,
+                ),
               ),
             ),
           ),
