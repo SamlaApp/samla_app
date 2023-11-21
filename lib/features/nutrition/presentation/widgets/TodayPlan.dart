@@ -7,6 +7,7 @@ import 'package:samla_app/features/nutrition/data/models/nutritionPlan_model.dar
 import 'package:samla_app/features/nutrition/domain/entities/NutritionPlanStatus.dart';
 import 'package:samla_app/features/nutrition/domain/repositories/nutritionPlan_repository.dart';
 import 'package:samla_app/features/nutrition/presentation/cubit/TodayPlan/todayPlan_cubit.dart';
+import 'package:samla_app/features/nutrition/presentation/cubit/displayMeal/displayMeal_cubit.dart';
 import 'package:samla_app/features/nutrition/presentation/cubit/nutrtiionPlan/nutritionPlan_cubit.dart';
 import 'package:samla_app/features/nutrition/nutrition_di.dart' as di;
 import 'package:samla_app/features/nutrition/presentation/pages/MealAdapt.dart';
@@ -22,11 +23,14 @@ class TodayPlan extends StatefulWidget {
 }
 
 class _TodayPlanState extends State<TodayPlan> {
-  final PageController _pageController =
-      PageController(viewportFraction: 1, initialPage: 0, keepPage: true);
+  final PageController _pageController = PageController(viewportFraction: 1, initialPage: 0, keepPage: true);
 
   final nutritionCubit = di.sl.get<NutritionPlanCubit>();
   final todayPlanCubit = di.sl.get<TodayPlanCubit>();
+  final displayMealCubit = di.sl.get<DisplayMealCubit>();
+
+  String today = DateFormat('EEEE').format(DateTime.now());
+
 
   @override
   void initState() {
@@ -38,16 +42,20 @@ class _TodayPlanState extends State<TodayPlan> {
     return BlocBuilder<TodayPlanCubit, TodayPlanState>(
       bloc: todayPlanCubit,
       builder: (context, state) {
-
-
         if (state is TodayPlanLoadingState) {
-          return const Center(child: CircularProgressIndicator());
+          return Center(child: CircularProgressIndicator(
+            color: theme_green,
+            backgroundColor: theme_pink,
+          ));
         }
 
         else if (state is TodayPlanLoaded) {
           return Stack(
             children: [
               PageView(
+                onPageChanged: (index) {
+                  displayMealCubit.getNutritionPlanMeals(today, state.nutritionPlans[index].id!);
+                },
                 controller: _pageController,
                 scrollDirection: Axis.horizontal,
                 children: [
@@ -119,7 +127,10 @@ class _TodayPlanState extends State<TodayPlan> {
           );
         }
         else {
-          return const Center(child: Text('Unknown state'));
+          return Center(child: CircularProgressIndicator(
+            color: theme_green,
+            backgroundColor: theme_pink,
+          ));
         }
       },
     );
@@ -282,14 +293,12 @@ class _TodayPlanState extends State<TodayPlan> {
     );
   }
 
-  BlocBuilder<NutritionPlanCubit, NutritionPlanState> displayedMeals(int id) {
-    String today = DateFormat('EEEE').format(DateTime.now());
-    final tempCubit = sl.get<NutritionPlanCubit>();
-    tempCubit.getNutritionPlanMeals(today, id);
-    return BlocBuilder<NutritionPlanCubit, NutritionPlanState>(
-      bloc: tempCubit,
+  BlocBuilder<DisplayMealCubit, DisplayMealState> displayedMeals(int id) {
+    return BlocBuilder<DisplayMealCubit, DisplayMealState>(
+      bloc: displayMealCubit,
       builder: (context, state) {
-        if (state is NutritionPlanMealsLoadingState) {
+
+        if (state is DisplayMealLoadingState) {
           return const Center(
             child: Padding(
               padding: EdgeInsets.all(16.0),
@@ -298,7 +307,28 @@ class _TodayPlanState extends State<TodayPlan> {
               ),
             ),
           );
-        } else if (state is NutritionPlanMealLoaded) {
+        }
+
+        else if (state is DisplayMealErrorState) {
+          return const Center(
+            child: Padding(
+              padding: EdgeInsets.all(16.0),
+              child: Text('Failed to load meals',
+                  style: TextStyle(color: Colors.white70)),
+            ),
+          );
+        }
+
+        else if (state is DisplayMealEmptyState) {
+          return const Center(
+            child: Padding(
+              padding: EdgeInsets.all(16.0),
+              child: Text('No meals', style: TextStyle(color: Colors.white70)),
+            ),
+          );
+        }
+
+        else if (state is DisplayMealLoaded) {
           return Column(
             children: [
               for (var meal in state.nutritionPlanMeals)
@@ -330,12 +360,14 @@ class _TodayPlanState extends State<TodayPlan> {
                 ),
             ],
           );
-        } else {
+        }
+
+        else {
           return const Center(
             child: Padding(
                 padding: EdgeInsets.all(16.0),
                 child:
-                    Text('No meals', style: TextStyle(color: Colors.white70))),
+                    Text('Failed to load meals', style: TextStyle(color: Colors.white70))),
           );
         }
       },

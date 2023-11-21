@@ -47,7 +47,6 @@ class NutritionPlanRemoteDataSourceImpl
     final resBody = await res.stream.bytesToString();
 
     if (res.statusCode == 200) {
-      print(resBody);
       final decodedNutritionPlans = json.decode(resBody)['nutrition_plans'];
 
       final List<NutritionPlanModel> convertedPlans = [];
@@ -71,7 +70,6 @@ class NutritionPlanRemoteDataSourceImpl
       method: 'POST',
     );
     final resBody = await response.stream.bytesToString();
-    print(resBody);
     if (response.statusCode == 200) {
       final NutritionPlanModel nutritionPlan =
           NutritionPlanModel.fromJson(json.decode(resBody)['nutrition_plan'][0]);
@@ -270,7 +268,6 @@ class NutritionPlanRemoteDataSourceImpl
       data: {'calories': '$calories'},
     );
     final resBody = await response.stream.bytesToString();
-    print(resBody);
     if (response.statusCode == 200) {
       return const Right(unit);
     } else {
