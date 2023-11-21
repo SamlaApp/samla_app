@@ -57,51 +57,45 @@ class _TrainingPageState extends State<TrainingPage> {
                     case 0:
                       dayRoutine = 'Day 1 - Pull Routine';
                       exercises = [
-                        ExerciseTile(
-                          imageUrl: 'https://source.unsplash.com/featured/?gym',
-                          title: 'Pull-Ups',
-                          subtitle: '3 sets of 10 reps',
-                        ),
-                        ExerciseTile(
-                          imageUrl: 'https://source.unsplash.com/featured/?gym',
-                          title: 'Pull-Ups',
-                          subtitle: '3 sets of 10 reps',
-                        ),
-                        ExerciseTile(
-                          imageUrl: 'https://source.unsplash.com/featured/?gym',
-                          title: 'Pull-Ups',
-                          subtitle: '3 sets of 10 reps',
-                        ),
-                        ExerciseTile(
-                          imageUrl: 'https://source.unsplash.com/featured/?gym',
-                          title: 'Pull-Ups',
-                          subtitle: '3 sets of 10 reps',
+                        ExerciseTiles(
+                          exercise: ExercisesItem(
+                            name: 'Push Up',
+                            bodyPart: 'Chest',
+                            equipment: 'None',
+                            gifUrl: 'https://source.unsplash.com/featured/?gym',
+                            target: 'Chest muscles',
+                            instructions: 'Keep your back straight and lower your body.',
+                            secondaryMuscles: ['Triceps', 'Shoulders'],
+                          ),
+
                         ),
                         // Add more ExerciseTile widgets specific to Day 1
+                        ExerciseTiles(exercise:
+                        ExercisesItem(
+                          name:'Pull Up',
+                          bodyPart: 'Back',
+                          equipment: 'Pull Up Bar',
+                          gifUrl: 'https://source.unsplash.com/featured/?gym',
+                          target: 'Back muscles',
+                          instructions: 'Keep your back straight and pull your body up.',
+                          secondaryMuscles: ['Biceps', 'Forearms'],
+                        )
+                        )
                       ];
                       break;
                     case 1:
                       dayRoutine = 'Day 2 - Push Routine';
                       exercises = [
-                        ExerciseTile(
-                          imageUrl: 'https://source.unsplash.com/featured/?gym',
-                          title: 'Push-Ups',
-                          subtitle: '4 sets of 10 reps',
-                        ),
-                        ExerciseTile(
-                          imageUrl: 'https://source.unsplash.com/featured/?gym',
-                          title: 'Push-Ups',
-                          subtitle: '4 sets of 10 reps',
-                        ),
-                        ExerciseTile(
-                          imageUrl: 'https://source.unsplash.com/featured/?gym',
-                          title: 'Push-Ups',
-                          subtitle: '4 sets of 10 reps',
-                        ),
-                        ExerciseTile(
-                          imageUrl: 'https://source.unsplash.com/featured/?gym',
-                          title: 'Push-Ups',
-                          subtitle: '4 sets of 10 reps',
+                        ExerciseTiles(
+                          exercise: ExercisesItem(
+                            name: 'Push Up',
+                            bodyPart: 'Chest',
+                            equipment: 'None',
+                            gifUrl: 'https://source.unsplash.com/featured/?gym',
+                            target: 'Chest muscles',
+                            instructions: 'Keep your back straight and lower your body.',
+                            secondaryMuscles: ['Triceps', 'Shoulders'],
+                          ),
                         ),
                         // Add more ExerciseTile widgets specific to Day 2
                       ];
@@ -109,23 +103,31 @@ class _TrainingPageState extends State<TrainingPage> {
                     case 2:
                       dayRoutine = 'Day 3 - Legs Routine';
                       exercises = [
-                        ExerciseTile(
-                          imageUrl: 'https://source.unsplash.com/featured/?gym',
-                          title: 'Squats',
-                          subtitle: '5 sets of 8 reps',
-                        ),
-                        ExerciseTile(
-                          imageUrl: 'https://source.unsplash.com/featured/?gym',
-                          title: 'Squats',
-                          subtitle: '5 sets of 8 reps',
-                        ),
-                        ExerciseTile(
-                          imageUrl: 'https://source.unsplash.com/featured/?gym',
-                          title: 'Squats',
-                          subtitle: '5 sets of 8 reps',
-                        ),
+
+
+
                         // Add more ExerciseTile widgets specific to Day 3
+                  // final String name;
+                  // final String bodyPart;
+                  // final String equipment;
+                  // final String gifUrl;
+                  // final String target;
+                  // final String instructions;
+                  // final List<String> secondaryMuscles;
+
+                        ExerciseTiles(
+                          exercise: ExercisesItem(
+                            name: 'Push Up',
+                            bodyPart: 'Chest',
+                            equipment: 'None',
+                            gifUrl: 'https://source.unsplash.com/featured/?gym',
+                            target: 'Chest muscles',
+                            instructions: 'Keep your back straight and lower your body.',
+                            secondaryMuscles: ['Triceps', 'Shoulders'],
+                          ),
+                        ),
                       ];
+
                       break;
                     // Add more cases for more days
                   }
@@ -149,29 +151,7 @@ class _TrainingPageState extends State<TrainingPage> {
                         ),
                         const SizedBox(height: 16),
                         ...exercises, // Insert the list of exercises
-                        SizedBox(
-                          width: double.infinity,
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: theme_green,
-                              // ensure theme_green is defined and accessible
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                            ),
-                            onPressed: () {
-                              print('Start Clicked');
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      startTraining(), // This is your Templates page widget
-                                ),
-                              );
-                            },
-                            child: const Text('Start Now'),
-                          ),
-                        ),
+                        _buildGradientBorderButton(context),
                       ],
                     ),
                   );
@@ -179,7 +159,7 @@ class _TrainingPageState extends State<TrainingPage> {
               ),
             ),
           ),
-
+          // _buildGradientBorderButton(),
           DotsIndicator(
             dotsCount: 3,
             // the number of dots should match the number of days/pages
@@ -271,89 +251,293 @@ class _TrainingPageState extends State<TrainingPage> {
   }
 }
 
-class ExerciseTile extends StatelessWidget {
-  final String imageUrl;
-  final String title;
-  final String subtitle;
 
-  ExerciseTile({
-    required this.imageUrl,
-    required this.title,
-    required this.subtitle,
+
+
+
+Widget _buildGradientBorderButton(BuildContext context) {
+  return InkWell(
+    onTap: () {
+      print('Start Clicked');
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => startTraining(), // This is your Start Training page widget
+        ),
+      );
+    },
+    child: Padding(
+      padding: const EdgeInsets.all(7.0),
+      child: Container(
+        padding: EdgeInsets.all(4), // Padding for the gradient border
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(11), // slightly larger radius for the border
+          gradient: LinearGradient(
+            colors: [theme_darkblue, Colors.red],
+            begin: Alignment.centerLeft,
+            end: Alignment.centerRight,
+          ),
+        ),
+        child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(9),
+            color: Colors.white, // White background
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              ShaderMask(
+                shaderCallback: (Rect bounds) {
+                  return LinearGradient(
+                    colors: [theme_darkblue, Colors.red],
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                  ).createShader(bounds);
+                },
+                child: Text(
+                  'Start Now',
+                  style: TextStyle(
+                    color: Colors.white, // This color is important to make gradient visible
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              Spacer(), // Use Spacer for even spacing
+              Container(
+                padding: EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: LinearGradient(
+                    colors: [theme_darkblue, Colors.red],
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                  ),
+                ),
+                child: Icon(
+                  Icons.play_arrow,
+                  color: Colors.white,
+                  size: 28,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    ),
+  );
+}
+
+class ExercisesItem {
+  final String name;
+  final String bodyPart;
+  final String equipment;
+  final String gifUrl;
+  final String target;
+  final String instructions;
+  final List<String> secondaryMuscles;
+
+  ExercisesItem({
+    required this.name,
+    required this.bodyPart,
+    required this.equipment,
+    required this.gifUrl,
+    required this.target,
+    required this.instructions,
+    required this.secondaryMuscles,
   });
+}
+
+
+
+
+class ExerciseTiles extends StatelessWidget {
+  final ExercisesItem exercise;
+
+  ExerciseTiles({required this.exercise});
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      clipBehavior: Clip.antiAlias,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
+    return GestureDetector(
+      onTap: () {
+        _showExerciseDetails(context);
+      },
+      child: Container(
+        margin: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0), // Adjust margins
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8.0),
+          border: Border.all(
+            color: theme_red.withOpacity(0.5), // Light border color
+            width: 1.0, // Border width
+          ),
+        ),
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            // Left side image
-            ClipRRect(
-              borderRadius: BorderRadius.circular(8.0),
-              // same as Card borderRadius
-              child: Image.network(
-                imageUrl,
-                width: 60,
-                height: 60,
-                fit: BoxFit.cover,
+
+            Container(
+              width: 70,
+              height: 70,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(8.0),
+                  bottomLeft: Radius.circular(8.0),
+                ),
+                image: DecorationImage(
+                  image: NetworkImage(exercise.gifUrl),
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
-
-            const SizedBox(width: 16), // spacing between the image and the texts
-
-            // Right side texts
+            // Content on the right with smaller padding
             Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    title,
-                    style: const TextStyle(
-                      fontSize: 16, // for larger text
-                      fontWeight: FontWeight.bold,
+              child: Padding(
+                padding: const EdgeInsets.all(6.0), // Reduce padding
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      exercise.name,
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold), // Adjust font size
+                      maxLines: 2, // Limit to 2 lines
+                      overflow: TextOverflow.ellipsis, // Ellipsis for long names
                     ),
-                  ),
-                  const SizedBox(height: 8), // spacing between title and subtitle
-                  Text(
-                    subtitle,
-                    style: const TextStyle(fontSize: 13), // for smaller text
-                  ),
-                ],
+                    SizedBox(height: 4),
+                    Text(
+                      'Tap for details',
+                      style: TextStyle(fontSize: 12, color: Colors.grey), // Adjust font size
+                    ),
+                  ],
+                ),
               ),
-            ),
-            Column(
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    print('more Clicked');
-                  },
-                  child: const Icon(
-                    Icons.more_vert_outlined,
-                    size: 20,
-                  ),
-                ),
-                const SizedBox(height: 18),
-                GestureDetector(
-                  onTap: () {
-                    print('drag Clicked');
-                  },
-                  child: const Icon(
-                    Icons.drag_handle_rounded,
-                    size: 20,
-                  ),
-                ),
-              ],
             ),
           ],
         ),
       ),
     );
   }
+
+  void _showExerciseDetails(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+        backgroundColor: Colors.white,
+          title: Text(
+            exercise.name,
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold), // Adjust font size
+          ),
+          content: Container(
+            width: 300, // Adjust width
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    //center image
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(8.0),
+                        child: Image.network(
+                          exercise.gifUrl,
+                          width: 100,
+                          height: 100,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Row(
+                  //space in between
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    CustomBorderContainer('bodyPart', exercise.bodyPart),
+
+                    CustomBorderContainer('Equipment', exercise.equipment),
+                  ],
+                ),
+
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    CustomBorderContainer('Target', exercise.target),
+                    CustomBorderContainer('Secondary Muscles', exercise.secondaryMuscles.join(', ')),
+                  ],
+                ),
+
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CustomBorderContainer('Instructions', exercise.instructions),
+                  ],
+                ), // Custom widget
+              ],
+            ),
+          ),
+          actions: [
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                primary: theme_green, // Change background color
+              ),
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+              },
+              child: Text('Close', style: TextStyle(fontSize: 14,color: Colors.white)), // Adjust font size
+            ),
+          ],
+        );
+      },
+    );
+  }
+}
+
+Widget CustomBorderContainer(String label, String value) {
+  return Stack(
+    clipBehavior: Clip.none,
+    alignment: Alignment.center,
+    children: [
+      Padding(
+        padding: const EdgeInsets.only(top: 5, bottom: 10),
+        child: Container(
+          width: 140, // Decreased width
+          padding: const EdgeInsets.fromLTRB(12, 12, 12, 12), // Smaller padding
+          decoration: BoxDecoration(
+            border: Border.all(color: theme_red, width: 1.5), // Smaller border width
+            borderRadius: BorderRadius.circular(6), // Smaller border radius
+          ),
+          child: Text(
+            value,
+            style: const TextStyle(
+              color: Colors.black,
+              fontWeight: FontWeight.w600,
+              fontSize: 12, // Smaller font size
+            ),
+          ),
+        ),
+      ),
+      Positioned(
+        top: -2,
+        left: 3, // Adjusted left position
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(8), // Smaller border radius
+          child: Container(
+            color: theme_red,
+            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1), // Smaller padding
+            child: Text(
+              label,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 12, // Smaller font size
+                fontWeight: FontWeight.normal,
+              ),
+            ),
+          ),
+        ),
+      ),
+    ],
+  );
 }

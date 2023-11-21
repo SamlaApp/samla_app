@@ -55,7 +55,7 @@ class _ExerciseTileState extends State<ExerciseTile> {
                           children: [
                             if (widget.exercise.imagePath != null)
                               Image.network(
-                                'https://source.unsplash.com/featured/?gym',
+                                'https://source.unsplash.com/featured/?gyms',
                                 width: 346,
                                 height: 200,
                                 fit: BoxFit.cover,
