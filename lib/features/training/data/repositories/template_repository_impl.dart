@@ -54,7 +54,8 @@ class TemplateRepositoryImpl implements TemplateRepository {
       }
     } else {
       try {
-        final localTemplate = await localDataSource.getCachedTemplate(template.id as String);
+        final localTemplate =
+            await localDataSource.getCachedTemplate(template.id as String);
         return Right(localTemplate);
       } on EmptyCacheException catch (e) {
         return Left(CacheFailure(message: e.message));
@@ -113,7 +114,8 @@ class TemplateRepositoryImpl implements TemplateRepository {
       }
     } else {
       try {
-        final localTemplate = await localDataSource.getCachedTemplate(id.toString());
+        final localTemplate =
+            await localDataSource.getCachedTemplate(id.toString());
         return Right(localTemplate);
       } on EmptyCacheException catch (e) {
         return Left(CacheFailure(message: e.message));
@@ -122,10 +124,12 @@ class TemplateRepositoryImpl implements TemplateRepository {
   }
 
   @override
-  Future<Either<Failure, Template>> updateTemplateDaysName(Template template) async {
+  Future<Either<Failure, Template>> updateTemplateDaysName(
+      Template template) async {
     if (await networkInfo.isConnected) {
       try {
-        final remoteTemplate = await remoteDataSource.updateTemplateDaysName(template);
+        final remoteTemplate =
+            await remoteDataSource.updateTemplateDaysName(template);
         localDataSource.cacheTemplate(remoteTemplate as TemplateModel);
         return Right(remoteTemplate);
       } on ServerException catch (e) {
@@ -133,11 +137,36 @@ class TemplateRepositoryImpl implements TemplateRepository {
       }
     } else {
       try {
-        final localTemplate = await localDataSource.getCachedTemplate(template.id as String);
+        final localTemplate =
+            await localDataSource.getCachedTemplate(template.id as String);
         return Right(localTemplate);
       } on EmptyCacheException catch (e) {
         return Left(CacheFailure(message: e.message));
       }
     }
   }
+
+  @override
+  Future<Either<Failure, Template>> updateTemplateInfo(
+      Template template) async {
+    if (await networkInfo.isConnected) {
+      try {
+        final remoteTemplate =
+            await remoteDataSource.updateTemplateInfo(template);
+        localDataSource.cacheTemplate(remoteTemplate as TemplateModel);
+        return Right(remoteTemplate);
+      } on ServerException catch (e) {
+        return Left(ServerFailure(message: e.message));
+      }
+    } else {
+      try {
+        final localTemplate =
+            await localDataSource.getCachedTemplate(template.id as String);
+        return Right(localTemplate);
+      } on EmptyCacheException catch (e) {
+        return Left(CacheFailure(message: e.message));
+      }
+    }
+  }
+
 }

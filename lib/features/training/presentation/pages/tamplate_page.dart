@@ -497,8 +497,9 @@ class _TemplatePageState extends State<TemplatePage> {
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                     ),
+                    day: _selectedDay,
                     onRemove: () {
-                      print('Remove exercise');
+                      viewDayExerciseCubit.getExercisesDay(day: _selectedDay, templateID: widget.template.id!);
                     },
                   ),
               ],
@@ -542,12 +543,25 @@ class _TemplatePageState extends State<TemplatePage> {
     );
   }
 
-}
+
 
 
 void _showUpdateTemplateDialog(BuildContext context) {
   TextEditingController nameController = TextEditingController();
-  bool isActivated = false;
+  bool isActivated = widget.template.is_active;
+  nameController.text = widget.template.name!;
+
+  void _updateTemplate() {
+    Template template = Template(
+      id: widget.template.id,
+      name: nameController.text,
+      is_active: isActivated,
+    );
+
+    templateCubit.updateTemplateInfo(template);
+    templateCubit.getTemplateDetails(widget.template.id!);
+    Navigator.pop(context);
+  }
 
   showDialog(
     context: context,
@@ -555,7 +569,7 @@ void _showUpdateTemplateDialog(BuildContext context) {
       return AlertDialog(
         title: Text(
           'Update The Template',
-          style: TextStyle(color: theme_darkblue),
+          style: TextStyle(color: theme_darkblue, fontSize: 16,fontWeight: FontWeight.bold),
         ),
         content: Stack(
           clipBehavior: Clip.none,
@@ -577,30 +591,40 @@ void _showUpdateTemplateDialog(BuildContext context) {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 20),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Text('Activate Plan?',
-                          style: TextStyle(color: theme_grey)),
-                      Switch(
-                        value: isActivated,
-                        onChanged: (bool value) {
-                          isActivated = value;
-                          (context as Element).markNeedsBuild();
-                        },
-                        activeColor: theme_green,
-                        inactiveThumbColor: theme_grey,
-                        inactiveTrackColor: theme_grey.withOpacity(0.5),
+
+                  if(!widget.template.is_active)
+                  Column(
+                    children: [
+                      const SizedBox(height: 20),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Text('Activate Plan?',
+                                style: TextStyle(color: theme_grey)),
+                            Switch(
+                              value: isActivated,
+                              onChanged: (bool value) {
+                                isActivated = value;
+                                (context as Element).markNeedsBuild();
+                              },
+                              activeColor: theme_green,
+                              inactiveThumbColor: theme_grey,
+                              inactiveTrackColor: theme_grey.withOpacity(0.5),
+                            ),
+                          ],
+                        ),
                       ),
                     ],
                   ),
+
                 ],
               ),
             ),
             Positioned(
               right: -45,
-              top: -100,
+              top: -80,
               child: Container(
                 width: 75,
                 height: 75,
@@ -623,21 +647,43 @@ void _showUpdateTemplateDialog(BuildContext context) {
           ],
         ),
         actions: <Widget>[
-          TextButton(
-            child: Text('Cancel', style: TextStyle(color: theme_red)),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
-          TextButton(
-            child: Text('Submit', style: TextStyle(color: theme_green)),
-            onPressed: () {
-              // TOdo submit logic here
-              Navigator.of(context).pop();
-            },
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ElevatedButton.icon(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                icon: const Icon(Icons.cancel),
+                label: const Text('Cancel'),
+                style: ElevatedButton.styleFrom(
+                  foregroundColor: Colors.white,
+                  backgroundColor: theme_red,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(32.0),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 10.0),
+              ElevatedButton.icon(
+                onPressed: () {
+                  _updateTemplate();
+                },
+                icon: const Icon(Icons.add),
+                label: const Text('Create'),
+                style: ElevatedButton.styleFrom(
+                  foregroundColor: Colors.white,
+                  backgroundColor: theme_darkblue,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(32.0),
+                  ),
+                ),
+              ),
+            ],
           ),
         ],
       );
     },
   );
+}
 }

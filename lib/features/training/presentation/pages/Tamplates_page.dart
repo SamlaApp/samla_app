@@ -301,7 +301,7 @@ class _TemplatesPageState extends State<TemplatesPage> {
 
   // Display Template Card
   Widget _buildTemplateCard(Template template, int length) {
-    bool isActive = template.is_active;
+    bool? isActive = template.is_active;
     return Container(
       padding: const EdgeInsets.all(8),
       margin: const EdgeInsets.only(bottom: 16),
@@ -332,7 +332,7 @@ class _TemplatesPageState extends State<TemplatesPage> {
                   ),
                 ),
                 const SizedBox(width: 10),
-                if (isActive)
+                if (isActive == true)
                   const Icon(Icons.check_circle, color: Colors.white, size: 20),
               ],
             ),

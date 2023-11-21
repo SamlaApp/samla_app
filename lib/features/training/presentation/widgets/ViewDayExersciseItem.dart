@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:samla_app/config/themes/common_styles.dart';
 import 'package:samla_app/features/training/domain/entities/ExerciseDay.dart';
 import 'package:samla_app/features/training/presentation/cubit/Exercises/exercise_cubit.dart';
+import 'package:samla_app/features/training/presentation/cubit/viewDayExercise/viewDayExercise_cubit.dart';
 import 'package:samla_app/features/training/training_di.dart' as di;
 
 
@@ -12,11 +13,12 @@ class ViewDayExerciseItem extends StatefulWidget {
   final String equipment;
   final String gifUrl;
   final String target;
+  final String day;
   final String instructions;
   final List<String> secondaryMuscles;
   final LinearGradient gradient;
-  final VoidCallback onRemove;
   final int templateId;
+  final Function onRemove;
 
   const ViewDayExerciseItem({
     Key? key,
@@ -29,8 +31,9 @@ class ViewDayExerciseItem extends StatefulWidget {
     required this.instructions,
     required this.secondaryMuscles,
     required this.gradient,
-    required this.onRemove,
+    required this.day,
     required this.templateId,
+    required this.onRemove,
   }) : super(key: key);
 
   @override
@@ -42,6 +45,7 @@ class _ViewDayExerciseItemState extends State<ViewDayExerciseItem> {
   String capitalize(String s) => s[0].toUpperCase() + s.substring(1); // capitalize first letter of string
 
   final exercisesCubit = di.sl.get<ExerciseCubit>();
+  final viewDayExerciseCubit = di.sl.get<ViewDayExerciseCubit>();
 
   bool _isExpanded = false;
 
@@ -86,7 +90,14 @@ class _ViewDayExerciseItemState extends State<ViewDayExerciseItem> {
                 // delete button
                 IconButton(
                   onPressed: () {
-                    //
+                    exercisesCubit.removeExerciseFromPlan(exerciseID: widget.id!, day: widget.day, templateID: widget.templateId);
+                    viewDayExerciseCubit.getExercisesDay(day: widget.day, templateID: widget.templateId);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Exercise removed from plan'),
+                        duration: Duration(seconds: 1),
+                      ),
+                    );
                   },
                   icon: const Icon(
                     Icons.delete,
