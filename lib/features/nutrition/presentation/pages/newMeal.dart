@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:samla_app/config/themes/common_styles.dart';
 import 'package:day_night_time_picker/day_night_time_picker.dart';
 import 'package:samla_app/features/nutrition/data/models/nutritionPlan_model.dart';
-import 'package:samla_app/features/nutrition/presentation/cubit/nutritionPlan_cubit.dart';
+import 'package:samla_app/features/nutrition/presentation/cubit/nutrtiionPlan/nutritionPlan_cubit.dart';
 import '../../nutrition_di.dart' as di;
 
 class NewMeal extends StatefulWidget {
@@ -78,7 +78,7 @@ class _NewMealState extends State<NewMeal> {
       appBar: AppBar(
         toolbarHeight: 150.0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          icon: Icon(Icons.arrow_back, color: primary_color),
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: Column(
@@ -99,9 +99,9 @@ class _NewMealState extends State<NewMeal> {
         child: SingleChildScrollView(
           child: Container(
             padding: const EdgeInsets.all(16.0),
-            decoration: const BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.only(
+            decoration: BoxDecoration(
+              color: primary_color,
+              borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(30),
                 topRight: Radius.circular(30),
               ),
@@ -257,7 +257,7 @@ class _NewMealState extends State<NewMeal> {
                             },
                             child: Text(
                               _timeToString(_endTime),
-                              style: const TextStyle(color: Color.fromRGBO(64, 194, 210, 1)),
+                              style: TextStyle(color: theme_green),
                             ),
                           ),
                         ),
@@ -302,7 +302,9 @@ class _NewMealState extends State<NewMeal> {
                                         _selectedMealTypeController.text = 'Breakfast';
                                       });
                                     },
-                                    child: const Text('Breakfast'),
+                                    child: Text('Breakfast' , style: TextStyle(color: _selectedMealTypeController.text == 'Breakfast'
+                                        ? primary_color
+                                        : theme_darkblue),),
                                   ),
                                 ),
                               ),
@@ -323,9 +325,12 @@ class _NewMealState extends State<NewMeal> {
                                         _selectedMealTypeController.text = 'Lunch';
                                       });
                                     },
-                                    child: const Text('Lunch'),
+                                    child: Text('Lunch', style: TextStyle(color: _selectedMealTypeController.text == 'Lunch'
+                                        ? primary_color
+                                        : theme_darkblue),
                                   ),
                                 ),
+                              ),
                               ),
                             ],
                           ),
@@ -352,9 +357,12 @@ class _NewMealState extends State<NewMeal> {
                                         _selectedMealTypeController.text = 'Dinner';
                                       });
                                     },
-                                    child: const Text('Dinner'),
+                                    child: Text('Dinner' , style: TextStyle(color: _selectedMealTypeController.text == 'Dinner'
+                                        ? primary_color
+                                        : theme_darkblue),
                                   ),
                                 ),
+                              ),
                               ),
                               Expanded(
                                 child: Padding(
@@ -373,10 +381,12 @@ class _NewMealState extends State<NewMeal> {
                                         _selectedMealTypeController.text = 'Snack';
                                       });
                                     },
-                                    child: const Text('Snack'),
+                                    child: Text('Snack', style: TextStyle(color: _selectedMealTypeController.text == 'Snack'
+                                        ? primary_color
+                                        : theme_darkblue),
                                   ),
                                 ),
-                              ),
+                              ), ),
                             ],
                           ),
                         ),
@@ -417,13 +427,14 @@ class _NewMealState extends State<NewMeal> {
                             }
                           }
                         },
-                        child: const Padding(
+                        child: Padding(
                           padding: EdgeInsets.all(16.0),
                           child: Text(
                             'Add Meal',
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
+                              color: primary_color,
                             ),
                           ),
                         ),

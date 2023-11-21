@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:samla_app/features/nutrition/presentation/cubit/nutritionPlan_cubit.dart';
+import 'package:samla_app/features/nutrition/presentation/cubit/nutrtiionPlan/nutritionPlan_cubit.dart';
 import 'package:samla_app/features/nutrition/presentation/widgets/TodayNutritionSummary.dart';
 import 'package:samla_app/features/nutrition/presentation/widgets/TodayPlan.dart';
 import 'package:samla_app/features/nutrition/presentation/widgets/CustomSignedCalories.dart';
@@ -23,7 +23,7 @@ class _NutritionPageState extends State<NutritionPage> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
+    return  SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -33,9 +33,7 @@ class _NutritionPageState extends State<NutritionPage> {
             const SizedBox(height: 20),
             const TodayNutritionSummary(),
             const SizedBox(height: 20),
-            CustomSignedCalories(),
-            const SizedBox(height: 20),
-            Macronutrients(),
+            const CustomSignedCalories(),
             const SizedBox(height: 20),
           ],
         ),

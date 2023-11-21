@@ -22,4 +22,5 @@ abstract class NutritionPlanRepository {
   Future<Either<Failure, NutritionPlanStatus>> getNutritionPlanStatus({required int id});
   Future<Either<Failure, NutritionPlanStatus>> updateNutritionPlanStatus({required NutritionPlanStatus nutritionPlanStatus});
   Future<Either<Failure, DailyNutritionPlanSummary>> getDailyNutritionPlanSummary();
+  Future<Either<Failure, Unit>> setCustomCalories({required int calories});
 }

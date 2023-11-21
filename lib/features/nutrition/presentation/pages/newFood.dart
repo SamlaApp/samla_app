@@ -3,7 +3,7 @@ import 'package:samla_app/config/themes/common_styles.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:samla_app/features/nutrition/domain/entities/MealLibrary.dart';
 import 'package:samla_app/features/nutrition/domain/repositories/nutritionPlan_repository.dart';
-import 'package:samla_app/features/nutrition/presentation/cubit/nutritionPlan_cubit.dart';
+import 'package:samla_app/features/nutrition/presentation/cubit/nutrtiionPlan/nutritionPlan_cubit.dart';
 import '../../nutrition_di.dart';
 
 class NewFoodPage extends StatefulWidget {
@@ -67,7 +67,7 @@ class _NewFoodState extends State<NewFoodPage> {
       appBar: AppBar(
         toolbarHeight: 150.0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          icon: Icon(Icons.arrow_back, color: primary_color),
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: Column(
@@ -87,8 +87,8 @@ class _NewFoodState extends State<NewFoodPage> {
       body: SafeArea(
         child: Container(
           padding: const EdgeInsets.all(16.0),
-          decoration: const BoxDecoration(
-            color: Colors.white,
+          decoration: BoxDecoration(
+            color: primary_color,
             borderRadius: BorderRadius.only(
               topLeft: Radius.circular(30),
               topRight: Radius.circular(30),
@@ -360,7 +360,7 @@ class _NewFoodState extends State<NewFoodPage> {
                       ],
                     ),
                   ),
-                  const SizedBox(height: 35),
+                  const SizedBox(height: 20),
                   _buttonAddCustomMeal(),
                 ]),
           ),
@@ -380,13 +380,13 @@ class _NewFoodState extends State<NewFoodPage> {
           ),
         ),
         onPressed: _submitForm,
-        child: const Padding(
+        child: Padding(
           padding: EdgeInsets.all(16.0),
           child: Text(
             'Add Food',
             style: TextStyle(
               fontSize: 16,
-              fontWeight: FontWeight.bold,
+              fontWeight: FontWeight.bold, color: primary_color
             ),
           ),
         ),

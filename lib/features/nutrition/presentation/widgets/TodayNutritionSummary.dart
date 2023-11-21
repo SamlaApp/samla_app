@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:samla_app/config/themes/common_styles.dart';
-import 'package:samla_app/features/nutrition/nutrition_di.dart';
-import 'package:samla_app/features/nutrition/presentation/cubit/nutritionPlan_cubit.dart';
+import 'package:samla_app/features/nutrition/nutrition_di.dart' as di;
+import 'package:samla_app/features/nutrition/presentation/cubit/nutrtiionPlan/nutritionPlan_cubit.dart';
+import 'package:samla_app/features/nutrition/presentation/cubit/summary/summary_cubit.dart';
 import 'package:samla_app/features/nutrition/presentation/widgets/MaelAdapt/NutrientColumn.dart';
 
 class TodayNutritionSummary extends StatefulWidget {
@@ -20,12 +21,12 @@ class _TodayNutritionSummaryState extends State<TodayNutritionSummary> {
 
   Color color = theme_orange;
 
-  final cubit = sl.get<NutritionPlanCubit>();
+  final summaryCubit = di.sl.get<SummaryCubit>();
 
   @override
   void initState() {
     super.initState();
-    cubit.getDailyNutritionPlanSummary();
+    summaryCubit.getDailyNutritionPlanSummary();
   }
 
   @override
@@ -48,15 +49,18 @@ class _TodayNutritionSummaryState extends State<TodayNutritionSummary> {
     );
   }
 
-  BlocBuilder<NutritionPlanCubit, NutritionPlanState> getSummary() {
-    return BlocBuilder<NutritionPlanCubit, NutritionPlanState>(
-        bloc: cubit,
+  BlocBuilder<SummaryCubit, SummaryState> getSummary() {
+    return BlocBuilder<SummaryCubit, SummaryState>(
+        bloc: summaryCubit,
         builder: (context, state) {
-          if (state is NutritionPlanLoadingState) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (state is NutritionPlanEmptyState) {
+          if (state is SummaryLoadingState) {
+            return  Center(child: CircularProgressIndicator(
+              color: theme_green,
+              backgroundColor: theme_pink,
+            ),);
+          } else if (state is SummaryEmptyState) {
             return const Center(child: Text('No data'));
-          } else if (state is NutritionPlanDailySummaryLoaded) {
+          } else if (state is SummaryLoaded) {
             _totalCarbs = state.dailyNutritionPlanSummary.totalCarbs;
             _totalProtein = state.dailyNutritionPlanSummary.totalProtein;
             _totalFat = state.dailyNutritionPlanSummary.totalFat;
@@ -73,10 +77,14 @@ class _TodayNutritionSummaryState extends State<TodayNutritionSummary> {
                     value: _totalCalories, label: 'Calories', color: color),
               ],
             );
-          } else if (state is NutritionPlanErrorState) {
+          } else if (state is SummaryErrorState) {
             return Text(state.message);
           } else {
-            return const Center(child: CircularProgressIndicator());
+            summaryCubit.getDailyNutritionPlanSummary();
+            return  Center(child: CircularProgressIndicator(
+              color: theme_green,
+              backgroundColor: theme_pink,
+            ),);
           }
         });
   }

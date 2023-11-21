@@ -8,7 +8,7 @@ import 'dart:async';
 import 'package:pedometer/pedometer.dart';
 import 'package:flutter/services.dart';
 import 'package:samla_app/features/nutrition/nutrition_di.dart';
-import 'package:samla_app/features/nutrition/presentation/cubit/nutritionPlan_cubit.dart';
+import 'package:samla_app/features/nutrition/presentation/cubit/nutrtiionPlan/nutritionPlan_cubit.dart';
 
 class CircularIndicators extends StatefulWidget {
   CircularIndicators({super.key});

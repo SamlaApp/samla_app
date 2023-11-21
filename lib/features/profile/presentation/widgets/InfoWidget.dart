@@ -79,13 +79,14 @@ class _InfoWidgetState extends State<InfoWidget> {
               child: TextField(
                 controller: _heightController,
                 style: inputText,
+                cursorColor: theme_green,
                 decoration: InputDecoration(
                   suffixText: 'cm',
                   prefixIcon: Padding(
                     padding: const EdgeInsets.fromLTRB(0, 0, 0, 8),
                     child: Icon(
                       Icons.accessibility,
-                      color: Colors.black38,
+                      color: theme_grey,
                     ),
                   ),
                   border: InputBorder.none,
@@ -111,13 +112,14 @@ class _InfoWidgetState extends State<InfoWidget> {
               child: TextFormField(
                 controller: _weightController,
                 style: inputText,
+                cursorColor: theme_green,
                 decoration: InputDecoration(
                   suffixText: 'kg',
                   prefixIcon: Padding(
                     padding: const EdgeInsets.fromLTRB(0, 0, 0, 8),
                     child: Icon(
                       Icons.accessibility,
-                      color: Colors.black38,
+                      color: theme_grey,
                     ),
                   ),
                   border: InputBorder.none,
@@ -185,7 +187,7 @@ class _InfoWidgetState extends State<InfoWidget> {
                                 thumbColor: theme_pink,
                                 thumbShape: RoundSliderThumbShape(
                                     enabledThumbRadius: 8.0),
-                                overlayColor: Colors.red.withAlpha(25),
+                                overlayColor: theme_pink.withAlpha(25),
                                 overlayShape: RoundSliderOverlayShape(
                                     overlayRadius: 15.0),
                               ),
@@ -256,7 +258,7 @@ class _InfoWidgetState extends State<InfoWidget> {
                                 thumbColor: theme_pink,
                                 thumbShape: RoundSliderThumbShape(
                                     enabledThumbRadius: 8.0),
-                                overlayColor: Colors.red.withAlpha(25),
+                                overlayColor: theme_pink.withAlpha(25),
                                 overlayShape: RoundSliderOverlayShape(
                                     overlayRadius: 15.0),
                               ),
@@ -297,7 +299,7 @@ class _InfoWidgetState extends State<InfoWidget> {
                     )),
                 onPressed: _saveInfo,
                 child: Text(
-                  'Save Info',
+                  'Save Info', style: TextStyle(color: primary_color),
                 ),
               ),
             ),
