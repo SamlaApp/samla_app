@@ -145,20 +145,6 @@ class NutritionPlanCubit extends Cubit<NutritionPlanState> {
     });
   }
 
-  Future<void> getTodayNutritionPlan(String query) async {
-    emit(NutritionPlanLoadingState()); // Show loading state
-    final result = await repository.getTodayNutritionPlan(query: query);
-    result.fold(
-        (failure) => emit(const NutritionPlanErrorState(
-            'Failed to get today nutrition plan')), (nutritionPlan) {
-      if (nutritionPlan.isEmpty) {
-        emit(NutritionPlanEmptyState());
-        return;
-      }
-      emit(NutritionPlanLoaded(nutritionPlan.cast<NutritionPlan>(), []));
-    });
-  }
-
   Future<void> getNutritionPlanStatus(int id) async {
     emit(NutritionPlanLoadingState()); // Show loading state
     final result = await repository.getNutritionPlanStatus(id: id);
@@ -190,21 +176,6 @@ class NutritionPlanCubit extends Cubit<NutritionPlanState> {
         return;
       }
       emit(NutritionPlanStatusLoaded(nutritionPlanStatus));
-    });
-  }
-
-  Future<void> getDailyNutritionPlanSummary() async {
-    emit(NutritionPlanLoadingState()); // Show loading state
-    final result = await repository.getDailyNutritionPlanSummary();
-    result.fold(
-        (failure) => emit(const NutritionPlanErrorState(
-            'Failed to get daily nutrition plan summary')),
-        (dailyNutritionPlanSummary) {
-      if (dailyNutritionPlanSummary == null) {
-        emit(NutritionPlanEmptyState());
-        return;
-      }
-      emit(NutritionPlanDailySummaryLoaded(dailyNutritionPlanSummary));
     });
   }
 }

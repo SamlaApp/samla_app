@@ -176,77 +176,66 @@ class _TrainingPageState extends State<TrainingPage> {
   }
 
   BlocBuilder<TemplateCubit, TemplateState> _activeTemplate() {
-    cubit.activeTemplate();
     return BlocBuilder<TemplateCubit, TemplateState>(
-      bloc: cubit,
-      builder: (context, state) {
-        if (state is TemplateLoadingState) {
-          return Center(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: CircularProgressIndicator(
-                color: theme_green,
-                backgroundColor: theme_pink,
-              ),
-            ),
-          );
-        } else if (state is ActiveTemplateLoaded) {
-          return Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Container(
-              padding: const EdgeInsets.all(16.0),
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [theme_red, theme_darkblue],
-                  tileMode: TileMode.clamp,
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
+        bloc: cubit,
+        builder: (context, state) {
+          if (state is TemplateLoadingState) {
+            return Center(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: CircularProgressIndicator(
+                  color: theme_green,
+                  backgroundColor: theme_pink,
                 ),
-                borderRadius: BorderRadius.circular(12),
-                backgroundBlendMode: BlendMode.darken,
               ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    state.template.name,
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                      fontFamily: 'Cairo',
+            );
+          } else if (state is ActiveTemplateLoaded) {
+            return Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Container(
+                padding: const EdgeInsets.all(16.0),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [theme_red, theme_darkblue],
+                    tileMode: TileMode.clamp,
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  borderRadius: BorderRadius.circular(12),
+                  backgroundBlendMode: BlendMode.darken,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      state.template.name,
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                        fontFamily: 'Cairo',
+                      ),
                     ),
-                  ),
-                  IconButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                const TemplatesPage(), // This is your Templates page widget
-                          ),
-                        );
-                      },
-                      icon: const Icon(Icons.edit, color: Colors.white)
-                  ),
-                ],
+                    IconButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                              const TemplatesPage(), // This is your Templates page widget
+                            ),
+                          );
+                        },
+                        icon: const Icon(Icons.edit, color: Colors.white)
+                    ),
+                  ],
+                ),
               ),
-            ),
-          );
-        } else if (state is TemplateEmptyState) {
-          return const Center(
-            child: Padding(
-              padding: EdgeInsets.all(16.0),
-              child: Text('No templates found'),
-            ),
-          );
-        } else if (state is TemplateErrorState) {
-          return Center(
-            child: Text(state.message),
-          );
+            );
+          } else {
+            return const SizedBox.shrink();
+          }
         }
-        return const SizedBox.shrink();
-      },
     );
   }
 }
@@ -493,51 +482,55 @@ class ExerciseTiles extends StatelessWidget {
       },
     );
   }
-}
 
-Widget CustomBorderContainer(String label, String value) {
-  return Stack(
-    clipBehavior: Clip.none,
-    alignment: Alignment.center,
-    children: [
-      Padding(
-        padding: const EdgeInsets.only(top: 5, bottom: 10),
-        child: Container(
-          width: 140, // Decreased width
-          padding: const EdgeInsets.fromLTRB(12, 12, 12, 12), // Smaller padding
-          decoration: BoxDecoration(
-            border: Border.all(color: theme_red, width: 1.5), // Smaller border width
-            borderRadius: BorderRadius.circular(6), // Smaller border radius
-          ),
-          child: Text(
-            value,
-            style: const TextStyle(
-              color: Colors.black,
-              fontWeight: FontWeight.w600,
-              fontSize: 12, // Smaller font size
-            ),
-          ),
-        ),
-      ),
-      Positioned(
-        top: -2,
-        left: 3, // Adjusted left position
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(8), // Smaller border radius
+
+
+  Widget CustomBorderContainer(String label, String value) {
+    return Stack(
+      clipBehavior: Clip.none,
+      alignment: Alignment.center,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(top: 5, bottom: 10),
           child: Container(
-            color: theme_red,
-            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1), // Smaller padding
+            width: 140, // Decreased width
+            padding: const EdgeInsets.fromLTRB(12, 12, 12, 12), // Smaller padding
+            decoration: BoxDecoration(
+              border: Border.all(color: theme_red, width: 1.5), // Smaller border width
+              borderRadius: BorderRadius.circular(6), // Smaller border radius
+            ),
             child: Text(
-              label,
-              style: TextStyle(
-                color: Colors.white,
+              value,
+              style: const TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.w600,
                 fontSize: 12, // Smaller font size
-                fontWeight: FontWeight.normal,
               ),
             ),
           ),
         ),
-      ),
-    ],
-  );
+        Positioned(
+          top: -2,
+          left: 3, // Adjusted left position
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(8), // Smaller border radius
+            child: Container(
+              color: theme_red,
+              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1), // Smaller padding
+              child: Text(
+                label,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 12, // Smaller font size
+                  fontWeight: FontWeight.normal,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
 }
+
+

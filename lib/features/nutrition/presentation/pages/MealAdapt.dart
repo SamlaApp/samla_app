@@ -6,7 +6,7 @@ import 'package:samla_app/config/themes/common_styles.dart';
 import 'package:samla_app/features/nutrition/domain/entities/MealLibrary.dart';
 import 'package:samla_app/features/nutrition/domain/entities/NutritionPlanMeal.dart';
 import 'package:samla_app/features/nutrition/domain/entities/nutritionPlan.dart';
-import 'package:samla_app/features/nutrition/presentation/cubit/nutritionPlan_cubit.dart';
+import 'package:samla_app/features/nutrition/presentation/cubit/nutrtiionPlan/nutritionPlan_cubit.dart';
 import 'package:samla_app/features/nutrition/presentation/pages/newFood.dart';
 import '../../../../core/widgets/CustomTextFormField.dart';
 import '../widgets/MaelAdapt/DayDropdown.dart';

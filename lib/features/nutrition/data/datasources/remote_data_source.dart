@@ -32,6 +32,7 @@ abstract class NutritionPlanRemoteDataSource {
   Future<NutritionPlanStatus> updateNutritionPlanStatus(
       NutritionPlanStatus nutritionPlanStatus);
   Future<DailyNutritionPlanSummary> getDailyNutritionPlanSummary();
+  Future<Either<Failure, Unit>> setCustomCalories(int calories);
 }
 
 class NutritionPlanRemoteDataSourceImpl
@@ -256,6 +257,22 @@ class NutritionPlanRemoteDataSourceImpl
           DailyNutritionPlanSummaryModel.fromJson(
               json.decode(resBody)['nutrition_plan']);
       return dailyNutritionPlanSummary;
+    } else {
+      throw ServerException(message: json.decode(resBody)['message']);
+    }
+  }
+
+  @override
+  Future<Either<Failure, Unit>> setCustomCalories(int calories) async {
+    final response = await samlaAPI(
+      endPoint: '/nutrition/custom_calories/set',
+      method: 'POST',
+      data: {'calories': '$calories'},
+    );
+    final resBody = await response.stream.bytesToString();
+    print(resBody);
+    if (response.statusCode == 200) {
+      return const Right(unit);
     } else {
       throw ServerException(message: json.decode(resBody)['message']);
     }

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:samla_app/config/themes/common_styles.dart';
 import 'package:samla_app/features/nutrition/data/models/nutritionPlan_model.dart';
-import 'package:samla_app/features/nutrition/presentation/cubit/nutritionPlan_cubit.dart';
+import 'package:samla_app/features/nutrition/presentation/cubit/nutrtiionPlan/nutritionPlan_cubit.dart';
 import 'package:samla_app/features/nutrition/presentation/pages/MealAdapt.dart';
 import 'package:samla_app/features/nutrition/presentation/pages/NewMeal.dart';
 import 'package:samla_app/features/nutrition/nutrition_di.dart' as di;

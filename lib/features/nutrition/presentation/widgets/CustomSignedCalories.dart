@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:samla_app/config/themes/common_styles.dart';
 import 'package:flutter/services.dart';
-import 'package:samla_app/features/nutrition/domain/repositories/nutritionPlan_repository.dart';
-import 'package:samla_app/features/nutrition/nutrition_di.dart';
-import 'package:samla_app/features/nutrition/presentation/cubit/nutritionPlan_cubit.dart';
+import 'package:samla_app/features/nutrition/nutrition_di.dart' as di;
+import 'package:samla_app/features/nutrition/presentation/cubit/summary/summary_cubit.dart';
 
 class CustomSignedCalories extends StatefulWidget {
   const CustomSignedCalories({super.key});
@@ -13,12 +12,13 @@ class CustomSignedCalories extends StatefulWidget {
 }
 
 class _CustomSignedCaloriesState extends State<CustomSignedCalories> {
-  final cubit = sl.get<NutritionPlanCubit>();
+  final summaryCubit = di.sl.get<SummaryCubit>();
+  int _calories = 0;
 
   @override
   void initState() {
     super.initState();
-    cubit.getDailyNutritionPlanSummary();
+    summaryCubit.getDailyNutritionPlanSummary();
   }
 
   @override
@@ -70,6 +70,11 @@ class _CustomSignedCaloriesState extends State<CustomSignedCalories> {
                 width: 150,
                 padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: TextField(
+                  onChanged: (value) {
+                    setState(() {
+                      _calories = int.parse(value);
+                    });
+                  },
                   keyboardType: TextInputType.number,
                   inputFormatters: <TextInputFormatter>[
                     FilteringTextInputFormatter.digitsOnly
@@ -111,8 +116,27 @@ class _CustomSignedCaloriesState extends State<CustomSignedCalories> {
                   borderRadius: BorderRadius.circular(10),
                 ),
               ),
-              onPressed: () {},
-              label: const Text('Add'),
+              onPressed: () {
+                // check if the calories is not 0
+                if (_calories > 0) {
+                  summaryCubit.setCustomCalories(_calories);
+                  summaryCubit.getDailyNutritionPlanSummary();
+
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Calories added successfully'),
+                    ),
+                  );
+
+                }else{
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Please enter a valid number'),
+                    ),
+                  );
+                }
+              },
+              label: const Text('Add', style: TextStyle(color: Colors.white)),
             ),
           ),
         ],
