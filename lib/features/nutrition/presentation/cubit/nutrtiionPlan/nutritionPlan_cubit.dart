@@ -144,38 +144,4 @@ class NutritionPlanCubit extends Cubit<NutritionPlanState> {
       emit(NutritionPlanDeleted(nutritionPlan));
     });
   }
-
-  Future<void> getNutritionPlanStatus(int id) async {
-    emit(NutritionPlanLoadingState()); // Show loading state
-    final result = await repository.getNutritionPlanStatus(id: id);
-    result.fold((failure) {
-      print(failure.message);
-
-      emit(
-          const NutritionPlanErrorState('Failed to get nutrition plan status'));
-    }, (nutritionPlanStatus) {
-      if (nutritionPlanStatus == null) {
-        emit(NutritionPlanEmptyState());
-        return;
-      }
-      emit(NutritionPlanStatusLoaded(nutritionPlanStatus));
-    });
-  }
-
-  //updateNutritionPlanStatus
-  Future<void> updateNutritionPlanStatus(
-      NutritionPlanStatus nutritionPlanStatus) async {
-    emit(NutritionPlanLoadingState()); // Show loading state
-    final result = await repository.updateNutritionPlanStatus(
-        nutritionPlanStatus: nutritionPlanStatus);
-    result.fold(
-        (failure) => emit(const NutritionPlanErrorState(
-            'Failed to update nutrition plan status')), (nutritionPlanStatus) {
-      if (nutritionPlanStatus == null) {
-        emit(NutritionPlanEmptyState());
-        return;
-      }
-      emit(NutritionPlanStatusLoaded(nutritionPlanStatus));
-    });
-  }
 }

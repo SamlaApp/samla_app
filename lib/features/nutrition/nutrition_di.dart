@@ -3,6 +3,7 @@ import 'package:samla_app/features/nutrition/data/datasources/local_datasource.d
 import 'package:samla_app/features/nutrition/data/datasources/remote_data_source.dart';
 import 'package:samla_app/features/nutrition/data/repositories/nutritionPlan_repository_impl.dart';
 import 'package:samla_app/features/nutrition/domain/repositories/nutritionPlan_repository.dart';
+import 'package:samla_app/features/nutrition/presentation/cubit/PlanStatus/planStatus_cubit.dart';
 import 'package:samla_app/features/nutrition/presentation/cubit/TodayPlan/todayPlan_cubit.dart';
 import 'package:samla_app/features/nutrition/presentation/cubit/displayMeal/displayMeal_cubit.dart';
 import 'package:samla_app/features/nutrition/presentation/cubit/nutrtiionPlan/nutritionPlan_cubit.dart';
@@ -32,6 +33,7 @@ void nutritionInit() {
   sl.registerLazySingleton<SummaryCubit>(() => SummaryCubit(sl()));
   sl.registerLazySingleton<TodayPlanCubit>(() => TodayPlanCubit(sl()));
   sl.registerLazySingleton<DisplayMealCubit>(() => DisplayMealCubit(sl()));
+  sl.registerLazySingleton<PlanStatusCubit>(() => PlanStatusCubit(sl()));
 
   sl.registerLazySingleton<NutritionPlanRepository>(() =>
       NutritionPlanRepositoryImpl(
