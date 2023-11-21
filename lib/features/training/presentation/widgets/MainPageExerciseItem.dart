@@ -95,86 +95,93 @@ class ExerciseTiles extends StatelessWidget {
 
   void _showExerciseDetails(BuildContext context) {
     final String _baseURL = 'https://samla.mohsowa.com/api/training/image/'; // api url for images
+
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
+        return Dialog(
+          insetPadding: EdgeInsets.all(1.0),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
           backgroundColor: Colors.white,
-          title: Text(
-            exercise.name,
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold), // Adjust font size
-          ),
-          content: Container(
-            width: 300, // Adjust width
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    //center image
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(8.0),
-                        child: Image.network(
-                          _baseURL + exercise.gifUrl,
-                          width: 100,
-                          height: 100,
-                          fit: BoxFit.cover,
+          child: Container(
+            // take 90% of screen width
+            width: MediaQuery.of(context).size.width * 0.9,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      //center image
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(8.0),
+                          child: Image.network(
+                            _baseURL + exercise.gifUrl,
+                            width: 100,
+                            height: 100,
+                            fit: BoxFit.cover,
+                          ),
                         ),
-                      ),
+                      ],
+                    ),
+                  ),
+                  Row(
+                    //space in between
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      CustomBorderContainer('bodyPart', exercise.bodyPart),
+                      CustomBorderContainer('Equipment', exercise.equipment),
                     ],
                   ),
-                ),
-                Row(
-                  //space in between
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    CustomBorderContainer('bodyPart', exercise.bodyPart),
-
-                    CustomBorderContainer('Equipment', exercise.equipment),
-                  ],
-                ),
-
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    CustomBorderContainer('Target', exercise.target),
-                    CustomBorderContainer('Secondary Muscles', exercise.secondaryMuscles.join(', ')),
-                  ],
-                ),
-
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    CustomBorderContainer('Instructions', exercise.instructions),
-                  ],
-                ), // Custom widget
-              ],
-            ),
-          ),
-          actions: [
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                primary: theme_green, // Change background color
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      CustomBorderContainer('Target', exercise.target),
+                      CustomBorderContainer('Secondary Muscles', exercise.secondaryMuscles.join(', ')),
+                    ],
+                  ),
+                  // Row(
+                  //   mainAxisAlignment: MainAxisAlignment.center,
+                  //   children: [
+                  //     CustomBorderContainer('Instructions', exercise.instructions),
+                  //   ],
+                  // ),
+                  //Instructions
+                  Container(
+                    width: MediaQuery.of(context).size.width * 0.9,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        exercise.instructions,
+                        style: TextStyle(fontSize: 12, color: Colors.grey), // Adjust font size
+                      ),
+                    ),
+                  ),// Custom widget
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      primary: theme_green, // Change background color
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).pop(); // Close the dialog
+                    },
+                    child: Text('Close', style: TextStyle(fontSize: 14, color: Colors.white)), // Adjust font size
+                  ),
+                ],
               ),
-              onPressed: () {
-                Navigator.of(context).pop(); // Close the dialog
-              },
-              child: Text('Close', style: TextStyle(fontSize: 14,color: Colors.white)), // Adjust font size
             ),
-          ],
+
+          ),
         );
       },
     );
   }
-}
 
-
-Widget CustomBorderContainer(String label, String value) {
+  Widget CustomBorderContainer(String label, String value) {
   return Stack(
     clipBehavior: Clip.none,
     alignment: Alignment.center,
@@ -219,4 +226,4 @@ Widget CustomBorderContainer(String label, String value) {
       ),
     ],
   );
-}
+}}
