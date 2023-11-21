@@ -90,6 +90,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
             child: TextField(
               controller: _nameController,
               style: inputText,
+                cursorColor: theme_green,
               decoration: InputDecoration(
                 prefixIcon: Padding(
                   padding: const EdgeInsets.fromLTRB(0, 0, 0, 8),
@@ -121,6 +122,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
             child: TextField(
               controller: _userNameController,
               style: inputText,
+              cursorColor: theme_green,
               decoration: InputDecoration(
                 prefixText: '@',
                 prefixIcon: Padding(
@@ -154,6 +156,8 @@ class _SettingsWidgetState extends State<SettingsWidget> {
             child: TextField(
               controller: _emailController,
               style: inputText,
+              cursorColor: theme_green,
+
               decoration: InputDecoration(
                 prefixIcon: Padding(
                   padding: const EdgeInsets.fromLTRB(0, 0, 0, 8),
@@ -186,6 +190,8 @@ class _SettingsWidgetState extends State<SettingsWidget> {
             child: TextField(
               controller: _phoneController,
               style: inputText,
+              cursorColor: theme_green,
+
               decoration: InputDecoration(
                 prefixIcon: Padding(
                   padding: const EdgeInsets.fromLTRB(0, 0, 0, 8),
@@ -209,6 +215,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
               fontWeight: FontWeight.bold,
               fontSize: 14.0,
               color: theme_green,
+
             ),
           ),
           Container(
@@ -218,6 +225,8 @@ class _SettingsWidgetState extends State<SettingsWidget> {
             child: TextField(
               controller: _oldPassController,
               style: inputText,
+              cursorColor: theme_green,
+
               decoration: InputDecoration(
                 hintText: 'Enter your current password',
                 prefixIcon: Padding(
@@ -251,6 +260,8 @@ class _SettingsWidgetState extends State<SettingsWidget> {
             child: TextField(
               controller: _newPassController,
               style: inputText,
+              cursorColor: theme_green,
+
               decoration: InputDecoration(
                 hintText: 'Enter your new password',
                 prefixIcon: Padding(

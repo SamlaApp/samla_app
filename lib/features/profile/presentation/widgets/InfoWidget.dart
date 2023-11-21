@@ -79,6 +79,7 @@ class _InfoWidgetState extends State<InfoWidget> {
               child: TextField(
                 controller: _heightController,
                 style: inputText,
+                cursorColor: theme_green,
                 decoration: InputDecoration(
                   suffixText: 'cm',
                   prefixIcon: Padding(
@@ -111,6 +112,7 @@ class _InfoWidgetState extends State<InfoWidget> {
               child: TextFormField(
                 controller: _weightController,
                 style: inputText,
+                cursorColor: theme_green,
                 decoration: InputDecoration(
                   suffixText: 'kg',
                   prefixIcon: Padding(
