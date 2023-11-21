@@ -14,8 +14,9 @@ import 'package:samla_app/features/training/training_di.dart' as di;
 
 class TemplatePage extends StatefulWidget {
   late Template template;
+  late int length;
 
-  TemplatePage({super.key, required this.template});
+  TemplatePage({super.key, required this.template, required this.length});
 
   @override
   _TemplatePageState createState() => _TemplatePageState();
@@ -25,6 +26,9 @@ class _TemplatePageState extends State<TemplatePage> {
   final templateCubit = di.sl.get<TemplateCubit>();
   final exercisesCubit = di.sl.get<ExerciseCubit>();
   final viewDayExerciseCubit = di.sl.get<ViewDayExerciseCubit>();
+
+  String capitalize(String s) => s[0].toUpperCase() + s.substring(1); // capitalize first letter of string
+
 
   String _selectedBodyPart = 'Back';
   String _selectedDay = 'Sunday';
@@ -144,8 +148,25 @@ class _TemplatePageState extends State<TemplatePage> {
   }
 
   void _deleteTemplate() {
-    //templateCubit.deleteTemplate(widget.template.id!);
-    Navigator.pop(context);
+
+    if(widget.length == 1) {
+      // return message you can't delete the last template
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Create a new template before deleting this one'),
+        ),
+      );
+    } else {
+      // return message template deleted
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Template deleted'),
+        ),
+      );
+      templateCubit.deleteTemplate(widget.template.id!);
+      Navigator.pop(context);
+    }
+
   }
 
   @override
@@ -169,6 +190,14 @@ class _TemplatePageState extends State<TemplatePage> {
             child: Scaffold(
               appBar: AppBar(
                 toolbarHeight: 150.0,
+                leading: IconButton(
+                  icon: const Icon(Icons.arrow_back_ios,
+                      color: Colors.white, size: 30),
+                  onPressed: () {
+                    templateCubit.getAllTemplates();
+                    Navigator.pop(context);
+                  },
+                ),
                 title: Center(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -177,30 +206,47 @@ class _TemplatePageState extends State<TemplatePage> {
                       Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text(
-                            widget.template.name,
-                            style: const TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            ),
-                          ),
-                          ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              foregroundColor: Colors.black,
-                              backgroundColor: Colors.white70,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20.0),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                capitalize(widget.template.name),
+                                style: const TextStyle(
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
                               ),
+
+                              if(widget.template.is_active)
+                                const Row(
+                                  children: [
+                                    SizedBox(width: 10),
+                                    Icon(Icons.verified, color: Colors.white, size: 20),
+                                  ],
+                                ),
+
+                            ],
+                          ),
+                          const SizedBox(height: 10),
+                          SizedBox(
+                            height: 25,
+                            width: 100,
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                foregroundColor: Colors.black,
+                                backgroundColor: Colors.white70,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20.0),
+                                ),
+                              ),
+                              onPressed: () {
+                                _showUpdateTemplateDialog(context);
+                              },
+                              child: const Text('Update',
+                                  style: TextStyle(fontSize: 12)),
                             ),
-                            onPressed: () {
-                              print(
-                                  'Should show a dialog to update the template');
-                              // _showUpdateTemplateDialog(context);
-                              _showUpdateTemplateDialog(context);
-                            },
-                            child: const Text('Update',
-                                style: TextStyle(fontSize: 16)),
                           ),
                         ],
                       ),

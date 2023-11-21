@@ -7,7 +7,6 @@ import 'package:samla_app/features/training/presentation/cubit/Templates/templat
 import 'package:samla_app/features/training/presentation/pages/tamplate_page.dart';
 import 'package:samla_app/features/training/training_di.dart' as di;
 
-
 class TemplatesPage extends StatefulWidget {
   const TemplatesPage({Key? key}) : super(key: key);
 
@@ -25,7 +24,6 @@ class _TemplatesPageState extends State<TemplatesPage> {
     super.initState();
     cubit.getAllTemplates();
   }
-
 
   void refresh() {
     setState(() {
@@ -48,7 +46,6 @@ class _TemplatesPageState extends State<TemplatesPage> {
       cubit.createTemplate(template);
       Navigator.of(context).pop();
       cubit.getAllTemplates();
-
     }
   }
 
@@ -61,14 +58,14 @@ class _TemplatesPageState extends State<TemplatesPage> {
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios),
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
           onPressed: () {
             Navigator.of(context).pop();
           },
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.add_circle_outline),
+            icon: const Icon(Icons.add_circle_outline, color: Colors.white),
             onPressed: () {
               showDialog(
                 context: context,
@@ -85,8 +82,8 @@ class _TemplatesPageState extends State<TemplatesPage> {
           secondaryBegin: Alignment.bottomRight,
           secondaryEnd: Alignment.topLeft,
           primaryColors: [
-            theme_darkblue,
-            theme_red,
+            theme_orange,
+            theme_pink,
           ],
           secondaryColors: [
             theme_pink,
@@ -132,9 +129,7 @@ class _TemplatesPageState extends State<TemplatesPage> {
     );
   }
 
-
   Widget buildNewTemplateDialog() {
-
     return Dialog(
       insetPadding: const EdgeInsets.all(16),
       child: Container(
@@ -149,19 +144,26 @@ class _TemplatesPageState extends State<TemplatesPage> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-               Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                 children: [
-                   Icon(Icons.file_present_rounded, color: theme_darkblue, size: 25),
-                   const SizedBox(width: 10),
-                   Text('New Template',
-                      style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold, fontFamily: 'Cairo',color: theme_darkblue),
-                      overflow: TextOverflow.ellipsis,),
-                 ],
-               ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.file_present_rounded,
+                      color: theme_darkblue, size: 25),
+                  const SizedBox(width: 10),
+                  Text(
+                    'New Template',
+                    style: TextStyle(
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'Cairo',
+                        color: theme_darkblue),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              ),
               const SizedBox(height: 20.0),
               TextFormField(
-                decoration:  InputDecoration(
+                decoration: InputDecoration(
                   border: const OutlineInputBorder(),
                   labelText: 'Template Name',
                   focusColor: theme_green,
@@ -185,7 +187,8 @@ class _TemplatesPageState extends State<TemplatesPage> {
                     icon: const Icon(Icons.cancel),
                     label: const Text('Cancel'),
                     style: ElevatedButton.styleFrom(
-                      foregroundColor: theme_red, backgroundColor: Colors.white,
+                      foregroundColor: theme_red,
+                      backgroundColor: Colors.white,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(32.0),
                       ),
@@ -199,13 +202,13 @@ class _TemplatesPageState extends State<TemplatesPage> {
                     icon: const Icon(Icons.add),
                     label: const Text('Create'),
                     style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.white, backgroundColor: theme_darkblue,
+                      foregroundColor: Colors.white,
+                      backgroundColor: theme_darkblue,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(32.0),
                       ),
                     ),
                   ),
-
                 ],
               ),
             ],
@@ -227,22 +230,77 @@ class _TemplatesPageState extends State<TemplatesPage> {
               backgroundColor: theme_pink,
             ),
           );
-        } else if (state is TemplateLoaded) {
+        }
+        else if (state is TemplateDeletedState) {
+          cubit.getAllTemplates();
+          return Center(
+            child: CircularProgressIndicator(
+              color: theme_green,
+              backgroundColor: theme_pink,
+            ),
+          );
+        }
+        // TemplateCreatedState
+        else if (state is TemplateCreatedState) {
+          cubit.getAllTemplates();
+          return Center(
+            child: CircularProgressIndicator(
+              color: theme_green,
+              backgroundColor: theme_pink,
+            ),
+          );
+        }
+
+        else if (state is TemplateLoaded) {
           return ListView.builder(
             itemCount: state.templates.length,
             itemBuilder: (context, index) {
               final template = state.templates[index];
-              return _buildTemplateCard(template);
+              return _buildTemplateCard(template,state.templates.length); 
             },
           );
+        } else {
+          return Container(
+            height: 200,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.gpp_maybe_rounded, color: theme_orange, size: 50),
+                const SizedBox(height: 10),
+                Text('Something went wrong',
+                    style: TextStyle(
+                      color: theme_darkblue,
+                      fontSize: 14,
+                      fontWeight: FontWeight.normal,
+                    )),
+                TextButton(
+                  onPressed: () {
+                    refresh();
+                  },
+                  child: Text('Try again',
+                      style: TextStyle(
+                        color: theme_green,
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                      )),
+                ),
+              ],
+            ),
+
+          );
         }
-        return const SizedBox.shrink();
       },
     );
   }
 
   // Display Template Card
-  Widget _buildTemplateCard(Template template) {
+  Widget _buildTemplateCard(Template template, int length) {
     bool isActive = template.is_active;
     return Container(
       padding: const EdgeInsets.all(8),
@@ -274,7 +332,7 @@ class _TemplatesPageState extends State<TemplatesPage> {
                   ),
                 ),
                 const SizedBox(width: 10),
-                if(isActive)
+                if (isActive)
                   const Icon(Icons.check_circle, color: Colors.white, size: 20),
               ],
             ),
@@ -285,12 +343,13 @@ class _TemplatesPageState extends State<TemplatesPage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => TemplatePage(template: template),
+                    builder: (context) => TemplatePage(template: template, length: length),
                   ),
                 );
               },
               style: ElevatedButton.styleFrom(
-                foregroundColor: theme_darkblue, backgroundColor: Colors.white,
+                foregroundColor: theme_darkblue,
+                backgroundColor: Colors.white,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(32.0),
                 ),

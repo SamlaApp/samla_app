@@ -73,4 +73,15 @@ class TemplateCubit extends Cubit<TemplateState> {
       emit(TemplateCreatedState(template));
     });
   }
+
+  Future<void> deleteTemplate(int id) async {
+    emit(TemplateLoadingState());
+    final result = await repository.deleteTemplate(id);
+    result.fold(
+        (failure) =>
+            emit(const TemplateErrorState('Failed to delete template')),
+        (template) {
+      emit(TemplateDeletedState());
+    });
+  }
 }

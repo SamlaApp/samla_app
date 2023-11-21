@@ -64,3 +64,6 @@ class TemplateDetailLoaded extends TemplateState {
   @override
   List<Object> get props => [template];
 }
+
+// TemplateDeletedState
+class TemplateDeletedState extends TemplateState {}
