@@ -8,7 +8,16 @@ Widget buildExercisesForDay(BuildContext context, int index, weeklyExercises) {
   var exercises = weeklyExercises[dayName] ?? [];
 
   if (exercises.isEmpty) {
-    return Text("No exercises for $dayName");
+    return const Center(
+      child: Text(
+        "No exercises for today, take a rest!",
+        style: TextStyle(
+          fontSize: 18,
+          fontWeight: FontWeight.w500,
+          color: Colors.white,
+        ),
+      ),
+    );
   }
   return _buildExercisesList(exercises);
 }

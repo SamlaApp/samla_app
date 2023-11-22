@@ -27,45 +27,37 @@ class ExerciseTiles extends StatelessWidget {
 
   const ExerciseTiles({super.key, required this.exercise});
 
-  final  baseURL = 'https://samla.mohsowa.com/api/training/image/'; // api url for images
+  final baseURL =
+      'https://samla.mohsowa.com/api/training/image/'; // api url for images
+  String capitalize(String s) =>
+      s[0].toUpperCase() + s.substring(1); // capitalize first letter of string
 
   @override
   Widget build(BuildContext context) {
-
-
     return GestureDetector(
       onTap: () {
         _showExerciseDetails(context);
       },
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-        // Adjust margins
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8.0),
-          border: Border.all(
-            color: theme_red.withOpacity(0.5), // Light border color
-            width: 1.0, // Border width
-          ),
+          color: Colors.white12,
         ),
-
-
         child: Row(
           children: <Widget>[
             Container(
               width: 70,
               height: 70,
               decoration: BoxDecoration(
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(8.0),
-                  bottomLeft: Radius.circular(8.0),
-                ),
+                borderRadius: const BorderRadius.all(Radius.circular(8.0)),
                 image: DecorationImage(
                   image: NetworkImage(baseURL + exercise.gifUrl),
                   fit: BoxFit.cover,
                 ),
               ),
             ),
-            // Content on the right with smaller padding
+            const SizedBox(width: 8),
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.all(6.0), // Reduce padding
@@ -73,20 +65,19 @@ class ExerciseTiles extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      exercise.name,
+                      capitalize(exercise.name),
                       style: const TextStyle(
-                          fontSize: 16, fontWeight: FontWeight.bold),
-                      // Adjust font size
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white),
                       maxLines: 2,
-                      // Limit to 2 lines
                       overflow:
                           TextOverflow.ellipsis, // Ellipsis for long names
                     ),
                     const SizedBox(height: 4),
                     const Text(
                       'Tap for details',
-                      style: TextStyle(
-                          fontSize: 12, color: Colors.grey), // Adjust font size
+                      style: TextStyle(fontSize: 12, color: Colors.white54),
                     ),
                   ],
                 ),
@@ -99,7 +90,6 @@ class ExerciseTiles extends StatelessWidget {
   }
 
   void _showExerciseDetails(BuildContext context) {
-
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -127,61 +117,72 @@ class ExerciseTiles extends StatelessWidget {
                           borderRadius: BorderRadius.circular(8.0),
                           child: Image.network(
                             baseURL + exercise.gifUrl,
-                            width: 100,
-                            height: 100,
+                            width: 200,
+                            height: 200,
                             fit: BoxFit.cover,
                           ),
+                        ),
+
+                        Column(
+                          children: [
+                            CustomBorderContainer('BodyPart', exercise.bodyPart),
+                            CustomBorderContainer('Equipment', exercise.equipment),
+                            CustomBorderContainer('Target', exercise.target),
+                            CustomBorderContainer('Secondary Muscles',
+                                exercise.secondaryMuscles.join(', ')),
+                          ],
                         ),
                       ],
                     ),
                   ),
-                  Row(
-                    //space in between
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      CustomBorderContainer('bodyPart', exercise.bodyPart),
-                      CustomBorderContainer('Equipment', exercise.equipment),
-                    ],
+
+
+                  const Divider(
+                    color: Colors.grey,
+                    height: 10,
+                    thickness: 0.5,
+                    indent: 0,
+                    endIndent: 0,
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      CustomBorderContainer('Target', exercise.target),
-                      CustomBorderContainer('Secondary Muscles',
-                          exercise.secondaryMuscles.join(', ')),
-                    ],
-                  ),
-                  // Row(
-                  //   mainAxisAlignment: MainAxisAlignment.center,
-                  //   children: [
-                  //     CustomBorderContainer('Instructions', exercise.instructions),
-                  //   ],
-                  // ),
+
                   //Instructions
                   Container(
+                    padding: const EdgeInsets.all(8.0),
                     width: MediaQuery.of(context).size.width * 0.9,
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Text(
                         exercise.instructions,
                         style: const TextStyle(
-                            fontSize: 12,
-                            color: Colors.grey), // Adjust font size
+                          fontSize: 12,
+                          color: Colors.grey,
+                          fontWeight: FontWeight.normal,
+                          overflow: TextOverflow.visible,
+                          decoration: TextDecoration.none,
+                        ),
+                          softWrap: true,
+                          overflow: TextOverflow.visible,
+                          textAlign: TextAlign.justify,
                       ),
                     ),
                   ),
-                  // Custom widget
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: theme_green, // Change background color
+
+                  // Close button
+                  Center(
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: 8.0),
+                      child: ElevatedButton.icon(
+                        icon: const Icon(Icons.close),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor:
+                              theme_darkblue, // Change background color
+                        ),
+                        onPressed: () {
+                          Navigator.of(context).pop(); // Close the dialog
+                        },
+                        label: const Text('Close'),
+                      ),
                     ),
-                    onPressed: () {
-                      Navigator.of(context).pop(); // Close the dialog
-                    },
-                    child: const Text('Close',
-                        style: TextStyle(
-                            fontSize: 14,
-                            color: Colors.white)), // Adjust font size
                   ),
                 ],
               ),
