@@ -129,6 +129,17 @@ class _TrainingPageState extends State<TrainingPage> {
                     const SizedBox(height: 16),
                     buildExercisesForDay(context, index, weeklyExercises),
                     buildGradientBorderButton(context),
+                    IconButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => StartTraining(dayIndex: index, templateId: state.template.id!),
+                            ),
+                          );
+                        },
+                        icon: const Icon(Icons.play_arrow, color: Colors.red)
+                    ),
                   ],
                 ),
               );

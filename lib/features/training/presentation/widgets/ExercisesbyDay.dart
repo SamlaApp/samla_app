@@ -27,9 +27,6 @@ String _getDayNameFromIndex(int index) {
 
 
 Widget _buildExercisesList(List<ExerciseLibrary> exercises) {
-  print(
-      exercises[0].gifUrl
-  );
   return Expanded( // Wrap ListView with Expanded
     child: ListView.builder(
       itemCount: exercises.length,

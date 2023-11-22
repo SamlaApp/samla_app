@@ -22,23 +22,24 @@ class ExercisesItem {
   });
 }
 
-
-
-
 class ExerciseTiles extends StatelessWidget {
   final ExercisesItem exercise;
 
-  ExerciseTiles({required this.exercise});
+  const ExerciseTiles({super.key, required this.exercise});
+
+  final  baseURL = 'https://samla.mohsowa.com/api/training/image/'; // api url for images
 
   @override
   Widget build(BuildContext context) {
-    final String _baseURL = 'https://samla.mohsowa.com/api/training/image/'; // api url for images
+
+
     return GestureDetector(
       onTap: () {
         _showExerciseDetails(context);
       },
       child: Container(
-        margin: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0), // Adjust margins
+        margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+        // Adjust margins
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8.0),
           border: Border.all(
@@ -46,21 +47,20 @@ class ExerciseTiles extends StatelessWidget {
             width: 1.0, // Border width
           ),
         ),
+
+
         child: Row(
           children: <Widget>[
-
             Container(
               width: 70,
               height: 70,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.only(
+                borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(8.0),
                   bottomLeft: Radius.circular(8.0),
                 ),
                 image: DecorationImage(
-                  image: NetworkImage(
-
-                      _baseURL + exercise.gifUrl),
+                  image: NetworkImage(baseURL + exercise.gifUrl),
                   fit: BoxFit.cover,
                 ),
               ),
@@ -74,14 +74,19 @@ class ExerciseTiles extends StatelessWidget {
                   children: <Widget>[
                     Text(
                       exercise.name,
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold), // Adjust font size
-                      maxLines: 2, // Limit to 2 lines
-                      overflow: TextOverflow.ellipsis, // Ellipsis for long names
+                      style: const TextStyle(
+                          fontSize: 16, fontWeight: FontWeight.bold),
+                      // Adjust font size
+                      maxLines: 2,
+                      // Limit to 2 lines
+                      overflow:
+                          TextOverflow.ellipsis, // Ellipsis for long names
                     ),
-                    SizedBox(height: 4),
-                    Text(
+                    const SizedBox(height: 4),
+                    const Text(
                       'Tap for details',
-                      style: TextStyle(fontSize: 12, color: Colors.grey), // Adjust font size
+                      style: TextStyle(
+                          fontSize: 12, color: Colors.grey), // Adjust font size
                     ),
                   ],
                 ),
@@ -94,14 +99,14 @@ class ExerciseTiles extends StatelessWidget {
   }
 
   void _showExerciseDetails(BuildContext context) {
-    final String _baseURL = 'https://samla.mohsowa.com/api/training/image/'; // api url for images
 
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return Dialog(
-          insetPadding: EdgeInsets.all(1.0),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+          insetPadding: const EdgeInsets.all(1.0),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
           backgroundColor: Colors.white,
           child: Container(
             // take 90% of screen width
@@ -121,7 +126,7 @@ class ExerciseTiles extends StatelessWidget {
                         ClipRRect(
                           borderRadius: BorderRadius.circular(8.0),
                           child: Image.network(
-                            _baseURL + exercise.gifUrl,
+                            baseURL + exercise.gifUrl,
                             width: 100,
                             height: 100,
                             fit: BoxFit.cover,
@@ -142,7 +147,8 @@ class ExerciseTiles extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       CustomBorderContainer('Target', exercise.target),
-                      CustomBorderContainer('Secondary Muscles', exercise.secondaryMuscles.join(', ')),
+                      CustomBorderContainer('Secondary Muscles',
+                          exercise.secondaryMuscles.join(', ')),
                     ],
                   ),
                   // Row(
@@ -158,23 +164,28 @@ class ExerciseTiles extends StatelessWidget {
                       padding: const EdgeInsets.all(8.0),
                       child: Text(
                         exercise.instructions,
-                        style: TextStyle(fontSize: 12, color: Colors.grey), // Adjust font size
+                        style: const TextStyle(
+                            fontSize: 12,
+                            color: Colors.grey), // Adjust font size
                       ),
                     ),
-                  ),// Custom widget
+                  ),
+                  // Custom widget
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      primary: theme_green, // Change background color
+                      backgroundColor: theme_green, // Change background color
                     ),
                     onPressed: () {
                       Navigator.of(context).pop(); // Close the dialog
                     },
-                    child: Text('Close', style: TextStyle(fontSize: 14, color: Colors.white)), // Adjust font size
+                    child: const Text('Close',
+                        style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.white)), // Adjust font size
                   ),
                 ],
               ),
             ),
-
           ),
         );
       },
@@ -182,48 +193,53 @@ class ExerciseTiles extends StatelessWidget {
   }
 
   Widget CustomBorderContainer(String label, String value) {
-  return Stack(
-    clipBehavior: Clip.none,
-    alignment: Alignment.center,
-    children: [
-      Padding(
-        padding: const EdgeInsets.only(top: 5, bottom: 10),
-        child: Container(
-          width: 140, // Decreased width
-          padding: const EdgeInsets.fromLTRB(12, 12, 12, 12), // Smaller padding
-          decoration: BoxDecoration(
-            border: Border.all(color: theme_red, width: 1.5), // Smaller border width
-            borderRadius: BorderRadius.circular(6), // Smaller border radius
-          ),
-          child: Text(
-            value,
-            style: const TextStyle(
-              color: Colors.black,
-              fontWeight: FontWeight.w600,
-              fontSize: 12, // Smaller font size
-            ),
-          ),
-        ),
-      ),
-      Positioned(
-        top: -2,
-        left: 3, // Adjusted left position
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(8), // Smaller border radius
+    return Stack(
+      clipBehavior: Clip.none,
+      alignment: Alignment.center,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(top: 5, bottom: 10),
           child: Container(
-            color: theme_red,
-            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1), // Smaller padding
+            width: 140,
+            // Decreased width
+            padding: const EdgeInsets.fromLTRB(12, 12, 12, 12),
+            // Smaller padding
+            decoration: BoxDecoration(
+              border: Border.all(color: theme_red, width: 1.5),
+              // Smaller border width
+              borderRadius: BorderRadius.circular(6), // Smaller border radius
+            ),
             child: Text(
-              label,
-              style: TextStyle(
-                color: Colors.white,
+              value,
+              style: const TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.w600,
                 fontSize: 12, // Smaller font size
-                fontWeight: FontWeight.normal,
               ),
             ),
           ),
         ),
-      ),
-    ],
-  );
-}}
+        Positioned(
+          top: -2,
+          left: 3, // Adjusted left position
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(8), // Smaller border radius
+            child: Container(
+              color: theme_red,
+              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
+              // Smaller padding
+              child: Text(
+                label,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 12, // Smaller font size
+                  fontWeight: FontWeight.normal,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}

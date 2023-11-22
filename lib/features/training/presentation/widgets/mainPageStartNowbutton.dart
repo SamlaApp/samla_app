@@ -6,6 +6,7 @@ import '../pages/startTrainig.dart';
 Widget buildGradientBorderButton(BuildContext context) {
   return InkWell(
     onTap: () {
+      /*
       print('Start Clicked');
       Navigator.push(
         context,
@@ -13,6 +14,9 @@ Widget buildGradientBorderButton(BuildContext context) {
           builder: (context) => startTraining(), // This is your Start Training page widget
         ),
       );
+
+       */
+
     },
     child: Padding(
       padding: const EdgeInsets.all(7.0),
