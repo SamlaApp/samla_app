@@ -88,8 +88,7 @@ class _CustomSignedCaloriesState extends State<CustomSignedCalories> {
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
                       borderSide: BorderSide(
-                        color: theme_green,
-                        width: 0.2,
+                        width: 2,
                       ),
                     ),
                     enabledBorder: OutlineInputBorder(

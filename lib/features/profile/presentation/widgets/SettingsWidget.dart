@@ -124,9 +124,9 @@ class _SettingsWidgetState extends State<SettingsWidget> {
               style: inputText,
               cursorColor: theme_green,
               decoration: InputDecoration(
-                prefixText: '@',
+                prefixText: '@ ',
                 prefixStyle: TextStyle(
-                  color: theme_darkblue,
+                  color: theme_grey,
                   fontWeight: FontWeight.bold,
                 ),
                 prefixIcon: Padding(

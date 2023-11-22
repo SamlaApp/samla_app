@@ -78,7 +78,6 @@ ThemeData lightTheme = ThemeData(
     bodyLarge: TextStyle(fontSize: 18, color: Colors.black87),
     labelLarge: TextStyle(color: Colors.white), // Text color for buttons
 
-    // Add other text styles as needed
   ),
   appBarTheme: AppBarTheme(
     color: Colors.grey, // AppBar background color
@@ -101,5 +100,20 @@ ThemeData lightTheme = ThemeData(
 
   ).copyWith(background: Colors.white).copyWith(error: Colors.red),
   textSelectionTheme: TextSelectionThemeData(cursorColor: Colors.blue, selectionColor: Colors.blue[300], selectionHandleColor: Colors.blue[600],),
-  // Add other theme properties as needed
+  inputDecorationTheme: InputDecorationTheme(
+    hintStyle: TextStyle(color: Colors.grey), // Hint text color
+    suffixStyle: TextStyle(color: Colors.grey), // Suffix icon/text color
+    labelStyle: TextStyle(color: Colors.grey), // Label text color
+    errorStyle: TextStyle(color: Colors.red), // Error text color
+    helperStyle: TextStyle(color: Colors.grey), // Helper text color
+    counterStyle: TextStyle(color: Colors.grey), // Counter text color
+    filled: true, // Whether the input should be filled
+    fillColor: Colors.grey[200], // Fill color for input
+    focusColor: Colors.blue, // Focus color for input
+    hoverColor: Colors.blue, // Hover color for input
+    prefixStyle: TextStyle(color: Colors.grey), // Prefix icon/text color
+    border: OutlineInputBorder(
+      borderSide: BorderSide(color: Colors.grey), // Border color
+    ),
+  ), // Add other theme properties as needed
 );
