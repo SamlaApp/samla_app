@@ -54,11 +54,11 @@ TextStyle inputText = TextStyle(color: Colors.black54, fontSize: 15);
 
 
 ThemeData lightTheme = ThemeData(
-  primaryColor: Colors.blue, // Default primary color
-  hintColor: Colors.blueAccent, // Default accent color
+  primaryColor: Colors.grey, // Default primary color
+  hintColor: Colors.grey, // Default accent color
   scaffoldBackgroundColor: Colors.white, // Another background color option
-  highlightColor: Colors.lightBlueAccent, // Highlight color for elements
-  splashColor: Colors.blue[100], // Splash color for inkwell effects
+  highlightColor: Colors.blue, // Highlight color for elements
+  // splashColor: Colors.grey, // Splash color for inkwell effects
   selectedRowColor: Colors.blue[50], // Color for selected rows in tables, etc.
   unselectedWidgetColor: Colors.grey, // Color for unselected widgets (checkboxes, radios)
   disabledColor: Colors.grey[400], // Default button color
@@ -73,16 +73,19 @@ ThemeData lightTheme = ThemeData(
   primaryIconTheme: IconThemeData(color: Colors.white), // Accent icon color
   brightness: Brightness.light,
   useMaterial3: false,
+
   textTheme: TextTheme(
     displayLarge: TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: Colors.black),
     bodyLarge: TextStyle(fontSize: 18, color: Colors.black87),
     labelLarge: TextStyle(color: Colors.white), // Text color for buttons
 
   ),
+
   appBarTheme: AppBarTheme(
     color: Colors.grey, // AppBar background color
     iconTheme: IconThemeData(color: Colors.white), // AppBar icon color
   ),
+
   dialogBackgroundColor: Colors.white, // Background color for dialogs
   dividerColor: Colors.grey, colorScheme: ColorScheme.fromSeed(
     seedColor: Colors.blue, // Base color for the color scheme
@@ -99,7 +102,9 @@ ThemeData lightTheme = ThemeData(
     brightness: Brightness.light,
 
   ).copyWith(background: Colors.white).copyWith(error: Colors.red),
+
   textSelectionTheme: TextSelectionThemeData(cursorColor: Colors.blue, selectionColor: Colors.blue[300], selectionHandleColor: Colors.blue[600],),
+
   inputDecorationTheme: InputDecorationTheme(
     hintStyle: TextStyle(color: Colors.grey), // Hint text color
     suffixStyle: TextStyle(color: Colors.grey), // Suffix icon/text color
@@ -110,10 +115,12 @@ ThemeData lightTheme = ThemeData(
     filled: true, // Whether the input should be filled
     fillColor: Colors.grey[200], // Fill color for input
     focusColor: Colors.blue, // Focus color for input
-    hoverColor: Colors.blue, // Hover color for input
+    hoverColor: Colors.grey, // Hover color for input
     prefixStyle: TextStyle(color: Colors.grey), // Prefix icon/text color
+
     border: OutlineInputBorder(
       borderSide: BorderSide(color: Colors.grey), // Border color
     ),
+
   ), // Add other theme properties as needed
 );
