@@ -307,7 +307,7 @@ class _NewFoodState extends State<NewFoodPage> {
                       ],
                     ),
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 15),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Row(
@@ -360,7 +360,7 @@ class _NewFoodState extends State<NewFoodPage> {
                       ],
                     ),
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 10),
                   _buttonAddCustomMeal(),
                 ]),
           ),

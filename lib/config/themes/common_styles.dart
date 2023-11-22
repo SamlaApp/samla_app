@@ -53,24 +53,53 @@ BoxDecoration textField_decoration = BoxDecoration(
 TextStyle inputText = TextStyle(color: Colors.black54, fontSize: 15);
 
 
-// ThemeData lightTheme = ThemeData(
-//   primaryColor: Colors.white,
-//   scaffoldBackgroundColor: Colors.white,
-//     highlightColor: Colors.green,
-//     buttonBarTheme: ButtonBarThemeData(
-//       buttonTextTheme: ButtonTextTheme.accent,
-//         layoutBehavior: ButtonBarLayoutBehavior.constrained,
-//     ),
-//   iconTheme: IconThemeData(color: theme_green),
-//   brightness: Brightness.light,
-//   useMaterial3: false,
-//   textTheme: TextTheme(
-//     displayLarge: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
-//     bodyLarge: TextStyle(fontSize: 18, color: Colors.black87),
-//   ),
-//   appBarTheme:  AppBarTheme(
-//     color: theme_grey,
-//     iconTheme: IconThemeData(color: theme_green),
-//   ),
-//   colorScheme: ColorScheme.fromSeed(seedColor: theme_grey),
-// );
+ThemeData lightTheme = ThemeData(
+  primaryColor: Colors.blue, // Default primary color
+  hintColor: Colors.blueAccent, // Default accent color
+  scaffoldBackgroundColor: Colors.white, // Another background color option
+  highlightColor: Colors.lightBlueAccent, // Highlight color for elements
+  splashColor: Colors.blue[100], // Splash color for inkwell effects
+  selectedRowColor: Colors.blue[50], // Color for selected rows in tables, etc.
+  unselectedWidgetColor: Colors.grey, // Color for unselected widgets (checkboxes, radios)
+  disabledColor: Colors.grey[400], // Default button color
+  secondaryHeaderColor: Colors.blue[200], // Secondary header color
+  indicatorColor: Colors.blue, // Tab indicator color
+
+  buttonBarTheme: ButtonBarThemeData(
+    buttonTextTheme: ButtonTextTheme.accent,
+    layoutBehavior: ButtonBarLayoutBehavior.constrained,
+  ),
+  iconTheme: IconThemeData(color: Colors.black), // Icon color
+  primaryIconTheme: IconThemeData(color: Colors.white), // Accent icon color
+  brightness: Brightness.light,
+  useMaterial3: false,
+  textTheme: TextTheme(
+    displayLarge: TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: Colors.black),
+    bodyLarge: TextStyle(fontSize: 18, color: Colors.black87),
+    labelLarge: TextStyle(color: Colors.white), // Text color for buttons
+
+    // Add other text styles as needed
+  ),
+  appBarTheme: AppBarTheme(
+    color: Colors.grey, // AppBar background color
+    iconTheme: IconThemeData(color: Colors.white), // AppBar icon color
+  ),
+  dialogBackgroundColor: Colors.white, // Background color for dialogs
+  dividerColor: Colors.grey, colorScheme: ColorScheme.fromSeed(
+    seedColor: Colors.blue, // Base color for the color scheme
+    primary: Colors.blue, // Primary color used for buttons, etc.
+    onPrimary: Colors.white, // Color for text/icons on primary color
+    secondary: Colors.blueAccent, // Secondary color
+    onSecondary: Colors.white, // Color for text/icons on secondary color
+    surface: Colors.white, // Surface color
+    onSurface: Colors.black, // Color for text/icons on surface color
+    background: Colors.white, // Background color
+    onBackground: Colors.black,   // Color for text/icons on background color
+    error: Colors.red, // Error color
+    onError: Colors.white, // Color for text/icons on error color
+    brightness: Brightness.light,
+
+  ).copyWith(background: Colors.white).copyWith(error: Colors.red),
+  textSelectionTheme: TextSelectionThemeData(cursorColor: Colors.blue, selectionColor: Colors.blue[300], selectionHandleColor: Colors.blue[600],),
+  // Add other theme properties as needed
+);

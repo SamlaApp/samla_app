@@ -125,6 +125,10 @@ class _SettingsWidgetState extends State<SettingsWidget> {
               cursorColor: theme_green,
               decoration: InputDecoration(
                 prefixText: '@',
+                prefixStyle: TextStyle(
+                  color: theme_darkblue,
+                  fontWeight: FontWeight.bold,
+                ),
                 prefixIcon: Padding(
                   padding: const EdgeInsets.fromLTRB(0, 0, 0, 8),
                   child: Icon(
@@ -229,6 +233,9 @@ class _SettingsWidgetState extends State<SettingsWidget> {
 
               decoration: InputDecoration(
                 hintText: 'Enter your current password',
+                hintStyle: TextStyle(
+                  color: theme_grey,
+                ),
                 prefixIcon: Padding(
                   padding: const EdgeInsets.fromLTRB(0, 0, 0, 8),
                   child: Icon(
@@ -264,6 +271,9 @@ class _SettingsWidgetState extends State<SettingsWidget> {
 
               decoration: InputDecoration(
                 hintText: 'Enter your new password',
+                hintStyle: TextStyle(
+                  color: theme_grey,
+                ),
                 prefixIcon: Padding(
                   padding: const EdgeInsets.fromLTRB(0, 0, 0, 8),
                   child: Icon(
@@ -293,11 +303,8 @@ class _SettingsWidgetState extends State<SettingsWidget> {
               onPressed: _saveInfo,
               child: Text(
                 'Save Info',
-                style: TextStyle(
-                  color: primary_color,
-                ),
-              ),
             ),
+          ),
           ),
 
           SizedBox(height: 10),
@@ -307,8 +314,6 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                   primary: theme_red,
                   padding: EdgeInsets.symmetric(horizontal: 20, vertical: 13),
 
-                  // padding: EdgeInsets.fromLTRB(14, 14, 14, 14),
-                  // Button padding
                   shape: RoundedRectangleBorder(
                     borderRadius:
                         BorderRadius.circular(8), // Button border radius
@@ -319,9 +324,6 @@ class _SettingsWidgetState extends State<SettingsWidget> {
               onPressed: _saveInfo,
               child: Text(
                 'Deactive Account',
-                style: TextStyle(
-                  color: primary_color,
-                ),
               ),
             ),
           ),

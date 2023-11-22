@@ -594,23 +594,23 @@ class _MealAdaptState extends State<MealAdapt> {
                     ),
                   );
                 },
-                icon: Icon(Icons.delete, color: theme_darkblue),
+                icon: Icon(Icons.delete),
               ),
             ),
           ],
           title: Column(
             children: [
-              Icon(icon, size: 80),
+              Icon(icon, size: 80 , color: primary_color),
               const SizedBox(height: 5),
               Text(
                 nutritionPlan.name,
                 style:
-                TextStyle(fontSize: 24, fontWeight: FontWeight.bold,
-              ),  ),
+                TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: primary_color),
+              ),
               const SizedBox(height: 10),
               Text(
                 '${nutritionPlan.start_time} - ${nutritionPlan.end_time}',
-                style: const TextStyle(fontSize: 14),
+                style: TextStyle(fontSize: 14),
               ),
             ],
           ),

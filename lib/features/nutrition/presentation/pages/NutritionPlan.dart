@@ -203,11 +203,12 @@ class _NutritionPlanState extends State<NutritionPlan> {
 
     return GestureDetector(
       onTap: () {
-        Navigator.of(context).push(
+        Navigator.push(
+          context,
           MaterialPageRoute(
             builder: (context) => MealAdapt(nutritionPlan: nutritionPlan),
           ),
-        );
+        ).then((_){refresh();});
       },
       child: Container(
         padding: const EdgeInsets.all(16),
