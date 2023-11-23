@@ -1,8 +1,11 @@
+import 'dart:async';
+
 import 'package:animate_gradient/animate_gradient.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../config/themes/common_styles.dart';
 import '../../domain/entities/ExerciseLibrary.dart';
+import '../widgets/CountDownTimer.dart';
 import '../widgets/ExerciseInfoStartPage.dart';
 import '../widgets/exercise_numbers.dart';
 import '../widgets/exercise_tile.dart';
@@ -25,7 +28,10 @@ class StartTrainingNew extends StatefulWidget {
 
 class _StartTrainingNewState extends State<StartTrainingNew>
     with TickerProviderStateMixin {
+  int countdownValue = 30; // Initial countdown value in seconds
+  late Timer _timer;
   late ExerciseLibrary selectedExercise;
+
   final baseURL = 'https://samla.mohsowa.com/api/training/image/';
 
   @override
@@ -41,7 +47,8 @@ class _StartTrainingNewState extends State<StartTrainingNew>
     return Scaffold(
       appBar: AppBar(
         title: Text(
-            'Training - Day ${widget.dayName} / ${_getDayNameFromIndex(widget.dayIndex)}'),
+            'Training - Day ${widget.dayName} / ${_getDayNameFromIndex(
+                widget.dayIndex)}'),
         flexibleSpace: AnimateGradient(
           primaryBegin: Alignment.topLeft,
           primaryEnd: Alignment.bottomLeft,
@@ -246,12 +253,15 @@ class _StartTrainingNewState extends State<StartTrainingNew>
                         ),
                         Container(
                           // color: theme_green,
-                          child: IconButton(
-                            onPressed: () {},
+                          child: ElevatedButton.icon(
+                            onPressed: () {
+                              ExerciseNumbersWidget();
+                            },
                             icon: Icon(
                               Icons.done_outlined,
                               color: Colors.white,
                             ),
+                            label: Text('Press me'),
                           ),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(15),
@@ -275,8 +285,8 @@ class _StartTrainingNewState extends State<StartTrainingNew>
                           color: theme_green,
                         )),
                     style: ButtonStyle(
-                        // backgroundColor: MaterialStateProperty.all(Colors.green),
-                        ),
+                      // backgroundColor: MaterialStateProperty.all(Colors.green),
+                    ),
                   ),
                 ],
               ),
@@ -286,4 +296,6 @@ class _StartTrainingNewState extends State<StartTrainingNew>
       ),
     );
   }
+
+
 }

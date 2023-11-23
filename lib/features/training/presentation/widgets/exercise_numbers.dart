@@ -1,15 +1,18 @@
+import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:io/ansi.dart';
 import 'package:samla_app/config/themes/common_styles.dart';
 
-class ExerciseNumbersWidget extends StatelessWidget {
-  const ExerciseNumbersWidget({
-    super.key,
-  });
+class ExerciseNumbersWidget extends StatefulWidget {
+  @override
+  _ExerciseNumbersWidgetState createState() => _ExerciseNumbersWidgetState();
+}
 
+class _ExerciseNumbersWidgetState extends State<ExerciseNumbersWidget> {
   final int setsNumber = 3;
   final int finishedSets = 0;
+
 
   @override
   Widget build(BuildContext context) {
@@ -62,3 +65,4 @@ class ExerciseNumbersWidget extends StatelessWidget {
         ),
       );
 }
+
