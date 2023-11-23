@@ -7,8 +7,10 @@ import '../../../../config/themes/common_styles.dart';
 import '../../domain/entities/ExerciseLibrary.dart';
 import '../widgets/CountDownTimer.dart';
 import '../widgets/ExerciseInfoStartPage.dart';
-import '../widgets/exercise_numbers.dart';
+
+// import '../widgets/exercise_numbers.dart';
 import '../widgets/exercise_tile.dart';
+import 'ExDay.dart';
 
 // import 'package:samla_app/features/training/presentation/widgets/exercise_numbers.dart'
 class StartTrainingNew extends StatefulWidget {
@@ -28,8 +30,11 @@ class StartTrainingNew extends StatefulWidget {
 
 class _StartTrainingNewState extends State<StartTrainingNew>
     with TickerProviderStateMixin {
-  int countdownValue = 30; // Initial countdown value in seconds
-  late Timer _timer;
+  late int countdownValue; // Initial countdown value in seconds
+
+  int totalSets = 3;
+  int finishedSets = 0;
+
   late ExerciseLibrary selectedExercise;
 
   final baseURL = 'https://samla.mohsowa.com/api/training/image/';
@@ -39,6 +44,8 @@ class _StartTrainingNewState extends State<StartTrainingNew>
     super.initState();
     if (widget.exercises.isNotEmpty) {
       selectedExercise = widget.exercises[0];
+      countdownValue = 0;
+      finishedSets = 0;
     }
   }
 
@@ -47,8 +54,7 @@ class _StartTrainingNewState extends State<StartTrainingNew>
     return Scaffold(
       appBar: AppBar(
         title: Text(
-            'Training - Day ${widget.dayName} / ${_getDayNameFromIndex(
-                widget.dayIndex)}'),
+            'Training - Day ${widget.dayName} / ${_getDayNameFromIndex(widget.dayIndex)}'),
         flexibleSpace: AnimateGradient(
           primaryBegin: Alignment.topLeft,
           primaryEnd: Alignment.bottomLeft,
@@ -73,6 +79,47 @@ class _StartTrainingNewState extends State<StartTrainingNew>
             // ExerciseInfoSection(selectedExercise: selectedExercise), // Pass selectedExercise
             // _buildProgressSection(),
             buildProgressSection(),
+            IconButton(
+              icon: Icon(Icons.history),
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return ExerciseDayDialog(
+                      exerciseHistory: [
+                        ExerciseDay(
+                          exerciseLibraryId: 1,
+                          sets: 3,
+                          repetitions: 12,
+                          weight: 50.0,
+                          distance: 2.5,
+                          duration: 30,
+                          notes: 'Completed with ease',
+                        ),
+                        ExerciseDay(
+                          exerciseLibraryId: 1,
+                          sets: 3,
+                          repetitions: 12,
+                          weight: 50.0,
+                          distance: 2.5,
+                          duration: 30,
+                          notes: 'Completed with ease',
+                        ),
+                        ExerciseDay(
+                          exerciseLibraryId: 1,
+                          sets: 3,
+                          repetitions: 12,
+                          weight: 50.0,
+                          distance: 2.5,
+                          duration: 30,
+                          notes: 'Completed with ease',
+                        ),
+                      ],
+                    );
+                  },
+                );
+              },
+            )
           ],
         ),
       ),
@@ -120,6 +167,7 @@ class _StartTrainingNewState extends State<StartTrainingNew>
             onTap: () {
               setState(() {
                 selectedExercise = exercise;
+                finishedSets = 0;
               });
             },
             child: Container(
@@ -196,7 +244,7 @@ class _StartTrainingNewState extends State<StartTrainingNew>
                 // crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SizedBox(height: 10.0),
-                  ExerciseNumbersWidget(),
+                  buildNumber(context),
                   // SizedBox(height: 16),
                   Column(children: [
                     Row(
@@ -255,7 +303,11 @@ class _StartTrainingNewState extends State<StartTrainingNew>
                           // color: theme_green,
                           child: ElevatedButton.icon(
                             onPressed: () {
-                              ExerciseNumbersWidget();
+                              setState(() {
+                                if (finishedSets < totalSets) {
+                                  finishedSets++; // Increment finishedSets
+                                }
+                              });
                             },
                             icon: Icon(
                               Icons.done_outlined,
@@ -285,8 +337,8 @@ class _StartTrainingNewState extends State<StartTrainingNew>
                           color: theme_green,
                         )),
                     style: ButtonStyle(
-                      // backgroundColor: MaterialStateProperty.all(Colors.green),
-                    ),
+                        // backgroundColor: MaterialStateProperty.all(Colors.green),
+                        ),
                   ),
                 ],
               ),
@@ -297,5 +349,53 @@ class _StartTrainingNewState extends State<StartTrainingNew>
     );
   }
 
+  Widget buildNumber(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.fromLTRB(15, 10, 15, 10),
+      margin: EdgeInsets.fromLTRB(20, 15, 20, 15),
+      decoration: primary_decoration,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          buildButton(
+            context,
+            '10',
+            'Repeats',
+          ),
+          buildButton(
+            context,
+            '00:00',
+            'Rest',
+          ),
+          buildButton(
+            context,
+            '${finishedSets}/${totalSets}',
+            'Sets',
+          )
+        ],
+      ),
+    );
+  }
 
+  Widget buildButton(BuildContext context, String numbers, String text) =>
+      MaterialButton(
+        onPressed: () {},
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Text(
+              numbers,
+              style: TextStyle(fontSize: 18, color: theme_green),
+            ),
+            SizedBox(
+              height: 2,
+            ),
+            Text(
+              text,
+              style: TextStyle(fontSize: 12),
+            ),
+          ],
+        ),
+      );
 }
