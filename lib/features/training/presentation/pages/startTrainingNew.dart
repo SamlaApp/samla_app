@@ -1,22 +1,18 @@
 import 'dart:async';
 
 import 'package:animate_gradient/animate_gradient.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:samla_app/features/training/domain/entities/ExerciseHistory.dart';
 import 'package:samla_app/features/training/presentation/cubit/History/history_cubit.dart';
-
 import '../../../../config/themes/common_styles.dart';
+import '../../data/models/ExerciseHistory_model.dart';
+import '../../domain/entities/ExerciseHistory.dart';
 import '../../domain/entities/ExerciseLibrary.dart';
-import '../widgets/CountDownTimer.dart';
 import '../widgets/ExerciseInfoStartPage.dart';
-
-// import '../widgets/exercise_numbers.dart';
-import '../widgets/exercise_tile.dart';
 import 'ExDay.dart';
 import 'package:samla_app/features/training/training_di.dart' as di;
 
-// import 'package:samla_app/features/training/presentation/widgets/exercise_numbers.dart'
 class StartTrainingNew extends StatefulWidget {
   final String dayName;
   final int dayIndex;
@@ -58,55 +54,154 @@ class _StartTrainingNewState extends State<StartTrainingNew>
     }
   }
 
-
   void setHistory() {
     historyCubit.addHistory(
-      set: 1,
-      duration: 1,
+      set: 2,
+      duration: 22,
       repetitions: 1,
       weight: 1,
-      distance: 1,
-      notes: 'test',
-      exercise_library_id: 664,
+      distance: 1.45,
+      notes: 'new note from me',
+      exercise_library_id: selectedExercise.id!,
+    );
+    loadHistoryForExercise();
+  }
+
+  BlocBuilder<HistoryCubit, HistoryState> buildHistory() {
+    return BlocBuilder<HistoryCubit, HistoryState>(
+        bloc: historyCubit,
+        builder: (context, state) {
+          // Display loading indicator for loading states
+          if (state is HistoryLoadingState || state is NewHistoryLoadedState) {
+            return Center(
+              child: CircularProgressIndicator(
+                color: theme_green,
+                backgroundColor: theme_pink,
+              ),
+            );
+          }
+
+          // Display error message for error state
+          if (state is HistoryErrorState) {
+            return Center(child: Text(state.message));
+          }
+
+          // Display no history message for empty state
+          if (state is HistoryEmptyState) {
+            return Center(child: Text('No history found'));
+          }
+
+          // Handle loaded state
+          if (state is HistoryLoadedState) {
+            // Grouping exercises by day
+            final groupedHistory = <String?, List<ExerciseHistory>>{};
+            for (final history in state.history) {
+              groupedHistory.putIfAbsent(history.day, () => []).add(history);
+            }
+
+            // Constructing the UI
+
+            return Dialog(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12)),
+              elevation: 0, // Removes shadow
+              child: SingleChildScrollView(
+                padding: EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    for (var entry in groupedHistory.entries)
+                      buildSetDetails(entry, selectedExercise.bodyPart),
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical: 8),
+                      child: Text(
+                        'Last updated: ${state.history.first.day}',
+                        style: TextStyle(color: Colors.grey, fontSize: 12),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          }
+
+          // Default case for unhandled states
+          return Container();
+        });
+  }
+
+  Widget buildSetDetails(MapEntry<String?, List<ExerciseHistory>> entry,
+      String bodyPart) {
+    bool isCardio = bodyPart == 'cardio';
+    var day = entry.key;
+    var sets = entry.value;
+
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Day $day',
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          ),
+          Divider(),
+          for (var set in sets)
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 4),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    flex: 2,
+                    child: Text(
+                      isCardio ? 'Duration' : 'Set ${set.sets}',
+                      style: TextStyle(fontSize: 14),
+                    ),
+                  ),
+                  if (isCardio)
+                    Expanded(
+                      flex: 2,
+                      child: Text(
+                        '${set.duration} min',
+                        style: TextStyle(fontSize: 14),
+                      ),
+                    ),
+                  if (isCardio)
+                    Expanded(
+                      flex: 2,
+                      child: Text(
+                        '${set.distance} km',
+                        style: TextStyle(fontSize: 14),
+                      ),
+                    ),
+                  if (!isCardio)
+                    Expanded(
+                      flex: 2,
+                      child: Text(
+                        '${set.repetitions} reps',
+                        style: TextStyle(fontSize: 14),
+                      ),
+                    ),
+                  if (!isCardio)
+                    Expanded(
+                      flex: 2,
+                      child: Text(
+                        '${set.weight} kg',
+                        style: TextStyle(fontSize: 14),
+                      ),
+                    ),
+                ],
+              ),
+            ),
+        ],
+      ),
     );
   }
 
 
-  BlocBuilder<HistoryCubit, HistoryState> buildHistory() {
-    return BlocBuilder<HistoryCubit, HistoryState>(
-      bloc: historyCubit,
-      builder: (context, state) {
-        if (state is HistoryLoadingState) {
-          return Center(child: CircularProgressIndicator(
-            color: theme_green,
-            backgroundColor: theme_pink,
-          ));
-        } else if (state is HistoryLoadedState) {
-          return Column(
-            children: [
-              for (var history in state.history)
-                Text(
-                  history.notes!,
-                  style: TextStyle(color: Colors.grey),
-                ),
-            ],
-          );
-        } else if (state is HistoryErrorState) {
-          return Center(child: Text(state.message));
-        } else if (state is HistoryEmptyState) {
-          return Center(child: Text('No history found'));
-        } else if (state is NewHistoryLoadedState) {
-          historyCubit.getHistory(id: widget.exercises[0].id!);
-          return Center(child: CircularProgressIndicator(
-            color: theme_green,
-            backgroundColor: theme_pink,
-          ));
-        } else {
-          return Container();
-        }
-      },
-    );
-
+  void loadHistoryForExercise() {
+    historyCubit.getHistory(id: selectedExercise.id!);
   }
 
   @override
@@ -114,7 +209,8 @@ class _StartTrainingNewState extends State<StartTrainingNew>
     return Scaffold(
       appBar: AppBar(
         title: Text(
-            'Training - Day ${widget.dayName} / ${_getDayNameFromIndex(widget.dayIndex)}'),
+            'Training - Day ${widget.dayName} / ${_getDayNameFromIndex(
+                widget.dayIndex)}'),
         flexibleSpace: AnimateGradient(
           primaryBegin: Alignment.topLeft,
           primaryEnd: Alignment.bottomLeft,
@@ -147,7 +243,6 @@ class _StartTrainingNewState extends State<StartTrainingNew>
                   setHistory();
                 },
                 child: Text('Add History')),
-
 
             IconButton(
               icon: Icon(Icons.history),
@@ -213,7 +308,6 @@ class _StartTrainingNewState extends State<StartTrainingNew>
             secondaryMuscles: selectedExercise.secondaryMuscles,
             instructions: selectedExercise.instructions,
           ),
-
         ],
       ),
     );
@@ -239,6 +333,7 @@ class _StartTrainingNewState extends State<StartTrainingNew>
               setState(() {
                 selectedExercise = exercise;
                 finishedSets = 0;
+                loadHistoryForExercise();
               });
             },
             child: Container(
@@ -408,8 +503,8 @@ class _StartTrainingNewState extends State<StartTrainingNew>
                           color: theme_green,
                         )),
                     style: ButtonStyle(
-                        // backgroundColor: MaterialStateProperty.all(Colors.green),
-                        ),
+                      // backgroundColor: MaterialStateProperty.all(Colors.green),
+                    ),
                   ),
                 ],
               ),

@@ -1,7 +1,10 @@
 import 'package:samla_app/features/training/domain/entities/ExerciseHistory.dart';
 
-class ExerciseHistoryModel extends ExerciseHistory{
+class ExerciseHistoryModel extends ExerciseHistory {
+  final String day; // Change the type to String
+
   const ExerciseHistoryModel({
+    required this.day,
     required super.id,
     required super.exercise_library_id,
     required super.sets,
@@ -12,45 +15,62 @@ class ExerciseHistoryModel extends ExerciseHistory{
     required super.notes,
   });
 
-  @override
   factory ExerciseHistoryModel.fromJson(Map<String, dynamic> json) {
+    int? parseInt(dynamic value) {
+      if (value is int) {
+        return value;
+      } else if (value is double) {
+        return value.toInt(); // Convert double to int
+      }
+      return null; // Return null for non-numeric values
+    }
+
+    final durationValue = json['duration'];
+    final duration = durationValue is int
+        ? durationValue
+        : (durationValue is double ? durationValue.toInt() : null);
+
+    final weight = json['weight'] is int
+        ? json['weight'].toDouble() // Convert int to double
+        : (json['weight'] is double ? json['weight'] : null);
+
+    final distance = json['distance'] is int
+        ? json['distance'].toDouble() // Convert int to double
+        : (json['distance'] is double ? json['distance'] : null);
+
+    // Parse 'created_at' as a DateTime object
+    final createdAt =
+        json['created_at'] != null ? DateTime.parse(json['created_at']) : null;
+
+    // Extract the date from 'created_at' or provide a default value
+    final day = createdAt != null
+        ? "${createdAt.year}-${createdAt.month}-${createdAt.day}"
+        : 'No date'; // Provide a default value for 'day'
+
     return ExerciseHistoryModel(
       id: json['id'],
       exercise_library_id: json['exercise_library_id'],
       sets: json['sets'],
-      duration: json['duration'],
+      duration: duration,
       repetitions: json['repetitions'],
-      weight: json['weight'],
-      distance: json['distance'],
-      notes: json['notes']??'No notes',
+      weight: weight,
+      distance: distance,
+      notes: json['notes'] != null ? json['notes'].toString() : 'No notes',
+      day: day, // Include the 'day' field
     );
   }
 
-  factory ExerciseHistoryModel.fromEntity(ExerciseHistory entity) {
-    return ExerciseHistoryModel(
-      id: entity.id,
-      exercise_library_id: entity.exercise_library_id,
-      sets: entity.sets,
-      duration: entity.duration,
-      repetitions: entity.repetitions,
-      weight: entity.weight,
-      distance: entity.distance,
-      notes: entity.notes,
-    );
-  }
-
-  Map<String, String> toJson() {
+  Map<String, dynamic> toJson() {
     return {
-      'id': int.parse(id.toString()).toString(),
-      'exercise_library_id': exercise_library_id.toString(),
-      'sets': sets.toString(),
-      'duration': duration.toString(),
-      'repetitions': repetitions.toString(),
-      'weight': weight.toString(),
-      'distance': distance.toString(),
-      'notes': notes.toString(),
+      'id': id,
+      'exercise_library_id': exercise_library_id,
+      'sets': sets,
+      'duration': duration,
+      'repetitions': repetitions,
+      'weight': weight,
+      'distance': distance,
+      'notes': notes,
+      'day': day, // Include the 'day' field
     };
   }
-
-
 }
