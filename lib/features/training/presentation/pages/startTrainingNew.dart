@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:animate_gradient/animate_gradient.dart';
 import 'package:flutter/material.dart';
+import 'package:samla_app/features/training/presentation/cubit/History/history_cubit.dart';
 
 import '../../../../config/themes/common_styles.dart';
 import '../../domain/entities/ExerciseLibrary.dart';
@@ -11,6 +12,7 @@ import '../widgets/ExerciseInfoStartPage.dart';
 // import '../widgets/exercise_numbers.dart';
 import '../widgets/exercise_tile.dart';
 import 'ExDay.dart';
+import 'package:samla_app/features/training/training_di.dart' as di;
 
 // import 'package:samla_app/features/training/presentation/widgets/exercise_numbers.dart'
 class StartTrainingNew extends StatefulWidget {
@@ -38,6 +40,8 @@ class _StartTrainingNewState extends State<StartTrainingNew>
   late ExerciseLibrary selectedExercise;
 
   final baseURL = 'https://samla.mohsowa.com/api/training/image/';
+
+  final historyCubit = di.sl.get<HistoryCubit>();
 
   @override
   void initState() {
