@@ -2,11 +2,13 @@ import 'dart:convert';
 import 'package:dartz/dartz.dart';
 import 'package:samla_app/core/error/exceptions.dart';
 import 'package:samla_app/features/training/data/models/ExerciseDay_model.dart';
+import 'package:samla_app/features/training/data/models/ExerciseHistory_model.dart';
 import 'package:samla_app/features/training/data/models/exerciseLibrary_model.dart';
 import 'package:samla_app/features/training/data/models/template_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:samla_app/core/network/samlaAPI.dart';
 import 'package:samla_app/features/training/domain/entities/ExerciseDay.dart';
+import 'package:samla_app/features/training/domain/entities/ExerciseHistory.dart';
 import 'package:samla_app/features/training/domain/entities/ExerciseLibrary.dart';
 import 'package:samla_app/features/training/domain/entities/Template.dart';
 
@@ -22,6 +24,8 @@ abstract class RemoteDataSource {
   Future<List<ExerciseLibrary>> getExercisesDay({required String day, required int templateID});
   Future<Template> updateTemplateInfo(Template template);
   Future<void> removeExerciseFromPlan({required int exerciseID,required String day,required int templateID});
+  Future<List<ExerciseHistory>> getHistory(int id);
+  Future<ExerciseHistory> addHistory({required int set,required int duration,required int repetitions,required int weight,required int distance,required String notes,required int exercise_library_id});
 }
 
 class TemplateRemoteDataSourceImpl implements RemoteDataSource {
@@ -199,6 +203,39 @@ class TemplateRemoteDataSourceImpl implements RemoteDataSource {
     final resBody = await res.stream.bytesToString();
     if (res.statusCode == 200) {
       return Future.value();
+    } else {
+      throw ServerException(message: json.decode(resBody)['message']);
+    }
+  }
+
+  @override
+  Future<List<ExerciseHistory>> getHistory(int id) async {
+    final res =
+        await samlaAPI(endPoint: '/training/history/get/$id', method: 'GET');
+    final resBody = await res.stream.bytesToString();
+    if (res.statusCode == 200) {
+      final List<dynamic> history = json.decode(resBody)['exercise_history'];
+      final List<ExerciseHistoryModel> convertedHistory = history
+          .map((e) => ExerciseHistoryModel.fromJson(e as Map<String, dynamic>))
+          .toList();
+      return convertedHistory;
+    } else {
+      throw ServerException(message: json.decode(resBody)['message']);
+    }
+  }
+
+  @override
+  Future<ExerciseHistory> addHistory({required int set,required int duration,required int repetitions,required int weight,required int distance,required String notes,required int exercise_library_id}) async {
+    final res = await samlaAPI(
+        data: {'sets': set.toString(), 'duration': duration.toString(), 'repetitions': repetitions.toString(), 'weight': weight.toString(), 'distance': distance.toString(), 'notes': notes, 'exercise_library_id': exercise_library_id.toString()},
+        endPoint: '/training/history/set',
+        method: 'POST');
+    final resBody = await res.stream.bytesToString();
+    print(resBody);
+    if (res.statusCode == 201) {
+      final ExerciseHistoryModel convertedHistory =
+          ExerciseHistoryModel.fromJson(json.decode(resBody)['exercise_history']);
+      return convertedHistory;
     } else {
       throw ServerException(message: json.decode(resBody)['message']);
     }

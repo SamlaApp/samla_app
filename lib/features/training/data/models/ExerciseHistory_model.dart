@@ -16,13 +16,13 @@ class ExerciseHistoryModel extends ExerciseHistory{
   factory ExerciseHistoryModel.fromJson(Map<String, dynamic> json) {
     return ExerciseHistoryModel(
       id: json['id'],
-      exercise_library_id: int.parse(json['exercise_library_id']),
+      exercise_library_id: json['exercise_library_id'],
       sets: json['sets'],
       duration: json['duration'],
       repetitions: json['repetitions'],
       weight: json['weight'],
       distance: json['distance'],
-      notes: json['notes'],
+      notes: json['notes']??'No notes',
     );
   }
 

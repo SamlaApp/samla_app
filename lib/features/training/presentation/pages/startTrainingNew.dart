@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:animate_gradient/animate_gradient.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:samla_app/features/training/domain/entities/ExerciseHistory.dart';
 import 'package:samla_app/features/training/presentation/cubit/History/history_cubit.dart';
 
 import '../../../../config/themes/common_styles.dart';
@@ -46,11 +48,65 @@ class _StartTrainingNewState extends State<StartTrainingNew>
   @override
   void initState() {
     super.initState();
+
+    historyCubit.getHistory(id: widget.exercises[0].id!);
+
     if (widget.exercises.isNotEmpty) {
       selectedExercise = widget.exercises[0];
       countdownValue = 0;
       finishedSets = 0;
     }
+  }
+
+
+  void setHistory() {
+    historyCubit.addHistory(
+      set: 1,
+      duration: 1,
+      repetitions: 1,
+      weight: 1,
+      distance: 1,
+      notes: 'test',
+      exercise_library_id: 664,
+    );
+  }
+
+
+  BlocBuilder<HistoryCubit, HistoryState> buildHistory() {
+    return BlocBuilder<HistoryCubit, HistoryState>(
+      bloc: historyCubit,
+      builder: (context, state) {
+        if (state is HistoryLoadingState) {
+          return Center(child: CircularProgressIndicator(
+            color: theme_green,
+            backgroundColor: theme_pink,
+          ));
+        } else if (state is HistoryLoadedState) {
+          return Column(
+            children: [
+              for (var history in state.history)
+                Text(
+                  history.notes!,
+                  style: TextStyle(color: Colors.grey),
+                ),
+            ],
+          );
+        } else if (state is HistoryErrorState) {
+          return Center(child: Text(state.message));
+        } else if (state is HistoryEmptyState) {
+          return Center(child: Text('No history found'));
+        } else if (state is NewHistoryLoadedState) {
+          historyCubit.getHistory(id: widget.exercises[0].id!);
+          return Center(child: CircularProgressIndicator(
+            color: theme_green,
+            backgroundColor: theme_pink,
+          ));
+        } else {
+          return Container();
+        }
+      },
+    );
+
   }
 
   @override
@@ -83,6 +139,16 @@ class _StartTrainingNewState extends State<StartTrainingNew>
             // ExerciseInfoSection(selectedExercise: selectedExercise), // Pass selectedExercise
             // _buildProgressSection(),
             buildProgressSection(),
+
+            buildHistory(),
+
+            ElevatedButton(
+                onPressed: () {
+                  setHistory();
+                },
+                child: Text('Add History')),
+
+
             IconButton(
               icon: Icon(Icons.history),
               onPressed: () {
@@ -147,6 +213,7 @@ class _StartTrainingNewState extends State<StartTrainingNew>
             secondaryMuscles: selectedExercise.secondaryMuscles,
             instructions: selectedExercise.instructions,
           ),
+
         ],
       ),
     );
