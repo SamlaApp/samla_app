@@ -22,7 +22,16 @@ class ExerciseLibrary extends Equatable {
   });
 
   @override
-  List<Object?> get props => [id, name, bodyPart, equipment, gifUrl, target, instructions, secondaryMuscles];
+  List<Object?> get props => [
+        id,
+        name,
+        bodyPart,
+        equipment,
+        gifUrl,
+        target,
+        instructions,
+        secondaryMuscles
+      ];
 
   ExerciseLibrary copyWith({
     int? id,
