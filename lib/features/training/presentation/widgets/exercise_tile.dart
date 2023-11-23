@@ -96,100 +96,7 @@ class _ExerciseTileState extends State<ExerciseTile> {
                     ),
                   Divider(),
                   ExerciseNumbersWidget(),
-                  // Row(
-                  //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //   children: [
-                  //     Text('Set      ',
-                  //         style: TextStyle(fontWeight: FontWeight.bold)),
-                  //     Text('Previous  ',
-                  //         style: TextStyle(fontWeight: FontWeight.bold)),
-                  //     Expanded(
-                  //         child: Text('                  Reps',
-                  //             textAlign: TextAlign.center,
-                  //             style: TextStyle(fontWeight: FontWeight.bold))),
-                  //     Expanded(
-                  //         child: Text('Kg',
-                  //             textAlign: TextAlign.center,
-                  //             style: TextStyle(fontWeight: FontWeight.bold))),
-                  //     SizedBox(width: 24.0), // Placeholder for checkbox
-                  //   ],
-                  // ),
-                  // Column(
-                  //   children: sets.asMap().entries.map((entry) {
-                  //     int idx = entry.key;
-                  //     SetData set = entry.value;
-                  //     final Key dismissibleKey =
-                  //         UniqueKey(); // Generate a unique key
-                  //     return Dismissible(
-                  //       key: dismissibleKey,
-                  //       onDismissed: (direction) {
-                  //         setState(() {
-                  //           sets.removeAt(idx);
-                  //         });
-                  //       },
-                  //       background: Container(
-                  //         color: Colors.red,
-                  //         alignment: Alignment.centerRight,
-                  //         padding: EdgeInsets.only(right: 16),
-                  //         child: Icon(
-                  //           Icons.delete,
-                  //           color: Colors.white,
-                  //         ),
-                  //       ),
-                  //       child: ListTile(
-                  //         title: Row(
-                  //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //           children: [
-                  //             Text('${idx + 1}'),
-                  //             SizedBox(width: 40.0),
-                  //             Text('${set.previousReps} x ${set.previousKg}kg',
-                  //                 style: TextStyle(color: Colors.grey[600])),
-                  //             Spacer(),
-                  //             Expanded(
-                  //               child: TextFormField(
-                  //                 decoration: InputDecoration(
-                  //                   border: OutlineInputBorder(),
-                  //                 ),
-                  //                 textAlign: TextAlign.center,
-                  //                 keyboardType: TextInputType.number,
-                  //                 initialValue: set.reps.toString(),
-                  //                 onChanged: (value) {
-                  //                   set.reps = int.tryParse(value) ?? 0;
-                  //                 },
-                  //               ),
-                  //             ),
-                  //             SizedBox(width: 10.0),
-                  //             Expanded(
-                  //               child: TextFormField(
-                  //                 decoration: InputDecoration(
-                  //                   border: OutlineInputBorder(),
-                  //                 ),
-                  //                 textAlign: TextAlign.center,
-                  //                 keyboardType: TextInputType.number,
-                  //                 initialValue: set.kg.toString(),
-                  //                 onChanged: (value) {
-                  //                   set.kg = double.tryParse(value) ?? 0.0;
-                  //                 },
-                  //               ),
-                  //             ),
-                  //             Checkbox(
-                  //               value: set.isDone,
-                  //               onChanged: (bool? value) {
-                  //                 setState(() {
-                  //                   set.isDone = value!;
-                  //                 });
-                  //               },
-                  //               shape: RoundedRectangleBorder(
-                  //                 borderRadius: BorderRadius.circular(6.0),
-                  //               ),
-                  //               activeColor: theme_green,
-                  //             ),
-                  //           ],
-                  //         ),
-                  //       ),
-                  //     );
-                  //   }).toList(),
-                  // ),
+
                   SizedBox(height: 16),
 
                   Column(children: [
@@ -253,8 +160,8 @@ class _ExerciseTileState extends State<ExerciseTile> {
                           color: theme_green,
                         )),
                     style: ButtonStyle(
-                        // backgroundColor: MaterialStateProperty.all(Colors.green),
-                        ),
+                      // backgroundColor: MaterialStateProperty.all(Colors.green),
+                    ),
                   ),
                 ],
               ),

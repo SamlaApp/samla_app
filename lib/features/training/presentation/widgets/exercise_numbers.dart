@@ -8,6 +8,9 @@ class ExerciseNumbersWidget extends StatelessWidget {
     super.key,
   });
 
+  final int setsNumber = 3;
+  final int finishedSets = 0;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -29,7 +32,7 @@ class ExerciseNumbersWidget extends StatelessWidget {
           ),
           buildButton(
             context,
-            '0/4',
+            '${finishedSets}/${setsNumber}',
             'Sets',
           )
         ],
