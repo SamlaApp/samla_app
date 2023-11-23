@@ -22,16 +22,22 @@ class ExercisesItem {
   });
 }
 
-class ExerciseTiles extends StatelessWidget {
+class ExerciseTiles extends StatefulWidget {
   final ExercisesItem exercise;
 
   const ExerciseTiles({super.key, required this.exercise});
 
-  final baseURL =
-      'https://samla.mohsowa.com/api/training/image/'; // api url for images
-  String capitalize(String s) =>
-      s[0].toUpperCase() + s.substring(1); // capitalize first letter of string
+  @override
+  State<ExerciseTiles> createState() => _ExerciseTilesState();
+}
 
+class _ExerciseTilesState extends State<ExerciseTiles> {
+  final baseURL = 'https://samla.mohsowa.com/api/training/image/';
+
+  // api url for images
+  String capitalize(String s) => s[0].toUpperCase() + s.substring(1);
+
+  // capitalize first letter of string
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -52,7 +58,7 @@ class ExerciseTiles extends StatelessWidget {
               decoration: BoxDecoration(
                 borderRadius: const BorderRadius.all(Radius.circular(8.0)),
                 image: DecorationImage(
-                  image: NetworkImage(baseURL + exercise.gifUrl),
+                  image: NetworkImage(baseURL + widget.exercise.gifUrl),
                   fit: BoxFit.cover,
                 ),
               ),
@@ -65,7 +71,7 @@ class ExerciseTiles extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      capitalize(exercise.name),
+                      capitalize(widget.exercise.name),
                       style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
@@ -90,6 +96,22 @@ class ExerciseTiles extends StatelessWidget {
   }
 
   void _showExerciseDetails(BuildContext context) {
+    List<bool> isSelected = [false, true]; // Initial state of toggle buttons
+    List<String> toggleButtonLabels = [
+      'All Info',
+      'GIF Alone'
+    ]; // Button labels
+
+    void onToggleButtonSelected(int index) {
+      setState(() {
+        for (int buttonIndex = 0;
+            buttonIndex < isSelected.length;
+            buttonIndex++) {
+          isSelected[buttonIndex] = buttonIndex == index;
+        }
+      });
+    }
+
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -99,7 +121,6 @@ class ExerciseTiles extends StatelessWidget {
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
           backgroundColor: Colors.white,
           child: Container(
-            // take 90% of screen width
             width: MediaQuery.of(context).size.width * 0.9,
             child: Padding(
               padding: const EdgeInsets.all(8.0),
@@ -110,33 +131,34 @@ class ExerciseTiles extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Row(
-                      //center image
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(8.0),
-                          child: Image.network(
-                            baseURL + exercise.gifUrl,
-                            width: 200,
-                            height: 200,
-                            fit: BoxFit.cover,
+                        if (!isSelected[
+                            1]) // Conditionally show the image based on toggle button state
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(8.0),
+                            child: Image.network(
+                              baseURL + widget.exercise.gifUrl,
+                              width: 200,
+                              height: 200,
+                              fit: BoxFit.cover,
+                            ),
                           ),
-                        ),
-
                         Column(
                           children: [
-                            CustomBorderContainer('BodyPart', exercise.bodyPart),
-                            CustomBorderContainer('Equipment', exercise.equipment),
-                            CustomBorderContainer('Target', exercise.target),
+                            CustomBorderContainer(
+                                'BodyPart', widget.exercise.bodyPart),
+                            CustomBorderContainer(
+                                'Equipment', widget.exercise.equipment),
+                            CustomBorderContainer(
+                                'Target', widget.exercise.target),
                             CustomBorderContainer('Secondary Muscles',
-                                exercise.secondaryMuscles.join(', ')),
+                                widget.exercise.secondaryMuscles.join(', ')),
                           ],
                         ),
                       ],
                     ),
                   ),
-
-
                   const Divider(
                     color: Colors.grey,
                     height: 10,
@@ -144,15 +166,13 @@ class ExerciseTiles extends StatelessWidget {
                     indent: 0,
                     endIndent: 0,
                   ),
-
-                  //Instructions
                   Container(
                     padding: const EdgeInsets.all(8.0),
                     width: MediaQuery.of(context).size.width * 0.9,
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Text(
-                        exercise.instructions,
+                        widget.exercise.instructions,
                         style: const TextStyle(
                           fontSize: 12,
                           color: Colors.grey,
@@ -160,25 +180,38 @@ class ExerciseTiles extends StatelessWidget {
                           overflow: TextOverflow.visible,
                           decoration: TextDecoration.none,
                         ),
-                          softWrap: true,
-                          overflow: TextOverflow.visible,
-                          textAlign: TextAlign.justify,
+                        softWrap: true,
+                        overflow: TextOverflow.visible,
+                        textAlign: TextAlign.justify,
                       ),
                     ),
                   ),
-
-                  // Close button
+                  // Toggle buttons to control GIF visibility
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ToggleButtons(
+                          isSelected: isSelected,
+                          onPressed: onToggleButtonSelected,
+                          children: toggleButtonLabels
+                              .map((label) => Text(label))
+                              .toList(),
+                        ),
+                      ],
+                    ),
+                  ),
                   Center(
                     child: Padding(
                       padding: const EdgeInsets.only(bottom: 8.0),
                       child: ElevatedButton.icon(
                         icon: const Icon(Icons.close),
                         style: ElevatedButton.styleFrom(
-                          backgroundColor:
-                              theme_darkblue, // Change background color
+                          backgroundColor: theme_darkblue,
                         ),
                         onPressed: () {
-                          Navigator.of(context).pop(); // Close the dialog
+                          Navigator.of(context).pop();
                         },
                         label: const Text('Close'),
                       ),

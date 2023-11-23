@@ -51,7 +51,7 @@ class ChatMessageWidget extends StatelessWidget {
                     style: Theme.of(context)
                         .textTheme
                         .bodyLarge
-                        ?.copyWith(color: Colors.grey.shade700),
+                        ?.copyWith(color: Colors.grey.shade700, fontSize: 16),
                   ),
                 ),
               ],
