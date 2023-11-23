@@ -43,6 +43,8 @@ Future<Map<String, dynamic>> getNutritionSummary() async {
   final res = await samlaAPI(endPoint: '/nutrition/summary/total', method: 'GET');
   final resBody = await res.stream.bytesToString();
 
+  print(resBody);
+
   if (res.statusCode == 200) {
     // if resBody is empty or only one element, add empty element
     if(json.decode(resBody)['nutrition_summary'].length == 0){
@@ -61,8 +63,9 @@ Future<Map<String, dynamic>> getNutritionSummary() async {
         "total_calories": 0,
         ...json.decode(resBody)['nutrition_summary'][0]
       };
+    }else{
+      return json.decode(resBody)['nutrition_summary'][0];
     }
-    return json.decode(resBody)['nutrition_summary'];
   } else {
     throw ServerException(message: json.decode(resBody)['message']);
   }
