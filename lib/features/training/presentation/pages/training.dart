@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:samla_app/features/training/presentation/cubit/Templates/template_cubit.dart';
 import 'package:samla_app/features/training/presentation/pages/startTrainig.dart';
+import 'package:samla_app/features/training/presentation/pages/startTrainingNew.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import '../../../../config/themes/common_styles.dart';
 import '../../domain/entities/ExerciseLibrary.dart';
@@ -218,7 +219,11 @@ class _TrainingPageState extends State<TrainingPage> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => StartTraining(dayIndex: index, templateId: state.template.id!),
+                                    builder: (context) => StartTrainingNew(
+                                      dayName: dayNameFromTemplate, // Pass the day name from the template
+                                      dayIndex: index, // Pass the day index directly
+                                      exercises: weeklyExercises[_getDayNameFromIndex(index)] ?? [],
+                                    ),
                                   ),
                                 );
                               },
