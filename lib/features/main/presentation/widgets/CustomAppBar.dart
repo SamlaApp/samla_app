@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:samla_app/config/themes/new_style.dart';
-import 'package:samla_app/core/widgets/image_viewer.dart';
 import 'package:samla_app/features/auth/auth_injection_container.dart' as di;
 import 'package:samla_app/features/auth/auth_injection_container.dart';
 import 'package:samla_app/features/auth/presentation/bloc/auth_bloc.dart';
@@ -37,21 +36,33 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                   GestureDetector(
                     onTap: () => Navigator.pushNamed(context, '/Profile'),
                     child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        CircleAvatar(
-                          backgroundColor: Colors.white,
-                          radius: 21,
-                          child: ImageViewer.network(
-                            imageURL:user.photoUrl,
-                            width: 42,
-                            height: 42,
-                            placeholderImagePath: 'images/defaults/user.png',
-                            viewerMode: false,
-                          )
+                        Image.asset(
+                          'images/Logo/2x/Icon_1@2x.png',
+                          width: 42,
+                          height: 42,
                         ),
-                        const SizedBox(width: 10),
-                        
+
+                        const SizedBox(
+                          width: 10,
+                        ),
+
+                        const Text(
+                          'SAMLA',
+                          style: TextStyle(
+                            fontFamily: 'Cairo',
+                              fontSize: 24,
+                              color: white,
+                              fontWeight: FontWeight.w900
+                          ),
+
+                        ),
+
                       ],
+
                     ),
                   ),
                   // row of upper buttons

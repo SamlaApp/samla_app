@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:samla_app/config/themes/new_style.dart';
+import 'package:samla_app/core/widgets/image_viewer.dart';
 import 'package:samla_app/features/main/presentation/cubits/StreakCubit/streak_cubit.dart';
 import 'package:samla_app/features/main/presentation/widgets/CircularIndicators.dart';
 import 'package:samla_app/features/main/presentation/widgets/WeeklyProgress.dart';
@@ -86,12 +87,27 @@ class _HomeState extends State<HomePage> {
 
             // Welcome Container
             Container(
-              padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+              padding: const EdgeInsets.fromLTRB(0, 30, 0, 0),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
+
+                  CircleAvatar(
+                      backgroundColor: Colors.white,
+                      radius: 21,
+                      child: ImageViewer.network(
+                        imageURL:user.photoUrl,
+                        width: 42,
+                        height: 42,
+                        placeholderImagePath: 'images/defaults/user.png',
+                        viewerMode: false,
+                      )
+                  ),
+
+                  const SizedBox(width: 10),
+
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
                     children: [
                        Text(
                         'Welcome,',
@@ -101,51 +117,58 @@ class _HomeState extends State<HomePage> {
                           color: white.withOpacity(0.6),
                         ),
                       ),
+
                       Text(
                         user.name,
-                        style:  TextStyle(
-                          fontSize: 24,
+                        style:  const TextStyle(
+                          fontSize: 20,
                           fontWeight: FontWeight.w700,
-                          color: themeBlue.withOpacity(0.8),
+                          color: white,
                         ),
                       ),
                     ],
                   ),
 
-                  // Streak Container
-                  Container(
-                    padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
-                    decoration: BoxDecoration(
-                      gradient: const LinearGradient(
-                        colors: [
-                          themeOrange,
-                          themePink,
-                        ],
-                        begin: Alignment.bottomLeft,
-                        end: Alignment.topRight,
-                      ),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Row(
-                      children: [
-                         const Icon(
-                          Icons.local_fire_department,
-                          color: white,
-                          size: 20,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(
+                        alignment: Alignment.center,
+                        height: 30,
+                        padding: const EdgeInsets.fromLTRB(25, 0, 25, 0),
+                        margin: const EdgeInsets.only(left: 50),
+                        decoration: BoxDecoration(
+                          gradient: const LinearGradient(
+                            colors: [
+                              themeOrange,
+                              themePink,
+                            ],
+                            begin: Alignment.bottomLeft,
+                            end: Alignment.topRight,
+                          ),
+                          borderRadius: BorderRadius.circular(10),
                         ),
-                        const SizedBox(width: 5),
-                        buildStreakStatus(),
-                      ],
-                    ),
+                        child: Row(
+                          children: [
+                            const Icon(
+                              Icons.local_fire_department,
+                              color: white,
+                              size: 20,
+                            ),
+                            const SizedBox(width: 5),
+                            buildStreakStatus(),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
 
                 ],
               ),
             ),
 
-            const SizedBox(height: 30),
 
-
+            const SizedBox(height: 40),
             const Wrap(direction: Axis.horizontal, runSpacing: 25, children: [
 
               CircularIndicators(),
