@@ -193,9 +193,7 @@ class _ImageViewerState extends State<ImageViewer> {
     return CircleAvatar(
         backgroundColor: inputField_color,
         radius: widget.width / 2,
-        child: imageWidget != null
-            ? imageWidget
-            : widget.placeholderImagePath != null
+        child: imageWidget ?? (widget.placeholderImagePath != null
                 ? ClipOval(child: Image.asset(widget.placeholderImagePath!))
                 : widget.editableCallback != null
                     ? Container(
@@ -207,7 +205,7 @@ class _ImageViewerState extends State<ImageViewer> {
                             color: themeDarkBlue.withOpacity(0.3)),
                       )
                     : throw Exception(
-                        'neither imageFile or imgeURL or ImageAsset or editableCallback must be passed '));
+                        'neither imageFile or imgeURL or ImageAsset or editableCallback must be passed ')));
   }
 
   Container RectanagularWidget(Widget? imageWidget) {

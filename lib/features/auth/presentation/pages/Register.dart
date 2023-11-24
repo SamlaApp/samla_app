@@ -3,7 +3,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
-import 'package:samla_app/config/themes/common_styles.dart';
+import 'package:samla_app/config/themes/new_style.dart';
 import 'package:samla_app/core/widgets/loading.dart';
 import 'package:samla_app/features/auth/auth_injection_container.dart' as di;
 import 'package:samla_app/features/setup/welcomePage.dart';
@@ -77,7 +77,7 @@ class _RegisterState extends State<RegisterPage> {
           SchedulerBinding.instance.addPostFrameCallback((_) {
             Navigator.of(context).pushReplacement(
               MaterialPageRoute(
-                builder: (context) => WelcomePage(),
+                builder: (context) => const WelcomePage(),
               ),
             );
           });
@@ -109,10 +109,10 @@ class _RegisterState extends State<RegisterPage> {
                           'images/Logo/2x/Icon_1@2x.png',
                           height: 60,
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 12,
                         ),
-                        Text(
+                        const Text(
                           'Sign Up to Samla',
                           style: TextStyle(
                             fontSize: 18,
@@ -136,7 +136,7 @@ class _RegisterState extends State<RegisterPage> {
                   ),
                 ),
 
-                SizedBox(
+                const SizedBox(
                   height: 40,
                 ),
 
@@ -160,7 +160,7 @@ class _RegisterState extends State<RegisterPage> {
                             },
                           ),
 
-                          SizedBox(
+                          const SizedBox(
                             height: 10,
                           ),
 
@@ -181,7 +181,7 @@ class _RegisterState extends State<RegisterPage> {
                           ),
 
                           // Email
-                          SizedBox(
+                          const SizedBox(
                             height: 10,
                           ),
 
@@ -202,36 +202,10 @@ class _RegisterState extends State<RegisterPage> {
                           ),
 
                           // Mobile
-                          SizedBox(
+                          const SizedBox(
                             height: 10,
                           ),
 
-                          // InternationalPhoneNumberInput(
-                          //   selectorConfig: const SelectorConfig(
-                          //     selectorType: PhoneInputSelectorType.BOTTOM_SHEET,
-                          //   ),
-                          //   onInputChanged: (PhoneNumber number) {
-                          //     print(number.toString());
-                          //   },
-                          //   initialValue: PhoneNumber(isoCode: 'SA'),
-                          //   inputDecoration: InputDecoration(
-                          //     border: OutlineInputBorder(
-                          //       borderRadius: BorderRadius.all(
-                          //         Radius.circular(10),
-                          //       ),
-                          //       borderSide: BorderSide(
-                          //         color: theme_green,
-                          //       ),
-                          //     ),
-                          //     focusedBorder: OutlineInputBorder(
-                          //       borderRadius: BorderRadius.all(
-                          //         Radius.circular(10),
-                          //       ),
-                          //       borderSide: BorderSide(color: theme_green),
-                          //     ),
-                          //     labelText: 'Mobile Number',
-                          //   ),
-                          // ),
                           InternationalPhoneNumberInput(
                             onInputChanged: (PhoneNumber number) {
                               print(number.phoneNumber);
@@ -241,22 +215,43 @@ class _RegisterState extends State<RegisterPage> {
                               print(value);
                             },
                             initialValue: PhoneNumber(isoCode: 'SA'),
-                            selectorConfig: SelectorConfig(
+                            selectorConfig: const SelectorConfig(
                               selectorType: PhoneInputSelectorType.BOTTOM_SHEET,
                             ),
                             ignoreBlank: true,
                             autoValidateMode:
                                 AutovalidateMode.onUserInteraction,
-                            selectorTextStyle: TextStyle(color: Colors.black),
+                            selectorTextStyle: const TextStyle(color: Colors.black),
                             textFieldController: _phoneController,
                             formatInput: false,
-                            keyboardType: TextInputType.numberWithOptions(
+                            keyboardType: const TextInputType.numberWithOptions(
                                 signed: true, decimal: true),
-                            inputBorder: OutlineInputBorder(),
+                            inputBorder: const OutlineInputBorder(),
+                            inputDecoration: const InputDecoration(
+                              hintText: 'Phone Number',
+                              hintStyle: TextStyle(color: themeDarkBlue),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Color.fromRGBO(64, 194, 210, 1),
+                                ),
+                              ),
+                              errorBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Colors.red,
+                                ),
+                              ),
+                              focusedErrorBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Colors.red,
+                                ),
+                              ),
+                              contentPadding: EdgeInsets.symmetric(
+                                  vertical: 15, horizontal: 20),
+                            ),
                           ),
 
                           // Date of Birth
-                          SizedBox(
+                          const SizedBox(
                             height: 10,
                           ),
 
@@ -316,7 +311,7 @@ class _RegisterState extends State<RegisterPage> {
                           ),
 
                           // Password
-                          SizedBox(
+                          const SizedBox(
                             height: 10,
                           ),
                           TextFormField(
@@ -324,16 +319,16 @@ class _RegisterState extends State<RegisterPage> {
                             decoration: InputDecoration(
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10),
-                                borderSide: BorderSide(
+                                borderSide: const BorderSide(
                                   color: themeBlue,
                                 ),
                               ),
-                              prefixIcon: Icon(Icons.key, color: themeBlue),
+                              prefixIcon: const Icon(Icons.key, color: themeBlue),
                               hintText: 'Password',
                               labelText: 'Password',
                               focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10),
-                                borderSide: BorderSide(
+                                borderSide: const BorderSide(
                                   color: themeBlue,
                                 ),
                               ),
@@ -361,7 +356,7 @@ class _RegisterState extends State<RegisterPage> {
                             },
                           ),
 
-                          SizedBox(
+                          const SizedBox(
                             height: 40,
                           ),
 
@@ -380,9 +375,12 @@ class _RegisterState extends State<RegisterPage> {
                                 _Register();
                               }
                             },
-                            child: const Text('Register'),
+                            child: const Text('Register',
+                                style: TextStyle(
+                                  color: white,
+                                )),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 20,
                           ),
                           Container(
@@ -449,16 +447,16 @@ class CustomTextField extends StatelessWidget {
       decoration: InputDecoration(
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide(
+          borderSide: const BorderSide(
             color: themeBlue,
           ),
         ),
-        prefixIcon: Icon(iconData, color: Color.fromRGBO(64, 194, 210, 1)),
+        prefixIcon: Icon(iconData, color: const Color.fromRGBO(64, 194, 210, 1)),
         hintText: hintText,
         labelText: hintText,
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide(
+          borderSide: const BorderSide(
             color: themeBlue,
           ),
         ),

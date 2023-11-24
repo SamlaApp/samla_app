@@ -70,6 +70,17 @@ Future<Map<String, dynamic>> getNutritionSummary() async {
     throw ServerException(message: json.decode(resBody)['message']);
   }
 }
+// /training/summary/get
+
+Future<Map<String, dynamic>> getTrainingSummary() async {
+  final res = await samlaAPI(endPoint: '/training/summary/get', method: 'GET');
+  final resBody = await res.stream.bytesToString();
+  if (res.statusCode == 200) {
+    return json.decode(resBody)['summary'];
+  } else {
+    throw ServerException(message: json.decode(resBody)['message']);
+  }
+}
 
 
 Future<String> generateResponse(String prompt,List<ChatMessage> _messages) async {
@@ -111,6 +122,10 @@ Future<String> generateResponse(String prompt,List<ChatMessage> _messages) async
         {
           "role": "system",
           "content": "this is my progress data: as json string => ${await getProgress()}"
+        },
+        {
+          "role": "system",
+          "content": "this is my training summary data: as json string => ${await getTrainingSummary()}"
         },
         for(var i in _messages)
           {

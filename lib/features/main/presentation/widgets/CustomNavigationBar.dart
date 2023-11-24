@@ -26,7 +26,7 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         iconTheme: MaterialStateProperty.all(
-          const IconThemeData(
+           IconThemeData(
             size: 25,
             color: themeGrey,
           ),

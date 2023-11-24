@@ -165,7 +165,14 @@ class _TodayPlanState extends State<TodayPlan> {
             ),
             if (true)
               Expanded(
-                child: getTodayPlans(backgroundGradient),
+                child: getTodayPlans(new LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    themeBlue,
+                    Colors.blueAccent,
+                  ],
+                )),
               ),
           ],
         ));

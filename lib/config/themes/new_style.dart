@@ -8,11 +8,9 @@ const Color themeRed = Color.fromRGBO(117, 20, 22, 1);
 // F7923F
 const Color themeOrange = Color.fromRGBO(247, 146, 63, 1);
 
-const Color primaryColor = Color.fromRGBO(10, 10, 10, 0.1);
-const Color inputFieldColor =
-    Color.fromRGBO(255, 255, 255, 0.1); // Adjusted for dark background
-const Color themeGrey =
-    Color.fromRGBO(255, 255, 255, 0.5); // Adjusted for dark background
+Color primaryColor = themeDarkBlue.withOpacity(0.8);
+const Color inputFieldColor = Colors.white;
+Color themeGrey = themeDarkBlue.withOpacity(0.5);
 const Color white =
     Color.fromRGBO(255, 255, 255, 1); // Adjusted for dark background
 
@@ -22,16 +20,31 @@ ThemeData lightTheme = ThemeData(
   primaryColor: primaryColor,
 
   // Colors Scheme for dark theme
-  colorScheme: const ColorScheme.dark(
-    primary: white,
+  colorScheme: ColorScheme.dark(
+    primary: themeDarkBlue,
     secondary: themePink,
-    background: themeDarkBlue,
-    surface: themeDarkBlue,
-    onPrimary: white,
+    background: white,
+    surface: white,
+    onPrimary: themeDarkBlue,
     onSecondary: white,
-    onBackground: white,
-    onSurface: white,
+    onBackground: themeDarkBlue.withOpacity(0.5),
+    onSurface: themeDarkBlue.withOpacity(0.5),
   ),
+
+  // main font is cairo
+  textTheme: GoogleFonts.cairoTextTheme(),
+  primaryTextTheme: GoogleFonts.cairoTextTheme(),
+
+  // card theme
+  cardTheme: CardTheme(
+    color: white,
+    shadowColor: themeDarkBlue.withOpacity(0.1),
+    elevation: 0,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(12),
+    ),
+  ),
+
 );
 
 BoxDecoration primaryDecoration =  BoxDecoration(
@@ -46,12 +59,6 @@ BoxDecoration primaryDecoration =  BoxDecoration(
     boxShadow: [boxShadow]
 );
 
-
-const backgroundGradient = LinearGradient(
-  colors: [Color.fromRGBO(0, 34, 51, 1), Color.fromRGBO(0, 113, 130, 1)],
-  begin: Alignment.bottomLeft,
-  end: Alignment.topRight,
-);
 
 BoxShadow boxShadow = BoxShadow(
   color: themeDarkBlue.withOpacity(0.05),

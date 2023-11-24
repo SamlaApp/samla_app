@@ -177,7 +177,7 @@ class _CommunityPageState extends State<CommunityPage> {
                             controller: textController,
                             iconData: Icons.text_fields_rounded,
                             label: 'Post description',
-                            textArealike: true,
+                            textAreaLike: true,
                           ),
                           const SizedBox(height: 20),
                           Row(

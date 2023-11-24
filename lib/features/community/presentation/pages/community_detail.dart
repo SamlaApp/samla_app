@@ -1,11 +1,8 @@
-import 'dart:io';
-import 'dart:math';
-
 import 'package:animate_gradient/animate_gradient.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:samla_app/config/themes/common_styles.dart';
+import 'package:samla_app/config/themes/new_style.dart';
 import 'package:samla_app/core/widgets/ConfirmationModal.dart';
 import 'package:samla_app/core/widgets/CustomTextFormField.dart';
 import 'package:samla_app/core/widgets/image_viewer.dart';
@@ -56,17 +53,10 @@ class CommunityDetail extends StatelessWidget {
         builder: (context) {
           final controller = TextEditingController(text: initialValue);
           return AlertDialog(
-            actions: [
-              TextButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: Text(
-                    'Close',
-                    style: TextStyle(color: theme_grey),
-                  ))
-            ],
-            content: Container(
+            backgroundColor: white,
+            surfaceTintColor: white,
+            content: Padding(
+              padding: const EdgeInsets.all(8.0),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -78,7 +68,7 @@ class CommunityDetail extends StatelessWidget {
                         decoration: TextDecoration.none,
                         color: themeDarkBlue.withOpacity(0.95)),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 10,
                   ),
                   CustomTextFormField(
@@ -87,31 +77,53 @@ class CommunityDetail extends StatelessWidget {
                     label: label,
                     iconData: Icons.edit,
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 20,
                   ),
-                  Container(
-                    width: 250,
-                    height: 40,
-                    decoration: primary_decoration.copyWith(color: themeBlue),
-                    child: TextButton.icon(
-                      // stretch the button
 
-                      icon: Icon(
-                        Icons.save,
-                        color: Colors.white,
-                      ),
-                      onPressed: () {
-                        if (controller.text.isNotEmpty) {
-                          callback(controller.text);
+
+                  Row(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      TextButton.icon(
+                        style: TextButton.styleFrom(
+                          backgroundColor: white,
+                        ),
+
+                        icon: const Icon(
+                          Icons.cancel,
+                          color: themeRed,
+                        ),
+                        onPressed: () {
                           Navigator.pop(context);
-                        }
-                      },
-                      label: Text(
-                        'Save',
-                        style: TextStyle(color: Colors.white),
+                        },
+                        label: const Text(
+                          'Cancel',
+                          style: TextStyle(color: themeRed),
+                        ),
                       ),
-                    ),
+                      TextButton.icon(
+                        // stretch the button
+                        style: TextButton.styleFrom(
+                          backgroundColor: themeBlue,
+                        ),
+                        icon: const Icon(
+                          Icons.save,
+                          color: Colors.white,
+                        ),
+                        onPressed: () {
+                          if (controller.text.isNotEmpty) {
+                            callback(controller.text);
+                            Navigator.pop(context);
+                          }
+                        },
+                        label: const Text(
+                          'update',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -147,16 +159,15 @@ class CommunityDetail extends StatelessWidget {
           }
 
           return Scaffold(
-            // appBar: GradientAppBar(context),
             body: SingleChildScrollView(
               child: Stack(
                 children: [
                   Positioned(
-                    child: GradientAppBar(
+                    child: gradientAppBar(
                         context, userRole, community, requestsCubit),
                   ),
                   Container(
-                    padding: EdgeInsets.all(20),
+                    padding: const EdgeInsets.all(20),
                     width: double.infinity,
                     child: SafeArea(
                       child: Flex(
@@ -164,8 +175,8 @@ class CommunityDetail extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             // main contents
-                            SizedBox(
-                              height: 80,
+                            const SizedBox(
+                              height: 60,
                             ),
 
                             ImageViewer.network(
@@ -184,7 +195,7 @@ class CommunityDetail extends StatelessWidget {
                               animationTag: 'imageHero',
                             ),
 
-                            SizedBox(height: 10),
+                            const SizedBox(height: 10),
 
                             GestureDetector(
                               onTap: () {
@@ -214,7 +225,7 @@ class CommunityDetail extends StatelessWidget {
                                       color: themeDarkBlue.withOpacity(0.95))),
                             ),
 
-                            SizedBox(height: 5),
+                            const SizedBox(height: 5),
 
                             // community handle
                             GestureDetector(
@@ -241,7 +252,7 @@ class CommunityDetail extends StatelessWidget {
                                               .addPostFrameCallback((_) {
                                             ScaffoldMessenger.of(context)
                                                 .showSnackBar(
-                                              SnackBar(
+                                              const SnackBar(
                                                 content: Text(
                                                     'Handle is already the same'),
                                               ),
@@ -259,7 +270,7 @@ class CommunityDetail extends StatelessWidget {
                                       color: themeDarkBlue.withOpacity(0.5))),
                             ),
 
-                            SizedBox(height: 30),
+                            const SizedBox(height: 30),
 
                             // row of number of memebers and public/private
                             MermbersCountWidget(
@@ -272,7 +283,7 @@ class CommunityDetail extends StatelessWidget {
                               requestsCubit: requestsCubit,
                               communityID: community.id!,
                             ),
-                            SizedBox(height: 10),
+                            const SizedBox(height: 10),
 
                             GestureDetector(
                                 onTap: () {
@@ -296,14 +307,14 @@ class CommunityDetail extends StatelessWidget {
                                 },
                                 child: OverViewWidget(
                                     overview: community.description)),
-                            SizedBox(
+                            const SizedBox(
                               height: 10,
                             ),
 
                             userRole == userRoleOptions.owner
                                 ? _builderMembersWidget(memebersCubit, user)
                                 : Container(),
-                            SizedBox(
+                            const SizedBox(
                               height: 30,
                             ),
 
@@ -344,7 +355,7 @@ class CommunityDetail extends StatelessWidget {
               });
             } else if (state is MemebersLoaded) {
               return Container(
-                  decoration: primary_decoration,
+                  decoration: primaryDecoration,
                   child: ListView.builder(
                       shrinkWrap: true,
                       itemCount: state.users.length,
@@ -373,11 +384,10 @@ class CommunityDetail extends StatelessWidget {
             context: context,
             builder: (context) {
               return AlertDialog(
+                backgroundColor: white,
+                surfaceTintColor: white,
                 content: Container(
                   // put border radius
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(30),
-                      color: Colors.white),
                   height: 230,
                   width: 200,
                   child: Column(
@@ -388,7 +398,7 @@ class CommunityDetail extends StatelessWidget {
                         animationTag: 'memeberImage$user.id',
                         // viewerMode: false,
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
                       Text(
@@ -399,7 +409,7 @@ class CommunityDetail extends StatelessWidget {
                             decoration: TextDecoration.none,
                             color: themeDarkBlue.withOpacity(0.95)),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 5,
                       ),
                       Text(
@@ -410,7 +420,7 @@ class CommunityDetail extends StatelessWidget {
                             decoration: TextDecoration.none,
                             color: themeDarkBlue.withOpacity(0.5)),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 40,
                       ),
                       // delete user button
@@ -421,11 +431,11 @@ class CommunityDetail extends StatelessWidget {
                             width: 250,
                             height: 40,
                             decoration:
-                                primary_decoration.copyWith(color: theme_red),
+                                primaryDecoration.copyWith(color: themeRed),
                             child: TextButton.icon(
                               // stretch the button
 
-                              icon: Icon(
+                              icon: const Icon(
                                 Icons.delete,
                                 color: Colors.white,
                               ),
@@ -461,7 +471,7 @@ class CommunityDetail extends StatelessWidget {
                                     },
                                     buttonLabel: 'Delete');
                               },
-                              label: Text(
+                              label: const Text(
                                 'Delete',
                                 style: TextStyle(color: Colors.white),
                               ),
@@ -481,7 +491,7 @@ class CommunityDetail extends StatelessWidget {
                       },
                       child: Text(
                         'Close',
-                        style: TextStyle(color: theme_grey),
+                        style: TextStyle(color: themeGrey),
                       ))
                 ],
               );
@@ -523,7 +533,7 @@ class CommunityDetail extends StatelessWidget {
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: community.isMemeber
-                ? [theme_red, themePink]
+                ? [themeRed, themePink]
                 : [
                     themeBlue,
                     // Replace with your theme_green color
@@ -597,7 +607,7 @@ class CommunityDetail extends StatelessWidget {
                 } else {
                   SchedulerBinding.instance.addPostFrameCallback((_) {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
+                      const SnackBar(
                         content: Text('Request sent successfully'),
                       ),
                     );
@@ -617,9 +627,9 @@ class CommunityDetail extends StatelessWidget {
                       : 'Join Community',
               style: TextStyle(
                   fontWeight: FontWeight.w600,
-                  fontSize: 18,
+                  fontSize: 16,
                   decoration: TextDecoration.none,
-                  color: primary_color.withOpacity(0.95))),
+                  color: white.withOpacity(0.95))),
         ),
       ),
     );
@@ -636,8 +646,8 @@ class OverViewWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(15),
-      decoration: primary_decoration,
+      padding: const EdgeInsets.all(15),
+      decoration: primaryDecoration,
       width: double.maxFinite,
       child: Column(children: [
         Text('Overview',
@@ -646,7 +656,7 @@ class OverViewWidget extends StatelessWidget {
                 fontSize: 20,
                 decoration: TextDecoration.none,
                 color: themeDarkBlue.withOpacity(0.75))),
-        SizedBox(height: 10),
+        const SizedBox(height: 10),
         SizedBox(
           width: double.maxFinite,
           child: Text(overview,
@@ -675,8 +685,7 @@ class MermbersCountWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.fromLTRB(40, 20, 40, 20),
-      decoration: primary_decoration,
+      padding: const EdgeInsets.fromLTRB(40, 20, 40, 20),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -694,7 +703,7 @@ class MermbersCountWidget extends StatelessWidget {
                           state is SpecificCommunityNumberLoaded
                               ? state.numOfMembers.toString()
                               : numOfMembers,
-                          style: TextStyle(
+                          style: const TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 20,
                               decoration: TextDecoration.none,
@@ -703,7 +712,7 @@ class MermbersCountWidget extends StatelessWidget {
                   );
                 },
               ),
-              SizedBox(height: 5),
+              const SizedBox(height: 5),
               Text('Members',
                   style: TextStyle(
                       fontWeight: FontWeight.w400,
@@ -715,12 +724,12 @@ class MermbersCountWidget extends StatelessWidget {
           Column(
             children: [
               Text(publicOrPrivate,
-                  style: TextStyle(
+                  style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 20,
                       decoration: TextDecoration.none,
                       color: themeBlue)),
-              SizedBox(height: 5),
+              const SizedBox(height: 5),
               Text('Community',
                   style: TextStyle(
                       fontWeight: FontWeight.w400,
@@ -735,10 +744,10 @@ class MermbersCountWidget extends StatelessWidget {
   }
 }
 
-PreferredSize GradientAppBar(context, userRoleOptions userRole,
+PreferredSize gradientAppBar(context, userRoleOptions userRole,
     Community community, RequestsCubit requestsCubit) {
   return PreferredSize(
-    preferredSize: Size.fromHeight(190),
+    preferredSize: const Size.fromHeight(190),
     child: Container(
       height: 190,
       child: AppBar(
@@ -787,7 +796,7 @@ PreferredSize GradientAppBar(context, userRoleOptions userRole,
                               child: Center(
                                 child: Text(
                                   state.requests.length.toString(),
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                       color: Colors.white, fontSize: 10),
                                 ),
                               ),
@@ -806,9 +815,9 @@ PreferredSize GradientAppBar(context, userRoleOptions userRole,
         leading: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             IconButton(
-              icon: Icon(Icons.arrow_back_ios),
+              icon: const Icon(Icons.arrow_back_ios, color: white),
               onPressed: () {
                 Navigator.pop(context);
               },
@@ -821,11 +830,11 @@ PreferredSize GradientAppBar(context, userRoleOptions userRole,
           primaryEnd: Alignment.bottomLeft,
           secondaryBegin: Alignment.bottomRight,
           secondaryEnd: Alignment.topLeft,
-          primaryColors: [
+          primaryColors: const [
             themeBlue,
             Colors.blueAccent,
           ],
-          secondaryColors: [themeBlue, Color.fromARGB(255, 120, 90, 255)],
+          secondaryColors: const [themeBlue, Color.fromARGB(255, 120, 90, 255)],
         ),
       ),
     ),

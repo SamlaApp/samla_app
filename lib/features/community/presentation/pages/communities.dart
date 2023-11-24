@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:samla_app/config/themes/common_styles.dart';
+import 'package:samla_app/config/themes/new_style.dart';
 import 'package:samla_app/core/widgets/CustomTextFormField.dart';
 import 'package:samla_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:samla_app/features/community/presentation/cubits/ExploreCubit/explore_cubit.dart';
@@ -44,7 +44,7 @@ class _CommunityPageState extends State<CommunitiesPage> {
   Widget build(BuildContext context) {
     communityCubit.getMyCommunities();
     return Container(
-      color: inputField_color,
+      color: inputFieldColor,
       height: double.maxFinite,
       child: SingleChildScrollView(
         child: Container(
@@ -53,7 +53,7 @@ class _CommunityPageState extends State<CommunitiesPage> {
             children: [
               // search bar here
               Container(
-                decoration: primary_decoration,
+                decoration: primaryDecoration,
                 padding: const EdgeInsets.all(20.0),
                 child: Column(
                   // search field
@@ -103,7 +103,7 @@ class _CommunityPageState extends State<CommunitiesPage> {
 
               Container(
                   constraints: const BoxConstraints(minHeight: 300),
-                  decoration: primary_decoration,
+                  decoration: primaryDecoration,
                   padding: const EdgeInsets.all(5.0),
                   child: BlocBuilder<SearchCubit, SearchState>(
                     bloc: searchCubit,
@@ -134,7 +134,7 @@ class _CommunityPageState extends State<CommunitiesPage> {
           bloc: communityCubit..getMyCommunities(),
           builder: (context, myCommunityState) {
             if (myCommunityState is CommunityLoading) {
-              return Center(
+              return const Center(
                 child: CircularProgressIndicator(
                   color: themeBlue,
                   backgroundColor: themePink,
@@ -146,7 +146,7 @@ class _CommunityPageState extends State<CommunitiesPage> {
                 bloc: searchCubit,
                 builder: (context, state) {
                   if (state is SearchLoading) {
-                    return Center(
+                    return const Center(
                       child: CircularProgressIndicator(
                         color: themeBlue,
                         backgroundColor: themePink,
@@ -193,7 +193,7 @@ class _CommunityPageState extends State<CommunitiesPage> {
       bloc: communityCubit,
       builder: (context, state) {
         if (state is CommunityLoading) {
-          return Center(
+          return const Center(
             child: CircularProgressIndicator(
               color: themeBlue,
               backgroundColor: themePink,
@@ -224,7 +224,7 @@ class _CommunityPageState extends State<CommunitiesPage> {
         }
 
         if (state is ExploreLoading) {
-          return Center(
+          return const Center(
             child: CircularProgressIndicator(
               color: themeBlue,
               backgroundColor: themePink,
@@ -252,7 +252,7 @@ Widget ButtonsBar(int currentIndex, Function(int) myCommunitiesOnTap,
         child: Container(
           // if this selected bottom border should be colored
           decoration: currentIndex == 0
-              ? BoxDecoration(
+              ? const BoxDecoration(
                   border: Border(
                       bottom: BorderSide(
                   color: themeBlue,
@@ -266,9 +266,9 @@ Widget ButtonsBar(int currentIndex, Function(int) myCommunitiesOnTap,
             child: Text(
               'Communities',
               style: TextStyle(
-                  color: currentIndex == 0 ? themeBlue : theme_grey,
+                  color: currentIndex == 0 ? themeBlue : themeGrey,
                   fontSize: 16,
-                  fontWeight: FontWeight.bold),
+                  fontWeight: currentIndex == 0 ? FontWeight.bold : FontWeight.normal),
             ),
           ),
         ),
@@ -277,7 +277,7 @@ Widget ButtonsBar(int currentIndex, Function(int) myCommunitiesOnTap,
         child: Container(
           // if this selected bottom border should be colored
           decoration: currentIndex == 1
-              ? BoxDecoration(
+              ? const BoxDecoration(
                   border: Border(
                       bottom: BorderSide(
                   color: themeBlue,
@@ -291,9 +291,10 @@ Widget ButtonsBar(int currentIndex, Function(int) myCommunitiesOnTap,
             child: Text(
               'Explore',
               style: TextStyle(
-                  color: currentIndex == 1 ? themeBlue : theme_grey,
+                  color: currentIndex == 1 ? themeBlue : themeGrey,
                   fontSize: 16,
-                  fontWeight: FontWeight.bold),
+                  fontWeight: currentIndex == 1 ? FontWeight.bold : FontWeight.normal
+              ),
             ),
           ),
         ),

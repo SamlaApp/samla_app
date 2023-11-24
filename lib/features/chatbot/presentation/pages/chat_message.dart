@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:samla_app/config/themes/common_styles.dart';
+import 'package:samla_app/config/themes/new_style.dart';
 import '../../data/models/chatMessage_model.dart';
 
 
@@ -15,8 +15,8 @@ class ChatMessageWidget extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       color: chatMessageType == ChatMessageType.bot
-            ? Colors.grey.shade200.withOpacity(0.5)
-          :  Colors.grey.shade50,
+            ? Colors.grey.shade300.withOpacity(0.4)
+          :  Colors.grey.shade300.withOpacity(0.1),
 
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -27,13 +27,16 @@ class ChatMessageWidget extends StatelessWidget {
                   child:  Image.asset(
                     'images/Logo/2x/Icon_1@2x.png',
                     height: 30,
+
                   ),
                 )
               : Container(
                   margin: const EdgeInsets.only(right: 16.0),
                   child: const CircleAvatar(
+                    backgroundColor: themeBlue,
                     child: Icon(
                       Icons.person,
+                      color: Colors.white,
                     ),
                   ),
                 ),
@@ -42,7 +45,7 @@ class ChatMessageWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Container(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.only(bottom: 8.0, right: 8.0, left: 4, top: 6),
                   decoration: const BoxDecoration(
                     borderRadius: BorderRadius.all(Radius.circular(8.0)),
                   ),
@@ -51,7 +54,7 @@ class ChatMessageWidget extends StatelessWidget {
                     style: Theme.of(context)
                         .textTheme
                         .bodyLarge
-                        ?.copyWith(color: Colors.grey.shade700, fontSize: 16),
+                        ?.copyWith(color: themeDarkBlue.withOpacity(0.7), fontSize: 15),
                   ),
                 ),
               ],

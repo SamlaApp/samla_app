@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:samla_app/config/themes/new_style.dart';
 import 'package:samla_app/core/widgets/image_viewer.dart';
 import 'package:samla_app/features/community/domain/entities/Community.dart';
 import 'package:samla_app/features/community/presentation/pages/communities.dart';
@@ -13,6 +14,9 @@ class CustomTile extends StatelessWidget {
   final String date;
   final int communityID;
   final Community community;
+
+  String capitalize(String s) => s[0].toUpperCase() + s.substring(1); // capitalize first letter of string
+
 
   const CustomTile({
     super.key,
@@ -36,26 +40,11 @@ class CustomTile extends StatelessWidget {
                 community: community,
               )));
       },
-      // trailing: Column(
-      //   mainAxisAlignment: MainAxisAlignment.center,
-      //   crossAxisAlignment: CrossAxisAlignment.end,
-      //   children: [
-      //     Text(
-      //       newCounter,
-      //     ),
-      //     SizedBox(
-      //       height: 4,
-      //     ),
-      //     Text(
-      //       date,
-      //     ),
-      //   ],
-      // ),
       subtitle: Padding(
         padding: const EdgeInsets.only(top: 2.0),
         child: Text(
           subtitle,
-          style: TextStyle(fontSize: 13),
+          style: const TextStyle(fontSize: 13, color: Colors.grey),
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
         ),
@@ -68,7 +57,7 @@ class CustomTile extends StatelessWidget {
       ),
       title: Padding(
         padding: const EdgeInsets.only(top: 2.0),
-        child: Text(title),
+        child: Text(capitalize(title), style: const TextStyle(fontSize: 15, color: themeDarkBlue)),
       ),
     );
   }

@@ -121,8 +121,8 @@ class _HomeState extends State<HomePage> {
                       Text(
                         user.name,
                         style:  TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w700,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w900,
                           color: themeDarkBlue.withOpacity(0.8),
                         ),
                       ),
