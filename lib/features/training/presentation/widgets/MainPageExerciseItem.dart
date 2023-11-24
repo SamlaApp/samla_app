@@ -96,22 +96,6 @@ class _ExerciseTilesState extends State<ExerciseTiles> {
   }
 
   void _showExerciseDetails(BuildContext context) {
-    List<bool> isSelected = [false, true]; // Initial state of toggle buttons
-    List<String> toggleButtonLabels = [
-      'All Info',
-      'GIF Alone'
-    ]; // Button labels
-
-    void onToggleButtonSelected(int index) {
-      setState(() {
-        for (int buttonIndex = 0;
-            buttonIndex < isSelected.length;
-            buttonIndex++) {
-          isSelected[buttonIndex] = buttonIndex == index;
-        }
-      });
-    }
-
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -121,6 +105,7 @@ class _ExerciseTilesState extends State<ExerciseTiles> {
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
           backgroundColor: Colors.white,
           child: Container(
+            // take 90% of screen width
             width: MediaQuery.of(context).size.width * 0.9,
             child: Padding(
               padding: const EdgeInsets.all(8.0),
@@ -131,19 +116,18 @@ class _ExerciseTilesState extends State<ExerciseTiles> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Row(
+                      //center image
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        if (!isSelected[
-                            1]) // Conditionally show the image based on toggle button state
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(8.0),
-                            child: Image.network(
-                              baseURL + widget.exercise.gifUrl,
-                              width: 200,
-                              height: 200,
-                              fit: BoxFit.cover,
-                            ),
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(8.0),
+                          child: Image.network(
+                            baseURL + widget.exercise.gifUrl,
+                            width: 200,
+                            height: 200,
+                            fit: BoxFit.cover,
                           ),
+                        ),
                         Column(
                           children: [
                             CustomBorderContainer(
@@ -186,32 +170,19 @@ class _ExerciseTilesState extends State<ExerciseTiles> {
                       ),
                     ),
                   ),
-                  // Toggle buttons to control GIF visibility
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        ToggleButtons(
-                          isSelected: isSelected,
-                          onPressed: onToggleButtonSelected,
-                          children: toggleButtonLabels
-                              .map((label) => Text(label))
-                              .toList(),
-                        ),
-                      ],
-                    ),
-                  ),
+
+                  // Close button
                   Center(
                     child: Padding(
                       padding: const EdgeInsets.only(bottom: 8.0),
                       child: ElevatedButton.icon(
                         icon: const Icon(Icons.close),
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: themeDarkBlue,
+                          backgroundColor:
+                              themeDarkBlue, // Change background color
                         ),
                         onPressed: () {
-                          Navigator.of(context).pop();
+                          Navigator.of(context).pop(); // Close the dialog
                         },
                         label: const Text('Close'),
                       ),
