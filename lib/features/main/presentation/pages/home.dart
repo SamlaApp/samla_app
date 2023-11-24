@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:samla_app/config/themes/common_styles.dart';
+import 'package:samla_app/config/themes/new_style.dart';
 import 'package:samla_app/features/main/presentation/cubits/StreakCubit/streak_cubit.dart';
 import 'package:samla_app/features/main/presentation/widgets/CircularIndicators.dart';
 import 'package:samla_app/features/main/presentation/widgets/WeeklyProgress.dart';
@@ -45,28 +45,28 @@ class _HomeState extends State<HomePage> {
         if (state is StreakLoadedState) {
           return Text(
             state.streak.toString(),
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w500,
-              color: theme_red,
+              color: white
             ),
           );
         } else if (state is StreakErrorState) {
-          return Text(
+          return const Text(
             '0',
             style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w500,
-              color: theme_red,
+              color: white
             ),
           );
         } else {
-          return Text(
+          return const Text(
             '0',
             style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w500,
-              color: theme_red,
+              color: white
             ),
           );
         }
@@ -78,7 +78,6 @@ class _HomeState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.fromLTRB(25, 15, 25, 15),
-      decoration: const BoxDecoration(color: Color.fromRGBO(252, 252, 252, 1)),
       child: SingleChildScrollView(
         scrollDirection: Axis.vertical,
         clipBehavior: Clip.none,
@@ -95,11 +94,11 @@ class _HomeState extends State<HomePage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                        Text(
-                        'Welcome',
+                        'Welcome,',
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w500,
-                          color: theme_darkblue.withOpacity(0.5),
+                          color: white.withOpacity(0.6),
                         ),
                       ),
                       Text(
@@ -107,7 +106,7 @@ class _HomeState extends State<HomePage> {
                         style:  TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.w700,
-                          color: theme_darkblue,
+                          color: themeBlue.withOpacity(0.8),
                         ),
                       ),
                     ],
@@ -117,14 +116,21 @@ class _HomeState extends State<HomePage> {
                   Container(
                     padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
                     decoration: BoxDecoration(
-                      color: theme_red.withOpacity(0.1),
+                      gradient: const LinearGradient(
+                        colors: [
+                          themeOrange,
+                          themePink,
+                        ],
+                        begin: Alignment.bottomLeft,
+                        end: Alignment.topRight,
+                      ),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Row(
                       children: [
-                         Icon(
+                         const Icon(
                           Icons.local_fire_department,
-                          color: theme_red,
+                          color: white,
                           size: 20,
                         ),
                         const SizedBox(width: 5),
@@ -140,7 +146,7 @@ class _HomeState extends State<HomePage> {
             const SizedBox(height: 30),
 
 
-            Wrap(direction: Axis.horizontal, runSpacing: 25, children: [
+            const Wrap(direction: Axis.horizontal, runSpacing: 25, children: [
 
               CircularIndicators(),
               WeeklyProgress(),

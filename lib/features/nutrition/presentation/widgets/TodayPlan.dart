@@ -11,7 +11,7 @@ import 'package:samla_app/features/nutrition/nutrition_di.dart' as di;
 import 'package:samla_app/features/nutrition/presentation/cubit/summary/summary_cubit.dart';
 import 'package:samla_app/features/nutrition/presentation/pages/MealAdapt.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import 'package:samla_app/config/themes/common_styles.dart';
+import 'package:samla_app/config/themes/new_style.dart';
 import 'package:samla_app/features/nutrition/presentation/pages/NutritionPlan.dart';
 
 class TodayPlan extends StatefulWidget {
@@ -45,10 +45,10 @@ class _TodayPlanState extends State<TodayPlan> {
       bloc: todayPlanCubit,
       builder: (context, state) {
         if (state is TodayPlanLoadingState) {
-          return Center(
+          return const Center(
               child: CircularProgressIndicator(
-            color: theme_green,
-            backgroundColor: theme_pink,
+            color: themeBlue,
+            backgroundColor: themePink,
           ));
         } else if (state is TodayPlanLoaded) {
           statusCubit.getNutritionPlanStatus(state.nutritionPlans[0].id!);
@@ -98,10 +98,10 @@ class _TodayPlanState extends State<TodayPlan> {
               child: Column(
                 children: [
                   const SizedBox(height: 40),
-                  Text(
+                  const Text(
                     'You have no nutrition plan for today',
                     style: TextStyle(
-                      color: theme_darkblue,
+                      color: themeDarkBlue,
                       fontSize: 16,
                       fontWeight: FontWeight.normal,
                     ),
@@ -110,7 +110,7 @@ class _TodayPlanState extends State<TodayPlan> {
                   ElevatedButton.icon(
                     icon: const Icon(Icons.add, color: Colors.white),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: theme_darkblue,
+                      backgroundColor: themeDarkBlue,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
@@ -126,10 +126,10 @@ class _TodayPlanState extends State<TodayPlan> {
             ),
           );
         } else {
-          return Center(
+          return const Center(
               child: CircularProgressIndicator(
-            color: theme_green,
-            backgroundColor: theme_pink,
+            color: themeBlue,
+            backgroundColor: themePink,
           ));
         }
       },
@@ -146,16 +146,16 @@ class _TodayPlanState extends State<TodayPlan> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
+                const Text(
                   'Today\'s Plan',
                   style: TextStyle(
-                    color: theme_darkblue,
+                    color: white,
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 IconButton(
-                  icon: Icon(Icons.list_sharp, color: theme_darkblue),
+                  icon: const Icon(Icons.list_sharp, color: white),
                   onPressed: () {
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => const NutritionPlan()));
@@ -165,7 +165,7 @@ class _TodayPlanState extends State<TodayPlan> {
             ),
             if (true)
               Expanded(
-                child: getTodayPlans(background_gradient),
+                child: getTodayPlans(backgroundGradient),
               ),
           ],
         ));
@@ -178,35 +178,35 @@ class _TodayPlanState extends State<TodayPlan> {
 
     if (type == 'Breakfast') {
       icon = Icons.free_breakfast;
-      gradient = LinearGradient(
+      gradient = const LinearGradient(
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
         colors: [
-          theme_green,
+          themeBlue,
           Colors.blueAccent,
         ],
       );
     } else if (type == 'Lunch') {
       icon = Icons.lunch_dining;
-      gradient = LinearGradient(
+      gradient = const LinearGradient(
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
-        colors: [theme_orange, Colors.red],
+        colors: [themeOrange, Colors.red],
       );
     } else if (type == 'Dinner') {
       icon = Icons.dinner_dining;
-      gradient = LinearGradient(
+      gradient = const LinearGradient(
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
-        colors: [theme_darkblue, theme_green],
+        colors: [themeDarkBlue, themeBlue],
       );
     } else if (type == 'Snack') {
       icon = Icons.fastfood;
-      gradient = LinearGradient(
+      gradient = const LinearGradient(
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
         colors: [
-          theme_pink,
+          themePink,
           Colors.blueAccent,
         ],
       );
@@ -216,9 +216,9 @@ class _TodayPlanState extends State<TodayPlan> {
       margin: const EdgeInsets.all(10),
       decoration: BoxDecoration(
         gradient: gradient,
-        backgroundBlendMode: BlendMode.multiply,
-        borderRadius: primary_decoration.borderRadius,
-        boxShadow: primary_decoration.boxShadow,
+        backgroundBlendMode: BlendMode.lighten,
+        borderRadius: primaryDecoration.borderRadius,
+        boxShadow: primaryDecoration.boxShadow,
       ),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -236,10 +236,10 @@ class _TodayPlanState extends State<TodayPlan> {
                         const SizedBox(width: 10),
                         Text(
                           nutritionPlan.name,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
-                            color: primary_color,
+                            color: white
                           ),
                         ),
                       ],
@@ -258,7 +258,7 @@ class _TodayPlanState extends State<TodayPlan> {
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
-                          color: primary_color,
+                          color: white.withOpacity(0.7),
                         ),
                       ),
                     ),
@@ -435,7 +435,7 @@ class _TodayPlanState extends State<TodayPlan> {
                       label: const Text('Meal Taken',
                           style: TextStyle(color: Colors.white)),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: theme_darkblue,
+                        backgroundColor: themeDarkBlue,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
@@ -450,9 +450,9 @@ class _TodayPlanState extends State<TodayPlan> {
                       onPressed: () {
                         mealSkipped();
                       },
-                      icon: Icon(Icons.close, color: theme_darkblue),
-                      label: Text('Skip Meal',
-                          style: TextStyle(color: theme_darkblue)),
+                      icon: const Icon(Icons.close, color: themeDarkBlue),
+                      label: const Text('Skip Meal',
+                          style: TextStyle(color: themeDarkBlue)),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.white70,
                         shape: RoundedRectangleBorder(
@@ -477,7 +477,7 @@ class _TodayPlanState extends State<TodayPlan> {
               ),
               child: Center(
                 child: Text(state.nutritionPlanStatus.status,
-                    style: TextStyle(color: theme_darkblue)),
+                    style: const TextStyle(color: themeDarkBlue)),
               ),
             ),
           );

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:samla_app/config/themes/common_styles.dart';
+import 'package:samla_app/config/themes/new_style.dart';
 
 class CustomNavigationBar extends StatefulWidget {
   final int index;
@@ -16,18 +16,45 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
   @override
   Widget build(BuildContext context) {
     double sizeOficon = 25;
-    Color selectedColor = theme_green;
-    Color unselectedColor = theme_darkblue.withOpacity(0.5);
+    Color selectedColor = themeBlue;
+    Color unselectedColor = themeGrey;
 
     return NavigationBarTheme(
       data: NavigationBarThemeData(
-        backgroundColor: primary_color,
+        height: 65,
         indicatorColor: Colors.transparent,
+        backgroundColor: Colors.black,
+        shadowColor: Colors.transparent,
+        elevation: 0,
+        iconTheme: MaterialStateProperty.all(
+          const IconThemeData(
+            size: 25,
+            color: themeGrey,
+          ),
+        ),
+        surfaceTintColor: themeGrey,
         labelTextStyle: MaterialStateProperty.all(
-            TextStyle(color: unselectedColor, fontSize: 12)),
+          const TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.w700,
+            color: themeGrey,
+            letterSpacing: 1.0,
+          ),
+        ),
+        labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
       ),
       child: Container(
-        decoration: primary_decoration,
+        decoration: BoxDecoration(
+          color: themeDarkBlue,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              spreadRadius: 0,
+              blurRadius: 10,
+              offset: const Offset(0, 1),
+            ),
+          ],
+        ),
         child: NavigationBar(
           labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
           height: 60,

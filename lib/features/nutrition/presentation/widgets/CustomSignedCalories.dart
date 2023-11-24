@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:samla_app/config/themes/common_styles.dart';
+import 'package:samla_app/config/themes/new_style.dart';
 import 'package:flutter/services.dart';
 import 'package:samla_app/features/nutrition/nutrition_di.dart' as di;
 import 'package:samla_app/features/nutrition/presentation/cubit/summary/summary_cubit.dart';
@@ -37,17 +36,7 @@ class _CustomSignedCaloriesState extends State<CustomSignedCalories> {
       height: 150,
       width: double.infinity,
       padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.2),
-            spreadRadius: 3,
-            blurRadius: 6,
-          ),
-        ],
-      ),
+      decoration: primaryDecoration,
       child: Column(
         children: [
           Row(
@@ -55,20 +44,17 @@ class _CustomSignedCaloriesState extends State<CustomSignedCalories> {
             children: [
               Row(
                 children: [
-                  Icon(icon, color: theme_darkblue, size: 30),
+                  Icon(icon, color: white, size: 30),
                   const SizedBox(width: 10),
                   Text(
                     title,
-                    style: greyTextStyle.copyWith(
-                      fontSize: 15,
-                      color: theme_darkblue.withOpacity(0.7),
-                    ),
                   ),
                 ],
               ),
               Container(
                 width: 150,
                 padding: const EdgeInsets.symmetric(horizontal: 10),
+                decoration: primaryDecoration,
                 child: TextField(
                   onChanged: (value) {
                     setState(() {
@@ -80,40 +66,24 @@ class _CustomSignedCaloriesState extends State<CustomSignedCalories> {
                     FilteringTextInputFormatter.digitsOnly
                   ],
                   decoration: InputDecoration(
-                    hintText: "e.g. 100",
-                    hintStyle: greyTextStyle.copyWith(
-                      fontSize: 15,
-                      color: theme_darkblue.withOpacity(0.7),
-                    ),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                      borderSide: BorderSide(
-                        width: 2,
-                      ),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                      borderSide: BorderSide(
-                        color: theme_grey,
-                        width: 2,
-                      ),
-                    ),
-                    focusColor: theme_green,
+                    hintText: 'Enter Calories',
+                    hintStyle: TextStyle(color: Colors.white.withOpacity(0.3)),
+                    border: InputBorder.none,
+                    alignLabelWithHint: true,
                   ),
                 ),
               ),
             ],
           ),
+          const SizedBox(height: 16),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             width: double.infinity,
             child: ElevatedButton.icon(
               icon: const Icon(Icons.add, color: Colors.white),
               style: ElevatedButton.styleFrom(
-                backgroundColor: theme_darkblue,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
+                backgroundColor: themeBlue,
+                padding: const EdgeInsets.symmetric(vertical: 10),
               ),
               onPressed: () {
                 // check if the calories is not 0

@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:samla_app/config/themes/common_styles.dart';
+import 'package:samla_app/config/themes/new_style.dart';
 import 'package:samla_app/core/widgets/image_viewer.dart';
-import 'package:samla_app/features/auth/auth_injection_container.dart'
-    as authDI;
+import 'package:samla_app/features/auth/auth_injection_container.dart' as di;
 import 'package:samla_app/features/auth/auth_injection_container.dart';
 import 'package:samla_app/features/auth/presentation/bloc/auth_bloc.dart';
 
@@ -16,12 +15,12 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   });
 
   final user = sl.get<AuthBloc>().user;
-  final authBloc = authDI.sl.get<AuthBloc>();
+  final authBloc = di.sl.get<AuthBloc>();
 
   @override
   Size get preferredSize => Size.fromHeight(height);
-  double sizeOficon = 27;
-  Color iconColor = theme_darkblue.withOpacity(0.5);
+  double sizeOfIcon = 27;
+  Color iconColor = themeBlue;
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +39,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                     child: Row(
                       children: [
                         CircleAvatar(
-                          backgroundColor: theme_green,
+                          backgroundColor: Colors.white,
                           radius: 21,
                           child: ImageViewer.network(
                             imageURL:user.photoUrl,
@@ -60,25 +59,16 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                     IconButton(
                         icon: Icon(
                           Icons.notifications,
-                          size: sizeOficon,
-                          color: iconColor,
+                          size: sizeOfIcon,
+                          color: white,
                         ),
                         onPressed: () =>
                             Navigator.pushNamed(context, '/Notifications')),
                     IconButton(
                         icon: Icon(
-                          Icons.qr_code,
-                          size: sizeOficon,
-                          color: iconColor,
-                        ),
-                        onPressed: () =>
-                            Navigator.pushNamed(context, '/QRcode')),
-                    // logout button
-                    IconButton(
-                        icon: Icon(
                           Icons.logout,
-                          size: sizeOficon,
-                          color: iconColor,
+                          size: sizeOfIcon,
+                          color: themePink,
                         ),
                         onPressed: () {
                           authBloc.add(LogOutEvent(context));

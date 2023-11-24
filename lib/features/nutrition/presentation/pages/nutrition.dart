@@ -3,7 +3,6 @@ import 'package:samla_app/features/nutrition/presentation/cubit/nutrtiionPlan/nu
 import 'package:samla_app/features/nutrition/presentation/widgets/TodayNutritionSummary.dart';
 import 'package:samla_app/features/nutrition/presentation/widgets/TodayPlan.dart';
 import 'package:samla_app/features/nutrition/presentation/widgets/CustomSignedCalories.dart';
-import 'package:samla_app/features/nutrition/presentation/widgets/Macronutrients.dart';
 import 'package:samla_app/features/nutrition/nutrition_di.dart' as di;
 
 class NutritionPage extends StatefulWidget {
@@ -23,18 +22,18 @@ class _NutritionPageState extends State<NutritionPage> {
 
   @override
   Widget build(BuildContext context) {
-    return  SingleChildScrollView(
+    return  const SingleChildScrollView(
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             TodayPlan(),
-            const SizedBox(height: 20),
-            const TodayNutritionSummary(),
-            const SizedBox(height: 20),
-            const CustomSignedCalories(),
-            const SizedBox(height: 20),
+            SizedBox(height: 20),
+            TodayNutritionSummary(),
+            SizedBox(height: 20),
+            CustomSignedCalories(),
+            SizedBox(height: 20),
           ],
         ),
       ),

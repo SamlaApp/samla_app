@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:countup/countup.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:samla_app/config/themes/common_styles.dart';
+import 'package:samla_app/config/themes/new_style.dart';
 import 'dart:async';
 import 'package:pedometer/pedometer.dart';
-import 'package:flutter/services.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -138,7 +137,7 @@ class _CircularIndicatorsState extends State<CircularIndicators> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Container(
-          decoration: primary_decoration,
+          decoration: primaryDecoration,
           alignment: Alignment.center,
           width: MediaQuery.of(context).size.width * 0.41,
           height: MediaQuery.of(context).size.width * 0.41,
@@ -159,32 +158,33 @@ class _CircularIndicatorsState extends State<CircularIndicators> {
                   !_animation
                       ? Text(
                           _steps.toString(),
-                          style: TextStyle(
+                          style: const TextStyle(
                               fontSize: 27,
                               fontWeight: FontWeight.bold,
-                              color: theme_green),
+                              color: themeBlue
+                          ),
                         )
                       : Countup(
                           begin: 0,
                           end: _steps.toDouble(),
-                          duration: Duration(milliseconds: 1500),
+                          duration: const Duration(milliseconds: 1500),
                           separator: '',
-                          style: TextStyle(
+                          style: const TextStyle(
                               fontSize: 27,
                               fontWeight: FontWeight.bold,
-                              color: theme_green),
+                              color: themeBlue),
                         ),
-                  Text(
+                  const Text(
                     'STEPS',
                     style: TextStyle(
                         fontSize: 15,
                         // fontWeight: FontWeight.bold,
-                        color: theme_darkblue.withOpacity(0.3)),
+                        color: themeBlue),
                   )
                 ],
               ),
-              progressColor: theme_green,
-              backgroundColor: theme_green.withOpacity(0.2),
+              progressColor: themeBlue,
+              backgroundColor: themeBlue.withOpacity(0.3),
             );
           }),
         ),
@@ -192,7 +192,7 @@ class _CircularIndicatorsState extends State<CircularIndicators> {
 // _______________________ CALORIES _______________________
 
         Container(
-          decoration: primary_decoration,
+          decoration: primaryDecoration,
           alignment: Alignment.center,
           width: MediaQuery.of(context).size.width * 0.41,
           height: MediaQuery.of(context).size.width * 0.41,
@@ -215,32 +215,32 @@ class _CircularIndicatorsState extends State<CircularIndicators> {
                   !_animation
                       ? Text(
                           (_steps * 0.07).round().toString(),
-                          style: TextStyle(
+                          style: const TextStyle(
                               fontSize: 27,
                               fontWeight: FontWeight.bold,
-                              color: theme_pink),
+                              color: themePink),
                         )
                       : Countup(
                           begin: 0,
                           end: (_steps * 0.07).round().toDouble(),
-                          duration: Duration(milliseconds: 1500),
+                          duration: const Duration(milliseconds: 1500),
                           separator: '',
-                          style: TextStyle(
+                          style: const TextStyle(
                               fontSize: 27,
                               fontWeight: FontWeight.bold,
-                              color: theme_pink),
+                              color: themePink),
                         ),
-                  Text(
+                  const Text(
                     'CALORIES',
                     style: TextStyle(
                         fontSize: 15,
                         // fontWeight: FontWeight.bold,
-                        color: theme_darkblue.withOpacity(0.3)),
+                        color:themePink),
                   )
                 ],
               ),
-              progressColor: theme_pink,
-              backgroundColor: theme_pink.withOpacity(0.2),
+              progressColor: themePink,
+              backgroundColor: themePink.withOpacity(0.3),
             );
           }),
         ),
