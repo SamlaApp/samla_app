@@ -1,23 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:samla_app/features/auth/auth_injection_container.dart';
-import 'package:samla_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:samla_app/features/nutrition/data/models/nutritionPlan_model.dart';
 import 'package:samla_app/features/nutrition/domain/entities/NutritionPlanStatus.dart';
-import 'package:samla_app/features/nutrition/domain/repositories/nutritionPlan_repository.dart';
 import 'package:samla_app/features/nutrition/presentation/cubit/PlanStatus/planStatus_cubit.dart';
 import 'package:samla_app/features/nutrition/presentation/cubit/TodayPlan/todayPlan_cubit.dart';
 import 'package:samla_app/features/nutrition/presentation/cubit/displayMeal/displayMeal_cubit.dart';
 import 'package:samla_app/features/nutrition/presentation/cubit/nutrtiionPlan/nutritionPlan_cubit.dart';
 import 'package:samla_app/features/nutrition/nutrition_di.dart' as di;
+import 'package:samla_app/features/nutrition/presentation/cubit/summary/summary_cubit.dart';
 import 'package:samla_app/features/nutrition/presentation/pages/MealAdapt.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:samla_app/config/themes/common_styles.dart';
 import 'package:samla_app/features/nutrition/presentation/pages/NutritionPlan.dart';
 
 class TodayPlan extends StatefulWidget {
-  TodayPlan({super.key});
+  const TodayPlan({super.key});
 
   @override
   _TodayPlanState createState() => _TodayPlanState();
@@ -31,14 +29,15 @@ class _TodayPlanState extends State<TodayPlan> {
   final todayPlanCubit = di.sl.get<TodayPlanCubit>();
   final displayMealCubit = di.sl.get<DisplayMealCubit>();
   final statusCubit = di.sl.get<PlanStatusCubit>();
+  final summaryCubit = di.sl.get<SummaryCubit>();
+
 
   String today = DateFormat('EEEE').format(DateTime.now());
 
   @override
   void initState() {
     super.initState();
-    todayPlanCubit
-        .getTodayNutritionPlan(DateFormat('EEEE').format(DateTime.now()));
+    todayPlanCubit.getTodayNutritionPlan(DateFormat('EEEE').format(DateTime.now()));
   }
 
   BlocBuilder<TodayPlanCubit, TodayPlanState> getTodayPlans(gradient) {
@@ -52,8 +51,8 @@ class _TodayPlanState extends State<TodayPlan> {
             backgroundColor: theme_pink,
           ));
         } else if (state is TodayPlanLoaded) {
-          displayMealCubit.getNutritionPlanMeals(today, state.nutritionPlans[0].id!);
           statusCubit.getNutritionPlanStatus(state.nutritionPlans[0].id!);
+          displayMealCubit.getNutritionPlanMeals(today, state.nutritionPlans[0].id!);
           return Stack(
             children: [
               PageView(
@@ -366,24 +365,26 @@ class _TodayPlanState extends State<TodayPlan> {
   }
 
   BlocBuilder<PlanStatusCubit, PlanStatusState> _planStatus(int id) {
-    statusCubit.getNutritionPlanStatus(id);
 
-    void _mealTaken() {
+    void mealTaken() {
       final status = NutritionPlanStatus(
         nutritionPlanStatusId: id,
         status: 'Taken',
       );
       statusCubit.updateNutritionPlanStatus(status);
       statusCubit.getNutritionPlanStatus(id);
+      summaryCubit.getDailyNutritionPlanSummary();
+
     }
 
-    void _mealSkipped() {
+    void mealSkipped() {
       final status = NutritionPlanStatus(
         nutritionPlanStatusId: id,
         status: 'Skipped',
       );
       statusCubit.updateNutritionPlanStatus(status);
       statusCubit.getNutritionPlanStatus(id);
+      summaryCubit.getDailyNutritionPlanSummary();
     }
 
     return BlocBuilder<PlanStatusCubit, PlanStatusState>(
@@ -428,7 +429,7 @@ class _TodayPlanState extends State<TodayPlan> {
                   Expanded(
                     child: ElevatedButton.icon(
                       onPressed: () {
-                        _mealTaken();
+                        mealTaken();
                       },
                       icon: const Icon(Icons.check, color: Colors.white),
                       label: const Text('Meal Taken',
@@ -447,7 +448,7 @@ class _TodayPlanState extends State<TodayPlan> {
                   Expanded(
                     child: ElevatedButton.icon(
                       onPressed: () {
-                        _mealSkipped();
+                        mealSkipped();
                       },
                       icon: Icon(Icons.close, color: theme_darkblue),
                       label: Text('Skip Meal',
@@ -466,7 +467,7 @@ class _TodayPlanState extends State<TodayPlan> {
           }
 
           return Padding(
-            padding: EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(16.0),
             child: Container(
               width: 100,
               height: 30,

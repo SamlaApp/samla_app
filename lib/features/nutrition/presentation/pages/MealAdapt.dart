@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:samla_app/config/themes/common_styles.dart';
+import 'package:samla_app/features/nutrition/data/models/MealLibrary_model.dart';
 import 'package:samla_app/features/nutrition/domain/entities/MealLibrary.dart';
 import 'package:samla_app/features/nutrition/domain/entities/NutritionPlanMeal.dart';
 import 'package:samla_app/features/nutrition/domain/entities/nutritionPlan.dart';
@@ -158,6 +159,7 @@ class _MealAdaptState extends State<MealAdapt> {
     return BlocBuilder<NutritionPlanCubit, NutritionPlanState>(
       bloc: cubit,
       builder: (context, state) {
+        print(state);
         if (state is NutritionPlanLoadingState) {
           return Center(
             child: Padding(
@@ -211,7 +213,7 @@ class _MealAdaptState extends State<MealAdapt> {
                                 _addMealToPlan(state.mealLibrary);
                               },
                               icon: Icon(Icons.add, color: theme_darkblue),
-                              label:  Text('Add'),
+                              label:  const Text('Add'),
                               style: ElevatedButton.styleFrom(
                                 foregroundColor: theme_darkblue,
                                 backgroundColor: Colors.white,
@@ -422,7 +424,22 @@ class _MealAdaptState extends State<MealAdapt> {
               ),
             ),
           );
-        } else {
+        }
+        else if (state is NutritionPlanMealLibraryAdded) {
+          _searchController.text = '';
+          cubit.searchMealLibrary(state.updatedMeals.name!);
+          cubit.getNutritionPlanMeals(_displayedDay.text, nutritionPlan.id!);
+          return Center(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: CircularProgressIndicator(
+                color: theme_green,
+                backgroundColor: theme_pink,
+              ),
+            ),
+          );
+        }
+        else {
           return Center(
             child: Padding(
               padding: const EdgeInsets.all(16.0),
@@ -594,7 +611,7 @@ class _MealAdaptState extends State<MealAdapt> {
                     ),
                   );
                 },
-                icon: Icon(Icons.delete),
+                icon: const Icon(Icons.delete),
               ),
             ),
           ],
@@ -610,7 +627,7 @@ class _MealAdaptState extends State<MealAdapt> {
               const SizedBox(height: 10),
               Text(
                 '${nutritionPlan.start_time} - ${nutritionPlan.end_time}',
-                style: TextStyle(fontSize: 14),
+                style: const TextStyle(fontSize: 14),
               ),
             ],
           ),
