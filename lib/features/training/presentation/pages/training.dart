@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:samla_app/features/training/presentation/cubit/Templates/template_cubit.dart';
-import 'package:samla_app/features/training/presentation/pages/EXstartTrainig.dart';
 import 'package:samla_app/features/training/presentation/pages/startTrainingPage.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import '../../../../config/themes/common_styles.dart';
+import '../../../../config/themes/new_style.dart';
 import '../../domain/entities/ExerciseLibrary.dart';
 import '../../domain/entities/Template.dart';
 import '../cubit/viewDayExercise/viewDayExercise_cubit.dart';
 import '../widgets/ExercisesbyDay.dart';
-import '../widgets/mainPageStartNowbutton.dart';
 import 'Tamplates_page.dart';
 import 'package:samla_app/features/training/training_di.dart' as di;
 
@@ -182,10 +180,10 @@ class _TrainingPageState extends State<TrainingPage> {
       bloc: templateCubit,
       builder: (context, state) {
         if (state is TemplateLoadingState) {
-          return Center(
+          return const Center(
               child: CircularProgressIndicator(
-            color: theme_green,
-            backgroundColor: theme_pink,
+            color: themeBlue,
+            backgroundColor: themePink,
           ));
         } else if (state is ActiveTemplateLoaded) {
           return PageView.builder(
@@ -199,22 +197,13 @@ class _TrainingPageState extends State<TrainingPage> {
                 margin: const EdgeInsets.all(16),
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      spreadRadius: 0,
-                      blurRadius: 7,
-                      offset: const Offset(0, 3), // changes position of shadow
-                    ),
-                  ],
-                  gradient: LinearGradient(
-                    colors: [theme_pink, theme_darkblue],
+                  gradient: const LinearGradient(
+                    colors: [themePink, themeBlue],
                     tileMode: TileMode.clamp,
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),
                   borderRadius: BorderRadius.circular(25),
-                  backgroundBlendMode: BlendMode.darken,
                 ),
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
@@ -245,47 +234,50 @@ class _TrainingPageState extends State<TrainingPage> {
                               null &&
                           weeklyExercises[_getDayNameFromIndex(index)]!
                               .isNotEmpty)
-                        Center(
-                          child: SizedBox(
-                            height: 50,
-                            child: ElevatedButton.icon(
-                              label: const Text(
-                                'Start Now',
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                  fontFamily: 'Cairo',
-                                ),
-                              ),
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => StartTrainingNew(
-                                      dayName: dayNameFromTemplate,
-                                      // Pass the day name from the template
-                                      dayIndex: index,
-                                      // Pass the day index directly
-                                      exercises: weeklyExercises[
-                                              _getDayNameFromIndex(index)] ??
-                                          [],
-                                    ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 16.0),
+                          child: Center(
+                            child: SizedBox(
+                              height: 50,
+                              child: ElevatedButton.icon(
+                                label: const Text(
+                                  'Start Now',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                    fontFamily: 'Cairo',
                                   ),
-                                );
-                              },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.transparent,
-                                shadowColor: Colors.transparent,
-                                elevation: 0,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(25),
                                 ),
-                                side: const BorderSide(
-                                    width: 2.0, color: Colors.white),
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => StartTrainingNew(
+                                        dayName: dayNameFromTemplate,
+                                        // Pass the day name from the template
+                                        dayIndex: index,
+                                        // Pass the day index directly
+                                        exercises: weeklyExercises[
+                                                _getDayNameFromIndex(index)] ??
+                                            [],
+                                      ),
+                                    ),
+                                  );
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.transparent,
+                                  shadowColor: Colors.transparent,
+                                  elevation: 0,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(25),
+                                  ),
+                                  side: const BorderSide(
+                                      width: 2.0, color: Colors.white),
+                                ),
+                                icon: const Icon(Icons.play_arrow,
+                                    color: Colors.white, size: 30),
                               ),
-                              icon: const Icon(Icons.play_arrow,
-                                  color: Colors.white, size: 30),
                             ),
                           ),
                         ),
@@ -300,10 +292,10 @@ class _TrainingPageState extends State<TrainingPage> {
         } else if (state is TemplateErrorState) {
           return Center(child: Text(state.message));
         }
-        return Center(
+        return const Center(
             child: CircularProgressIndicator(
-          color: theme_green,
-          backgroundColor: theme_pink,
+          color: themeBlue,
+          backgroundColor: themePink,
         ));
       },
     );
@@ -314,12 +306,12 @@ class _TrainingPageState extends State<TrainingPage> {
       bloc: templateCubit,
       builder: (context, state) {
         if (state is TemplateLoadingState) {
-          return Center(
+          return const Center(
             child: Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: EdgeInsets.all(16.0),
               child: CircularProgressIndicator(
-                color: theme_green,
-                backgroundColor: theme_pink,
+                color: themeBlue,
+                backgroundColor: themePink,
               ),
             ),
           );
@@ -333,16 +325,17 @@ class _TrainingPageState extends State<TrainingPage> {
                 children: [
                   Text(
                     state.template.name,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
-                      color: theme_darkblue,
+                      color: white,
                       fontFamily: 'Cairo',
                     ),
                   ),
                   IconButton(
                     onPressed: _navigateToTemplatesPage,
-                    icon: Icon(Icons.edit, color: theme_darkblue, size: 30),
+                    icon:
+                        const Icon(Icons.dashboard_rounded, color: white, size: 30),
                   ),
                 ],
               ),
