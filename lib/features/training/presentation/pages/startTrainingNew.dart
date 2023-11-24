@@ -1,22 +1,18 @@
 import 'dart:async';
 
 import 'package:animate_gradient/animate_gradient.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:samla_app/features/training/domain/entities/ExerciseHistory.dart';
 import 'package:samla_app/features/training/presentation/cubit/History/history_cubit.dart';
-
 import '../../../../config/themes/common_styles.dart';
+import '../../data/models/ExerciseHistory_model.dart';
+import '../../domain/entities/ExerciseHistory.dart';
 import '../../domain/entities/ExerciseLibrary.dart';
-import '../widgets/CountDownTimer.dart';
 import '../widgets/ExerciseInfoStartPage.dart';
-
-// import '../widgets/exercise_numbers.dart';
-import '../widgets/exercise_tile.dart';
 import 'ExDay.dart';
 import 'package:samla_app/features/training/training_di.dart' as di;
 
-// import 'package:samla_app/features/training/presentation/widgets/exercise_numbers.dart'
 class StartTrainingNew extends StatefulWidget {
   final String dayName;
   final int dayIndex;
@@ -35,78 +31,209 @@ class StartTrainingNew extends StatefulWidget {
 class _StartTrainingNewState extends State<StartTrainingNew>
     with TickerProviderStateMixin {
   late int countdownValue; // Initial countdown value in seconds
-
+  late Timer? countdownTimer; // Timer for countdown
   int totalSets = 3;
   int finishedSets = 0;
-
   late ExerciseLibrary selectedExercise;
-
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final baseURL = 'https://samla.mohsowa.com/api/training/image/';
+  ExerciseDay? setsnum;
 
+  TextEditingController kilogramsController = TextEditingController();
+  TextEditingController repeatsController = TextEditingController();
   final historyCubit = di.sl.get<HistoryCubit>();
 
   @override
+  void dispose() {
+    // Dispose controllers to free up resources when the widget is disposed
+    kilogramsController.dispose();
+    repeatsController.dispose();
+    countdownTimer?.cancel();
+    super.dispose();
+  }
+
+  @override
   void initState() {
+    print('sff$setsnum');
     super.initState();
-
-    historyCubit.getHistory(id: widget.exercises[0].id!);
-
     if (widget.exercises.isNotEmpty) {
       selectedExercise = widget.exercises[0];
-      countdownValue = 0;
       finishedSets = 0;
+      totalSets = 3;
+      countdownTimer = null;
+      countdownValue = 30;
     }
   }
 
+  String formatTime(int seconds) {
+    // Format seconds as MM:SS
+    int minutes = seconds ~/ 60;
+    int remainingSeconds = seconds % 60;
+    return '$minutes:${remainingSeconds.toString().padLeft(2, '0')}';
+  }
+
+  void startCountdown() {
+    countdownTimer?.cancel(); // Cancel the timer if it's not null
+    countdownTimer = Timer.periodic(Duration(seconds: 1), (timer) {
+      setState(() {
+        if (countdownValue > 0) {
+          countdownValue--;
+        } else {
+          // Countdown finished, reset the value and cancel the timer
+          countdownValue = 30;
+          countdownTimer?.cancel();
+        }
+      });
+    });
+  }
 
   void setHistory() {
     historyCubit.addHistory(
-      set: 1,
-      duration: 1,
+      set: 2,
+      duration: 22,
       repetitions: 1,
       weight: 1,
-      distance: 1,
-      notes: 'test',
-      exercise_library_id: 664,
+      distance: 1.45,
+      notes: 'new note from me',
+      exercise_library_id: selectedExercise.id!,
     );
+    loadHistoryForExercise();
   }
-
 
   BlocBuilder<HistoryCubit, HistoryState> buildHistory() {
     return BlocBuilder<HistoryCubit, HistoryState>(
-      bloc: historyCubit,
-      builder: (context, state) {
-        if (state is HistoryLoadingState) {
-          return Center(child: CircularProgressIndicator(
-            color: theme_green,
-            backgroundColor: theme_pink,
-          ));
-        } else if (state is HistoryLoadedState) {
-          return Column(
-            children: [
-              for (var history in state.history)
-                Text(
-                  history.notes!,
-                  style: TextStyle(color: Colors.grey),
-                ),
-            ],
-          );
-        } else if (state is HistoryErrorState) {
-          return Center(child: Text(state.message));
-        } else if (state is HistoryEmptyState) {
-          return Center(child: Text('No history found'));
-        } else if (state is NewHistoryLoadedState) {
-          historyCubit.getHistory(id: widget.exercises[0].id!);
-          return Center(child: CircularProgressIndicator(
-            color: theme_green,
-            backgroundColor: theme_pink,
-          ));
-        } else {
-          return Container();
-        }
-      },
-    );
+        bloc: historyCubit,
+        builder: (context, state) {
+          // Display loading indicator for loading states
+          if (state is HistoryLoadingState || state is NewHistoryLoadedState) {
+            return Center(
+              child: CircularProgressIndicator(
+                color: theme_green,
+                backgroundColor: theme_pink,
+              ),
+            );
+          }
 
+          // Display error message for error state
+          if (state is HistoryErrorState) {
+            return Center(child: Text(state.message));
+          }
+
+          // Display no history message for empty state
+          if (state is HistoryEmptyState) {
+            return Center(child: Text('No history found'));
+          }
+
+          // Handle loaded state
+          if (state is HistoryLoadedState) {
+            // Grouping exercises by day
+            final groupedHistory = <String?, List<ExerciseHistory>>{};
+            for (final history in state.history) {
+              groupedHistory.putIfAbsent(history.day, () => []).add(history);
+            }
+
+            // Constructing the UI
+
+            return Dialog(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12)),
+              elevation: 0, // Removes shadow
+              child: SingleChildScrollView(
+                padding: EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    for (var entry in groupedHistory.entries)
+                      buildSetDetails(entry, selectedExercise.bodyPart),
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical: 8),
+                      child: Text(
+                        'Last updated: ${state.history.first.day}',
+                        style: TextStyle(color: Colors.grey, fontSize: 12),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          }
+
+          // Default case for unhandled states
+          return Container();
+        });
+  }
+
+  Widget buildSetDetails(
+      MapEntry<String?, List<ExerciseHistory>> entry, String bodyPart) {
+    bool isCardio = bodyPart == 'cardio';
+    var day = entry.key;
+    var sets = entry.value;
+
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Day $day',
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          ),
+          Divider(),
+          for (var set in sets)
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 4),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    flex: 2,
+                    child: Text(
+                      isCardio ? 'Duration' : 'Set ${set.sets}',
+                      style: TextStyle(fontSize: 14),
+                    ),
+                  ),
+                  if (isCardio)
+                    Expanded(
+                      flex: 2,
+                      child: Text(
+                        '${set.duration} min',
+                        style: TextStyle(fontSize: 14),
+                      ),
+                    ),
+                  if (isCardio)
+                    Expanded(
+                      flex: 2,
+                      child: Text(
+                        '${set.distance} km',
+                        style: TextStyle(fontSize: 14),
+                      ),
+                    ),
+                  if (!isCardio)
+                    Expanded(
+                      flex: 2,
+                      child: Text(
+                        '${set.repetitions} reps',
+                        style: TextStyle(fontSize: 14),
+                      ),
+                    ),
+                  if (!isCardio)
+                    Expanded(
+                      flex: 2,
+                      child: Text(
+                        '${set.weight} kg',
+                        style: TextStyle(fontSize: 14),
+                      ),
+                    ),
+                ],
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+
+  void loadHistoryForExercise() {
+    historyCubit.getHistory(id: selectedExercise.id!);
   }
 
   @override
@@ -147,7 +274,6 @@ class _StartTrainingNewState extends State<StartTrainingNew>
                   setHistory();
                 },
                 child: Text('Add History')),
-
 
             IconButton(
               icon: Icon(Icons.history),
@@ -213,7 +339,6 @@ class _StartTrainingNewState extends State<StartTrainingNew>
             secondaryMuscles: selectedExercise.secondaryMuscles,
             instructions: selectedExercise.instructions,
           ),
-
         ],
       ),
     );
@@ -239,6 +364,9 @@ class _StartTrainingNewState extends State<StartTrainingNew>
               setState(() {
                 selectedExercise = exercise;
                 finishedSets = 0;
+                totalSets = 3;
+                countdownValue = 30;
+                loadHistoryForExercise();
               });
             },
             child: Container(
@@ -317,88 +445,131 @@ class _StartTrainingNewState extends State<StartTrainingNew>
                   SizedBox(height: 10.0),
                   buildNumber(context),
                   // SizedBox(height: 16),
-                  Column(children: [
-                    Row(
-                      children: <Widget>[
-                        Expanded(
-                          child: Container(
-                            margin: EdgeInsets.fromLTRB(20, 0, 5, 0),
-                            height: 50,
-                            decoration: textField_decoration,
-                            child: TextField(
-                              textAlign: TextAlign.center,
-                              decoration: InputDecoration(
-                                border: InputBorder.none,
-                                hintText: 'Kilograms',
-                                focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.blue),
-                                  // Customize focused border color
-                                  borderRadius: BorderRadius.circular(12),
+                  Form(
+                    key: _formKey,
+                    child: Column(children: [
+                      Row(
+                        children: <Widget>[
+                          Expanded(
+                            child: Container(
+                              margin: EdgeInsets.fromLTRB(20, 0, 5, 0),
+                              height: 50,
+                              decoration: textField_decoration,
+                              child: TextFormField(
+                                controller: kilogramsController,
+                                textAlign: TextAlign.center,
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  hintText: 'Kilograms',
+                                  focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.blue),
+                                    // Customize focused border color
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.grey),
+                                    // Customize enabled border color
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
                                 ),
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.grey),
-                                  // Customize enabled border color
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
+                                keyboardType: TextInputType.number,
+                                // validator: (value) {
+                                //   if (value == null || value.isEmpty) {
+                                //     return value;
+                                //   }
+                                //   return null;
+                                // },
                               ),
                             ),
                           ),
-                        ),
-                        SizedBox(width: 16),
-                        // Spacer between the text fields
-                        Expanded(
-                          child: Container(
-                            margin: EdgeInsets.fromLTRB(5, 0, 20, 0),
-                            height: 50,
-                            decoration: textField_decoration,
-                            child: TextField(
-                              textAlign: TextAlign.center,
-                              decoration: InputDecoration(
-                                border: InputBorder.none,
-                                hintText: 'Repeats',
-                                focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.blue),
-                                  // Customize focused border color
-                                  borderRadius: BorderRadius.circular(12),
+                          SizedBox(width: 16),
+                          // Spacer between the text fields
+                          Expanded(
+                            child: Container(
+                              margin: EdgeInsets.fromLTRB(5, 0, 20, 0),
+                              height: 50,
+                              decoration: textField_decoration,
+                              child: TextFormField(
+                                controller: repeatsController,
+                                textAlign: TextAlign.center,
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  hintText: 'Repeats',
+                                  focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.blue),
+                                    // Customize focused border color
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.grey),
+                                    // Customize enabled border color
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
                                 ),
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.grey),
-                                  // Customize enabled border color
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
+                                keyboardType: TextInputType.number,
                               ),
                             ),
                           ),
-                        ),
-                        Container(
-                          // color: theme_green,
-                          child: ElevatedButton.icon(
-                            onPressed: () {
-                              setState(() {
-                                if (finishedSets < totalSets) {
-                                  finishedSets++; // Increment finishedSets
+
+                          Container(
+                            child: TextButton(
+                              child: Icon(
+                                Icons.done,
+                                color: Colors.white,
+                                size: 30,
+                              ),
+                              onPressed: () {
+                                // Manually trigger validation
+                                if (_formKey.currentState != null) {
+                                  _formKey.currentState!.validate();
                                 }
-                              });
-                            },
-                            icon: Icon(
-                              Icons.done_outlined,
-                              color: Colors.white,
+
+                                // Check if the kilograms field is empty
+                                if (kilogramsController.text.isEmpty) {
+                                  // Show a SnackBar with the validation message
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text('Please enter kilograms'),
+                                      duration: Duration(seconds: 2),
+                                    ),
+                                  );
+                                } else {
+                                  setState(() {
+                                    startCountdown();
+                                    countdownValue = 30;
+                                    if (finishedSets < totalSets)
+                                      finishedSets++;
+                                    kilogramsController.clear();
+                                    repeatsController.clear();
+                                    // if (!countdownTimer.isActive) {
+                                    //   countdownTimer.cancel();
+                                    // }
+
+                                    if (finishedSets == totalSets) {
+                                      selectedExercise = widget.exercises[widget
+                                              .exercises
+                                              .indexOf(selectedExercise) +
+                                          1];
+                                      finishedSets = 0;
+                                    }
+                                  });
+                                }
+                              },
                             ),
-                            label: Text('Press me'),
-                          ),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(15),
-                            color: theme_green,
-                          ),
-                        )
-                      ],
-                    )
-                  ]),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(15),
+                              color: theme_green,
+                            ),
+                          )
+                        ],
+                      )
+                    ]),
+                  ),
                   Divider(),
                   TextButton.icon(
                     onPressed: () {
                       setState(() {
-                        // sets.add();
+                        totalSets++;
                       });
                     },
                     icon: Icon(Icons.add, size: 16.0, color: theme_green),
@@ -435,7 +606,7 @@ class _StartTrainingNewState extends State<StartTrainingNew>
           ),
           buildButton(
             context,
-            '00:00',
+            formatTime(countdownValue),
             'Rest',
           ),
           buildButton(

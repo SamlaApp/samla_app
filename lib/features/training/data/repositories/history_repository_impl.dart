@@ -19,7 +19,8 @@ class HistoryRepositoryImpl implements HistoryRepository {
   });
 
   @override
-  Future<Either<Failure, List<ExerciseHistory>>> getHistory({ required int id}) async {
+  Future<Either<Failure, List<ExerciseHistory>>> getHistory(
+      {required int id}) async {
     if (await networkInfo.isConnected) {
       try {
         final remoteExercises = await remoteDataSource.getHistory(id);
@@ -33,10 +34,24 @@ class HistoryRepositoryImpl implements HistoryRepository {
   }
 
   @override
-  Future<Either<Failure, ExerciseHistory>> addHistory({required int set,required int duration,required int repetitions,required int weight,required int distance,required String notes,required int exercise_library_id}) async {
+  Future<Either<Failure, ExerciseHistory>> addHistory(
+      {required int set,
+      required int duration,
+      required int repetitions,
+      required int weight,
+      required double distance,
+      required String notes,
+      required int exercise_library_id}) async {
     if (await networkInfo.isConnected) {
       try {
-        final remoteExercises = await remoteDataSource.addHistory(set: set,duration: duration,repetitions: repetitions,weight: weight,distance: distance,notes: notes,exercise_library_id: exercise_library_id);
+        final remoteExercises = await remoteDataSource.addHistory(
+            set: set,
+            duration: duration,
+            repetitions: repetitions,
+            weight: weight,
+            distance: distance,
+            notes: notes,
+            exercise_library_id: exercise_library_id);
         return Right(remoteExercises);
       } on ServerException catch (e) {
         return Left(ServerFailure(message: e.message));
@@ -45,5 +60,4 @@ class HistoryRepositoryImpl implements HistoryRepository {
       return Left(ServerFailure(message: "No Internet Connection"));
     }
   }
-
 }
