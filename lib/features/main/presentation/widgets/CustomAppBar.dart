@@ -55,8 +55,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                           style: TextStyle(
                             fontFamily: 'Cairo',
                               fontSize: 24,
-                              color: white,
-                              fontWeight: FontWeight.w900
+                              color: themeDarkBlue,
+                              fontWeight: FontWeight.w700
                           ),
 
                         ),
@@ -69,9 +69,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                   Row(mainAxisAlignment: MainAxisAlignment.end, children: [
                     IconButton(
                         icon: Icon(
-                          Icons.notifications,
+                          Icons.notifications_none_outlined,
                           size: sizeOfIcon,
-                          color: white,
+                          color: themeDarkBlue,
                         ),
                         onPressed: () =>
                             Navigator.pushNamed(context, '/Notifications')),

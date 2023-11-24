@@ -22,8 +22,8 @@ class _WelcomePageState extends State<WelcomePage> {
   final PageController _pageController = PageController(initialPage: 0);
   final ProfileCubit _profileCubit = sl.get<ProfileCubit>();
   final authBloc = sl.get<AuthBloc>();
-  Color appBarColor1 = theme_darkblue;
-  Color appBarColor2 = theme_pink;
+  Color appBarColor1 = themeDarkBlue;
+  Color appBarColor2 = themePink;
   final animationDuration = Duration(milliseconds: 1000);
 
   @override
@@ -82,8 +82,8 @@ class _WelcomePageState extends State<WelcomePage> {
                                 duration: animationDuration,
                                 curve: Curves.fastEaseInToSlowEaseOut);
                             setState(() {
-                              appBarColor1 = theme_darkblue;
-                              appBarColor2 = theme_pink;
+                              appBarColor1 = themeDarkBlue;
+                              appBarColor2 = themePink;
                               currentPage = currentPage - 1;
                             });
                           })
@@ -135,8 +135,8 @@ class _WelcomePageState extends State<WelcomePage> {
                                     duration: Duration(milliseconds: 400),
                                     curve: Curves.fastEaseInToSlowEaseOut);
                                 setState(() {
-                                  appBarColor1 = theme_green;
-                                  appBarColor2 = theme_darkblue;
+                                  appBarColor1 = themeBlue;
+                                  appBarColor2 = themeDarkBlue;
                                   currentPage = 2;
                                 });
                               }),
@@ -158,7 +158,7 @@ class _WelcomePageState extends State<WelcomePage> {
                                     curve: Curves.fastEaseInToSlowEaseOut);
                                 setState(() {
                                   appBarColor2 = theme_orange;
-                                  appBarColor1 = theme_pink;
+                                  appBarColor1 = themePink;
                                   currentPage = 4;
                                 });
                               }),
@@ -209,7 +209,7 @@ class _WelcomePageState extends State<WelcomePage> {
             Text(
               "Welcome to Samla",
               style: TextStyle(
-                  color: theme_darkblue,
+                  color: themeDarkBlue,
                   fontWeight: FontWeight.bold,
                   fontSize: 30),
             ),
@@ -244,8 +244,8 @@ class _WelcomePageState extends State<WelcomePage> {
                   duration: animationDuration,
                   curve: Curves.fastEaseInToSlowEaseOut);
               setState(() {
-                appBarColor1 = theme_pink;
-                appBarColor2 = theme_green;
+                appBarColor1 = themePink;
+                appBarColor2 = themeBlue;
                 currentPage = 1;
               });
             },

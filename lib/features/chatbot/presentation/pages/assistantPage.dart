@@ -55,11 +55,11 @@ backgroundColor: const Color.fromRGBO(10, 44, 64, 1),
           reverse: true,
           animateAlignments: true,
           primaryColors: [
-            theme_green,
+            themeBlue,
             Colors.blueAccent,
           ],
           secondaryColors: [
-            theme_green,
+            themeBlue,
             const Color.fromARGB(255, 120, 90, 255),
           ],
         ),

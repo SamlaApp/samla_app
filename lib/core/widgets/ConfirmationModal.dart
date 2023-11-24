@@ -6,7 +6,7 @@ void showConfirmationModal({
    required BuildContext context,required String message, required Function confirmCallback,
     String? buttonLabel, bool isNegative = true}) {
   showModalBottomSheet(
-      backgroundColor: isNegative == true ? theme_pink : theme_green,
+      backgroundColor: isNegative == true ? themePink : themeBlue,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(
           top: Radius.circular(20.0),
@@ -21,7 +21,7 @@ void showConfirmationModal({
               Container(
                 height: 40,
                 decoration: BoxDecoration(
-                  color: isNegative == true ? theme_pink : theme_green,
+                  color: isNegative == true ? themePink : themeBlue,
                   borderRadius: const BorderRadius.vertical(
                     top: Radius.circular(20.0),
                   ),
@@ -45,7 +45,7 @@ void showConfirmationModal({
                               fontWeight: FontWeight.w400,
                               fontSize: 16,
                               decoration: TextDecoration.none,
-                              color: theme_darkblue.withOpacity(0.95))),
+                              color: themeDarkBlue.withOpacity(0.95))),
                       const SizedBox(height: 10),
                       Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -62,7 +62,7 @@ void showConfirmationModal({
                                           fontWeight: FontWeight.w400,
                                           fontSize: 16,
                                           decoration: TextDecoration.none,
-                                          color: theme_darkblue
+                                          color: themeDarkBlue
                                               .withOpacity(0.95))),
                                 ),
                               ),
@@ -74,7 +74,7 @@ void showConfirmationModal({
                                   style: ButtonStyle(
                                     backgroundColor: MaterialStateProperty.all<
                                             Color>(
-                                        isNegative ? theme_pink : theme_green),
+                                        isNegative ? themePink : themeBlue),
                                   ),
                                   onPressed: () {
                                     confirmCallback();

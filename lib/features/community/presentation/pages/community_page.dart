@@ -70,12 +70,12 @@ class _CommunityPageState extends State<CommunityPage> {
             onPressed: () {
               showAddPostModal(context);
             },
-            backgroundColor: theme_pink,
+            backgroundColor: themePink,
             child: const Icon(Icons.add),
           ),
           appBar: AppBar(
             toolbarHeight: 60,
-            backgroundColor: theme_pink,
+            backgroundColor: themePink,
             titleSpacing: 0,
             // leadingWidth: 35,
             leading: IconButton(
@@ -129,7 +129,7 @@ class _CommunityPageState extends State<CommunityPage> {
     final textController = TextEditingController();
     showModalBottomSheet(
         isScrollControlled: true,
-        backgroundColor: theme_pink,
+        backgroundColor: themePink,
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(
             top: Radius.circular(20.0),
@@ -146,7 +146,7 @@ class _CommunityPageState extends State<CommunityPage> {
                 Container(
                   height: 40,
                   decoration: BoxDecoration(
-                    color: theme_pink,
+                    color: themePink,
                     borderRadius: const BorderRadius.vertical(
                       top: Radius.circular(20.0),
                     ),
@@ -195,7 +195,7 @@ class _CommunityPageState extends State<CommunityPage> {
                                               fontWeight: FontWeight.w400,
                                               fontSize: 16,
                                               decoration: TextDecoration.none,
-                                              color: theme_darkblue
+                                              color: themeDarkBlue
                                                   .withOpacity(0.95))),
                                     ),
                                   ),
@@ -207,7 +207,7 @@ class _CommunityPageState extends State<CommunityPage> {
                                       style: ButtonStyle(
                                         backgroundColor:
                                             MaterialStateProperty.all<Color>(
-                                                theme_pink),
+                                                themePink),
                                       ),
                                       onPressed: () {
                                         final post = Post(
@@ -295,7 +295,7 @@ class _CommunityPageState extends State<CommunityPage> {
                       const SizedBox(width: 10),
                       Text('${post.writerName}',
                           style: TextStyle(
-                              color: theme_darkblue.withOpacity(0.7),
+                              color: themeDarkBlue.withOpacity(0.7),
                               fontSize: 16,
                               fontWeight: FontWeight.w500)),
                     ],
@@ -304,7 +304,7 @@ class _CommunityPageState extends State<CommunityPage> {
                   Text(
                     post.content ?? 'this a dummy content for this post',
                     style: TextStyle(
-                        fontSize: 14, color: theme_darkblue.withOpacity(0.6)),
+                        fontSize: 14, color: themeDarkBlue.withOpacity(0.6)),
                   )
                 ],
               ),
@@ -406,7 +406,7 @@ class _CommunityPageState extends State<CommunityPage> {
                       cubit.emit(PostInitial());
                     },
                     icon: const Icon(Icons.send),
-                    color: theme_green,
+                    color: themeBlue,
                   )
                 ],
               ),
@@ -433,7 +433,7 @@ class _CommunityPageState extends State<CommunityPage> {
               const SizedBox(width: 10),
               Text('${comment.writerName}',
                   style: TextStyle(
-                      color: theme_darkblue.withOpacity(0.7),
+                      color: themeDarkBlue.withOpacity(0.7),
                       fontSize: 16,
                       fontWeight: FontWeight.w500)),
             ],
@@ -446,13 +446,13 @@ class _CommunityPageState extends State<CommunityPage> {
                 child: Text(
                   comment.content,
                   style: TextStyle(
-                      fontSize: 14, color: theme_darkblue.withOpacity(0.6)),
+                      fontSize: 14, color: themeDarkBlue.withOpacity(0.6)),
                 ),
               )
             ],
           ),
           Divider(
-            color: theme_darkblue.withOpacity(0.6),
+            color: themeDarkBlue.withOpacity(0.6),
           )
         ],
       ),

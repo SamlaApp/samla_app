@@ -26,8 +26,8 @@ Widget LoadingWidget() {
                     height: 40,
                   ),
                   LinearProgressIndicator(
-                    color: theme_pink,
-                    backgroundColor: theme_green,
+                    color: themePink,
+                    backgroundColor: themeBlue,
                     semanticsLabel: 'Linear progress indicator',
                   ),
                 ],

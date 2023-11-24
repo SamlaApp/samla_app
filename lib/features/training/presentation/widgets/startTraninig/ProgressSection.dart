@@ -32,7 +32,7 @@ class ProgressSection extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12.0),
         gradient: LinearGradient(
-          colors: [theme_pink, theme_darkblue],
+          colors: [themePink, themeDarkBlue],
           tileMode: TileMode.clamp,
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
@@ -58,11 +58,11 @@ class ProgressSection extends StatelessWidget {
             ),
             TextButton.icon(
               onPressed: () => updateTotalSets(totalSets + 1),
-              icon: Icon(Icons.add, size: 16.0, color: theme_green),
+              icon: Icon(Icons.add, size: 16.0, color: themeBlue),
               label: Text("Add Set",
                   style: TextStyle(
                     fontSize: 14,
-                    color: theme_green,
+                    color: themeBlue,
                   )),
             ),
           ],
@@ -110,7 +110,7 @@ class ProgressSection extends StatelessWidget {
           Text(
             numbers,
             // Assume theme_green is defined elsewhere
-            style: TextStyle(fontSize: 18, color: theme_green),
+            style: TextStyle(fontSize: 18, color: themeBlue),
           ),
           SizedBox(
             height: 2,
@@ -200,7 +200,7 @@ class ProgressSection extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(15),
         // Assume theme_green is defined elsewhere
-        color: theme_green,
+        color: themeBlue,
       ),
     );
   }

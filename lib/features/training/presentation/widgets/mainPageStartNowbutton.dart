@@ -25,7 +25,7 @@ Widget buildGradientBorderButton(BuildContext context) {
           borderRadius: BorderRadius.circular(11),
           // slightly larger radius for the border
           gradient: LinearGradient(
-            colors: [theme_darkblue, Colors.red],
+            colors: [themeDarkBlue, Colors.red],
             begin: Alignment.centerLeft,
             end: Alignment.centerRight,
           ),
@@ -42,7 +42,7 @@ Widget buildGradientBorderButton(BuildContext context) {
               ShaderMask(
                 shaderCallback: (Rect bounds) {
                   return LinearGradient(
-                    colors: [theme_darkblue, Colors.red],
+                    colors: [themeDarkBlue, Colors.red],
                     begin: Alignment.centerLeft,
                     end: Alignment.centerRight,
                   ).createShader(bounds);
@@ -62,7 +62,7 @@ Widget buildGradientBorderButton(BuildContext context) {
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   gradient: LinearGradient(
-                    colors: [theme_darkblue, Colors.red],
+                    colors: [themeDarkBlue, Colors.red],
                     begin: Alignment.centerLeft,
                     end: Alignment.centerRight,
                   ),

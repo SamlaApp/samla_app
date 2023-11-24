@@ -149,13 +149,13 @@ class _TodayPlanState extends State<TodayPlan> {
                 const Text(
                   'Today\'s Plan',
                   style: TextStyle(
-                    color: white,
+                    color: themeDarkBlue,
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 IconButton(
-                  icon: const Icon(Icons.list_sharp, color: white),
+                  icon: const Icon(Icons.list_sharp, color: themeDarkBlue,size: 30),
                   onPressed: () {
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => const NutritionPlan()));
@@ -216,7 +216,7 @@ class _TodayPlanState extends State<TodayPlan> {
       margin: const EdgeInsets.all(10),
       decoration: BoxDecoration(
         gradient: gradient,
-        backgroundBlendMode: BlendMode.lighten,
+        backgroundBlendMode: BlendMode.darken,
         borderRadius: primaryDecoration.borderRadius,
         boxShadow: primaryDecoration.boxShadow,
       ),

@@ -43,9 +43,9 @@ class ImageHelper {
       uiSettings: [
         AndroidUiSettings(
             toolbarTitle: 'Cropper',
-            toolbarColor: theme_darkblue,
+            toolbarColor: themeDarkBlue,
             toolbarWidgetColor: Colors.white,
-            statusBarColor: theme_darkblue,
+            statusBarColor: themeDarkBlue,
             initAspectRatio: CropAspectRatioPreset.original,
             lockAspectRatio: cropAspectRatioLocked),
         IOSUiSettings(
@@ -85,7 +85,7 @@ class ImageHelper {
                 Container(
                   height: 40,
                   decoration: BoxDecoration(
-                    color: theme_green,
+                    color: themeBlue,
                     borderRadius: const BorderRadius.vertical(
                       top: Radius.circular(20.0),
                     ),
@@ -124,7 +124,7 @@ class ImageHelper {
                               children: [
                                 Icon(
                                   Icons.camera,
-                                  color: theme_green,
+                                  color: themeBlue,
                                   size: 60,
                                 ),
                                 Text('Camera'),
@@ -162,7 +162,7 @@ class ImageHelper {
                                 children: [
                                   Icon(
                                     Icons.image,
-                                    color: theme_green,
+                                    color: themeBlue,
                                     size: 60,
                                   ),
                                   Text(

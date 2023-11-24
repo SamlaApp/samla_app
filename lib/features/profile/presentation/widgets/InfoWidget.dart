@@ -69,7 +69,7 @@ class _InfoWidgetState extends State<InfoWidget> {
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 14.0,
-                color: theme_green,
+                color: themeBlue,
               ),
             ),
             Container(
@@ -81,7 +81,7 @@ class _InfoWidgetState extends State<InfoWidget> {
                 style: inputText,
                 decoration: InputDecoration(
                   suffixText: 'cm' ,
-                  suffixStyle: TextStyle(color: theme_darkblue),
+                  suffixStyle: TextStyle(color: themeDarkBlue),
                   prefixIcon: Padding(
                     padding: const EdgeInsets.fromLTRB(0, 0, 0, 8),
                     child: Icon(
@@ -102,7 +102,7 @@ class _InfoWidgetState extends State<InfoWidget> {
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 14.0,
-                color: theme_green,
+                color: themeBlue,
               ),
             ),
             Container(
@@ -114,7 +114,7 @@ class _InfoWidgetState extends State<InfoWidget> {
                 style: inputText,
                 decoration: InputDecoration(
                   suffixText: 'kg',
-                  suffixStyle: TextStyle(color: theme_darkblue),
+                  suffixStyle: TextStyle(color: themeDarkBlue),
                   prefixIcon: Padding(
                     padding: const EdgeInsets.fromLTRB(0, 0, 0, 8),
                     child: Icon(
@@ -149,7 +149,7 @@ class _InfoWidgetState extends State<InfoWidget> {
                         'Target Calories:',
                         style: TextStyle(
                           fontSize: 14,
-                          color: theme_green,
+                          color: themeBlue,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -181,10 +181,10 @@ class _InfoWidgetState extends State<InfoWidget> {
                             ),
                             SliderTheme(
                               data: SliderTheme.of(context).copyWith(
-                                activeTrackColor: theme_pink,
-                                inactiveTrackColor: theme_green,
+                                activeTrackColor: themePink,
+                                inactiveTrackColor: themeBlue,
                                 trackHeight: 3,
-                                thumbColor: theme_pink,
+                                thumbColor: themePink,
                                 thumbShape: RoundSliderThumbShape(
                                     enabledThumbRadius: 8.0),
                                 overlayColor: Colors.red.withAlpha(25),
@@ -220,7 +220,7 @@ class _InfoWidgetState extends State<InfoWidget> {
                         'Target Steps:',
                         style: TextStyle(
                           fontSize: 14,
-                          color: theme_green,
+                          color: themeBlue,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -252,10 +252,10 @@ class _InfoWidgetState extends State<InfoWidget> {
                             ),
                             SliderTheme(
                               data: SliderTheme.of(context).copyWith(
-                                activeTrackColor: theme_pink,
-                                inactiveTrackColor: theme_green,
+                                activeTrackColor: themePink,
+                                inactiveTrackColor: themeBlue,
                                 trackHeight: 3,
-                                thumbColor: theme_pink,
+                                thumbColor: themePink,
                                 thumbShape: RoundSliderThumbShape(
                                     enabledThumbRadius: 8.0),
                                 overlayColor: Colors.red.withAlpha(25),
@@ -287,7 +287,7 @@ class _InfoWidgetState extends State<InfoWidget> {
             Center(
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                    primary: theme_darkblue,
+                    primary: themeDarkBlue,
                     padding: EdgeInsets.symmetric(horizontal: 20, vertical: 13),
                     // Button padding
                     shape: RoundedRectangleBorder(

@@ -21,8 +21,8 @@ class historyDialog extends StatelessWidget {
 
         if (state is HistoryLoadingState || state is NewHistoryLoadedState) {
           dialogContent = CircularProgressIndicator(
-            color: theme_green,
-            backgroundColor: theme_pink,
+            color: themeBlue,
+            backgroundColor: themePink,
           );
         } else if (state is HistoryErrorState) {
           dialogContent = Row(
@@ -37,7 +37,7 @@ class historyDialog extends StatelessWidget {
           dialogContent = Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.history_toggle_off, color: theme_green),
+              Icon(Icons.history_toggle_off, color: themeBlue),
               SizedBox(width: 8),
               Text('No history found'),
             ],

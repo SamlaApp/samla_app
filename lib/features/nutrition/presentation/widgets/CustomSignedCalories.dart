@@ -44,10 +44,14 @@ class _CustomSignedCaloriesState extends State<CustomSignedCalories> {
             children: [
               Row(
                 children: [
-                  Icon(icon, color: white, size: 30),
+                  Icon(icon, color: themeDarkBlue, size: 30),
                   const SizedBox(width: 10),
                   Text(
                     title,
+                    style: const TextStyle(
+                      color: themeDarkBlue,
+                      fontSize: 16,
+                    ),
                   ),
                 ],
               ),
@@ -66,11 +70,14 @@ class _CustomSignedCaloriesState extends State<CustomSignedCalories> {
                     FilteringTextInputFormatter.digitsOnly
                   ],
                   decoration: InputDecoration(
+                    labelStyle: const TextStyle(color: themeDarkBlue),
                     hintText: 'Enter Calories',
-                    hintStyle: TextStyle(color: Colors.white.withOpacity(0.3)),
+                    hintStyle: TextStyle(color: themeDarkBlue.withOpacity(0.3)),
                     border: InputBorder.none,
                     alignLabelWithHint: true,
+                    focusColor: themeDarkBlue,
                   ),
+                  style: const TextStyle(color: themeDarkBlue),
                 ),
               ),
             ],
@@ -83,7 +90,6 @@ class _CustomSignedCaloriesState extends State<CustomSignedCalories> {
               icon: const Icon(Icons.add, color: Colors.white),
               style: ElevatedButton.styleFrom(
                 backgroundColor: themeBlue,
-                padding: const EdgeInsets.symmetric(vertical: 10),
               ),
               onPressed: () {
                 // check if the calories is not 0

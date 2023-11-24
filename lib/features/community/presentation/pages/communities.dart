@@ -81,7 +81,7 @@ class _CommunityPageState extends State<CommunitiesPage> {
                             );
                           },
                           icon: const Icon(Icons.add),
-                          color: theme_green,
+                          color: themeBlue,
                         )
                       ],
                     ),
@@ -136,8 +136,8 @@ class _CommunityPageState extends State<CommunitiesPage> {
             if (myCommunityState is CommunityLoading) {
               return Center(
                 child: CircularProgressIndicator(
-                  color: theme_green,
-                  backgroundColor: theme_pink,
+                  color: themeBlue,
+                  backgroundColor: themePink,
                 ),
               );
             }
@@ -148,8 +148,8 @@ class _CommunityPageState extends State<CommunitiesPage> {
                   if (state is SearchLoading) {
                     return Center(
                       child: CircularProgressIndicator(
-                        color: theme_green,
-                        backgroundColor: theme_pink,
+                        color: themeBlue,
+                        backgroundColor: themePink,
                       ),
                     );
                   } else if (state is SearchLoaded &&
@@ -195,8 +195,8 @@ class _CommunityPageState extends State<CommunitiesPage> {
         if (state is CommunityLoading) {
           return Center(
             child: CircularProgressIndicator(
-              color: theme_green,
-              backgroundColor: theme_pink,
+              color: themeBlue,
+              backgroundColor: themePink,
             ),
           );
         }
@@ -226,8 +226,8 @@ class _CommunityPageState extends State<CommunitiesPage> {
         if (state is ExploreLoading) {
           return Center(
             child: CircularProgressIndicator(
-              color: theme_green,
-              backgroundColor: theme_pink,
+              color: themeBlue,
+              backgroundColor: themePink,
             ),
           );
         }
@@ -255,7 +255,7 @@ Widget ButtonsBar(int currentIndex, Function(int) myCommunitiesOnTap,
               ? BoxDecoration(
                   border: Border(
                       bottom: BorderSide(
-                  color: theme_green,
+                  color: themeBlue,
                   width: 3.0,
                 )))
               : null,
@@ -266,7 +266,7 @@ Widget ButtonsBar(int currentIndex, Function(int) myCommunitiesOnTap,
             child: Text(
               'Communities',
               style: TextStyle(
-                  color: currentIndex == 0 ? theme_green : theme_grey,
+                  color: currentIndex == 0 ? themeBlue : theme_grey,
                   fontSize: 16,
                   fontWeight: FontWeight.bold),
             ),
@@ -280,7 +280,7 @@ Widget ButtonsBar(int currentIndex, Function(int) myCommunitiesOnTap,
               ? BoxDecoration(
                   border: Border(
                       bottom: BorderSide(
-                  color: theme_green,
+                  color: themeBlue,
                   width: 3.0,
                 )))
               : null,
@@ -291,7 +291,7 @@ Widget ButtonsBar(int currentIndex, Function(int) myCommunitiesOnTap,
             child: Text(
               'Explore',
               style: TextStyle(
-                  color: currentIndex == 1 ? theme_green : theme_grey,
+                  color: currentIndex == 1 ? themeBlue : theme_grey,
                   fontSize: 16,
                   fontWeight: FontWeight.bold),
             ),

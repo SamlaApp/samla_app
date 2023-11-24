@@ -176,7 +176,7 @@ class _ProfilePageState extends State<ProfilePage> {
             style: ElevatedButton.styleFrom(
                 padding: EdgeInsets.symmetric(horizontal: 25.0, vertical: 10.0),
                 shape: StadiumBorder(),
-                primary: theme_green),
+                primary: themeBlue),
             child: Text(
               'update',
               style: TextStyle(fontWeight: FontWeight.bold),

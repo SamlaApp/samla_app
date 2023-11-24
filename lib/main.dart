@@ -83,7 +83,7 @@ class MyApp extends StatelessWidget {
       child: BlocProvider(
         create: (context) => notifi_di.sl<NotificationBloc>(),
         child: MaterialApp(
-            theme:darkTheme,
+            theme:lightTheme,
             navigatorKey: navigatorKey,
             debugShowCheckedModeBanner: false,
             title: 'Samla App',

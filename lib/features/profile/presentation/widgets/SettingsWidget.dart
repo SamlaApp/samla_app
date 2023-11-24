@@ -80,7 +80,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 14.0,
-              color: theme_green,
+              color: themeBlue,
             ),
           ),
           Container(
@@ -90,7 +90,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
             child: TextField(
               controller: _nameController,
               style: inputText,
-                cursorColor: theme_green,
+                cursorColor: themeBlue,
               decoration: InputDecoration(
                 prefixIcon: Padding(
                   padding: const EdgeInsets.fromLTRB(0, 0, 0, 8),
@@ -112,7 +112,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 14.0,
-              color: theme_green,
+              color: themeBlue,
             ),
           ),
           Container(
@@ -122,7 +122,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
             child: TextField(
               controller: _userNameController,
               style: inputText,
-              cursorColor: theme_green,
+              cursorColor: themeBlue,
               decoration: InputDecoration(
                 prefixText: '@ ',
                 prefixStyle: TextStyle(
@@ -150,7 +150,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 14.0,
-              color: theme_green,
+              color: themeBlue,
             ),
           ),
           Container(
@@ -160,7 +160,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
             child: TextField(
               controller: _emailController,
               style: inputText,
-              cursorColor: theme_green,
+              cursorColor: themeBlue,
 
               decoration: InputDecoration(
                 prefixIcon: Padding(
@@ -184,7 +184,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 14.0,
-              color: theme_green,
+              color: themeBlue,
             ),
           ),
           Container(
@@ -194,7 +194,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
             child: TextField(
               controller: _phoneController,
               style: inputText,
-              cursorColor: theme_green,
+              cursorColor: themeBlue,
 
               decoration: InputDecoration(
                 prefixIcon: Padding(
@@ -218,7 +218,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 14.0,
-              color: theme_green,
+              color: themeBlue,
 
             ),
           ),
@@ -229,7 +229,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
             child: TextField(
               controller: _oldPassController,
               style: inputText,
-              cursorColor: theme_green,
+              cursorColor: themeBlue,
 
               decoration: InputDecoration(
                 hintText: 'Enter your current password',
@@ -257,7 +257,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 14.0,
-              color: theme_green,
+              color: themeBlue,
             ),
           ),
           Container(
@@ -267,7 +267,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
             child: TextField(
               controller: _newPassController,
               style: inputText,
-              cursorColor: theme_green,
+              cursorColor: themeBlue,
 
               decoration: InputDecoration(
                 hintText: 'Enter your new password',
@@ -290,7 +290,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
           Center(
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
-                  primary: theme_darkblue,
+                  primary: themeDarkBlue,
                   padding: EdgeInsets.symmetric(horizontal: 50, vertical: 13),
                   // Button padding
                   shape: RoundedRectangleBorder(

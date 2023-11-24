@@ -161,15 +161,15 @@ class _ExerciseItemState extends State<ExerciseItem> {
                             onPressed: () {
                               _submitForm();
                             },
-                            icon: Icon(Icons.add, color: theme_darkblue, size: 20),
+                            icon: Icon(Icons.add, color: themeDarkBlue, size: 20),
                             label: Text('Add ',
                                 style: TextStyle(
-                                    color: theme_darkblue,
+                                    color: themeDarkBlue,
                                     fontSize: 12,
                                     fontWeight: FontWeight.bold)),
                             style: ElevatedButton.styleFrom(
                               primary: Colors.white,
-                              onPrimary: theme_darkblue,
+                              onPrimary: themeDarkBlue,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(32.0),
                               ),
@@ -204,7 +204,7 @@ class _ExerciseItemState extends State<ExerciseItem> {
                               });
                             },
                             shape: const CircleBorder(),
-                            activeColor: theme_darkblue,
+                            activeColor: themeDarkBlue,
                           ),
                         ],
                       ),
@@ -228,7 +228,7 @@ class _ExerciseItemState extends State<ExerciseItem> {
                               });
                             },
                             shape: const CircleBorder(),
-                            activeColor: theme_darkblue,
+                            activeColor: themeDarkBlue,
                           ),
                         ],
                       ),
@@ -252,7 +252,7 @@ class _ExerciseItemState extends State<ExerciseItem> {
                               });
                             },
                             shape: const CircleBorder(),
-                            activeColor: theme_darkblue,
+                            activeColor: themeDarkBlue,
                           ),
                         ],
                       ),
@@ -276,7 +276,7 @@ class _ExerciseItemState extends State<ExerciseItem> {
                               });
                             },
                             shape: const CircleBorder(),
-                            activeColor: theme_darkblue,
+                            activeColor: themeDarkBlue,
                           ),
                         ],
                       ),
@@ -300,7 +300,7 @@ class _ExerciseItemState extends State<ExerciseItem> {
                               });
                             },
                             shape: const CircleBorder(),
-                            activeColor: theme_darkblue,
+                            activeColor: themeDarkBlue,
                           ),
                         ],
                       ),
@@ -324,7 +324,7 @@ class _ExerciseItemState extends State<ExerciseItem> {
                               });
                             },
                             shape: const CircleBorder(),
-                            activeColor: theme_darkblue,
+                            activeColor: themeDarkBlue,
                           ),
                         ],
                       ),
@@ -348,7 +348,7 @@ class _ExerciseItemState extends State<ExerciseItem> {
                               });
                             },
                             shape: const CircleBorder(),
-                            activeColor: theme_darkblue,
+                            activeColor: themeDarkBlue,
                           ),
                         ],
                       ),
@@ -415,7 +415,7 @@ class _ExerciseItemState extends State<ExerciseItem> {
               child: Text(
                 label,
                 style: TextStyle(
-                  color: theme_darkblue,
+                  color: themeDarkBlue,
                   fontSize: 14,
                   fontWeight: FontWeight.normal,
                 ),

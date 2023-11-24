@@ -114,33 +114,36 @@ class _HomeState extends State<HomePage> {
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w500,
-                          color: white.withOpacity(0.6),
+                          color: themeDarkBlue.withOpacity(0.6),
                         ),
                       ),
 
                       Text(
                         user.name,
-                        style:  const TextStyle(
-                          fontSize: 20,
+                        style:  TextStyle(
+                          fontSize: 18,
                           fontWeight: FontWeight.w700,
-                          color: white,
+                          color: themeDarkBlue.withOpacity(0.8),
                         ),
                       ),
                     ],
                   ),
 
+                  const Spacer(
+                    flex: 1,
+                  ),
+
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       Container(
                         alignment: Alignment.center,
                         height: 30,
-                        padding: const EdgeInsets.fromLTRB(25, 0, 25, 0),
-                        margin: const EdgeInsets.only(left: 50),
+                        padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
                         decoration: BoxDecoration(
                           gradient: const LinearGradient(
                             colors: [
-                              themeOrange,
+                              themeRed,
                               themePink,
                             ],
                             begin: Alignment.bottomLeft,

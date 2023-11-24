@@ -165,8 +165,8 @@ class _MealAdaptState extends State<MealAdapt> {
             child: Padding(
               padding: const EdgeInsets.all(16.0),
               child: CircularProgressIndicator(
-                color: theme_green,
-                backgroundColor: theme_pink,
+                color: themeBlue,
+                backgroundColor: themePink,
               ),
             ),
           );
@@ -212,10 +212,10 @@ class _MealAdaptState extends State<MealAdapt> {
                               onPressed: () {
                                 _addMealToPlan(state.mealLibrary);
                               },
-                              icon: Icon(Icons.add, color: theme_darkblue),
+                              icon: Icon(Icons.add, color: themeDarkBlue),
                               label:  const Text('Add'),
                               style: ElevatedButton.styleFrom(
-                                foregroundColor: theme_darkblue,
+                                foregroundColor: themeDarkBlue,
                                 backgroundColor: Colors.white,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(32.0),
@@ -373,7 +373,7 @@ class _MealAdaptState extends State<MealAdapt> {
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),
                                 border: Border.all(
-                                  color: theme_darkblue,
+                                  color: themeDarkBlue,
                                 ),
                               ),
                               minValue: 1,
@@ -433,8 +433,8 @@ class _MealAdaptState extends State<MealAdapt> {
             child: Padding(
               padding: const EdgeInsets.all(16.0),
               child: CircularProgressIndicator(
-                color: theme_green,
-                backgroundColor: theme_pink,
+                color: themeBlue,
+                backgroundColor: themePink,
               ),
             ),
           );
@@ -471,11 +471,11 @@ class _MealAdaptState extends State<MealAdapt> {
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
         colors: [
-          theme_green,
+          themeBlue,
           Colors.blueAccent,
         ],
       );
-      color = theme_green;
+      color = themeBlue;
     } else if (type == 'Lunch') {
       icon = Icons.lunch_dining;
       gradient = LinearGradient(
@@ -489,20 +489,20 @@ class _MealAdaptState extends State<MealAdapt> {
       gradient = LinearGradient(
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
-        colors: [theme_darkblue, theme_green],
+        colors: [themeDarkBlue, themeBlue],
       );
-      color = theme_darkblue;
+      color = themeDarkBlue;
     } else if (type == 'Snack') {
       icon = Icons.fastfood;
       gradient = LinearGradient(
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
         colors: [
-          theme_pink,
+          themePink,
           Colors.blueAccent,
         ],
       );
-      color = theme_pink;
+      color = themePink;
     }
 
     BlocBuilder<NutritionPlanCubit, NutritionPlanState> displayedMeals() {
@@ -514,8 +514,8 @@ class _MealAdaptState extends State<MealAdapt> {
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: CircularProgressIndicator(
-                  color: theme_green,
-                  backgroundColor: theme_pink,
+                  color: themeBlue,
+                  backgroundColor: themePink,
                 ),
               ),
             );
@@ -658,7 +658,7 @@ class _MealAdaptState extends State<MealAdapt> {
                     const SizedBox(height: 20),
                     Form(
                       child: DayDropdown(
-                        color: theme_darkblue,
+                        color: themeDarkBlue,
                         backgroundColor: primary_color,
                         initialValue: today,
                         onChanged: (value) {
@@ -705,7 +705,7 @@ class _MealAdaptState extends State<MealAdapt> {
                                     color: primary_color, // Set your desired background color here
                                     shape: BoxShape.circle, // Makes the container circular
                                   ),
-                                  child: Icon(Icons.search, color: theme_green , size: 35),
+                                  child: Icon(Icons.search, color: themeBlue , size: 35),
                                 ),
                               ),
                             ],
@@ -738,7 +738,7 @@ class _MealAdaptState extends State<MealAdapt> {
       icon: const Icon(Icons.add),
       label: const Text('Add custom food'),
       style: ElevatedButton.styleFrom(
-        foregroundColor: theme_darkblue,
+        foregroundColor: themeDarkBlue,
         backgroundColor: primary_color,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(32.0),

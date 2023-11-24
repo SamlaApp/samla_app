@@ -83,10 +83,10 @@ class _TemplatesPageState extends State<TemplatesPage> {
           secondaryEnd: Alignment.topLeft,
           primaryColors: [
             theme_orange,
-            theme_pink,
+            themePink,
           ],
           secondaryColors: [
-            theme_pink,
+            themePink,
             theme_red,
           ],
         ),
@@ -114,12 +114,12 @@ class _TemplatesPageState extends State<TemplatesPage> {
           Text(
             'Templates',
             style: TextStyle(
-                color: theme_darkblue,
+                color: themeDarkBlue,
                 fontSize: 16,
                 fontWeight: FontWeight.bold),
           ),
           IconButton(
-            icon: Icon(Icons.refresh, color: theme_darkblue),
+            icon: Icon(Icons.refresh, color: themeDarkBlue),
             onPressed: () {
               refresh();
             },
@@ -148,7 +148,7 @@ class _TemplatesPageState extends State<TemplatesPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(Icons.file_present_rounded,
-                      color: theme_darkblue, size: 25),
+                      color: themeDarkBlue, size: 25),
                   const SizedBox(width: 10),
                   Text(
                     'New Template',
@@ -156,7 +156,7 @@ class _TemplatesPageState extends State<TemplatesPage> {
                         fontSize: 20.0,
                         fontWeight: FontWeight.bold,
                         fontFamily: 'Cairo',
-                        color: theme_darkblue),
+                        color: themeDarkBlue),
                     overflow: TextOverflow.ellipsis,
                   ),
                 ],
@@ -166,7 +166,7 @@ class _TemplatesPageState extends State<TemplatesPage> {
                 decoration: InputDecoration(
                   border: const OutlineInputBorder(),
                   labelText: 'Template Name',
-                  focusColor: theme_green,
+                  focusColor: themeBlue,
                 ),
                 controller: nameController,
                 validator: (value) {
@@ -203,7 +203,7 @@ class _TemplatesPageState extends State<TemplatesPage> {
                     label: const Text('Create'),
                     style: ElevatedButton.styleFrom(
                       foregroundColor: Colors.white,
-                      backgroundColor: theme_darkblue,
+                      backgroundColor: themeDarkBlue,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(32.0),
                       ),
@@ -226,8 +226,8 @@ class _TemplatesPageState extends State<TemplatesPage> {
         if (state is TemplateLoadingState) {
           return Center(
             child: CircularProgressIndicator(
-              color: theme_green,
-              backgroundColor: theme_pink,
+              color: themeBlue,
+              backgroundColor: themePink,
             ),
           );
         }
@@ -235,8 +235,8 @@ class _TemplatesPageState extends State<TemplatesPage> {
           cubit.getAllTemplates();
           return Center(
             child: CircularProgressIndicator(
-              color: theme_green,
-              backgroundColor: theme_pink,
+              color: themeBlue,
+              backgroundColor: themePink,
             ),
           );
         }
@@ -245,8 +245,8 @@ class _TemplatesPageState extends State<TemplatesPage> {
           cubit.getAllTemplates();
           return Center(
             child: CircularProgressIndicator(
-              color: theme_green,
-              backgroundColor: theme_pink,
+              color: themeBlue,
+              backgroundColor: themePink,
             ),
           );
         }
@@ -275,7 +275,7 @@ class _TemplatesPageState extends State<TemplatesPage> {
                 const SizedBox(height: 10),
                 Text('Something went wrong',
                     style: TextStyle(
-                      color: theme_darkblue,
+                      color: themeDarkBlue,
                       fontSize: 14,
                       fontWeight: FontWeight.normal,
                     )),
@@ -285,7 +285,7 @@ class _TemplatesPageState extends State<TemplatesPage> {
                   },
                   child: Text('Try again',
                       style: TextStyle(
-                        color: theme_green,
+                        color: themeBlue,
                         fontSize: 14,
                         fontWeight: FontWeight.bold,
                       )),
@@ -312,8 +312,8 @@ class _TemplatesPageState extends State<TemplatesPage> {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            theme_darkblue,
-            theme_pink,
+            themeDarkBlue,
+            themePink,
           ],
         ),
       ),
@@ -351,7 +351,7 @@ class _TemplatesPageState extends State<TemplatesPage> {
                 });
               },
               style: ElevatedButton.styleFrom(
-                foregroundColor: theme_darkblue,
+                foregroundColor: themeDarkBlue,
                 backgroundColor: Colors.white,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(32.0),

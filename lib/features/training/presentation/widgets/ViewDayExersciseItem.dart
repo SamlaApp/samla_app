@@ -166,7 +166,7 @@ class _ViewDayExerciseItemState extends State<ViewDayExerciseItem> {
               child: Text(
                 label,
                 style: TextStyle(
-                  color: theme_darkblue,
+                  color: themeDarkBlue,
                   fontSize: 14,
                   fontWeight: FontWeight.normal,
                 ),

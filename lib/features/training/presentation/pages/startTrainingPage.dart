@@ -112,10 +112,10 @@ class _StartTrainingNewState extends State<StartTrainingNew> {
           secondaryEnd: Alignment.topLeft,
           primaryColors: [
             theme_orange,
-            theme_pink,
+            themePink,
           ],
           secondaryColors: [
-            theme_pink,
+            themePink,
             theme_red,
           ],
         ),

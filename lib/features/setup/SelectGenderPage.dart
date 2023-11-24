@@ -22,7 +22,7 @@ Widget GenderWidget(BuildContext context, double height, double width,
       Text(
         "Select Your Gender",
         style: TextStyle(
-            color: theme_darkblue.withOpacity(0.9),
+            color: themeDarkBlue.withOpacity(0.9),
             fontWeight: FontWeight.bold,
             fontSize: 26),
       ),
@@ -36,7 +36,7 @@ Widget GenderWidget(BuildContext context, double height, double width,
           Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
-              color: theme_green,
+              color: themeBlue,
               boxShadow: [
                 BoxShadow(
                   color: Colors.grey.withOpacity(0.5),
@@ -68,7 +68,7 @@ Widget GenderWidget(BuildContext context, double height, double width,
             // border radius
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
-              color: theme_pink,
+              color: themePink,
               boxShadow: [
                 BoxShadow(
                   color: Colors.grey.withOpacity(0.5),

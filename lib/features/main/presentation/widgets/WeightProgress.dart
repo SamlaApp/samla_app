@@ -48,7 +48,7 @@ class WeightProgressState extends State<WeightProgress> {
                         style: textStyle.copyWith(
                           fontSize: 12,
                           fontWeight: FontWeight.w500,
-                          color: theme_pink,
+                          color: themePink,
                         ),
                       ),
                       const SizedBox(
@@ -59,7 +59,7 @@ class WeightProgressState extends State<WeightProgress> {
                         style: textStyle.copyWith(
                           fontSize: 12,
                           fontWeight: FontWeight.w300,
-                          color: theme_darkblue.withOpacity(0.3),
+                          color: themeDarkBlue.withOpacity(0.3),
                         ),
                       ),
                       const SizedBox(
@@ -71,7 +71,7 @@ class WeightProgressState extends State<WeightProgress> {
                           //should get the BMI here!
                           fontSize: 12,
                           fontWeight: FontWeight.w500,
-                          color: theme_pink,
+                          color: themePink,
                         ),
                       ),
                       Text(
@@ -79,7 +79,7 @@ class WeightProgressState extends State<WeightProgress> {
                         style: textStyle.copyWith(
                           fontSize: 12,
                           fontWeight: FontWeight.w300,
-                          color: theme_darkblue.withOpacity(0.3),
+                          color: themeDarkBlue.withOpacity(0.3),
                         ),
                       ),
                     ],
@@ -121,11 +121,11 @@ class WeightProgressState extends State<WeightProgress> {
                   LineChartBarData(
                     spots: weightSpots,
                     isCurved: true,
-                    color: theme_green,
+                    color: themeBlue,
                     barWidth: 5,
                     // dotData: FlDotData(show: false),
                     belowBarData: BarAreaData(
-                        show: true, color: theme_pink.withOpacity(0.3)),
+                        show: true, color: themePink.withOpacity(0.3)),
                   ),
                 ],
               ),

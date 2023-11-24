@@ -198,7 +198,7 @@ class _TrainingPageState extends State<TrainingPage> {
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
                   gradient: const LinearGradient(
-                    colors: [themePink, themeBlue],
+                    colors: [themePink, themeDarkBlue],
                     tileMode: TileMode.clamp,
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
@@ -328,14 +328,14 @@ class _TrainingPageState extends State<TrainingPage> {
                     style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
-                      color: white,
+                      color: themeDarkBlue,
                       fontFamily: 'Cairo',
                     ),
                   ),
                   IconButton(
                     onPressed: _navigateToTemplatesPage,
                     icon:
-                        const Icon(Icons.dashboard_rounded, color: white, size: 30),
+                        const Icon(Icons.dashboard_outlined, color: themeDarkBlue, size: 30),
                   ),
                 ],
               ),

@@ -17,14 +17,13 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
   Widget build(BuildContext context) {
     double sizeOficon = 25;
     Color selectedColor = themeBlue;
-    Color unselectedColor = themeGrey;
+    Color unselectedColor = themeDarkBlue.withOpacity(0.3);
 
     return NavigationBarTheme(
       data: NavigationBarThemeData(
         height: 65,
         indicatorColor: Colors.transparent,
-        backgroundColor: Colors.black,
-        shadowColor: Colors.transparent,
+        backgroundColor: Colors.transparent,
         elevation: 0,
         iconTheme: MaterialStateProperty.all(
           const IconThemeData(
@@ -34,26 +33,18 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
         ),
         surfaceTintColor: themeGrey,
         labelTextStyle: MaterialStateProperty.all(
-          const TextStyle(
+           TextStyle(
             fontSize: 12,
             fontWeight: FontWeight.w700,
-            color: themeGrey,
+            color: themeDarkBlue.withOpacity(0.4),
             letterSpacing: 1.0,
           ),
         ),
         labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
       ),
       child: Container(
-        decoration: BoxDecoration(
-          color: themeDarkBlue,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              spreadRadius: 0,
-              blurRadius: 10,
-              offset: const Offset(0, 1),
-            ),
-          ],
+        decoration: const BoxDecoration(
+          color: white,
         ),
         child: NavigationBar(
           labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,

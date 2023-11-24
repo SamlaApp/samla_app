@@ -179,8 +179,8 @@ class _TemplatePageState extends State<TemplatePage> {
           return Scaffold(
             body: Center(
                 child: CircularProgressIndicator(
-              color: theme_green,
-              backgroundColor: theme_pink,
+              color: themeBlue,
+              backgroundColor: themePink,
             )),
           );
         } else if (state is TemplateDetailLoaded) {
@@ -256,7 +256,7 @@ class _TemplatePageState extends State<TemplatePage> {
                 flexibleSpace: Container(
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
-                      colors: [theme_pink, theme_darkblue],
+                      colors: [themePink, themeDarkBlue],
                       tileMode: TileMode.clamp,
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
@@ -303,8 +303,8 @@ class _TemplatePageState extends State<TemplatePage> {
           return Scaffold(
             body: Center(
                 child: CircularProgressIndicator(
-              color: theme_green,
-              backgroundColor: theme_pink,
+              color: themeBlue,
+              backgroundColor: themePink,
             )),
           );
         }
@@ -366,7 +366,7 @@ class _TemplatePageState extends State<TemplatePage> {
                           _beforeUpdateDayName();
                         },
                         icon: const Icon(Icons.edit),
-                        color: theme_green,
+                        color: themeBlue,
                       )
                     ],
                   ),
@@ -446,7 +446,7 @@ class _TemplatePageState extends State<TemplatePage> {
                     instructions: exercise.instructions,
                     secondaryMuscles: exercise.secondaryMuscles,
                     gradient: LinearGradient(
-                      colors: [theme_pink, theme_green],
+                      colors: [themePink, themeBlue],
                       tileMode: TileMode.clamp,
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
@@ -476,8 +476,8 @@ class _TemplatePageState extends State<TemplatePage> {
       builder: (context, state){
         if (state is ExercisesDayLoadingState) {
           return  Center(child: CircularProgressIndicator(
-            color: theme_green,
-            backgroundColor: theme_pink,
+            color: themeBlue,
+            backgroundColor: themePink,
           ));
         } else if (state is ExerciseDayLoadedState) {
           return SingleChildScrollView(
@@ -495,7 +495,7 @@ class _TemplatePageState extends State<TemplatePage> {
                     instructions: exercise.instructions,
                     secondaryMuscles: exercise.secondaryMuscles,
                     gradient: LinearGradient(
-                      colors: [theme_pink, theme_green],
+                      colors: [themePink, themeBlue],
                       tileMode: TileMode.clamp,
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
@@ -524,7 +524,7 @@ class _TemplatePageState extends State<TemplatePage> {
                 const SizedBox(height: 10),
                 Text('No exercises added yet',
                     style: TextStyle(
-                      color: theme_darkblue,
+                      color: themeDarkBlue,
                       fontSize: 14,
                       fontWeight: FontWeight.normal,
                     )),
@@ -572,7 +572,7 @@ void _showUpdateTemplateDialog(BuildContext context) {
       return AlertDialog(
         title: Text(
           'Update The Template',
-          style: TextStyle(color: theme_darkblue, fontSize: 16,fontWeight: FontWeight.bold),
+          style: TextStyle(color: themeDarkBlue, fontSize: 16,fontWeight: FontWeight.bold),
         ),
         content: Stack(
           clipBehavior: Clip.none,
@@ -612,7 +612,7 @@ void _showUpdateTemplateDialog(BuildContext context) {
                                 isActivated = value;
                                 (context as Element).markNeedsBuild();
                               },
-                              activeColor: theme_green,
+                              activeColor: themeBlue,
                               inactiveThumbColor: theme_grey,
                               inactiveTrackColor: theme_grey.withOpacity(0.5),
                             ),
@@ -634,7 +634,7 @@ void _showUpdateTemplateDialog(BuildContext context) {
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   gradient: LinearGradient(
-                    colors: [theme_pink, theme_darkblue],
+                    colors: [themePink, themeDarkBlue],
                     tileMode: TileMode.clamp,
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
@@ -676,7 +676,7 @@ void _showUpdateTemplateDialog(BuildContext context) {
                 label: const Text('Create'),
                 style: ElevatedButton.styleFrom(
                   foregroundColor: Colors.white,
-                  backgroundColor: theme_darkblue,
+                  backgroundColor: themeDarkBlue,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(32.0),
                   ),

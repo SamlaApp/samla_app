@@ -36,9 +36,9 @@ class Macronutrients extends StatelessWidget {
                 backgroundColor: inputField_color,
                 valueColor: AlwaysStoppedAnimation<Color>(
                   nutrient == "Carbs"
-                      ? theme_green
+                      ? themeBlue
                       : nutrient == "Protein"
-                      ? theme_pink
+                      ? themePink
                       : theme_orange,
                 ),
                 minHeight: 5, // Adjust height for the line style

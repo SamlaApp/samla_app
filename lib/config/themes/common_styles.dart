@@ -8,13 +8,13 @@ const background_gradient = LinearGradient(
 );
 
 // colors
-Color theme_green = Color.fromRGBO(64, 194, 210, 1);
-Color theme_darkblue = Color.fromRGBO(10, 44, 64, 1);
-Color theme_pink = Color.fromRGBO(213, 20, 122, 1);
+Color themeBlue = Color.fromRGBO(64, 194, 210, 1);
+Color themeDarkBlue = Color.fromRGBO(10, 44, 64, 1);
+Color themePink = Color.fromRGBO(213, 20, 122, 1);
 Color theme_red = Color.fromRGBO(165, 30, 34, 1);
 Color theme_orange = Color.fromRGBO(217, 157, 42, 1);
 Color primary_color = Color.fromRGBO(252, 252, 252, 1);
-Color inputField_color = theme_darkblue.withOpacity(0.05);
+Color inputField_color = themeDarkBlue.withOpacity(0.05);
 Color theme_grey = Color.fromRGBO(0, 0, 0, 0.5);
 // styles
 
@@ -25,7 +25,7 @@ BoxDecoration primary_decoration = BoxDecoration(
 
 TextStyle textStyle = GoogleFonts.getFont('Almarai',
     fontSize: 27,
-    color: theme_darkblue.withOpacity(0.7),
+    color: themeDarkBlue.withOpacity(0.7),
     decoration: TextDecoration.none,
     fontWeight: FontWeight.normal);
 
@@ -33,7 +33,7 @@ TextStyle greyTextStyle = GoogleFonts.getFont(
   'Almarai',
   fontSize: 27,
   fontWeight: FontWeight.bold,
-  color: theme_darkblue.withOpacity(0.5),
+  color: themeDarkBlue.withOpacity(0.5),
   decoration: TextDecoration.none,
 );
 

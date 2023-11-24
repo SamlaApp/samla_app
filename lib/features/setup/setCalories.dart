@@ -38,7 +38,7 @@ class _CaloriesGoalWidgetState extends State<CaloriesGoalWidget> {
               Text(
                 "Set your daily \nburned calories goal",
                 style: TextStyle(
-                    color: theme_darkblue,
+                    color: themeDarkBlue,
                     fontWeight: FontWeight.bold,
                     fontSize: 30),
               ),
@@ -115,7 +115,7 @@ class CustomTextField extends StatelessWidget {
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
           borderSide: BorderSide(
-            color: theme_green,
+            color: themeBlue,
           ),
         ),
         prefixIcon: Icon(iconData, color: Color.fromRGBO(64, 194, 210, 1)),
@@ -124,7 +124,7 @@ class CustomTextField extends StatelessWidget {
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
           borderSide: BorderSide(
-            color: theme_green,
+            color: themeBlue,
           ),
         ),
         errorBorder: OutlineInputBorder(

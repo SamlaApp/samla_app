@@ -124,7 +124,7 @@ class _CreateCommunityPageState extends State<CreateCommunityPage> {
           SchedulerBinding.instance.addPostFrameCallback((_) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                backgroundColor: theme_green.withOpacity(0.65),
+                backgroundColor: themeBlue.withOpacity(0.65),
                 content: Text('Community created successfully'),
               ),
             );
@@ -148,10 +148,10 @@ class _CreateCommunityPageState extends State<CreateCommunityPage> {
           );
         } else {
           return Scaffold(
-            backgroundColor: theme_green,
+            backgroundColor: themeBlue,
             appBar: AppBar(
               shadowColor: primary_color,
-              backgroundColor: theme_green,
+              backgroundColor: themeBlue,
               toolbarHeight: 150.0,
               leading: IconButton(
                 icon: Icon(Icons.arrow_back, color: primary_color),
@@ -219,14 +219,14 @@ class _CreateCommunityPageState extends State<CreateCommunityPage> {
                         iconData: Icons.alternate_email,
                       ),
                       SwitchListTile(
-                        activeTrackColor: theme_green.withOpacity(0.65),
+                        activeTrackColor: themeBlue.withOpacity(0.65),
                         thumbColor:
-                            MaterialStateProperty.all<Color>(theme_green),
+                            MaterialStateProperty.all<Color>(themeBlue),
                         inactiveTrackColor: inputField_color,
                         title: Text(
                           'Public Community',
                           style: TextStyle(
-                              color: theme_darkblue.withOpacity(0.95)),
+                              color: themeDarkBlue.withOpacity(0.95)),
                         ),
                         value: _isPublic,
                         onChanged: (newValue) {
@@ -239,7 +239,7 @@ class _CreateCommunityPageState extends State<CreateCommunityPage> {
                       Container(
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
-                          color: theme_green,
+                          color: themeBlue,
                         ),
                         width: double.infinity,
                         child: TextButton(

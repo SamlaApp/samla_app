@@ -325,16 +325,16 @@ class _RegisterState extends State<RegisterPage> {
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10),
                                 borderSide: BorderSide(
-                                  color: theme_green,
+                                  color: themeBlue,
                                 ),
                               ),
-                              prefixIcon: Icon(Icons.key, color: theme_green),
+                              prefixIcon: Icon(Icons.key, color: themeBlue),
                               hintText: 'Password',
                               labelText: 'Password',
                               focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10),
                                 borderSide: BorderSide(
-                                  color: theme_green,
+                                  color: themeBlue,
                                 ),
                               ),
                               errorBorder: OutlineInputBorder(
@@ -370,7 +370,7 @@ class _RegisterState extends State<RegisterPage> {
                           ElevatedButton(
                             style: ElevatedButton.styleFrom(
                               minimumSize: const Size(double.infinity, 50),
-                              backgroundColor: theme_green,
+                              backgroundColor: themeBlue,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10),
                               ),
@@ -450,7 +450,7 @@ class CustomTextField extends StatelessWidget {
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
           borderSide: BorderSide(
-            color: theme_green,
+            color: themeBlue,
           ),
         ),
         prefixIcon: Icon(iconData, color: Color.fromRGBO(64, 194, 210, 1)),
@@ -459,7 +459,7 @@ class CustomTextField extends StatelessWidget {
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
           borderSide: BorderSide(
-            color: theme_green,
+            color: themeBlue,
           ),
         ),
         errorBorder: OutlineInputBorder(

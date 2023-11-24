@@ -204,7 +204,7 @@ class _ImageViewerState extends State<ImageViewer> {
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: Icon(Icons.add_a_photo_outlined,
-                            color: theme_darkblue.withOpacity(0.3)),
+                            color: themeDarkBlue.withOpacity(0.3)),
                       )
                     : throw Exception(
                         'neither imageFile or imgeURL or ImageAsset or editableCallback must be passed '));
@@ -232,7 +232,7 @@ class _ImageViewerState extends State<ImageViewer> {
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Icon(Icons.add_a_photo_outlined,
-                        color: theme_darkblue.withOpacity(0.3)),
+                        color: themeDarkBlue.withOpacity(0.3)),
                   )
                 : widget.placeholderImagePath != null
                     ? ClipOval(child: Image.asset(widget.placeholderImagePath!))

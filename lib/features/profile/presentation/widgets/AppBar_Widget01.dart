@@ -18,7 +18,7 @@ class buildAAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Size get preferredSize => Size.fromHeight(height);
   double sizeOficon = 27;
-  Color iconColor = theme_darkblue.withOpacity(0.5);
+  Color iconColor = themeDarkBlue.withOpacity(0.5);
 
   @override
   Widget build(BuildContext context) {
@@ -30,13 +30,13 @@ class buildAAppBar extends StatelessWidget implements PreferredSizeWidget {
                   fontWeight: FontWeight.bold,
                   fontSize: 17,
                   decoration: TextDecoration.none,
-                  color: theme_darkblue.withOpacity(1))),
+                  color: themeDarkBlue.withOpacity(1))),
           backgroundColor: primary_color,
           elevation: 0,
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              color: theme_darkblue.withOpacity(0.5),
+              color: themeDarkBlue.withOpacity(0.5),
             ),
             onPressed: () => Navigator.pop(context),
           ),

@@ -38,9 +38,9 @@ class CustomTextFormField extends StatelessWidget {
       controller: controller,
       validator: validator,
       key: formKey,
-      style: TextStyle(color: theme_darkblue, fontSize: 16),
+      style: TextStyle(color: themeDarkBlue, fontSize: 16),
       textAlignVertical: TextAlignVertical.center,
-      cursorColor: theme_darkblue.withOpacity(0.3),
+      cursorColor: themeDarkBlue.withOpacity(0.3),
       decoration: InputDecoration(
         contentPadding: textArealike ? EdgeInsets.all(10.0) : null,
         isCollapsed: true,
@@ -59,7 +59,7 @@ class CustomTextFormField extends StatelessWidget {
           heightFactor: 1.0,
           child: Icon(
             iconData,
-            color: theme_green,
+            color: themeBlue,
           ),
         ),
       ),

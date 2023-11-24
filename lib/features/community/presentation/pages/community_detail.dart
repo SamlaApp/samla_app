@@ -76,7 +76,7 @@ class CommunityDetail extends StatelessWidget {
                         fontWeight: FontWeight.w400,
                         fontSize: 16,
                         decoration: TextDecoration.none,
-                        color: theme_darkblue.withOpacity(0.95)),
+                        color: themeDarkBlue.withOpacity(0.95)),
                   ),
                   SizedBox(
                     height: 10,
@@ -93,7 +93,7 @@ class CommunityDetail extends StatelessWidget {
                   Container(
                     width: 250,
                     height: 40,
-                    decoration: primary_decoration.copyWith(color: theme_green),
+                    decoration: primary_decoration.copyWith(color: themeBlue),
                     child: TextButton.icon(
                       // stretch the button
 
@@ -211,7 +211,7 @@ class CommunityDetail extends StatelessWidget {
                                       fontWeight: FontWeight.w400,
                                       fontSize: 20,
                                       decoration: TextDecoration.none,
-                                      color: theme_darkblue.withOpacity(0.95))),
+                                      color: themeDarkBlue.withOpacity(0.95))),
                             ),
 
                             SizedBox(height: 5),
@@ -256,7 +256,7 @@ class CommunityDetail extends StatelessWidget {
                                       fontWeight: FontWeight.w400,
                                       fontSize: 14,
                                       decoration: TextDecoration.none,
-                                      color: theme_darkblue.withOpacity(0.5))),
+                                      color: themeDarkBlue.withOpacity(0.5))),
                             ),
 
                             SizedBox(height: 30),
@@ -397,7 +397,7 @@ class CommunityDetail extends StatelessWidget {
                             fontWeight: FontWeight.w400,
                             fontSize: 16,
                             decoration: TextDecoration.none,
-                            color: theme_darkblue.withOpacity(0.95)),
+                            color: themeDarkBlue.withOpacity(0.95)),
                       ),
                       SizedBox(
                         height: 5,
@@ -408,7 +408,7 @@ class CommunityDetail extends StatelessWidget {
                             fontWeight: FontWeight.w400,
                             fontSize: 14,
                             decoration: TextDecoration.none,
-                            color: theme_darkblue.withOpacity(0.5)),
+                            color: themeDarkBlue.withOpacity(0.5)),
                       ),
                       SizedBox(
                         height: 40,
@@ -500,7 +500,7 @@ class CommunityDetail extends StatelessWidget {
               fontWeight: FontWeight.w400,
               fontSize: 16,
               decoration: TextDecoration.none,
-              color: theme_darkblue.withOpacity(0.95)),
+              color: themeDarkBlue.withOpacity(0.95)),
         ),
         subtitle: Text(
           state is MemebersLoaded ? state.users[index].email : '',
@@ -508,7 +508,7 @@ class CommunityDetail extends StatelessWidget {
               fontWeight: FontWeight.w400,
               fontSize: 14,
               decoration: TextDecoration.none,
-              color: theme_darkblue.withOpacity(0.5)),
+              color: themeDarkBlue.withOpacity(0.5)),
         ),
       ),
     );
@@ -523,11 +523,11 @@ class CommunityDetail extends StatelessWidget {
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: community.isMemeber
-                ? [theme_red, theme_pink]
+                ? [theme_red, themePink]
                 : [
-                    theme_green,
+                    themeBlue,
                     // Replace with your theme_green color
-                    theme_pink // Replace with your theme_pink color
+                    themePink // Replace with your theme_pink color
                   ],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
@@ -645,13 +645,13 @@ class OverViewWidget extends StatelessWidget {
                 fontWeight: FontWeight.w400,
                 fontSize: 20,
                 decoration: TextDecoration.none,
-                color: theme_darkblue.withOpacity(0.75))),
+                color: themeDarkBlue.withOpacity(0.75))),
         SizedBox(height: 10),
         SizedBox(
           width: double.maxFinite,
           child: Text(overview,
               style: TextStyle(
-                  fontSize: 14, color: theme_darkblue.withOpacity(0.8))),
+                  fontSize: 14, color: themeDarkBlue.withOpacity(0.8))),
         )
       ]),
     );
@@ -698,7 +698,7 @@ class MermbersCountWidget extends StatelessWidget {
                               fontWeight: FontWeight.bold,
                               fontSize: 20,
                               decoration: TextDecoration.none,
-                              color: theme_green));
+                              color: themeBlue));
                     },
                   );
                 },
@@ -709,7 +709,7 @@ class MermbersCountWidget extends StatelessWidget {
                       fontWeight: FontWeight.w400,
                       fontSize: 12,
                       decoration: TextDecoration.none,
-                      color: theme_darkblue.withOpacity(0.5))),
+                      color: themeDarkBlue.withOpacity(0.5))),
             ],
           ),
           Column(
@@ -719,14 +719,14 @@ class MermbersCountWidget extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                       fontSize: 20,
                       decoration: TextDecoration.none,
-                      color: theme_green)),
+                      color: themeBlue)),
               SizedBox(height: 5),
               Text('Community',
                   style: TextStyle(
                       fontWeight: FontWeight.w400,
                       fontSize: 12,
                       decoration: TextDecoration.none,
-                      color: theme_darkblue.withOpacity(0.5))),
+                      color: themeDarkBlue.withOpacity(0.5))),
             ],
           ),
         ],
@@ -822,10 +822,10 @@ PreferredSize GradientAppBar(context, userRoleOptions userRole,
           secondaryBegin: Alignment.bottomRight,
           secondaryEnd: Alignment.topLeft,
           primaryColors: [
-            theme_green,
+            themeBlue,
             Colors.blueAccent,
           ],
-          secondaryColors: [theme_green, Color.fromARGB(255, 120, 90, 255)],
+          secondaryColors: [themeBlue, Color.fromARGB(255, 120, 90, 255)],
         ),
       ),
     ),

@@ -43,7 +43,7 @@ class _BarChart extends StatelessWidget {
               rod.toY.round().toString(),
               // '',
               TextStyle(
-                color: theme_green,
+                color: themeBlue,
                 fontWeight: FontWeight.bold,
               ),
             );
@@ -53,7 +53,7 @@ class _BarChart extends StatelessWidget {
 
   Widget getTitles(double value, TitleMeta meta) {
     final style = TextStyle(
-      color: theme_darkblue.withOpacity(0.7),
+      color: themeDarkBlue.withOpacity(0.7),
       fontWeight: FontWeight.w300,
       fontSize: 12,
     );
@@ -117,8 +117,8 @@ class _BarChart extends StatelessWidget {
 
   LinearGradient get _barsGradient => LinearGradient(
         colors: [
-          theme_pink,
-          theme_green,
+          themePink,
+          themeBlue,
         ],
         begin: Alignment.bottomCenter,
         end: Alignment.topCenter,
@@ -247,7 +247,7 @@ class WeeklyProgressState extends State<WeeklyProgress> {
                     icon: SvgPicture.asset(
                     'images/arrow-down.svg',
                     height: 10,
-                    color: theme_darkblue.withOpacity(0.3),
+                    color: themeDarkBlue.withOpacity(0.3),
                     ),
                     alignment: Alignment.centerRight,
                     // Step 3.
@@ -266,7 +266,7 @@ class WeeklyProgressState extends State<WeeklyProgress> {
                             style: textStyle.copyWith(
                               fontSize: 12,
                               fontWeight: FontWeight.w300,
-                              color: theme_darkblue.withOpacity(0.3)
+                              color: themeDarkBlue.withOpacity(0.3)
                               ,
                               ),
                           ),

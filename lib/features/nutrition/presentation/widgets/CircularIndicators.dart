@@ -66,7 +66,7 @@ class _CircularIndicatorsState extends State<CircularIndicators> {
                         style: TextStyle(
                             fontSize: 27,
                             fontWeight: FontWeight.bold,
-                            color: theme_green),
+                            color: themeBlue),
                       )
                           : Countup(
                         begin: 0,
@@ -76,19 +76,19 @@ class _CircularIndicatorsState extends State<CircularIndicators> {
                         style: TextStyle(
                             fontSize: 27,
                             fontWeight: FontWeight.bold,
-                            color: theme_green),
+                            color: themeBlue),
                       ),
                       Text(
                         'Eaten',
                         style: TextStyle(
                             fontSize: 15,
                             // fontWeight: FontWeight.bold,
-                            color: theme_darkblue.withOpacity(0.7)),
+                            color: themeDarkBlue.withOpacity(0.7)),
                       )
                     ],
                   ),
-                  progressColor: theme_green,
-                  backgroundColor: theme_green.withOpacity(0.2),
+                  progressColor: themeBlue,
+                  backgroundColor: themeBlue.withOpacity(0.2),
                 );
               }),
         ),
@@ -141,7 +141,7 @@ class _CircularIndicatorsState extends State<CircularIndicators> {
                         style: TextStyle(
                             fontSize: 15,
                             // fontWeight: FontWeight.bold,
-                            color: theme_darkblue.withOpacity(0.3)),
+                            color: themeDarkBlue.withOpacity(0.3)),
                       )
                     ],
                   ),

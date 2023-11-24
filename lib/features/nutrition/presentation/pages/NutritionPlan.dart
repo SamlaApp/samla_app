@@ -68,11 +68,11 @@ class _NutritionPlanState extends State<NutritionPlan> {
           secondaryBegin: Alignment.bottomRight,
           secondaryEnd: Alignment.topLeft,
           primaryColors: [
-            theme_green,
+            themeBlue,
             Colors.blueAccent,
           ],
           secondaryColors: [
-            theme_green,
+            themeBlue,
             const Color.fromARGB(255, 120, 90, 255)
           ],
         ),
@@ -89,12 +89,12 @@ class _NutritionPlanState extends State<NutritionPlan> {
                 Text(
                   'Nutrition Plans',
                   style: TextStyle(
-                      color: theme_darkblue,
+                      color: themeDarkBlue,
                       fontSize: 16,
                       fontWeight: FontWeight.bold),
                 ),
                 IconButton(
-                  icon: Icon(Icons.refresh, color: theme_darkblue),
+                  icon: Icon(Icons.refresh, color: themeDarkBlue),
                   onPressed: () {
                     refresh();
                   },
@@ -118,8 +118,8 @@ class _NutritionPlanState extends State<NutritionPlan> {
             child: Padding(
               padding: const EdgeInsets.all(16.0),
               child: CircularProgressIndicator(
-                color: theme_green,
-                backgroundColor: theme_pink,
+                color: themeBlue,
+                backgroundColor: themePink,
               ),
             ),
           );
@@ -171,7 +171,7 @@ class _NutritionPlanState extends State<NutritionPlan> {
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
         colors: [
-          theme_green,
+          themeBlue,
           Colors.blueAccent,
         ],
       );
@@ -187,7 +187,7 @@ class _NutritionPlanState extends State<NutritionPlan> {
       gradient = LinearGradient(
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
-        colors: [theme_darkblue, theme_green],
+        colors: [themeDarkBlue, themeBlue],
       );
     } else if (type == 'Snack') {
       icon = Icons.fastfood;
@@ -195,7 +195,7 @@ class _NutritionPlanState extends State<NutritionPlan> {
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
         colors: [
-          theme_pink,
+          themePink,
           Colors.blueAccent,
         ],
       );

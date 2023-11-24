@@ -208,7 +208,7 @@ class _ExerciseTilesState extends State<ExerciseTiles> {
                       child: ElevatedButton.icon(
                         icon: const Icon(Icons.close),
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: theme_darkblue,
+                          backgroundColor: themeDarkBlue,
                         ),
                         onPressed: () {
                           Navigator.of(context).pop();
