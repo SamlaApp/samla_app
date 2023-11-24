@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:samla_app/features/training/presentation/cubit/Templates/template_cubit.dart';
-import 'package:samla_app/features/training/presentation/pages/startTrainig.dart';
-import 'package:samla_app/features/training/presentation/pages/startTrainingNew.dart';
+import 'package:samla_app/features/training/presentation/pages/EXstartTrainig.dart';
+import 'package:samla_app/features/training/presentation/pages/startTrainingPage.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import '../../../../config/themes/common_styles.dart';
 import '../../domain/entities/ExerciseLibrary.dart';
@@ -21,10 +21,10 @@ class TrainingPage extends StatefulWidget {
 }
 
 class _TrainingPageState extends State<TrainingPage> {
-
-  final String baseURL = 'https://samla.mohsowa.com/api/training/image/'; // api url for images
-  String capitalize(String s) => s[0].toUpperCase() + s.substring(1); // capitalize first letter of string
-
+  final String baseURL =
+      'https://samla.mohsowa.com/api/training/image/'; // api url for images
+  String capitalize(String s) =>
+      s[0].toUpperCase() + s.substring(1); // capitalize first letter of string
 
   late TemplateCubit templateCubit; // Declare the cubit
   late ViewDayExerciseCubit viewDayExerciseCubit; // Declare the cubit
@@ -34,15 +34,14 @@ class _TrainingPageState extends State<TrainingPage> {
 
   ValueNotifier<int?> activeTemplateId = ValueNotifier(null);
 
-
-
   @override
   void initState() {
     super.initState();
 
     di.trainingInit(); // Initialize the training module
     templateCubit = di.sl.get<TemplateCubit>(); // Get the cubit instance
-    viewDayExerciseCubit = di.sl.get<ViewDayExerciseCubit>(); // Get the cubit instance
+    viewDayExerciseCubit =
+        di.sl.get<ViewDayExerciseCubit>(); // Get the cubit instance
 
     templateCubit.activeTemplate(); // Get the active template
 
@@ -53,12 +52,22 @@ class _TrainingPageState extends State<TrainingPage> {
     });
   }
 
-
   void _fetchWeeklyExercises() {
-    const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-    int templateId = activeTemplateId.value ?? 0; // Use the value from the notifier
+    const days = [
+      "Sunday",
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday"
+    ];
+    int templateId =
+        activeTemplateId.value ?? 0; // Use the value from the notifier
     for (var day in days) {
-      viewDayExerciseCubit.repository.getExercisesDay(day: day, templateID: templateId).then((result) {
+      viewDayExerciseCubit.repository
+          .getExercisesDay(day: day, templateID: templateId)
+          .then((result) {
         setState(() {
           weeklyExercises[day] = result.getOrElse(() => []);
         });
@@ -68,14 +77,22 @@ class _TrainingPageState extends State<TrainingPage> {
 
   String _getDayNameFromTemplate(Template template, int index) {
     switch (index) {
-      case 0: return template.sunday ?? "Sunday";
-      case 1: return template.monday ?? "Monday";
-      case 2: return template.tuesday ?? "Tuesday";
-      case 3: return template.wednesday ?? "Wednesday";
-      case 4: return template.thursday ?? "Thursday";
-      case 5: return template.friday ?? "Friday";
-      case 6: return template.saturday ?? "Saturday";
-      default: return "Unknown Day";
+      case 0:
+        return template.sunday ?? "Sunday";
+      case 1:
+        return template.monday ?? "Monday";
+      case 2:
+        return template.tuesday ?? "Tuesday";
+      case 3:
+        return template.wednesday ?? "Wednesday";
+      case 4:
+        return template.thursday ?? "Thursday";
+      case 5:
+        return template.friday ?? "Friday";
+      case 6:
+        return template.saturday ?? "Saturday";
+      default:
+        return "Unknown Day";
     }
   }
 
@@ -88,25 +105,34 @@ class _TrainingPageState extends State<TrainingPage> {
     // This line will be executed after you pop back from TemplatesPage
     _fetchDataOrRefreshState(); // Call your method to refresh or fetch data
   }
+
   void _fetchDataOrRefreshState() {
     templateCubit.activeTemplate(); // To refresh the active template
     if (activeTemplateId.value != null) {
       _fetchWeeklyExercises(); // To refresh weekly exercises
     }
   }
+
   String _getDayNameFromIndex(int index) {
     switch (index) {
-      case 0: return "Sunday";
-      case 1: return "Monday";
-      case 2: return "Tuesday";
-      case 3: return "Wednesday";
-      case 4: return "Thursday";
-      case 5: return "Friday";
-      case 6: return "Saturday";
-      default: return "Unknown Day";
+      case 0:
+        return "Sunday";
+      case 1:
+        return "Monday";
+      case 2:
+        return "Tuesday";
+      case 3:
+        return "Wednesday";
+      case 4:
+        return "Thursday";
+      case 5:
+        return "Friday";
+      case 6:
+        return "Saturday";
+      default:
+        return "Unknown Day";
     }
   }
-
 
   @override
   void dispose() {
@@ -114,7 +140,6 @@ class _TrainingPageState extends State<TrainingPage> {
     activeTemplateId.dispose(); // Dispose the notifier
     super.dispose();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -140,11 +165,12 @@ class _TrainingPageState extends State<TrainingPage> {
                 dotHeight: 6,
                 dotWidth: 6,
                 jumpScale: 3,
-                activeDotColor: Color.fromRGBO(216, 46, 20, 1), // use your theme color here
-                dotColor: Colors.grey, // use a color that suits your theme for inactive dots
+                activeDotColor: Color.fromRGBO(216, 46, 20, 1),
+                // use your theme color here
+                dotColor: Colors
+                    .grey, // use a color that suits your theme for inactive dots
               ),
             ),
-
           ],
         ),
       ),
@@ -156,7 +182,8 @@ class _TrainingPageState extends State<TrainingPage> {
       bloc: templateCubit,
       builder: (context, state) {
         if (state is TemplateLoadingState) {
-          return Center(child: CircularProgressIndicator(
+          return Center(
+              child: CircularProgressIndicator(
             color: theme_green,
             backgroundColor: theme_pink,
           ));
@@ -165,7 +192,8 @@ class _TrainingPageState extends State<TrainingPage> {
             controller: _controller,
             itemCount: 7, // One for each day of the week
             itemBuilder: (BuildContext context, int index) {
-              String dayNameFromTemplate = _getDayNameFromTemplate(state.template, index);
+              String dayNameFromTemplate =
+                  _getDayNameFromTemplate(state.template, index);
               return Container(
                 width: MediaQuery.of(context).size.width - 40,
                 margin: const EdgeInsets.all(16),
@@ -188,8 +216,6 @@ class _TrainingPageState extends State<TrainingPage> {
                   borderRadius: BorderRadius.circular(25),
                   backgroundBlendMode: BlendMode.darken,
                 ),
-                
-                
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Column(
@@ -197,49 +223,72 @@ class _TrainingPageState extends State<TrainingPage> {
                     mainAxisSize: MainAxisSize.max,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
-
                       Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Text(capitalize(dayNameFromTemplate), style:  const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white, fontFamily: 'Cairo',),),
+                        child: Text(
+                          capitalize(dayNameFromTemplate),
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                            fontFamily: 'Cairo',
+                          ),
+                        ),
                       ),
 
                       // Exercises
                       const SizedBox(height: 16),
                       buildExercisesForDay(context, index, weeklyExercises),
-                      
 
                       // buildGradientBorderButton(context),
-                      if(weeklyExercises[_getDayNameFromIndex(index)] != null && weeklyExercises[_getDayNameFromIndex(index)]!.isNotEmpty)
-                      Center(
-                        child: SizedBox(
-                          height: 50,
-                          child: ElevatedButton.icon(
-                              label: const Text('Start Now', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white, fontFamily: 'Cairo',),),
+                      if (weeklyExercises[_getDayNameFromIndex(index)] !=
+                              null &&
+                          weeklyExercises[_getDayNameFromIndex(index)]!
+                              .isNotEmpty)
+                        Center(
+                          child: SizedBox(
+                            height: 50,
+                            child: ElevatedButton.icon(
+                              label: const Text(
+                                'Start Now',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                  fontFamily: 'Cairo',
+                                ),
+                              ),
                               onPressed: () {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) => StartTrainingNew(
-                                      dayName: dayNameFromTemplate, // Pass the day name from the template
-                                      dayIndex: index, // Pass the day index directly
-                                      exercises: weeklyExercises[_getDayNameFromIndex(index)] ?? [],
+                                      dayName: dayNameFromTemplate,
+                                      // Pass the day name from the template
+                                      dayIndex: index,
+                                      // Pass the day index directly
+                                      exercises: weeklyExercises[
+                                              _getDayNameFromIndex(index)] ??
+                                          [],
                                     ),
                                   ),
                                 );
                               },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.transparent,
-                              shadowColor: Colors.transparent,
-                              elevation: 0,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(25),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.transparent,
+                                shadowColor: Colors.transparent,
+                                elevation: 0,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(25),
+                                ),
+                                side: const BorderSide(
+                                    width: 2.0, color: Colors.white),
                               ),
-                              side: const BorderSide(width: 2.0, color: Colors.white),
+                              icon: const Icon(Icons.play_arrow,
+                                  color: Colors.white, size: 30),
                             ),
-                              icon: const Icon(Icons.play_arrow, color: Colors.white, size: 30),
                           ),
                         ),
-                      ),
                     ],
                   ),
                 ),
@@ -251,7 +300,8 @@ class _TrainingPageState extends State<TrainingPage> {
         } else if (state is TemplateErrorState) {
           return Center(child: Text(state.message));
         }
-        return Center(child: CircularProgressIndicator(
+        return Center(
+            child: CircularProgressIndicator(
           color: theme_green,
           backgroundColor: theme_pink,
         ));
@@ -291,8 +341,8 @@ class _TrainingPageState extends State<TrainingPage> {
                     ),
                   ),
                   IconButton(
-                      onPressed:_navigateToTemplatesPage,
-                      icon: Icon(Icons.edit, color: theme_darkblue, size: 30),
+                    onPressed: _navigateToTemplatesPage,
+                    icon: Icon(Icons.edit, color: theme_darkblue, size: 30),
                   ),
                 ],
               ),
@@ -314,11 +364,4 @@ class _TrainingPageState extends State<TrainingPage> {
       },
     );
   }
-
 }
-
-
-
-
-
-

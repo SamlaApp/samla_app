@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../config/themes/common_styles.dart';
-import '../pages/startTrainig.dart';
+import '../pages/EXstartTrainig.dart';
 
 Widget buildGradientBorderButton(BuildContext context) {
   return InkWell(
@@ -16,14 +16,14 @@ Widget buildGradientBorderButton(BuildContext context) {
       );
 
        */
-
     },
     child: Padding(
       padding: const EdgeInsets.all(7.0),
       child: Container(
         padding: EdgeInsets.all(4), // Padding for the gradient border
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(11), // slightly larger radius for the border
+          borderRadius: BorderRadius.circular(11),
+          // slightly larger radius for the border
           gradient: LinearGradient(
             colors: [theme_darkblue, Colors.red],
             begin: Alignment.centerLeft,
@@ -50,7 +50,8 @@ Widget buildGradientBorderButton(BuildContext context) {
                 child: Text(
                   'Start Now',
                   style: TextStyle(
-                    color: Colors.white, // This color is important to make gradient visible
+                    color: Colors.white,
+                    // This color is important to make gradient visible
                     fontWeight: FontWeight.bold,
                   ),
                 ),
