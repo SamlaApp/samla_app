@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../../config/themes/common_styles.dart';
+import '../../../../../config/themes/new_style.dart';
 
 class ProgressSection extends StatelessWidget {
   final int totalSets;
@@ -13,7 +13,8 @@ class ProgressSection extends StatelessWidget {
   final Function(int) updateTotalSets;
   final Function(int) formatTime;
 
-  ProgressSection({
+  const ProgressSection({
+    super.key,
     required this.totalSets,
     required this.finishedSets,
     required this.countdownValue,
@@ -28,7 +29,7 @@ class ProgressSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.all(10.0),
+      margin: const EdgeInsets.all(10.0),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12.0),
         gradient: LinearGradient(
@@ -76,7 +77,7 @@ class ProgressSection extends StatelessWidget {
       padding: EdgeInsets.fromLTRB(15, 10, 15, 10),
       margin: EdgeInsets.fromLTRB(20, 15, 20, 15),
       // Assume primary_decoration is defined elsewhere
-      decoration: primary_decoration,
+      decoration: primaryDecoration,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -144,11 +145,18 @@ class ProgressSection extends StatelessWidget {
   }
 
   Widget buildTextField(TextEditingController controller, String hint) {
+    // decoration varable text failed to take numbers only input
+    final textFieldDecoration = BoxDecoration(
+      borderRadius: BorderRadius.circular(12),
+      color: white,
+      // hint color
+      
+    );
     return Container(
       margin: EdgeInsets.fromLTRB(20, 0, 5, 0),
       height: 50,
       // Assume textField_decoration is defined elsewhere
-      decoration: textField_decoration,
+      decoration: textFieldDecoration,
       child: TextFormField(
         controller: controller,
         textAlign: TextAlign.center,

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../../../config/themes/common_styles.dart';
+import '../../../../../config/themes/new_style.dart';
 import '../../../domain/entities/ExerciseLibrary.dart';
 
 class ExerciseScrollRow extends StatelessWidget {
@@ -8,22 +8,22 @@ class ExerciseScrollRow extends StatelessWidget {
   final Function(ExerciseLibrary) onExerciseSelect;
   final String baseURL = 'https://samla.mohsowa.com/api/training/image/';
 
-  ExerciseScrollRow({
+  const ExerciseScrollRow({
+    super.key,
     required this.exercises,
     required this.selectedExercise,
     required this.onExerciseSelect,
-
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: primary_decoration.copyWith(
+      decoration: primaryDecoration.copyWith(
         border: Border.all(color: Colors.grey[300]!),
         borderRadius: BorderRadius.circular(12),
       ),
-      height: 80, // Adjust as needed
-      margin: EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+      height: MediaQuery.of(context).size.height * 0.09,
+      margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: exercises.length,
@@ -34,18 +34,21 @@ class ExerciseScrollRow extends StatelessWidget {
           return InkWell(
             onTap: () => onExerciseSelect(exercise),
             child: Container(
+              margin: const EdgeInsets.all(8.0),
               width: 65,
-              margin: EdgeInsets.all(8),
               decoration: BoxDecoration(
                 border: Border.all(
-                  color: isSelected ? Colors.blue : Colors.grey[300]!,
+                  color: isSelected ? themeDarkBlue : themeGrey,
                   width: isSelected ? 3 : 1,
                 ),
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(6.0),
               ),
-              child: Image.network(
-                baseURL + exercise.gifUrl,
-                fit: BoxFit.cover,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Image.network(
+                  baseURL + exercise.gifUrl,
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
           );
