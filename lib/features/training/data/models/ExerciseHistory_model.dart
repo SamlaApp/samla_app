@@ -38,14 +38,7 @@ class ExerciseHistoryModel extends ExerciseHistory {
         ? json['distance'].toDouble() // Convert int to double
         : (json['distance'] is double ? json['distance'] : null);
 
-    // Parse 'created_at' as a DateTime object
-    final createdAt =
-        json['created_at'] != null ? DateTime.parse(json['created_at']) : null;
-
-    // Extract the date from 'created_at' or provide a default value
-    final day = createdAt != null
-        ? "${createdAt.year}-${createdAt.month}-${createdAt.day}"
-        : 'No date'; // Provide a default value for 'day'
+    final day = json['date'] as String;
 
     return ExerciseHistoryModel(
       id: json['id'],
