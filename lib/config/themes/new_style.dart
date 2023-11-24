@@ -28,7 +28,7 @@ ThemeData lightTheme = ThemeData(
     onPrimary: themeDarkBlue,
     onSecondary: white,
     onBackground: themeDarkBlue.withOpacity(0.5),
-    onSurface: themeDarkBlue.withOpacity(0.5),
+    onSurface: Colors.black,
   ),
 
   // main font is cairo

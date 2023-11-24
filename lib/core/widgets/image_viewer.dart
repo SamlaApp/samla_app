@@ -4,7 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:photo_view/photo_view.dart';
-import 'package:samla_app/config/themes/common_styles.dart';
+import 'package:samla_app/config/themes/new_style.dart';
 import 'package:samla_app/core/widgets/image_helper.dart';
 
 enum ImageViewerType { network, asset, file, empty }
@@ -123,16 +123,16 @@ class _ImageViewerState extends State<ImageViewer> {
                 ? Hero(
                     tag: widget.animationTag!,
                     child: widget.isRectangular == true
-                        ? RectanagularWidget(imageRectWidget)
+                        ? rectanagularWidget(imageRectWidget)
 
                         // circular image
-                        : CircularWidget(imageWidget),
+                        : circularWidget(imageWidget),
                   )
                 : widget.isRectangular == true
-                    ? RectanagularWidget(imageRectWidget)
+                    ? rectanagularWidget(imageRectWidget)
 
                     // circular image
-                    : CircularWidget(imageWidget)
+                    : circularWidget(imageWidget)
             :
 
             // with clickable
@@ -141,16 +141,16 @@ class _ImageViewerState extends State<ImageViewer> {
                     ? Hero(
                         tag: widget.animationTag!,
                         child: widget.isRectangular == true
-                            ? RectanagularWidget(imageRectWidget)
+                            ? rectanagularWidget(imageRectWidget)
 
                             // circular image
-                            : CircularWidget(imageWidget),
+                            : circularWidget(imageWidget),
                       )
                     : widget.isRectangular == true
-                        ? RectanagularWidget(imageRectWidget)
+                        ? rectanagularWidget(imageRectWidget)
 
                         // circular image
-                        : CircularWidget(imageWidget),
+                        : circularWidget(imageWidget),
                 onTap: () {
                   if (image == null && imageWidget == null) {
                     if (widget.editableCallback != null) {
@@ -189,16 +189,16 @@ class _ImageViewerState extends State<ImageViewer> {
               );
   }
 
-  CircleAvatar CircularWidget(ClipOval? imageWidget) {
+  CircleAvatar circularWidget(ClipOval? imageWidget) {
     return CircleAvatar(
-        backgroundColor: inputField_color,
+        backgroundColor: inputFieldColor,
         radius: widget.width / 2,
         child: imageWidget ?? (widget.placeholderImagePath != null
                 ? ClipOval(child: Image.asset(widget.placeholderImagePath!))
                 : widget.editableCallback != null
                     ? Container(
                         decoration: BoxDecoration(
-                          color: inputField_color,
+                          color: inputFieldColor,
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: Icon(Icons.add_a_photo_outlined,
@@ -208,25 +208,25 @@ class _ImageViewerState extends State<ImageViewer> {
                         'neither imageFile or imgeURL or ImageAsset or editableCallback must be passed ')));
   }
 
-  Container RectanagularWidget(Widget? imageWidget) {
+  Container rectanagularWidget(Widget? imageWidget) {
     return Container(
         clipBehavior: Clip.hardEdge,
         width: widget.width,
         height: widget.height,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
-          color: inputField_color,
+          color: inputFieldColor,
         ),
         child: imageWidget != null
             ? FittedBox(
-                child: imageWidget,
                 fit: BoxFit.cover,
+                child: imageWidget,
               )
             : widget.editableCallback != null
                 ? Container(
                     height: double.maxFinite,
                     decoration: BoxDecoration(
-                      color: inputField_color,
+                      color: inputFieldColor,
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Icon(Icons.add_a_photo_outlined,
@@ -262,10 +262,10 @@ Widget cachedNetworkImage(
         fit: BoxFit.cover,
         placeholder: (context, url) => placeholderImagePath != null
             ? Image.asset(placeholderImagePath)
-            : Center(child: Icon(Icons.image)),
+            : const Center(child: Icon(Icons.image)),
         errorWidget: (context, url, error) => placeholderImagePath != null
             ? Image.asset(placeholderImagePath)
-            : Center(child: Icon(Icons.error)),
+            : const Center(child: Icon(Icons.error)),
         imageBuilder: (context, imageProvider) => Image(
               image: imageProvider,
               fit: BoxFit.cover,
@@ -274,7 +274,7 @@ Widget cachedNetworkImage(
   } catch (e) {
     print('error while load image from cache $e');
   }
-  return Center();
+  return const Center();
 }
 
 class ViewerPage extends StatefulWidget {
@@ -312,6 +312,12 @@ class _ViewerPageState extends State<ViewerPage> {
           title: Text(widget.title ?? ''),
           elevation: 0.2,
           backgroundColor: Colors.transparent,
+          leading: IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
+          ),
           actions: widget.editableCallback != null
               ? [
                   IconButton(
@@ -325,7 +331,7 @@ class _ViewerPageState extends State<ViewerPage> {
                         });
                       });
                     },
-                    icon: Icon(Icons.edit_rounded, color: Colors.white),
+                    icon: const Icon(Icons.edit_rounded, color: Colors.white),
                   )
                 ]
               : null),
@@ -344,12 +350,12 @@ Widget photoView(File? imageFile, String? imageURL, String? imageAssetPath,
     ImageViewerType? type) {
   if (imageFile != null) {
     return PhotoView(
-      imageProvider: FileImage(imageFile!),
+      imageProvider: FileImage(imageFile),
       minScale: PhotoViewComputedScale.contained * 0.8,
       maxScale: PhotoViewComputedScale.covered * 1.8,
       initialScale: PhotoViewComputedScale.contained * 1.0,
       enableRotation: false,
-      backgroundDecoration: BoxDecoration(
+      backgroundDecoration: const BoxDecoration(
         color: Colors.transparent,
       ),
     );
@@ -361,7 +367,7 @@ Widget photoView(File? imageFile, String? imageURL, String? imageAssetPath,
           minScale: PhotoViewComputedScale.contained * 0.8,
           maxScale: PhotoViewComputedScale.covered * 1.8,
           initialScale: PhotoViewComputedScale.contained * 1.0,
-          backgroundDecoration: BoxDecoration(
+          backgroundDecoration: const BoxDecoration(
             color: Colors.transparent,
           )),
       imageUrl: imageURL!,
@@ -372,7 +378,7 @@ Widget photoView(File? imageFile, String? imageURL, String? imageAssetPath,
         maxScale: PhotoViewComputedScale.covered * 1.8,
         initialScale: PhotoViewComputedScale.contained * 1.0,
         enableRotation: false,
-        backgroundDecoration: BoxDecoration(
+        backgroundDecoration: const BoxDecoration(
           color: Colors.transparent,
         ),
       ),
@@ -384,18 +390,18 @@ Widget photoView(File? imageFile, String? imageURL, String? imageAssetPath,
       maxScale: PhotoViewComputedScale.covered * 1.8,
       initialScale: PhotoViewComputedScale.contained * 1.0,
       enableRotation: false,
-      backgroundDecoration: BoxDecoration(
+      backgroundDecoration: const BoxDecoration(
         color: Colors.transparent,
       ),
     );
   } else
     return PhotoView(
-      imageProvider: AssetImage('images/defaults/empty.png'),
+      imageProvider: const AssetImage('images/defaults/empty.png'),
       minScale: PhotoViewComputedScale.contained * 0.8,
       maxScale: PhotoViewComputedScale.covered * 1.8,
       initialScale: PhotoViewComputedScale.contained * 1.0,
       enableRotation: false,
-      backgroundDecoration: BoxDecoration(
+      backgroundDecoration: const BoxDecoration(
         color: Colors.transparent,
       ),
     );

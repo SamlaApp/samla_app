@@ -210,14 +210,14 @@ class CommunityDetail extends StatelessWidget {
                                       },
                                       'Update Community Name',
                                       'Name',
-                                      community.name!,
+                                      community.name,
                                       (value) {
                                         updateCommunity(
                                             community.copyWith(name: value));
                                       });
                                 }
                               },
-                              child: Text(community.name!,
+                              child: Text(community.name,
                                   style: TextStyle(
                                       fontWeight: FontWeight.w400,
                                       fontSize: 20,
@@ -262,7 +262,7 @@ class CommunityDetail extends StatelessWidget {
                                       });
                                 }
                               },
-                              child: Text(community.handle!,
+                              child: Text(community.handle,
                                   style: TextStyle(
                                       fontWeight: FontWeight.w400,
                                       fontSize: 14,
@@ -298,7 +298,7 @@ class CommunityDetail extends StatelessWidget {
                                         },
                                         'Update Community Description',
                                         'Description',
-                                        community.description!,
+                                        community.description,
                                         (value) {
                                           updateCommunity(community.copyWith(
                                               description: value));
@@ -345,7 +345,18 @@ class CommunityDetail extends StatelessWidget {
           },
           bloc: memebersCubit..getMemebers(community.id!, community.isPublic),
           builder: (context, state) {
-            if (state is MemebersError) {
+            if (state is MemebersLoading) {
+              return const Center(
+                child: Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: CircularProgressIndicator(
+                    color: themeBlue,
+                    backgroundColor: themePink ,
+                  ),
+                ),
+              );
+            }
+            else if (state is MemebersError) {
               SchedulerBinding.instance.addPostFrameCallback((_) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
@@ -386,114 +397,123 @@ class CommunityDetail extends StatelessWidget {
               return AlertDialog(
                 backgroundColor: white,
                 surfaceTintColor: white,
-                content: Container(
+                content: SizedBox(
                   // put border radius
                   height: 230,
                   width: 200,
-                  child: Column(
-                    children: [
-                      ImageViewer.network(
-                        imageURL: state.users[index].photoUrl,
-                        placeholderImagePath: 'images/defaults/user.png',
-                        animationTag: 'memeberImage$user.id',
-                        // viewerMode: false,
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                        state.users[index].name,
-                        style: TextStyle(
-                            fontWeight: FontWeight.w400,
-                            fontSize: 16,
-                            decoration: TextDecoration.none,
-                            color: themeDarkBlue.withOpacity(0.95)),
-                      ),
-                      const SizedBox(
-                        height: 5,
-                      ),
-                      Text(
-                        '@' + state.users[index].username,
-                        style: TextStyle(
-                            fontWeight: FontWeight.w400,
-                            fontSize: 14,
-                            decoration: TextDecoration.none,
-                            color: themeDarkBlue.withOpacity(0.5)),
-                      ),
-                      const SizedBox(
-                        height: 40,
-                      ),
-                      // delete user button
-                      () {
-                        if (community.ownerID == int.parse(user.id!) &&
-                            state.users[index].id != user.id!) {
-                          return Container(
-                            width: 250,
-                            height: 40,
-                            decoration:
-                                primaryDecoration.copyWith(color: themeRed),
-                            child: TextButton.icon(
-                              // stretch the button
-
-                              icon: const Icon(
-                                Icons.delete,
-                                color: Colors.white,
-                              ),
-                              onPressed: () {
-                                showConfirmationModal(
-                                    context: context,
-                                    message:
-                                        'Are you sure you want to delete this user?',
-                                    confirmCallback: () {
-                                      memebersCubit.deleteUser(community.id!,
-                                          int.parse(state.users[index].id!),
-                                          (err) {
-                                        if (err == null) {
-                                          Navigator.pop(context);
-                                          Navigator.pop(context);
-                                          specificCubit
-                                              .getCommunitynumOfMemebers(
-                                                  community.id!);
-                                        } else {
-                                          Navigator.pop(context);
-
-                                          SchedulerBinding.instance
-                                              .addPostFrameCallback((_) {
-                                            ScaffoldMessenger.of(context)
-                                                .showSnackBar(
-                                              SnackBar(
-                                                content: Text(err),
-                                              ),
-                                            );
-                                          });
-                                        }
-                                      }, community.isPublic);
-                                    },
-                                    buttonLabel: 'Delete');
-                              },
-                              label: const Text(
-                                'Delete',
-                                style: TextStyle(color: Colors.white),
-                              ),
+                  child: Center(
+                    child: Stack(
+                      children: [
+                        Column(
+                          children: [
+                            ImageViewer.network(
+                              imageURL: state.users[index].photoUrl,
+                              placeholderImagePath: 'images/defaults/user.png',
+                              animationTag: 'memeberImage$user.id',
+                              // viewerMode: false,
                             ),
-                          );
-                        } else {
-                          return Container();
-                        }
-                      }(),
-                    ],
+                            const SizedBox(
+                              height: 5,
+                            ),
+                            Text(
+                              state.users[index].name,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 16,
+                                  decoration: TextDecoration.none,
+                                  color: themeDarkBlue.withOpacity(0.95)),
+                            ),
+                            const SizedBox(
+                              height: 5,
+                            ),
+                            Text(
+                              '@${state.users[index].username}',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 14,
+                                  decoration: TextDecoration.none,
+                                  color: themeDarkBlue.withOpacity(0.5)),
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            // delete user button
+                            () {
+                              if (community.ownerID == int.parse(user.id!) &&
+                                  state.users[index].id != user.id!) {
+                                return Container(
+                                  width: 250,
+                                  height: 40,
+                                  decoration:
+                                      primaryDecoration.copyWith(color: themeRed),
+                                  child: TextButton.icon(
+                                    // stretch the button
+
+                                    icon: const Icon(
+                                      Icons.delete,
+                                      color: Colors.white,
+                                    ),
+                                    onPressed: () {
+                                      showConfirmationModal(
+                                          context: context,
+                                          message:
+                                              'Are you sure you want to delete this user?',
+                                          confirmCallback: () {
+                                            memebersCubit.deleteUser(community.id!,
+                                                int.parse(state.users[index].id!),
+                                                (err) {
+                                              if (err == null) {
+                                                Navigator.pop(context);
+                                                Navigator.pop(context);
+                                                specificCubit
+                                                    .getCommunitynumOfMemebers(
+                                                        community.id!);
+                                              } else {
+                                                Navigator.pop(context);
+
+                                                SchedulerBinding.instance
+                                                    .addPostFrameCallback((_) {
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(
+                                                    SnackBar(
+                                                      content: Text(err),
+                                                    ),
+                                                  );
+                                                });
+                                              }
+                                            }, community.isPublic);
+                                          },
+                                          buttonLabel: 'Delete');
+                                    },
+                                    label: const Text(
+                                      'Delete',
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  ),
+                                );
+                              } else {
+                                return Container();
+                              }
+                            }(),
+                          ],
+                        ),
+                        Positioned(
+                          top: -12,
+                          right: -12,
+                          child: IconButton(
+                            icon: Icon(
+                              Icons.cancel_outlined,
+                              color: themeGrey.withOpacity(0.5),
+                            ),
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-                actions: [
-                  TextButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      child: Text(
-                        'Close',
-                        style: TextStyle(color: themeGrey),
-                      ))
-                ],
               );
             });
       },
@@ -685,6 +705,7 @@ class MermbersCountWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      decoration: primaryDecoration,
       padding: const EdgeInsets.fromLTRB(40, 20, 40, 20),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -748,7 +769,7 @@ PreferredSize gradientAppBar(context, userRoleOptions userRole,
     Community community, RequestsCubit requestsCubit) {
   return PreferredSize(
     preferredSize: const Size.fromHeight(190),
-    child: Container(
+    child: SizedBox(
       height: 190,
       child: AppBar(
         actions: [
@@ -756,7 +777,7 @@ PreferredSize gradientAppBar(context, userRoleOptions userRole,
 
           () {
             if (userRole == userRoleOptions.owner && !community.isPublic) {
-              return Container(
+              return SizedBox(
                 height: 20,
                 width: 50,
                 child: Stack(children: [

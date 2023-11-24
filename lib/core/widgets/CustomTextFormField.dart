@@ -51,13 +51,14 @@ class CustomTextFormField extends StatelessWidget {
           borderSide: BorderSide(color: themeBlue.withOpacity(0.8), width: 1),
         ),
         fillColor: inputFieldColor,
-        filled: true,
+        filled: false,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10.0),
-          borderSide: BorderSide(color: inputFieldColor.withOpacity(0.05), width: 0.1 ),
+          borderSide: BorderSide(color: themeDarkBlue.withOpacity(0.3), width: 1),
         ),
+        hoverColor: themeDarkBlue.withOpacity(0.3),
         labelText: label,
-        labelStyle: TextStyle(color: inputFieldColor.withOpacity(0.05), fontSize: 14),
+        labelStyle: TextStyle(color: themeDarkBlue.withOpacity(0.3), fontSize: 14),
         prefixIcon: Align(
           widthFactor: 1.0,
           heightFactor: 1.0,
