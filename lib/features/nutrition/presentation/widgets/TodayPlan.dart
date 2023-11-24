@@ -40,7 +40,7 @@ class _TodayPlanState extends State<TodayPlan> {
     todayPlanCubit.getTodayNutritionPlan(DateFormat('EEEE').format(DateTime.now()));
   }
 
-  BlocBuilder<TodayPlanCubit, TodayPlanState> getTodayPlans(gradient) {
+  BlocBuilder<TodayPlanCubit, TodayPlanState> getTodayPlans() {
     return BlocBuilder<TodayPlanCubit, TodayPlanState>(
       bloc: todayPlanCubit,
       builder: (context, state) {
@@ -140,39 +140,35 @@ class _TodayPlanState extends State<TodayPlan> {
   Widget build(BuildContext context) {
     return Container(
         margin: const EdgeInsets.all(10),
-        height: 375,
+        height: 400,
         child: Column(
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text(
-                  'Today\'s Plan',
-                  style: TextStyle(
-                    color: themeDarkBlue,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
+            Padding(
+              padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'Today\'s Plan',
+                    style: TextStyle(
+                      color: themeDarkBlue,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
-                IconButton(
-                  icon: const Icon(Icons.list_sharp, color: themeDarkBlue,size: 30),
-                  onPressed: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => const NutritionPlan()));
-                  },
-                ),
-              ],
+                  IconButton(
+                    icon: const Icon(Icons.list_sharp, color: themeDarkBlue,size: 30),
+                    onPressed: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => const NutritionPlan()));
+                    },
+                  ),
+                ],
+              ),
             ),
             if (true)
               Expanded(
-                child: getTodayPlans(new LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    themeBlue,
-                    Colors.blueAccent,
-                  ],
-                )),
+                child: getTodayPlans(),
               ),
           ],
         ));
@@ -223,7 +219,7 @@ class _TodayPlanState extends State<TodayPlan> {
       margin: const EdgeInsets.all(10),
       decoration: BoxDecoration(
         gradient: gradient,
-        backgroundBlendMode: BlendMode.darken,
+        backgroundBlendMode: BlendMode.srcOver,
         borderRadius: primaryDecoration.borderRadius,
         boxShadow: primaryDecoration.boxShadow,
       ),
@@ -251,7 +247,7 @@ class _TodayPlanState extends State<TodayPlan> {
                         ),
                       ],
                     ),
-                    TextButton(
+                    TextButton.icon(
                       onPressed: () {
                         Navigator.of(context).push(
                           MaterialPageRoute(
@@ -260,7 +256,8 @@ class _TodayPlanState extends State<TodayPlan> {
                           ),
                         );
                       },
-                      child: Text(
+                      icon:  Icon(Icons.edit, color: white.withOpacity(0.8),size: 20),
+                      label: Text(
                         'Edit',
                         style: TextStyle(
                           fontSize: 16,
@@ -283,10 +280,6 @@ class _TodayPlanState extends State<TodayPlan> {
                       ),
                     ),
                   ],
-                ),
-                const Divider(
-                  color: Colors.white70,
-                  thickness: 0.5,
                 ),
                 const SizedBox(height: 10),
                 displayedMeals(nutritionPlan.id!),
@@ -328,36 +321,43 @@ class _TodayPlanState extends State<TodayPlan> {
             ),
           );
         } else if (state is DisplayMealLoaded) {
-          return Column(
-            children: [
-              for (var meal in state.nutritionPlanMeals)
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        const Icon(Icons.circle,
-                            color: Colors.white70, size: 10),
-                        const SizedBox(width: 10),
-                        Text(
-                          '${meal.meal_name} (${meal.size}g)',
-                          style: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white70),
-                        ),
-                      ],
-                    ),
-                    Text(
-                      '${meal.calories} kcal',
-                      style: const TextStyle(
-                        fontSize: 16,
-                        color: Colors.white60,
+          return Container(
+            padding: const EdgeInsets.all(16.0),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: themeDarkBlue.withOpacity(0.2),
+            ),
+            child: Column(
+              children: [
+                for (var meal in state.nutritionPlanMeals)
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          const Icon(Icons.circle,
+                              color: Colors.white70, size: 10),
+                          const SizedBox(width: 10),
+                          Text(
+                            '${meal.meal_name} (${meal.size}g)',
+                            style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.normal,
+                                color: Colors.white70),
+                          ),
+                        ],
                       ),
-                    ),
-                  ],
-                ),
-            ],
+                      Text(
+                        '${meal.calories} kcal',
+                        style: const TextStyle(
+                          fontSize: 16,
+                          color: Colors.white60,
+                        ),
+                      ),
+                    ],
+                  ),
+              ],
+            ),
           );
         } else {
           return const Center(
@@ -461,7 +461,7 @@ class _TodayPlanState extends State<TodayPlan> {
                       label: const Text('Skip Meal',
                           style: TextStyle(color: themeDarkBlue)),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white70,
+                        backgroundColor: white,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),

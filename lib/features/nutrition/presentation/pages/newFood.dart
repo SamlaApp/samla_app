@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:samla_app/config/themes/common_styles.dart';
-import 'package:numberpicker/numberpicker.dart';
+import 'package:samla_app/config/themes/new_style.dart';
 import 'package:samla_app/features/nutrition/domain/entities/MealLibrary.dart';
-import 'package:samla_app/features/nutrition/domain/repositories/nutritionPlan_repository.dart';
 import 'package:samla_app/features/nutrition/presentation/cubit/nutrtiionPlan/nutritionPlan_cubit.dart';
 import '../../nutrition_di.dart';
 
@@ -67,7 +65,7 @@ class _NewFoodState extends State<NewFoodPage> {
       appBar: AppBar(
         toolbarHeight: 150.0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: primary_color),
+          icon: const Icon(Icons.arrow_back_ios, color: white),
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: Column(
@@ -87,8 +85,8 @@ class _NewFoodState extends State<NewFoodPage> {
       body: SafeArea(
         child: Container(
           padding: const EdgeInsets.all(16.0),
-          decoration: BoxDecoration(
-            color: primary_color,
+          decoration: const BoxDecoration(
+            color: white,
             borderRadius: BorderRadius.only(
               topLeft: Radius.circular(30),
               topRight: Radius.circular(30),
@@ -100,8 +98,8 @@ class _NewFoodState extends State<NewFoodPage> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(top: 20.0),
+                  const Padding(
+                    padding: EdgeInsets.only(top: 20.0),
                     child: Center(
                       child: Text(
                         'New Food',
@@ -127,19 +125,19 @@ class _NewFoodState extends State<NewFoodPage> {
                       decoration: InputDecoration(
                         labelText: 'Name',
                         helperText: 'e.g. Apple, Banana, Steak',
-                        labelStyle: TextStyle(
+                        labelStyle: const TextStyle(
                           color: themeDarkBlue,
                         ),
                         enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: theme_grey),
+                          borderSide: BorderSide(color: themeGrey),
                           borderRadius: BorderRadius.circular(10),
                         ),
                         focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: themeDarkBlue),
+                          borderSide: const BorderSide(color: themeDarkBlue),
                           borderRadius: BorderRadius.circular(10),
                         ),
                         errorBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: theme_red),
+                          borderSide: const BorderSide(color: themeRed),
                           borderRadius: BorderRadius.circular(10),
                         ),
                         border: OutlineInputBorder(
@@ -156,7 +154,7 @@ class _NewFoodState extends State<NewFoodPage> {
                         Container(
                           width: 150,
                           alignment: Alignment.centerLeft,
-                          child: Text(
+                          child: const Text(
                             'Calories/100g',
                             style: TextStyle(
                               fontSize: 16,
@@ -177,19 +175,19 @@ class _NewFoodState extends State<NewFoodPage> {
                             keyboardType: TextInputType.number,
                             decoration: InputDecoration(
                               labelText: 'Calories',
-                              labelStyle: TextStyle(
+                              labelStyle: const TextStyle(
                                 color: themeDarkBlue,
                               ),
                               enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: theme_grey),
+                                borderSide: BorderSide(color: themeGrey),
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: themeDarkBlue),
+                                borderSide: const BorderSide(color: themeDarkBlue),
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               errorBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: theme_red),
+                                borderSide: const BorderSide(color: themeRed),
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               border: OutlineInputBorder(
@@ -209,7 +207,7 @@ class _NewFoodState extends State<NewFoodPage> {
                         Container(
                           width: 150,
                           alignment: Alignment.centerLeft,
-                          child: Text(
+                          child: const Text(
                             'Carbs/100g',
                             style: TextStyle(
                               fontSize: 16,
@@ -230,19 +228,19 @@ class _NewFoodState extends State<NewFoodPage> {
                             keyboardType: TextInputType.number,
                             decoration: InputDecoration(
                               labelText: 'Calories',
-                              labelStyle: TextStyle(
+                              labelStyle: const TextStyle(
                                 color: themeDarkBlue,
                               ),
                               enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: theme_grey),
+                                borderSide: BorderSide(color: themeGrey),
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: themeDarkBlue),
+                                borderSide: const BorderSide(color: themeDarkBlue),
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               errorBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: theme_red),
+                                borderSide: const BorderSide(color: themeRed),
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               border: OutlineInputBorder(
@@ -262,7 +260,7 @@ class _NewFoodState extends State<NewFoodPage> {
                         Container(
                           width: 150,
                           alignment: Alignment.centerLeft,
-                          child: Text(
+                          child: const Text(
                             'Protein/100g',
                             style: TextStyle(
                               fontSize: 16,
@@ -283,19 +281,19 @@ class _NewFoodState extends State<NewFoodPage> {
                             keyboardType: TextInputType.number,
                             decoration: InputDecoration(
                               labelText: 'Calories',
-                              labelStyle: TextStyle(
+                              labelStyle: const TextStyle(
                                 color: themeDarkBlue,
                               ),
                               enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: theme_grey),
+                                borderSide: BorderSide(color: themeGrey),
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: themeDarkBlue),
+                                borderSide: const BorderSide(color: themeDarkBlue),
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               errorBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: theme_red),
+                                borderSide: const BorderSide(color: themeRed),
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               border: OutlineInputBorder(
@@ -315,7 +313,7 @@ class _NewFoodState extends State<NewFoodPage> {
                         Container(
                           width: 150,
                           alignment: Alignment.centerLeft,
-                          child: Text(
+                          child: const Text(
                             'Fat/100g',
                             style: TextStyle(
                               fontSize: 16,
@@ -336,19 +334,19 @@ class _NewFoodState extends State<NewFoodPage> {
                             keyboardType: TextInputType.number,
                             decoration: InputDecoration(
                               labelText: 'Calories',
-                              labelStyle: TextStyle(
+                              labelStyle: const TextStyle(
                                 color: themeDarkBlue,
                               ),
                               enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: theme_grey),
+                                borderSide: BorderSide(color: themeGrey),
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: themeDarkBlue),
+                                borderSide: const BorderSide(color: themeDarkBlue),
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               errorBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: theme_red),
+                                borderSide: const BorderSide(color: themeRed),
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               border: OutlineInputBorder(
@@ -381,12 +379,12 @@ class _NewFoodState extends State<NewFoodPage> {
         ),
         onPressed: _submitForm,
         child: Padding(
-          padding: EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(16.0),
           child: Text(
             'Add Food',
             style: TextStyle(
               fontSize: 16,
-              fontWeight: FontWeight.bold, color: primary_color
+              fontWeight: FontWeight.bold, color: primaryColor
             ),
           ),
         ),

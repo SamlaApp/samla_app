@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:samla_app/config/themes/common_styles.dart';
+import 'package:intl/intl.dart';
+import 'package:samla_app/config/themes/new_style.dart';
 import 'package:day_night_time_picker/day_night_time_picker.dart';
 import 'package:samla_app/features/nutrition/data/models/nutritionPlan_model.dart';
+import 'package:samla_app/features/nutrition/presentation/cubit/TodayPlan/todayPlan_cubit.dart';
 import 'package:samla_app/features/nutrition/presentation/cubit/nutrtiionPlan/nutritionPlan_cubit.dart';
 import '../../nutrition_di.dart' as di;
 
@@ -55,6 +57,7 @@ class _NewMealState extends State<NewMeal> {
 
 
   final cubit = di.sl.get<NutritionPlanCubit>();
+  final todayPlanCubit = di.sl.get<TodayPlanCubit>();
 
   void _submitForm() {
 
@@ -66,6 +69,7 @@ class _NewMealState extends State<NewMeal> {
         type: _selectedMealTypeController.text,
       );
       cubit.createNutritionPlan(nutritionPlan);
+      todayPlanCubit.getTodayNutritionPlan(DateFormat('EEEE').format(DateTime.now()));
       Navigator.pop(context);
     }
   }
@@ -78,7 +82,7 @@ class _NewMealState extends State<NewMeal> {
       appBar: AppBar(
         toolbarHeight: 150.0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: primary_color),
+          icon: Icon(Icons.arrow_back_ios, color: white),
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: Column(
@@ -99,9 +103,9 @@ class _NewMealState extends State<NewMeal> {
         child: SingleChildScrollView(
           child: Container(
             padding: const EdgeInsets.all(16.0),
-            decoration: BoxDecoration(
-              color: primary_color,
-              borderRadius: const BorderRadius.only(
+            decoration: const BoxDecoration(
+              color: white,
+              borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(30),
                 topRight: Radius.circular(30),
               ),
@@ -115,8 +119,8 @@ class _NewMealState extends State<NewMeal> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.only(top: 20.0),
+                    const Padding(
+                      padding: EdgeInsets.only(top: 20.0),
                       child: Center(
                         child: Text(
                           'New Meal',
@@ -142,19 +146,19 @@ class _NewMealState extends State<NewMeal> {
                         decoration: InputDecoration(
                           labelText: 'Name',
                           helperText: 'e.g. Breakfast',
-                          labelStyle: TextStyle(
+                          labelStyle: const TextStyle(
                             color: themeDarkBlue,
                           ),
                           enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: theme_grey), // normal
+                            borderSide: BorderSide(color: themeGrey), // normal
                             borderRadius: BorderRadius.circular(10),
                           ),
                           focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: themeDarkBlue), // selected
+                            borderSide: const BorderSide(color: themeDarkBlue), // selected
                             borderRadius: BorderRadius.circular(10),
                           ),
                           errorBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: theme_red), // validation error
+                            borderSide: const BorderSide(color: themeRed), // validation error
                             borderRadius: BorderRadius.circular(10),
                           ),
                           border: OutlineInputBorder(
@@ -171,7 +175,7 @@ class _NewMealState extends State<NewMeal> {
                           child: Container(
                             padding: const EdgeInsets.only(left: 8.0),
                             alignment: Alignment.centerLeft,
-                            child: Text(
+                            child: const Text(
                               'Start Time',
                               style: TextStyle(
                                 fontSize: 16,
@@ -221,7 +225,7 @@ class _NewMealState extends State<NewMeal> {
                           child: Container(
                             padding: const EdgeInsets.only(left: 8.0),
                             alignment: Alignment.centerLeft,
-                            child: Text(
+                            child: const Text(
                               'End Time',
                               style: TextStyle(
                                 fontSize: 16,
@@ -257,7 +261,7 @@ class _NewMealState extends State<NewMeal> {
                             },
                             child: Text(
                               _timeToString(_endTime),
-                              style: TextStyle(color: themeBlue),
+                              style: const TextStyle(color: themeBlue),
                             ),
                           ),
                         ),
@@ -270,7 +274,7 @@ class _NewMealState extends State<NewMeal> {
                         Container(
                           padding: const EdgeInsets.only(left: 8.0),
                           alignment: Alignment.centerLeft,
-                          child: Text(
+                          child: const Text(
                             'Meal Type',
                             style: TextStyle(
                               fontSize: 16,
@@ -292,7 +296,7 @@ class _NewMealState extends State<NewMeal> {
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: _selectedMealTypeController.text == 'Breakfast'
                                           ? themeBlue
-                                          : inputField_color,
+                                          : inputFieldColor,
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(10),
                                       ),
@@ -303,7 +307,7 @@ class _NewMealState extends State<NewMeal> {
                                       });
                                     },
                                     child: Text('Breakfast' , style: TextStyle(color: _selectedMealTypeController.text == 'Breakfast'
-                                        ? primary_color
+                                        ? primaryColor
                                         : themeDarkBlue),),
                                   ),
                                 ),
@@ -315,7 +319,7 @@ class _NewMealState extends State<NewMeal> {
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: _selectedMealTypeController.text == 'Lunch'
                                           ? themeBlue
-                                          : inputField_color,
+                                          : inputFieldColor,
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(10),
                                       ),
@@ -326,7 +330,7 @@ class _NewMealState extends State<NewMeal> {
                                       });
                                     },
                                     child: Text('Lunch', style: TextStyle(color: _selectedMealTypeController.text == 'Lunch'
-                                        ? primary_color
+                                        ? primaryColor
                                         : themeDarkBlue),
                                   ),
                                 ),
@@ -347,7 +351,7 @@ class _NewMealState extends State<NewMeal> {
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: _selectedMealTypeController.text == 'Dinner'
                                           ? themeBlue
-                                          : inputField_color,
+                                          : inputFieldColor,
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(10),
                                       ),
@@ -358,7 +362,7 @@ class _NewMealState extends State<NewMeal> {
                                       });
                                     },
                                     child: Text('Dinner' , style: TextStyle(color: _selectedMealTypeController.text == 'Dinner'
-                                        ? primary_color
+                                        ? primaryColor
                                         : themeDarkBlue),
                                   ),
                                 ),
@@ -371,7 +375,7 @@ class _NewMealState extends State<NewMeal> {
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: _selectedMealTypeController.text == 'Snack'
                                           ? themeBlue
-                                          : inputField_color,
+                                          : inputFieldColor,
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(10),
                                       ),
@@ -382,7 +386,7 @@ class _NewMealState extends State<NewMeal> {
                                       });
                                     },
                                     child: Text('Snack', style: TextStyle(color: _selectedMealTypeController.text == 'Snack'
-                                        ? primary_color
+                                        ? primaryColor
                                         : themeDarkBlue),
                                   ),
                                 ),
@@ -427,14 +431,14 @@ class _NewMealState extends State<NewMeal> {
                             }
                           }
                         },
-                        child: Padding(
+                        child: const Padding(
                           padding: EdgeInsets.all(16.0),
                           child: Text(
                             'Add Meal',
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
-                              color: primary_color,
+                              color: white,
                             ),
                           ),
                         ),
