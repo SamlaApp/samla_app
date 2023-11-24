@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-
-import '../../../../config/themes/common_styles.dart';
+import 'package:samla_app/features/training/presentation/widgets/startTraninig/history.dart';
+import '../../../../config/themes/new_style.dart';
+import '../../domain/entities/ExerciseLibrary.dart';
+import '../cubit/History/history_cubit.dart';
 
 class ExerciseInfoStartPage extends StatefulWidget {
   final String name;
@@ -10,98 +12,139 @@ class ExerciseInfoStartPage extends StatefulWidget {
   final String target;
   final List<String> secondaryMuscles;
   final String instructions;
+  final HistoryCubit historyCubit;
+  final ExerciseLibrary selectedExercise;
 
-  ExerciseInfoStartPage({
+  const ExerciseInfoStartPage({
+    super.key,
     required this.gifUrl,
     required this.bodyPart,
     required this.equipment,
     required this.target,
     required this.secondaryMuscles,
-    required this.instructions, required this.name,
+    required this.instructions,
+    required this.name,
+    required this.historyCubit,
+    required this.selectedExercise,
   });
 
   @override
-  _ExerciseInfoStartPageState createState() => _ExerciseInfoStartPageState();
+  ExerciseInfoStartPageState createState() => ExerciseInfoStartPageState();
 }
 
-class _ExerciseInfoStartPageState extends State<ExerciseInfoStartPage> {
+class ExerciseInfoStartPageState extends State<ExerciseInfoStartPage> {
   bool _isExpanded = false;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: MediaQuery.of(context).size.width * 0.9,
+      decoration: primaryDecoration.copyWith(
+        border: Border.all(color: Colors.grey[300]!),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+      width: MediaQuery.of(context).size.width * 0.95,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Row(
-              //center image
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(8.0),
-                  child: Image.network(
-                    widget.gifUrl,
-                    width: 200,
-                    height: 200,
-                    fit: BoxFit.cover,
+            child: SizedBox(
+              // 30% of screen hight
+              height: MediaQuery.of(context).size.height * 0.31,
+              child: Row(
+                //center image
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(8.0),
+                    child: Image.network(
+                      widget.gifUrl,
+                      width: 200,
+                      // max hight is 20% of screen hight
+                      height: MediaQuery.of(context).size.height * 0.22,
+                      fit: BoxFit.cover,
+                    ),
                   ),
-                ),
-                Column(
-                  children: [
-                    CustomBorderContainer('BodyPart', widget.bodyPart),
-                    CustomBorderContainer('Equipment', widget.equipment),
-                    CustomBorderContainer('Target', widget.target),
-                    CustomBorderContainer('Secondary Muscles', widget.secondaryMuscles.join(', ')),
-                  ],
-                ),
-              ],
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  Column(
+                    // make them always center and space between
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      customBorderContainer('BodyPart', widget.bodyPart),
+                      customBorderContainer('Equipment', widget.equipment),
+                      customBorderContainer('Target', widget.target),
+                      customBorderContainer('Secondary Muscles',
+                          widget.secondaryMuscles.join(', ')),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
           const Divider(
             color: Colors.grey,
             height: 1,
             thickness: 0.5,
-            indent: 0,
-            endIndent: 0,
+            indent: 10,
+            endIndent: 10,
           ),
           ListTile(
             title: Text(
               'Instructions of ${widget.name}',
               style: TextStyle(
-                fontSize: 15,
+                color: themeGrey,
+                fontWeight: FontWeight.w500,
+                fontSize: 13,
               ),
             ),
-            trailing: IconButton(
-              icon: _isExpanded ? Icon(Icons.expand_less) : Icon(Icons.expand_more),
-              onPressed: () {
-                setState(() {
-                  _isExpanded = !_isExpanded;
-                });
-              },
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              // Use this to constrain the width of the Row
+              children: [
+                IconButton(
+                  icon: _isExpanded
+                      ? const Icon(Icons.expand_less)
+                      : const Icon(Icons.expand_more),
+                  onPressed: () {
+                    setState(() {
+                      _isExpanded = !_isExpanded;
+                    });
+                  },
+                ),
+                IconButton(
+                  icon: const Icon(Icons.history),
+                  // Replace with your history icon
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) => HistoryDialog(
+                        historyCubit: widget.historyCubit,
+                        selectedExercise: widget.selectedExercise,
+                      ),
+                    );
+                  },
+                ),
+              ],
             ),
           ),
           if (_isExpanded)
-            Container(
-              padding: const EdgeInsets.all(8.0),
+            SizedBox(
               width: MediaQuery.of(context).size.width * 0.9,
               child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
+                padding: const EdgeInsets.fromLTRB(16, 0, 8, 16),
+                child: buildNumberedList(
                   widget.instructions,
-                  style: const TextStyle(
+                  TextStyle(
                     fontSize: 12,
-                    color: Colors.grey,
+                    color: themeGrey,
                     fontWeight: FontWeight.normal,
                     overflow: TextOverflow.visible,
                     decoration: TextDecoration.none,
                   ),
-                  softWrap: true,
-                  overflow: TextOverflow.visible,
-                  textAlign: TextAlign.justify,
                 ),
               ),
             ),
@@ -110,7 +153,37 @@ class _ExerciseInfoStartPageState extends State<ExerciseInfoStartPage> {
     );
   }
 
-  Widget CustomBorderContainer(String label, String value) {
+  Widget buildNumberedList(String instructions, TextStyle textStyle) {
+    final lines =
+        instructions.split('\n').where((line) => line.trim().isNotEmpty);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: lines.map((line) {
+        final index = lines.toList().indexOf(line) + 1;
+        return Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              '$index.',
+              style: textStyle,
+            ),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Text(
+                line,
+                style: textStyle,
+                softWrap: true,
+                overflow: TextOverflow.visible,
+                textAlign: TextAlign.justify,
+              ),
+            ),
+          ],
+        );
+      }).toList(),
+    );
+  }
+
+  Widget customBorderContainer(String label, String value) {
     return Stack(
       clipBehavior: Clip.none,
       alignment: Alignment.center,
@@ -121,13 +194,13 @@ class _ExerciseInfoStartPageState extends State<ExerciseInfoStartPage> {
             width: 140,
             padding: const EdgeInsets.fromLTRB(12, 12, 12, 12),
             decoration: BoxDecoration(
-              border: Border.all(color: theme_red, width: 1.5),
+              border: Border.all(color: themeRed, width: 1.5),
               borderRadius: BorderRadius.circular(6),
             ),
             child: Text(
               value,
               style: const TextStyle(
-                color: Colors.black,
+                color: black,
                 fontWeight: FontWeight.w600,
                 fontSize: 12,
               ),
@@ -135,18 +208,18 @@ class _ExerciseInfoStartPageState extends State<ExerciseInfoStartPage> {
           ),
         ),
         Positioned(
-          top: -2,
-          left: 3,
+          top: -3,
+          left: 5,
           child: ClipRRect(
             borderRadius: BorderRadius.circular(8),
             child: Container(
-              color: theme_red,
+              color: themeRed,
               padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
               child: Text(
                 label,
                 style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 12,
+                  color: white,
+                  fontSize: 11,
                   fontWeight: FontWeight.normal,
                 ),
               ),

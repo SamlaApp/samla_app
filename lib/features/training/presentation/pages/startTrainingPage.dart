@@ -6,7 +6,7 @@ import 'package:samla_app/features/training/presentation/cubit/History/history_c
 import '../../../../config/themes/common_styles.dart';
 import '../../domain/entities/ExerciseLibrary.dart';
 import '../widgets/startTraninig/ExerciseScrollRow.dart';
-import '../widgets/startTraninig/ProgressSection.dart';
+import '../widgets/startTraninig/progressSection.dart';
 import '../widgets/startTraninig/SelectedExerciseDisplay.dart';
 import '../widgets/startTraninig/history.dart';
 import 'package:samla_app/features/training/training_di.dart' as di;
@@ -124,7 +124,10 @@ class _StartTrainingNewState extends State<StartTrainingNew> {
         child: Column(
           children: [
             // ## selected exercise section
-            SelectedExerciseDisplay(selectedExercise: selectedExercise),
+            SelectedExerciseDisplay(
+              selectedExercise: selectedExercise,
+              historyCubit: historyCubit,
+            ),
             // buildProgressSection(),
 
             // ## exercise scroll row
@@ -165,7 +168,7 @@ class _StartTrainingNewState extends State<StartTrainingNew> {
                 showDialog(
                   context: context,
                   builder: (BuildContext context) {
-                    return historyDialog(
+                    return HistoryDialog(
                         historyCubit: historyCubit,
                         selectedExercise: selectedExercise);
                   },
