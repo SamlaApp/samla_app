@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:samla_app/config/themes/common_styles.dart';
+import 'package:samla_app/config/themes/new_style.dart';
 import 'package:samla_app/features/training/domain/entities/ExerciseDay.dart';
 import 'package:samla_app/features/training/presentation/cubit/Exercises/exercise_cubit.dart';
 import 'package:samla_app/features/training/training_di.dart' as di;
-import 'package:cached_network_image/cached_network_image.dart';
 
 
 class ExerciseItem extends StatefulWidget {
@@ -107,7 +106,7 @@ class _ExerciseItemState extends State<ExerciseItem> {
             title: Text(
               capitalize(widget.name),
               style: const TextStyle(
-                color: Colors.white,
+                color: white,
                 fontWeight: FontWeight.w800,
                 fontSize: 18,
               ),
@@ -123,7 +122,7 @@ class _ExerciseItemState extends State<ExerciseItem> {
                   },
                   icon: Icon(
                     _isExpanded ? Icons.expand_less : Icons.expand_more,
-                    color: Colors.white,
+                    color: white,
                     size: 30,
                   ),
                 ),
@@ -149,7 +148,7 @@ class _ExerciseItemState extends State<ExerciseItem> {
                       const Text(
                         'Select Days: ',
                         style: TextStyle(
-                          color: Colors.white,
+                          color: white,
                           fontSize: 14,
                           fontWeight: FontWeight.bold,
                         ),
@@ -161,15 +160,15 @@ class _ExerciseItemState extends State<ExerciseItem> {
                             onPressed: () {
                               _submitForm();
                             },
-                            icon: Icon(Icons.add, color: themeDarkBlue, size: 20),
-                            label: Text('Add ',
+                            icon: const Icon(Icons.add, color: themeDarkBlue, size: 20),
+                            label: const Text('Add ',
                                 style: TextStyle(
                                     color: themeDarkBlue,
                                     fontSize: 12,
                                     fontWeight: FontWeight.bold)),
                             style: ElevatedButton.styleFrom(
-                              primary: Colors.white,
-                              onPrimary: themeDarkBlue,
+                              primary: white,
+                              onPrimary: white,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(32.0),
                               ),
@@ -192,7 +191,7 @@ class _ExerciseItemState extends State<ExerciseItem> {
                           const Text(
                             'Sun',
                             style: TextStyle(
-                                color: Colors.white,
+                                color: white,
                                 fontSize: 14,
                                 fontWeight: FontWeight.bold),
                           ),
@@ -204,7 +203,7 @@ class _ExerciseItemState extends State<ExerciseItem> {
                               });
                             },
                             shape: const CircleBorder(),
-                            activeColor: themeDarkBlue,
+                            activeColor: white,
                           ),
                         ],
                       ),
@@ -216,7 +215,7 @@ class _ExerciseItemState extends State<ExerciseItem> {
                           const Text(
                             'Mon',
                             style: TextStyle(
-                                color: Colors.white,
+                                color: white,
                                 fontSize: 14,
                                 fontWeight: FontWeight.bold),
                           ),
@@ -228,7 +227,7 @@ class _ExerciseItemState extends State<ExerciseItem> {
                               });
                             },
                             shape: const CircleBorder(),
-                            activeColor: themeDarkBlue,
+                            activeColor: white,
                           ),
                         ],
                       ),
@@ -240,7 +239,7 @@ class _ExerciseItemState extends State<ExerciseItem> {
                           const Text(
                             'Tue',
                             style: TextStyle(
-                                color: Colors.white,
+                                color: white,
                                 fontSize: 14,
                                 fontWeight: FontWeight.bold),
                           ),
@@ -252,7 +251,7 @@ class _ExerciseItemState extends State<ExerciseItem> {
                               });
                             },
                             shape: const CircleBorder(),
-                            activeColor: themeDarkBlue,
+                            activeColor: white,
                           ),
                         ],
                       ),
@@ -264,7 +263,7 @@ class _ExerciseItemState extends State<ExerciseItem> {
                           const Text(
                             'Wed',
                             style: TextStyle(
-                                color: Colors.white,
+                                color: white,
                                 fontSize: 14,
                                 fontWeight: FontWeight.bold),
                           ),
@@ -276,7 +275,7 @@ class _ExerciseItemState extends State<ExerciseItem> {
                               });
                             },
                             shape: const CircleBorder(),
-                            activeColor: themeDarkBlue,
+                            activeColor: white,
                           ),
                         ],
                       ),
@@ -288,7 +287,7 @@ class _ExerciseItemState extends State<ExerciseItem> {
                           const Text(
                             'Thu',
                             style: TextStyle(
-                                color: Colors.white,
+                                color: white,
                                 fontSize: 14,
                                 fontWeight: FontWeight.bold),
                           ),
@@ -300,7 +299,7 @@ class _ExerciseItemState extends State<ExerciseItem> {
                               });
                             },
                             shape: const CircleBorder(),
-                            activeColor: themeDarkBlue,
+                            activeColor: white,
                           ),
                         ],
                       ),
@@ -312,7 +311,7 @@ class _ExerciseItemState extends State<ExerciseItem> {
                           const Text(
                             'Fri',
                             style: TextStyle(
-                                color: Colors.white,
+                                color: white,
                                 fontSize: 14,
                                 fontWeight: FontWeight.bold),
                           ),
@@ -324,7 +323,7 @@ class _ExerciseItemState extends State<ExerciseItem> {
                               });
                             },
                             shape: const CircleBorder(),
-                            activeColor: themeDarkBlue,
+                            activeColor: white,
                           ),
                         ],
                       ),
@@ -336,7 +335,7 @@ class _ExerciseItemState extends State<ExerciseItem> {
                           const Text(
                             'Sat',
                             style: TextStyle(
-                                color: Colors.white,
+                                color: white,
                                 fontSize: 14,
                                 fontWeight: FontWeight.bold),
                           ),
@@ -348,7 +347,7 @@ class _ExerciseItemState extends State<ExerciseItem> {
                               });
                             },
                             shape: const CircleBorder(),
-                            activeColor: themeDarkBlue,
+                            activeColor: white,
                           ),
                         ],
                       ),
@@ -391,13 +390,13 @@ class _ExerciseItemState extends State<ExerciseItem> {
             width: 160,
             padding: const EdgeInsets.fromLTRB(16, 20, 16, 16),
             decoration: BoxDecoration(
-              border: Border.all(color: Colors.white),
+              border: Border.all(color: white),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Text(
               value,
               style: const TextStyle(
-                color: Colors.white,
+                color: white,
                 fontWeight: FontWeight.w600,
                 fontSize: 14,
               ),
@@ -410,11 +409,11 @@ class _ExerciseItemState extends State<ExerciseItem> {
           child: ClipRRect(
             borderRadius: BorderRadius.circular(6),
             child: Container(
-              color: Colors.white, // Match the background color
+              color: white, // Match the background color
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 1),
               child: Text(
                 label,
-                style: TextStyle(
+                style: const TextStyle(
                   color: themeDarkBlue,
                   fontSize: 14,
                   fontWeight: FontWeight.normal,
@@ -449,7 +448,7 @@ class _ExerciseItemState extends State<ExerciseItem> {
                   if (loadingProgress == null) return child;
                   return  const Center(
                     child: CircularProgressIndicator(
-                      color: Colors.white,
+                      color: white,
                     ),
                   );
                 }
@@ -472,7 +471,7 @@ class _ExerciseItemState extends State<ExerciseItem> {
                     const Text(
                       'Target: ',
                       style: TextStyle(
-                          color: Colors.white,
+                          color: white,
                           fontSize: 14,
                           fontWeight: FontWeight.bold),
                     ),
@@ -487,7 +486,7 @@ class _ExerciseItemState extends State<ExerciseItem> {
                     const Text(
                       'Secondary Muscles: ',
                       style: TextStyle(
-                          color: Colors.white,
+                          color: white,
                           fontSize: 14,
                           fontWeight: FontWeight.bold),
                     ),
@@ -506,7 +505,7 @@ class _ExerciseItemState extends State<ExerciseItem> {
                 const Text(
                   'Instructions:',
                   style: TextStyle(
-                    color: Colors.white,
+                    color: white,
                     fontSize: 14,
                     fontWeight: FontWeight.bold,
                   ),
@@ -524,7 +523,7 @@ class _ExerciseItemState extends State<ExerciseItem> {
   Widget _buildDetailText(String text) {
     return Text(text,
         style: const TextStyle(
-          color: Colors.white,
+          color: white,
           fontSize: 14,
           fontWeight: FontWeight.normal,
           overflow: TextOverflow.visible,
