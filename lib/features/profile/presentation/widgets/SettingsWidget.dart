@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:io/ansi.dart';
 
 import '../../../../config/themes/common_styles.dart';
+import '../../../auth/auth_injection_container.dart';
+import '../../../auth/domain/entities/user.dart';
 import '../pages/PersonalInfo.dart';
 
 class SettingsWidget extends StatefulWidget {
@@ -12,7 +14,10 @@ class SettingsWidget extends StatefulWidget {
   State<SettingsWidget> createState() => _SettingsWidgetState();
 }
 
+final user = getUser();
+
 class _SettingsWidgetState extends State<SettingsWidget> {
+  late User user2;
   int selectedKilograms = 70; // Initial selected kilograms
   int selectedGrams = 0; // Initial selected grams
 
@@ -90,7 +95,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
             child: TextField(
               controller: _nameController,
               style: inputText,
-                cursorColor: themeBlue,
+              cursorColor: themeBlue,
               decoration: InputDecoration(
                 prefixIcon: Padding(
                   padding: const EdgeInsets.fromLTRB(0, 0, 0, 8),
@@ -161,7 +166,6 @@ class _SettingsWidgetState extends State<SettingsWidget> {
               controller: _emailController,
               style: inputText,
               cursorColor: themeBlue,
-
               decoration: InputDecoration(
                 prefixIcon: Padding(
                   padding: const EdgeInsets.fromLTRB(0, 0, 0, 8),
@@ -195,7 +199,6 @@ class _SettingsWidgetState extends State<SettingsWidget> {
               controller: _phoneController,
               style: inputText,
               cursorColor: themeBlue,
-
               decoration: InputDecoration(
                 prefixIcon: Padding(
                   padding: const EdgeInsets.fromLTRB(0, 0, 0, 8),
@@ -219,7 +222,6 @@ class _SettingsWidgetState extends State<SettingsWidget> {
               fontWeight: FontWeight.bold,
               fontSize: 14.0,
               color: themeBlue,
-
             ),
           ),
           Container(
@@ -230,7 +232,6 @@ class _SettingsWidgetState extends State<SettingsWidget> {
               controller: _oldPassController,
               style: inputText,
               cursorColor: themeBlue,
-
               decoration: InputDecoration(
                 hintText: 'Enter your current password',
                 hintStyle: TextStyle(
@@ -268,7 +269,6 @@ class _SettingsWidgetState extends State<SettingsWidget> {
               controller: _newPassController,
               style: inputText,
               cursorColor: themeBlue,
-
               decoration: InputDecoration(
                 hintText: 'Enter your new password',
                 hintStyle: TextStyle(
@@ -303,8 +303,8 @@ class _SettingsWidgetState extends State<SettingsWidget> {
               onPressed: _saveInfo,
               child: Text(
                 'Save Info',
+              ),
             ),
-          ),
           ),
 
           SizedBox(height: 10),
@@ -313,7 +313,6 @@ class _SettingsWidgetState extends State<SettingsWidget> {
               style: ElevatedButton.styleFrom(
                   primary: theme_red,
                   padding: EdgeInsets.symmetric(horizontal: 20, vertical: 13),
-
                   shape: RoundedRectangleBorder(
                     borderRadius:
                         BorderRadius.circular(8), // Button border radius

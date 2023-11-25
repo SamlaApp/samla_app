@@ -30,7 +30,7 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
   String userEmail = user.email;
   String userPhone = user.phone;
   String userNameID = user.username;
-  String height = '170';
+  String height = '$user.height';
   String weight = '55';
 
   // Edit mode flag
@@ -99,7 +99,7 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               ProfileWidget(
-                imgPath: imagePath,
+                imageName: imagePath,
                 onClicked: () async {},
               ),
               Text(
@@ -208,7 +208,7 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
                     ),
               SizedBox(height: 16.0),
               Text(
-                'Phone',
+                'Phne',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 14.0,

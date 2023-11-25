@@ -17,6 +17,16 @@ class ProfileError extends ProfileState {
 
 class ProfileLoading extends ProfileState {}
 
+class UserGoalInitial extends ProfileState {}
 
+class UserGoalErrorState extends ProfileState {
+  final String message;
 
+  UserGoalErrorState({required this.message});
+}
 
+class UserGoalloaded extends ProfileState {
+  final UserGoals userGoal;
+
+  UserGoalloaded({required this.userGoal});
+}

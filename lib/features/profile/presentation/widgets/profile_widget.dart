@@ -1,37 +1,71 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:samla_app/config/themes/common_styles.dart';
-
-// import 'package:image_picker/image_picker.dart';
+import '../../../../core/widgets/image_helper.dart';
+import '../../../../core/widgets/image_viewer.dart';
 import '../../../auth/domain/entities/user.dart';
 
-class ProfileWidget extends StatelessWidget {
-  final String imgPath;
+class ProfileWidget extends StatefulWidget {
+  final String imageName;
   final VoidCallback onClicked;
 
   const ProfileWidget({
     Key? key,
-    required this.imgPath,
+    required this.imageName,
     required this.onClicked,
   }) : super(key: key);
 
   @override
+  State<ProfileWidget> createState() => _ProfileWidgetState();
+}
+
+class _ProfileWidgetState extends State<ProfileWidget> {
+  File? _image;
+  final _formKey = GlobalKey<FormState>();
+
+  void _submitForm() {
+    if (_formKey.currentState!.validate()) {
+      // All fields are valid, you can create the Community object and proceed
+    }
+  }
+
+  Future<void> _pickImage() async {
+    final ImageHelper _imageHelper = ImageHelper();
+    final imagePath = await _imageHelper.pickImage(context, (image) {
+      setState(() {
+        _image = image;
+      });
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     final color = Theme.of(context).colorScheme.primary;
-    return Center(
-      child: Stack(children: [
-        buildImage(),
-        Positioned(
-          bottom: 0,
-          right: 4,
-          child: buildEditIcon(color),
+    return Column(
+      children: [
+        Center(
+          child: Stack(
+            children: [
+              buildImage(),
+              Positioned(
+                bottom: 0,
+                right: 4,
+                child: GestureDetector(
+                  onTap: () {
+                    showImageEditor();
+                  },
+                  child: buildEditIcon(color),
+                ),
+              ),
+            ],
+          ),
         ),
-      ]),
+      ],
     );
   }
 
   Widget buildImage() {
-    final image = Image.asset('images/download.jpeg');
+    final imageApi = 'https://samla.mohsowa.com/api/user/user_photo/';
 
     return buildCircle(
       color: themeBlue,
@@ -39,12 +73,11 @@ class ProfileWidget extends StatelessWidget {
       child: ClipOval(
         child: Material(
           color: Colors.transparent,
-          child: Ink.image(
-            image: image.image,
+          child: Image.network(
+            imageApi + widget.imageName,
             fit: BoxFit.cover,
             width: 110,
             height: 110,
-            child: InkWell(onTap: onClicked),
           ),
         ),
       ),
@@ -77,4 +110,39 @@ class ProfileWidget extends StatelessWidget {
           child: child,
         ),
       );
+
+  void showImageEditor() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Edit Image"),
+          content: Container(
+            // You can customize the size of the image viewer here
+            width: double.maxFinite,
+            height: 400,
+            child: Form(
+              key: _formKey,
+              child: ImageViewer.file(
+                imageFile: _image,
+                editableCallback: (newImage) {
+                  setState(() {
+                    _image = newImage;
+                  });
+                },
+              ),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text("Close"),
+            ),
+          ],
+        );
+      },
+    );
+  }
 }
