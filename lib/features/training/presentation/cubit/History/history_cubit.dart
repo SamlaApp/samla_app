@@ -30,7 +30,7 @@ class HistoryCubit extends Cubit<HistoryState> {
       {required int set,
       required int duration,
       required int repetitions,
-      required int weight,
+      required double weight,
       required double distance,
       required String notes,
       required int exercise_library_id}) async {
@@ -43,12 +43,14 @@ class HistoryCubit extends Cubit<HistoryState> {
         distance: distance,
         notes: notes,
         exercise_library_id: exercise_library_id);
+
     result.fold(
       (failure) {
         emit(HistoryErrorState('Failed to add history: ${failure.toString()}'));
       },
       (history) {
-        emit(NewHistoryLoadedState(history));
+        // After successfully adding history, reload the history data
+        getHistory(id: exercise_library_id);
       },
     );
   }

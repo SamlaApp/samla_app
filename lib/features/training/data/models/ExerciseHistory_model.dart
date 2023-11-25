@@ -1,10 +1,7 @@
 import 'package:samla_app/features/training/domain/entities/ExerciseHistory.dart';
 
 class ExerciseHistoryModel extends ExerciseHistory {
-  final String day; // Change the type to String
-
   const ExerciseHistoryModel({
-    required this.day,
     required super.id,
     required super.exercise_library_id,
     required super.sets,
@@ -13,43 +10,56 @@ class ExerciseHistoryModel extends ExerciseHistory {
     required super.weight,
     required super.distance,
     required super.notes,
+    required super.day,
   });
 
   factory ExerciseHistoryModel.fromJson(Map<String, dynamic> json) {
+    // Helper function to parse integers safely
     int? parseInt(dynamic value) {
       if (value is int) {
         return value;
-      } else if (value is double) {
-        return value.toInt(); // Convert double to int
+      } else if (value is String) {
+        return int.tryParse(value);
       }
-      return null; // Return null for non-numeric values
+      return null;
     }
 
-    final durationValue = json['duration'];
-    final duration = durationValue is int
-        ? durationValue
-        : (durationValue is double ? durationValue.toInt() : null);
+    // Helper function to parse doubles safely
+    double? parseDouble(dynamic value) {
+      if (value is double) {
+        return value;
+      } else if (value is int) {
+        return value.toDouble();
+      } else if (value is String) {
+        return double.tryParse(value);
+      }
+      return null;
+    }
 
-    final weight = json['weight'] is int
-        ? json['weight'].toDouble() // Convert int to double
-        : (json['weight'] is double ? json['weight'] : null);
+    // Extract values safely, providing default values or handling nulls
+    final int id =
+        parseInt(json['id']) ?? 0; // Default to 0 if id is not parsable
+    final int exerciseLibraryId = parseInt(json['exercise_library_id']) ?? 0;
+    final int sets = parseInt(json['sets']) ?? 0;
+    final int duration = parseInt(json['duration']) ?? 0;
+    final int repetitions = parseInt(json['repetitions']) ?? 0;
+    final double weight = parseDouble(json['weight']) ?? 0.0;
+    final double distance = parseDouble(json['distance']) ?? 0.0;
+    final String notes = json['notes']?.toString() ?? 'No notes';
 
-    final distance = json['distance'] is int
-        ? json['distance'].toDouble() // Convert int to double
-        : (json['distance'] is double ? json['distance'] : null);
-
-    final day = json['date'] as String;
+    // Assuming 'created_at' can be used as the 'day' field
+    final String day = json['date']?.toString() ?? '';
 
     return ExerciseHistoryModel(
-      id: json['id'],
-      exercise_library_id: json['exercise_library_id'],
-      sets: json['sets'],
+      id: id,
+      exercise_library_id: exerciseLibraryId,
+      sets: sets,
       duration: duration,
-      repetitions: json['repetitions'],
+      repetitions: repetitions,
       weight: weight,
       distance: distance,
-      notes: json['notes'] != null ? json['notes'].toString() : 'No notes',
-      day: day, // Include the 'day' field
+      notes: notes,
+      day: day,
     );
   }
 

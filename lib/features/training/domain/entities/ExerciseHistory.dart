@@ -34,5 +34,6 @@ class ExerciseHistory extends Equatable {
         weight,
         distance,
         notes,
+        day,
       ];
 }

@@ -40,11 +40,11 @@ abstract class RemoteDataSource {
 
   Future<List<ExerciseHistory>> getHistory(int id);
 
-  Future<ExerciseHistory> addHistory(
+  Future<Unit> addHistory(
       {required int set,
       required int duration,
       required int repetitions,
-      required int weight,
+      required double weight,
       required double distance,
       required String notes,
       required int exercise_library_id});
@@ -251,11 +251,11 @@ class TemplateRemoteDataSourceImpl implements RemoteDataSource {
   }
 
   @override
-  Future<ExerciseHistory> addHistory(
+  Future<Unit> addHistory(
       {required int set,
       required int duration,
       required int repetitions,
-      required int weight,
+      required double weight,
       required double distance,
       required String notes,
       required int exercise_library_id}) async {
@@ -270,11 +270,8 @@ class TemplateRemoteDataSourceImpl implements RemoteDataSource {
     }, endPoint: '/training/history/set', method: 'POST');
     final resBody = await res.stream.bytesToString();
     print(resBody);
-    if (res.statusCode == 201) {
-      final ExerciseHistoryModel convertedHistory =
-          ExerciseHistoryModel.fromJson(
-              json.decode(resBody)['exercise_history']);
-      return convertedHistory;
+    if (res.statusCode == 200) {
+      return unit;
     } else {
       throw ServerException(message: json.decode(resBody)['message']);
     }

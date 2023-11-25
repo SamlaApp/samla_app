@@ -22,7 +22,8 @@ class ExerciseScrollRow extends StatelessWidget {
         border: Border.all(color: Colors.grey[300]!),
         borderRadius: BorderRadius.circular(12),
       ),
-      height: MediaQuery.of(context).size.height * 0.09,
+      height: MediaQuery.of(context).size.height * 0.1,
+      width: MediaQuery.of(context).size.width * 0.95,
       margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
@@ -35,7 +36,7 @@ class ExerciseScrollRow extends StatelessWidget {
             onTap: () => onExerciseSelect(exercise),
             child: Container(
               margin: const EdgeInsets.all(8.0),
-              width: 65,
+              width: MediaQuery.of(context).size.width * 0.18,
               decoration: BoxDecoration(
                 border: Border.all(
                   color: isSelected ? themeDarkBlue : themeGrey,
@@ -48,6 +49,8 @@ class ExerciseScrollRow extends StatelessWidget {
                 child: Image.network(
                   baseURL + exercise.gifUrl,
                   fit: BoxFit.cover,
+                  width: MediaQuery.of(context).size.width * 0.18,
+                  height: MediaQuery.of(context).size.height * 0.09,
                 ),
               ),
             ),

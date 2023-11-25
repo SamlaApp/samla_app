@@ -13,7 +13,7 @@ const Color inputFieldColor = Colors.white;
 Color themeGrey = themeDarkBlue.withOpacity(0.5);
 const Color white =
     Color.fromRGBO(255, 255, 255, 1); // Adjusted for dark background
-
+const Color black = Color.fromRGBO(0, 0, 0, 1);
 ThemeData lightTheme = ThemeData(
   useMaterial3: true,
   scaffoldBackgroundColor: white,
@@ -44,21 +44,18 @@ ThemeData lightTheme = ThemeData(
       borderRadius: BorderRadius.circular(12),
     ),
   ),
-
 );
 
-BoxDecoration primaryDecoration =  BoxDecoration(
+BoxDecoration primaryDecoration = BoxDecoration(
     color: white,
-    border : Border.fromBorderSide(
-        BorderSide(
-          color: themeDarkBlue.withOpacity(0.2),
-          width: 0.5,
-        ),
+    border: Border.fromBorderSide(
+      BorderSide(
+        color: themeDarkBlue.withOpacity(0.2),
+        width: 0.5,
+      ),
     ),
     borderRadius: const BorderRadius.all(Radius.circular(12)),
-    boxShadow: [boxShadow]
-);
-
+    boxShadow: [boxShadow]);
 
 BoxShadow boxShadow = BoxShadow(
   color: themeDarkBlue.withOpacity(0.05),

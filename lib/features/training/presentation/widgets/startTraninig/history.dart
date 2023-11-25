@@ -72,7 +72,7 @@ class HistoryDialog extends StatelessWidget {
             ),
           );
         } else {
-          dialogContent = const Text('Unhandled state');
+          dialogContent = const Text('Refresh the page');
         }
 
         // Display dialog for the current state
@@ -101,7 +101,7 @@ class HistoryDialog extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Day $day',
+            '$day',
             style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
           const Divider(),

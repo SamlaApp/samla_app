@@ -123,10 +123,13 @@ class _ExerciseTilesState extends State<ExerciseTiles> {
                           borderRadius: BorderRadius.circular(8.0),
                           child: Image.network(
                             baseURL + widget.exercise.gifUrl,
-                            width: 200,
-                            height: 200,
+                            width: MediaQuery.of(context).size.width * 0.43,
+                            height: MediaQuery.of(context).size.width * 0.43,
                             fit: BoxFit.cover,
                           ),
+                        ),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.05,
                         ),
                         Column(
                           children: [
@@ -205,7 +208,7 @@ class _ExerciseTilesState extends State<ExerciseTiles> {
         Padding(
           padding: const EdgeInsets.only(top: 5, bottom: 10),
           child: Container(
-            width: 140,
+            width: MediaQuery.of(context).size.width * 0.33,
             // Decreased width
             padding: const EdgeInsets.fromLTRB(12, 12, 12, 12),
             // Smaller padding

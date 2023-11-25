@@ -70,16 +70,35 @@ class ExerciseInfoStartPageState extends State<ExerciseInfoStartPage> {
                   const SizedBox(
                     width: 10,
                   ),
-                  Column(
-                    // make them always center and space between
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      customBorderContainer('BodyPart', widget.bodyPart),
-                      customBorderContainer('Equipment', widget.equipment),
-                      customBorderContainer('Target', widget.target),
-                      customBorderContainer('Secondary Muscles',
-                          widget.secondaryMuscles.join(', ')),
-                    ],
+                  // scrollable list of info
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(height: 8),
+                          customBorderContainer(
+                            'Body Part',
+                            widget.bodyPart,
+                          ),
+                          const SizedBox(height: 5),
+                          customBorderContainer(
+                            'Equipment',
+                            widget.equipment,
+                          ),
+                          const SizedBox(height: 5),
+                          customBorderContainer(
+                            'Target',
+                            widget.target,
+                          ),
+                          const SizedBox(height: 5),
+                          customBorderContainer(
+                            'Secondary Muscles',
+                            widget.secondaryMuscles.join(', '),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -191,7 +210,8 @@ class ExerciseInfoStartPageState extends State<ExerciseInfoStartPage> {
         Padding(
           padding: const EdgeInsets.only(top: 5, bottom: 10),
           child: Container(
-            width: 140,
+            // according to the screen size
+            width: MediaQuery.of(context).size.width * 0.33,
             padding: const EdgeInsets.fromLTRB(12, 12, 12, 12),
             decoration: BoxDecoration(
               border: Border.all(color: themeRed, width: 1.5),
@@ -201,8 +221,8 @@ class ExerciseInfoStartPageState extends State<ExerciseInfoStartPage> {
               value,
               style: const TextStyle(
                 color: black,
-                fontWeight: FontWeight.w600,
-                fontSize: 12,
+                fontWeight: FontWeight.normal,
+                fontSize: 14,
               ),
             ),
           ),
@@ -219,7 +239,7 @@ class ExerciseInfoStartPageState extends State<ExerciseInfoStartPage> {
                 label,
                 style: const TextStyle(
                   color: white,
-                  fontSize: 11,
+                  fontSize: 13,
                   fontWeight: FontWeight.normal,
                 ),
               ),

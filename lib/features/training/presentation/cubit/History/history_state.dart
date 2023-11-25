@@ -32,10 +32,4 @@ class HistoryErrorState extends HistoryState {
 }
 
 class NewHistoryLoadedState extends HistoryState {
-  final ExerciseHistory history;
-
-  const NewHistoryLoadedState(this.history);
-
-  @override
-  List<Object> get props => [history];
 }
