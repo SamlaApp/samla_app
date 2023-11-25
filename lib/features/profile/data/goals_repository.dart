@@ -1,6 +1,8 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:dartz/dartz.dart';
+import 'package:http/http.dart' as http;
 import 'package:samla_app/core/error/exceptions.dart';
 import 'package:samla_app/core/error/failures.dart';
 import 'package:samla_app/core/network/network_info.dart';
@@ -9,6 +11,7 @@ import 'package:samla_app/features/auth/data/models/user_model.dart';
 import 'package:samla_app/features/auth/domain/entities/user.dart';
 import 'package:samla_app/features/profile/domain/Goals.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http_parser/http_parser.dart';
 
 enum Gender { male, female }
 
@@ -208,4 +211,42 @@ class GoalsRepository {
       return Left(ServerFailure(message: 'No Internet Connection'));
     }
   }
+
+  // updateAvatar
+  Future<Either<Failure, User>> updateAvatar(File image) async {
+    if (await networkInfo.isConnected) {
+      try {
+        http.MultipartFile? multipartFile = null;
+
+        if (image != null) {
+          multipartFile = http.MultipartFile(
+            'photo',
+            http.ByteStream(image.openRead()),
+            await image.length(),
+            filename: 'image.jpg',
+            contentType: MediaType('image', 'jpeg'),
+          );
+        }
+
+        final res = await samlaAPI(
+            endPoint: '/user/update_photo',
+            method: 'POST',
+            file: multipartFile);
+
+        final resBody = json.decode(await res.stream.bytesToString());
+        print(resBody);
+        if (res.statusCode != 200) {
+          return Left(ServerFailure(message: resBody['message']));
+        }
+        return Right(UserModel.fromJson(resBody['user']));
+      } on ServerException catch (e) {
+        return Left(ServerFailure(message: e.message));
+      } catch (e) {
+        return Left(ServerFailure(message: 'Something went wrong'));
+      }
+    } else {
+      return Left(ServerFailure(message: 'No Internet Connection'));
+    }
+  }
+
 }
