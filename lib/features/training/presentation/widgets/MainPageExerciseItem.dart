@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import '../../../../config/themes/common_styles.dart';
+import '../../../../config/themes/new_style.dart';
 
 class ExercisesItem {
   final String name;
@@ -100,6 +99,7 @@ class _ExerciseTilesState extends State<ExerciseTiles> {
       context: context,
       builder: (BuildContext context) {
         return Dialog(
+          surfaceTintColor: Colors.white,
           insetPadding: const EdgeInsets.all(1.0),
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
@@ -158,18 +158,15 @@ class _ExerciseTilesState extends State<ExerciseTiles> {
                     width: MediaQuery.of(context).size.width * 0.9,
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Text(
+                      child:  buildNumberedList(
                         widget.exercise.instructions,
-                        style: const TextStyle(
+                        const TextStyle(
                           fontSize: 12,
                           color: Colors.grey,
                           fontWeight: FontWeight.normal,
                           overflow: TextOverflow.visible,
                           decoration: TextDecoration.none,
                         ),
-                        softWrap: true,
-                        overflow: TextOverflow.visible,
-                        textAlign: TextAlign.justify,
                       ),
                     ),
                   ),
@@ -179,7 +176,7 @@ class _ExerciseTilesState extends State<ExerciseTiles> {
                     child: Padding(
                       padding: const EdgeInsets.only(bottom: 8.0),
                       child: ElevatedButton.icon(
-                        icon: const Icon(Icons.close),
+                        icon: const Icon(Icons.close, color: white),
                         style: ElevatedButton.styleFrom(
                           backgroundColor:
                               themeDarkBlue, // Change background color
@@ -187,7 +184,7 @@ class _ExerciseTilesState extends State<ExerciseTiles> {
                         onPressed: () {
                           Navigator.of(context).pop(); // Close the dialog
                         },
-                        label: const Text('Close'),
+                        label: const Text('Close', style: TextStyle(color: white)),
                       ),
                     ),
                   ),
@@ -197,6 +194,36 @@ class _ExerciseTilesState extends State<ExerciseTiles> {
           ),
         );
       },
+    );
+  }
+
+  Widget buildNumberedList(String instructions, TextStyle textStyle) {
+    final lines =
+    instructions.split('\n').where((line) => line.trim().isNotEmpty);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: lines.map((line) {
+        final index = lines.toList().indexOf(line) + 1;
+        return Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              '$index.',
+              style: textStyle,
+            ),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Text(
+                line,
+                style: textStyle,
+                softWrap: true,
+                overflow: TextOverflow.visible,
+                textAlign: TextAlign.justify,
+              ),
+            ),
+          ],
+        );
+      }).toList(),
     );
   }
 
@@ -213,35 +240,45 @@ class _ExerciseTilesState extends State<ExerciseTiles> {
             padding: const EdgeInsets.fromLTRB(12, 12, 12, 12),
             // Smaller padding
             decoration: BoxDecoration(
-              border: Border.all(color: theme_red, width: 1.5),
+              border: Border.all(color: themeDarkBlue.withOpacity(0.5), width: 0.9),
               // Smaller border width
               borderRadius: BorderRadius.circular(6), // Smaller border radius
             ),
-            child: Text(
-              value,
-              style: const TextStyle(
-                color: Colors.black,
-                fontWeight: FontWeight.w600,
-                fontSize: 12, // Smaller font size
+            child: Padding(
+              padding: const EdgeInsets.only(top: 6.0, bottom: 2.0),
+              child: Text(
+                capitalize(value),
+                style:  TextStyle(
+                  color: themeDarkBlue.withOpacity(0.7),
+                  fontWeight: FontWeight.w600,
+                  fontSize: 12, // Smaller font size
+                ),
               ),
             ),
           ),
         ),
         Positioned(
           top: -2,
-          left: 3, // Adjusted left position
+          left: -5, // Adjusted left position
           child: ClipRRect(
             borderRadius: BorderRadius.circular(8), // Smaller border radius
             child: Container(
-              color: theme_red,
               padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
-              // Smaller padding
-              child: Text(
-                label,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 12, // Smaller font size
-                  fontWeight: FontWeight.normal,
+              decoration: const BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(8)),
+                gradient: LinearGradient(
+                  colors: [themePink, themeDarkBlue],
+                ),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(1),
+                child: Text(
+                  label,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 12, // Smaller font size
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
               ),
             ),
