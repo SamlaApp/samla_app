@@ -88,6 +88,7 @@ class WeightProgressState extends State<WeightProgress> {
               ],
             ),
             const SizedBox(height: 30),
+            /*
             LineChart(
               LineChartData(
                 minX: 0,
@@ -130,6 +131,8 @@ class WeightProgressState extends State<WeightProgress> {
                 ],
               ),
             ),
+
+             */
           ],
         ),
       ),

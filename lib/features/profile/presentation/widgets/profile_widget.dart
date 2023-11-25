@@ -68,8 +68,6 @@ class _ProfileWidgetState extends State<ProfileWidget> {
   }
 
   Widget buildImage() {
-    final imageApi = 'https://samla.mohsowa.com/api/user/user_photo/';
-
     return buildCircle(
       color: themeBlue,
       all: 2,
@@ -77,7 +75,7 @@ class _ProfileWidgetState extends State<ProfileWidget> {
         child: Material(
           color: Colors.transparent,
           child: Image.network(
-            imageApi + widget.imageName,
+            widget.imageName,
             fit: BoxFit.cover,
             width: 110,
             height: 110,
