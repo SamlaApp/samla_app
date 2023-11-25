@@ -83,12 +83,16 @@ class _HomeState extends State<HomePage> {
                   CircleAvatar(
                       backgroundColor: Colors.white,
                       radius: 21,
-                      child: ImageViewer.network(
-                        imageURL: user.photoUrl,
-                        width: 42,
-                        height: 42,
-                        placeholderImagePath: 'images/defaults/user.png',
-                        viewerMode: false,
+                      child: BlocBuilder<AuthBloc, AuthState>(
+                        builder: (context, state) {
+                          return ImageViewer.network(
+                            imageURL: user.photoUrl,
+                            width: 42,
+                            height: 42,
+                            placeholderImagePath: 'images/defaults/user.png',
+                            viewerMode: false,
+                          );
+                        },
                       )),
                   const SizedBox(width: 10),
                   Column(
@@ -154,7 +158,6 @@ class _HomeState extends State<HomePage> {
 
             const SizedBox(height: 40),
             Wrap(direction: Axis.horizontal, runSpacing: 25, children: [
-
               CircularIndicators(),
               WeeklyProgress(),
               WeightProgress(),

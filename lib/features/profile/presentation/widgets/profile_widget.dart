@@ -74,9 +74,9 @@ class _ProfileWidgetState extends State<ProfileWidget> {
       child: ClipOval(
         child: Material(
           color: Colors.transparent,
-          child: Image.network(
-            widget.imageName,
-            fit: BoxFit.cover,
+          child: ImageViewer.network(
+            placeholderImagePath: 'images/defaults/user.png',
+            imageURL: widget.imageName,
             width: 110,
             height: 110,
           ),
