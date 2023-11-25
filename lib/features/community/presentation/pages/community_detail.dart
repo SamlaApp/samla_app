@@ -775,8 +775,7 @@ PreferredSize gradientAppBar(context, userRoleOptions userRole,
 
           () {
             if (userRole == userRoleOptions.owner && !community.isPublic) {
-              return SizedBox(
-                height: 20,
+              return Container(
                 width: 50,
                 child: Stack(children: [
                   Positioned(
@@ -786,6 +785,7 @@ PreferredSize gradientAppBar(context, userRoleOptions userRole,
                       icon: const Icon(
                         Icons.people,
                         size: 30,
+                        color: white,
                       ),
                       onPressed: () {
                         Navigator.of(context)

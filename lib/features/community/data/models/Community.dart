@@ -21,7 +21,7 @@ class CommunityModel extends Community {
         description: json['description'],
         isPublic: json['is_public'] == 1 ? true : false,
         handle: json['handle'],
-        id: json['id'],
+        id: json['id'] is String ? int.parse(json['id']) : json['id'],
         imageURL: json['avatar'],
         isMemeber: json['is_member'] ?? false,
         numOfMemebers: 0,
