@@ -7,7 +7,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_in_app_messaging/firebase_in_app_messaging.dart';
 import 'package:samla_app/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:samla_app/features/main/presentation/cubits/steps_timer_loop.dart';
 import 'package:samla_app/features/notifications/presentation/bloc/notification_bloc.dart';
+import 'package:workmanager/workmanager.dart';
 import 'config/router/app_router.dart';
 import 'firebase_options.dart'; // Import your logical code
 import 'features/auth/auth_injection_container.dart' as auth_di;
@@ -23,10 +25,16 @@ class MyHttpOverrides extends HttpOverrides {
   }
 }
 
+
+
 Future<void> main() async {
   HttpOverrides.global = MyHttpOverrides();
 
   WidgetsFlutterBinding.ensureInitialized();
+  // initilizing steps background
+
+ 
+
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );

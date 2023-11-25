@@ -76,4 +76,13 @@ class ProfileCubit extends Cubit<ProfileState> {
       emit(ProfileInitial());
     });
   }
+
+  // get user goals
+  Future<void> getUserGoals() async {
+    final result = await goalsRepository.getUserGoals();
+    result.fold((l) => emit(ProfileError(message: l.message)), (goals) {
+      userGoals = goals;
+      emit(ProfileInitial());
+    });
+  }
 }

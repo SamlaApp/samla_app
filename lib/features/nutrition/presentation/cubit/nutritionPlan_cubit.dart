@@ -19,6 +19,14 @@ class NutritionPlanCubit extends Cubit<NutritionPlanState> {
     print('someone tried to close the nutrition plan cubit');
   }
 
+  @override
+  dynamic noSuchMethod(Invocation invocation) {
+    String methodName = invocation.memberName.toString();
+    print('Method called: $methodName');
+    // You can choose to throw an exception here if needed
+    return null;
+  }
+
   // getAllNutritionPlans
   Future<void> getAllNutritionPlans() async {
     emit(NutritionPlanLoadingState()); // Show loading state
@@ -148,9 +156,10 @@ class NutritionPlanCubit extends Cubit<NutritionPlanState> {
   Future<void> getTodayNutritionPlan(String query) async {
     emit(NutritionPlanLoadingState()); // Show loading state
     final result = await repository.getTodayNutritionPlan(query: query);
-    result.fold(
-        (failure) => emit(const NutritionPlanErrorState(
-            'Failed to get today nutrition plan')), (nutritionPlan) {
+    result.fold((failure) {
+      print(failure.message);
+      emit(const NutritionPlanErrorState('Failed to get today nutrition plan'));
+    }, (nutritionPlan) {
       if (nutritionPlan.isEmpty) {
         emit(NutritionPlanEmptyState());
         return;

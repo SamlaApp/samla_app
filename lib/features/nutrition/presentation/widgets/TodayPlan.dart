@@ -36,9 +36,8 @@ class _TodayPlanState extends State<TodayPlan> {
     return BlocBuilder<NutritionPlanCubit, NutritionPlanState>(
       bloc: cubit,
       builder: (context, state) {
+        print(state);
         if (state is NutritionPlanInitial) {
-          cubit
-              .getTodayNutritionPlan(DateFormat('EEEE').format(DateTime.now()));
           return const Center(child: CircularProgressIndicator());
         } else if (state is NutritionPlanLoadingState) {
           return const Center(child: CircularProgressIndicator());

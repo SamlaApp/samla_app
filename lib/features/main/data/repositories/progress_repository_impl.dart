@@ -38,4 +38,10 @@ class ProgressRepositoryImpl implements ProgressRepository {
       }
     }
   }
+  
+  @override
+  Future<Either<Failure, Unit>> sendProgress(Progress progress) {
+    // TODO: implement sendProgress
+    throw UnimplementedError();
+  }
 }

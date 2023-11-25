@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:samla_app/config/themes/common_styles.dart';
 import 'package:samla_app/core/error/exceptions.dart';
 import 'package:samla_app/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:samla_app/features/main/home_di.dart';
 import 'package:samla_app/features/notifications/notification_injection_container.dart';
 import 'package:samla_app/features/nutrition/nutrition_di.dart';
 import 'package:samla_app/features/profile/profile_di.dart';
@@ -61,6 +62,8 @@ class _SplashScreenState extends State<SplashScreen>
     ProfileInit();
     // initlizeing nutrition service
     nutritionInit();
+    // initlizeing home featrues
+    await HomeInit();
     // authentication handling
     await _checkCachedUserAndNavigate();
   }

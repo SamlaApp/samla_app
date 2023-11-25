@@ -1,3 +1,0 @@
-class DummyClass {
-  void someMethod() {}
-}

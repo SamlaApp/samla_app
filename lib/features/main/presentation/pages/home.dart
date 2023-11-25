@@ -19,7 +19,6 @@ class _HomeState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    di.HomeInit();
     progressCubit = di.sl.get<ProgressCubit>();
   }
 

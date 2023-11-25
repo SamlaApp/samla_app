@@ -40,6 +40,8 @@ class NutritionPlanRemoteDataSourceImpl
 
   NutritionPlanRemoteDataSourceImpl({required this.client});
 
+   
+
   @override
   Future<List<NutritionPlan>> getAllNutritionPlans() async {
     final res = await samlaAPI(endPoint: '/nutrition/get', method: 'GET');
