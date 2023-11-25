@@ -12,7 +12,7 @@ class ProfileInitial extends ProfileState {}
 class ProfileError extends ProfileState {
   final String message;
 
-  ProfileError({required this.message});
+  const ProfileError({required this.message});
 }
 
 class ProfileLoading extends ProfileState {}
@@ -22,11 +22,29 @@ class UserGoalInitial extends ProfileState {}
 class UserGoalErrorState extends ProfileState {
   final String message;
 
-  UserGoalErrorState({required this.message});
+  const UserGoalErrorState({required this.message});
 }
 
 class UserGoalloaded extends ProfileState {
   final UserGoals userGoal;
 
-  UserGoalloaded({required this.userGoal});
+  const UserGoalloaded({required this.userGoal});
 }
+
+// ProfileAvatarLoading
+class ProfileAvatarLoading extends ProfileState {}
+
+// ProfileAvatarLoaded
+class UserAvatarLoaded extends ProfileState {
+  final File imageFile;
+
+  const UserAvatarLoaded({required this.imageFile});
+}
+
+// ProfileAvatarError
+class UserAvatarErrorState extends ProfileState {
+  final String message;
+
+  const UserAvatarErrorState({required this.message});
+}
+

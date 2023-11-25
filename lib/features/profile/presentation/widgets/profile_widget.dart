@@ -1,9 +1,10 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:samla_app/config/themes/common_styles.dart';
+import 'package:samla_app/config/themes/new_style.dart';
+import 'package:samla_app/features/profile/presentation/cubit/profile_cubit.dart';
 import '../../../../core/widgets/image_helper.dart';
 import '../../../../core/widgets/image_viewer.dart';
-import '../../../auth/domain/entities/user.dart';
+import 'package:samla_app/features/profile/profile_di.dart' as di;
 
 class ProfileWidget extends StatefulWidget {
   final String imageName;
@@ -23,9 +24,11 @@ class _ProfileWidgetState extends State<ProfileWidget> {
   File? _image;
   final _formKey = GlobalKey<FormState>();
 
+  final avatarCubit = di.sl.get<ProfileCubit>();
+
   void _submitForm() {
     if (_formKey.currentState!.validate()) {
-      // All fields are valid, you can create the Community object and proceed
+      avatarCubit.updateAvatar(_image!);
     }
   }
 
@@ -92,7 +95,7 @@ class _ProfileWidgetState extends State<ProfileWidget> {
           all: 8,
           child: Icon(
             Icons.edit,
-            color: primary_color,
+            color: primaryColor,
             size: 20,
           ),
         ),
@@ -116,7 +119,7 @@ class _ProfileWidgetState extends State<ProfileWidget> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("Edit Image"),
+          title: const Text("Edit Image"),
           content: Container(
             // You can customize the size of the image viewer here
             width: double.maxFinite,
@@ -138,7 +141,14 @@ class _ProfileWidgetState extends State<ProfileWidget> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text("Close"),
+              child: const Text("Close"),
+            ),
+            TextButton(
+              onPressed: () {
+                _submitForm();
+                Navigator.of(context).pop();
+              },
+              child: const Text("Save"),
             ),
           ],
         );
