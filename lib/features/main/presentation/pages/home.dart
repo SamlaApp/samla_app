@@ -76,85 +76,83 @@ class _HomeState extends State<HomePage> {
         child: Column(
           children: [
             // Welcome Container
-            Container(
-              padding: const EdgeInsets.fromLTRB(0, 30, 0, 0),
-              child: Row(
-                children: [
-                  CircleAvatar(
-                      backgroundColor: Colors.white,
-                      radius: 21,
-                      child: BlocBuilder<AuthBloc, AuthState>(
-                        builder: (context, state) {
-                          return ImageViewer.network(
-                            imageURL: user.photoUrl,
-                            width: 42,
-                            height: 42,
-                            placeholderImagePath: 'images/defaults/user.png',
-                            viewerMode: false,
-                          );
-                        },
-                      )),
-                  const SizedBox(width: 10),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        'Welcome,',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w500,
-                          color: themeDarkBlue.withOpacity(0.6),
-                        ),
-                      ),
-                      Text(
-                        user.name,
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w900,
-                          color: themeDarkBlue.withOpacity(0.8),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const Spacer(
-                    flex: 1,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Container(
-                        alignment: Alignment.center,
-                        height: 30,
-                        padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-                        decoration: BoxDecoration(
-                          gradient: const LinearGradient(
-                            colors: [
-                              themeRed,
-                              themePink,
-                            ],
-                            begin: Alignment.bottomLeft,
-                            end: Alignment.topRight,
+            BlocBuilder<AuthBloc, AuthState>(builder: (context, state) {
+              return Container(
+                padding: const EdgeInsets.fromLTRB(0, 30, 0, 0),
+                child: Row(
+                  children: [
+                    CircleAvatar(
+                        backgroundColor: Colors.white,
+                        radius: 21,
+                        child: ImageViewer.network(
+                          imageURL: user.photoUrl,
+                          width: 42,
+                          height: 42,
+                          placeholderImagePath: 'images/defaults/user.png',
+                          viewerMode: false,
+                        )),
+                    const SizedBox(width: 10),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          'Welcome,',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w500,
+                            color: themeDarkBlue.withOpacity(0.6),
                           ),
-                          borderRadius: BorderRadius.circular(10),
                         ),
-                        child: Row(
-                          children: [
-                            const Icon(
-                              Icons.local_fire_department,
-                              color: white,
-                              size: 20,
+                        Text(
+                          user.name,
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w900,
+                            color: themeDarkBlue.withOpacity(0.8),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const Spacer(
+                      flex: 1,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Container(
+                          alignment: Alignment.center,
+                          height: 30,
+                          padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                          decoration: BoxDecoration(
+                            gradient: const LinearGradient(
+                              colors: [
+                                themeRed,
+                                themePink,
+                              ],
+                              begin: Alignment.bottomLeft,
+                              end: Alignment.topRight,
                             ),
-                            const SizedBox(width: 5),
-                            buildStreakStatus(),
-                          ],
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Row(
+                            children: [
+                              const Icon(
+                                Icons.local_fire_department,
+                                color: white,
+                                size: 20,
+                              ),
+                              const SizedBox(width: 5),
+                              buildStreakStatus(),
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
+                      ],
+                    ),
+                  ],
+                ),
+              );
+            }),
 
             const SizedBox(height: 40),
             Wrap(direction: Axis.horizontal, runSpacing: 25, children: [
