@@ -24,13 +24,13 @@ class StartTrainingNew extends StatefulWidget {
   _StartTrainingNewState createState() => _StartTrainingNewState();
 }
 
-class _StartTrainingNewState extends State<StartTrainingNew> {
+class _StartTrainingNewState extends State<StartTrainingNew>
+    with TickerProviderStateMixin {
   late ExerciseLibrary selectedExercise;
   final baseURL = 'https://samla.mohsowa.com/api/training/image/';
   TextEditingController kilogramsController = TextEditingController();
   TextEditingController repeatsController = TextEditingController();
   final historyCubit = di.sl.get<HistoryCubit>();
-
 
   @override
   void dispose() {
@@ -62,7 +62,7 @@ class _StartTrainingNewState extends State<StartTrainingNew> {
     historyCubit.getHistory(id: selectedExercise.id!);
   }
 
-  void selectNextExercise() {
+  void selectNextExercise() async {
     int currentIndex = widget.exercises.indexOf(selectedExercise);
     if (currentIndex < widget.exercises.length - 1) {
       setState(() {
@@ -70,22 +70,88 @@ class _StartTrainingNewState extends State<StartTrainingNew> {
         loadHistoryForExercise();
       });
     } else {
-      // If it's the last exercise, show a thank you dialog
-      _showThankYouDialog();
+      print("Last exercise completed, showing dialog");
+      bool? trainingCompleted = await _showThankYouDialog();
+      print("Dialog closed with value: $trainingCompleted");
+      if (trainingCompleted == true) {
+        Navigator.of(context).pop(true);
+      }
     }
   }
 
-  void _showThankYouDialog() {
-    showDialog(
+  Future<bool?> _showThankYouDialog() async {
+    // Animation Controllers for the icons
+    AnimationController smallStarController1 = AnimationController(
+      duration: const Duration(seconds: 2),
+      vsync: this,
+    )
+      ..repeat(reverse: true);
+    AnimationController largeStarController = AnimationController(
+      duration: const Duration(seconds: 2),
+      vsync: this,
+    )
+      ..repeat(reverse: true);
+    AnimationController smallStarController2 = AnimationController(
+      duration: const Duration(seconds: 2),
+      vsync: this,
+    )
+      ..repeat(reverse: true);
+
+    return showDialog<bool>(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("Test Dialog"),
-          content: Text("This is a test."),
+          backgroundColor: Colors.white,
+          shape:
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+          title: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  FadeTransition(
+                    opacity: smallStarController1,
+                    child: Icon(Icons.star_rate,
+                        size: 22, color: themeRed), // Smaller star
+                  ),
+                  FadeTransition(
+                    opacity: largeStarController,
+                    child: Icon(Icons.star_rate,
+                        size: 45, color: themeRed), // Larger star
+                  ),
+                  FadeTransition(
+                    opacity: smallStarController2,
+                    child: Icon(Icons.star_rate,
+                        size: 22, color: themeRed), // Smaller star
+                  ),
+                ],
+              ),
+              SizedBox(height: 16),
+              Text(
+                "Training Complete",
+                style:
+                TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+          content: Text(
+            "Congratulations! You've completed today's training session. Great job!",
+            style: TextStyle(color: Colors.black87, fontSize: 18),
+            textAlign: TextAlign.center,
+          ),
           actions: <Widget>[
             TextButton(
-              child: Text("OK"),
-              onPressed: () => Navigator.of(context).pop(),
+              child: Text("Close", style: TextStyle(color: Colors.blueAccent)),
+              onPressed: () {
+                Navigator.of(context).pop(
+                    true); // Pop with 'true' indicating completion
+
+                smallStarController1.dispose();
+                largeStarController.dispose();
+                smallStarController2.dispose();
+              },
             ),
           ],
         );
@@ -144,6 +210,12 @@ class _StartTrainingNewState extends State<StartTrainingNew> {
                 });
               },
             ),
+            //_showThankYouDialog(), button to show the dialog
+            ElevatedButton(
+                onPressed: () {
+                  _showThankYouDialog();
+                },
+                child: Text('set Dialog'))
           ],
         ),
       ),

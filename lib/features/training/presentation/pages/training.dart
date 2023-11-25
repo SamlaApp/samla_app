@@ -26,10 +26,9 @@ class _TrainingPageState extends State<TrainingPage> {
 
   late TemplateCubit templateCubit; // Declare the cubit
   late ViewDayExerciseCubit viewDayExerciseCubit; // Declare the cubit
-
+  Map<int, bool> dayCompletionStatus = {};
   final _controller = PageController();
   Map<String, List<ExerciseLibrary>> weeklyExercises = {};
-
   ValueNotifier<int?> activeTemplateId = ValueNotifier(null);
 
   @override
@@ -72,6 +71,7 @@ class _TrainingPageState extends State<TrainingPage> {
       });
     }
   }
+
 
   String _getDayNameFromTemplate(Template template, int index) {
     switch (index) {
@@ -130,6 +130,49 @@ class _TrainingPageState extends State<TrainingPage> {
       default:
         return "Unknown Day";
     }
+  }
+
+  void _navigateToStartTrainingNew(
+      String dayName, int dayIndex, List<ExerciseLibrary> exercises) async {
+    // If there are no exercises for the day, mark it as complete
+    if (exercises.isEmpty) {
+      _markDayAsComplete(dayIndex);
+      return;
+    }
+
+    // Navigate to StartTrainingNew and wait for completion
+    bool? isCompleted = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => StartTrainingNew(
+          dayName: dayName,
+          dayIndex: dayIndex,
+          exercises: exercises,
+        ),
+      ),
+    );
+
+    // Update the completion status if training is completed
+    if (isCompleted == true) {
+      _markDayAsComplete(dayIndex);
+    }
+  }
+
+  void _markDayAsComplete(int dayIndex) {
+    setState(() {
+      dayCompletionStatus[dayIndex] = true;
+
+      // Check if all days are completed
+      if (dayIndex == 6 &&
+          dayCompletionStatus.values.every((status) => status)) {
+        // Reset all days
+        dayCompletionStatus = Map.fromIterable(
+          List.generate(7, (index) => index),
+          key: (item) => item,
+          value: (item) => false,
+        );
+      }
+    });
   }
 
   @override
@@ -240,8 +283,10 @@ class _TrainingPageState extends State<TrainingPage> {
                             child: SizedBox(
                               height: 50,
                               child: ElevatedButton.icon(
-                                label: const Text(
-                                  'Start Now',
+                                label: Text(
+                                  dayCompletionStatus[index] == true
+                                      ? 'Completed'
+                                      : 'Start Now',
                                   style: TextStyle(
                                     fontSize: 18,
                                     fontWeight: FontWeight.bold,
@@ -249,34 +294,28 @@ class _TrainingPageState extends State<TrainingPage> {
                                     fontFamily: 'Cairo',
                                   ),
                                 ),
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => StartTrainingNew(
-                                        dayName: dayNameFromTemplate,
-                                        // Pass the day name from the template
-                                        dayIndex: index,
-                                        // Pass the day index directly
-                                        exercises: weeklyExercises[
-                                                _getDayNameFromIndex(index)] ??
-                                            [],
-                                      ),
-                                    ),
-                                  );
-                                },
+                                onPressed: () => _navigateToStartTrainingNew(
+                                    dayNameFromTemplate,
+                                    index,
+                                    weeklyExercises[
+                                            _getDayNameFromIndex(index)] ??
+                                        []),
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.transparent,
                                   shadowColor: Colors.transparent,
                                   elevation: 0,
                                   shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(25),
-                                  ),
+                                      borderRadius: BorderRadius.circular(25)),
                                   side: const BorderSide(
                                       width: 2.0, color: Colors.white),
                                 ),
-                                icon: const Icon(Icons.play_arrow,
-                                    color: Colors.white, size: 30),
+                                icon: Icon(
+                                  dayCompletionStatus[index] == true
+                                      ? Icons.check
+                                      : Icons.play_arrow,
+                                  color: Colors.white,
+                                  size: 30,
+                                ),
                               ),
                             ),
                           ),
@@ -334,8 +373,8 @@ class _TrainingPageState extends State<TrainingPage> {
                   ),
                   IconButton(
                     onPressed: _navigateToTemplatesPage,
-                    icon:
-                        const Icon(Icons.dashboard_outlined, color: themeDarkBlue, size: 30),
+                    icon: const Icon(Icons.dashboard_outlined,
+                        color: themeDarkBlue, size: 30),
                   ),
                 ],
               ),
