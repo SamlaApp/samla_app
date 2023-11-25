@@ -1,7 +1,7 @@
 import 'package:animate_gradient/animate_gradient.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:samla_app/config/themes/common_styles.dart';
+import 'package:samla_app/config/themes/new_style.dart';
 import 'package:samla_app/features/training/domain/entities/Template.dart';
 import 'package:samla_app/features/training/presentation/cubit/Templates/template_cubit.dart';
 import 'package:samla_app/features/training/presentation/pages/tamplate_page.dart';
@@ -53,6 +53,7 @@ class _TemplatesPageState extends State<TemplatesPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: themeDarkBlue.withOpacity(0.95),
         title: const Text(
           "Workout Templates",
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
@@ -76,20 +77,6 @@ class _TemplatesPageState extends State<TemplatesPage> {
             },
           ),
         ],
-        flexibleSpace: AnimateGradient(
-          primaryBegin: Alignment.topLeft,
-          primaryEnd: Alignment.bottomLeft,
-          secondaryBegin: Alignment.bottomRight,
-          secondaryEnd: Alignment.topLeft,
-          primaryColors: [
-            theme_orange,
-            themePink,
-          ],
-          secondaryColors: [
-            themePink,
-            theme_red,
-          ],
-        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(12.0),
@@ -111,7 +98,7 @@ class _TemplatesPageState extends State<TemplatesPage> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
+          const Text(
             'Templates',
             style: TextStyle(
                 color: themeDarkBlue,
@@ -119,7 +106,7 @@ class _TemplatesPageState extends State<TemplatesPage> {
                 fontWeight: FontWeight.bold),
           ),
           IconButton(
-            icon: Icon(Icons.refresh, color: themeDarkBlue),
+            icon: const Icon(Icons.refresh, color: themeDarkBlue),
             onPressed: () {
               refresh();
             },
@@ -144,12 +131,12 @@ class _TemplatesPageState extends State<TemplatesPage> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              Row(
+              const Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(Icons.file_present_rounded,
                       color: themeDarkBlue, size: 25),
-                  const SizedBox(width: 10),
+                  SizedBox(width: 10),
                   Text(
                     'New Template',
                     style: TextStyle(
@@ -163,8 +150,8 @@ class _TemplatesPageState extends State<TemplatesPage> {
               ),
               const SizedBox(height: 20.0),
               TextFormField(
-                decoration: InputDecoration(
-                  border: const OutlineInputBorder(),
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
                   labelText: 'Template Name',
                   focusColor: themeBlue,
                 ),
@@ -187,7 +174,7 @@ class _TemplatesPageState extends State<TemplatesPage> {
                     icon: const Icon(Icons.cancel),
                     label: const Text('Cancel'),
                     style: ElevatedButton.styleFrom(
-                      foregroundColor: theme_red,
+                      foregroundColor: themeRed,
                       backgroundColor: Colors.white,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(32.0),
@@ -224,7 +211,7 @@ class _TemplatesPageState extends State<TemplatesPage> {
       bloc: cubit,
       builder: (context, state) {
         if (state is TemplateLoadingState) {
-          return Center(
+          return const Center(
             child: CircularProgressIndicator(
               color: themeBlue,
               backgroundColor: themePink,
@@ -233,7 +220,7 @@ class _TemplatesPageState extends State<TemplatesPage> {
         }
         else if (state is TemplateDeletedState) {
           cubit.getAllTemplates();
-          return Center(
+          return const Center(
             child: CircularProgressIndicator(
               color: themeBlue,
               backgroundColor: themePink,
@@ -243,7 +230,7 @@ class _TemplatesPageState extends State<TemplatesPage> {
         // TemplateCreatedState
         else if (state is TemplateCreatedState) {
           cubit.getAllTemplates();
-          return Center(
+          return const Center(
             child: CircularProgressIndicator(
               color: themeBlue,
               backgroundColor: themePink,
@@ -271,9 +258,9 @@ class _TemplatesPageState extends State<TemplatesPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(Icons.gpp_maybe_rounded, color: theme_orange, size: 50),
+                const Icon(Icons.gpp_maybe_rounded, color: themeOrange, size: 50),
                 const SizedBox(height: 10),
-                Text('Something went wrong',
+                const Text('Something went wrong',
                     style: TextStyle(
                       color: themeDarkBlue,
                       fontSize: 14,
@@ -283,7 +270,7 @@ class _TemplatesPageState extends State<TemplatesPage> {
                   onPressed: () {
                     refresh();
                   },
-                  child: Text('Try again',
+                  child: const Text('Try again',
                       style: TextStyle(
                         color: themeBlue,
                         fontSize: 14,
@@ -308,7 +295,7 @@ class _TemplatesPageState extends State<TemplatesPage> {
       height: 75,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
-        gradient: LinearGradient(
+        gradient: const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
