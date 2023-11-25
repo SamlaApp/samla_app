@@ -3,8 +3,9 @@ import 'package:samla_app/features/training/presentation/widgets/startTraninig/h
 import '../../../../config/themes/new_style.dart';
 import '../../domain/entities/ExerciseLibrary.dart';
 import '../cubit/History/history_cubit.dart';
-
 class ExerciseInfoStartPage extends StatefulWidget {
+
+
   final String name;
   final String gifUrl;
   final String bodyPart;
@@ -34,6 +35,7 @@ class ExerciseInfoStartPage extends StatefulWidget {
 
 class ExerciseInfoStartPageState extends State<ExerciseInfoStartPage> {
   bool _isExpanded = false;
+  String capitalize(String s) => s[0].toUpperCase() + s.substring(1);
 
   @override
   Widget build(BuildContext context) {
@@ -210,37 +212,50 @@ class ExerciseInfoStartPageState extends State<ExerciseInfoStartPage> {
         Padding(
           padding: const EdgeInsets.only(top: 5, bottom: 10),
           child: Container(
-            // according to the screen size
             width: MediaQuery.of(context).size.width * 0.33,
+            // Decreased width
             padding: const EdgeInsets.fromLTRB(12, 12, 12, 12),
+            // Smaller padding
             decoration: BoxDecoration(
-              border: Border.all(color: themeRed, width: 1.5),
-              borderRadius: BorderRadius.circular(6),
+              border: Border.all(color: themeDarkBlue.withOpacity(0.5), width: 0.9),
+              // Smaller border width
+              borderRadius: BorderRadius.circular(6), // Smaller border radius
             ),
-            child: Text(
-              value,
-              style: const TextStyle(
-                color: black,
-                fontWeight: FontWeight.normal,
-                fontSize: 14,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 6.0, bottom: 2.0),
+              child: Text(
+                capitalize(value),
+                style:  TextStyle(
+                  color: themeDarkBlue.withOpacity(0.7),
+                  fontWeight: FontWeight.w600,
+                  fontSize: 12, // Smaller font size
+                ),
               ),
             ),
           ),
         ),
         Positioned(
-          top: -3,
-          left: 5,
+          top: -2,
+          left: -5, // Adjusted left position
           child: ClipRRect(
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(8), // Smaller border radius
             child: Container(
-              color: themeRed,
               padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
-              child: Text(
-                label,
-                style: const TextStyle(
-                  color: white,
-                  fontSize: 13,
-                  fontWeight: FontWeight.normal,
+              decoration: const BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(8)),
+                gradient: LinearGradient(
+                  colors: [themePink, themeDarkBlue],
+                ),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(1),
+                child: Text(
+                  label,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 12, // Smaller font size
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
               ),
             ),
