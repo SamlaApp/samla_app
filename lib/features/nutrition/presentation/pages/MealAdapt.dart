@@ -558,6 +558,7 @@ class _MealAdaptState extends State<MealAdapt> {
                     size: meal.size!,
                     onRemove: () {
                       cubit.deleteNutritionPlanMeal(meal.id!);
+                      cubit.getNutritionPlanMeals(_displayedDay.text, nutritionPlan.id!);
                       todayPlanCubit.getTodayNutritionPlan(DateFormat('EEEE').format(DateTime.now()));
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
@@ -603,6 +604,8 @@ class _MealAdaptState extends State<MealAdapt> {
               child: IconButton(
                 onPressed: () {
                   cubit.deleteNutritionPlan(nutritionPlan.id!);
+                  todayPlanCubit.getTodayNutritionPlan(DateFormat('EEEE').format(DateTime.now()));
+
                   Navigator.pop(context);
 
                   ScaffoldMessenger.of(context).showSnackBar(
