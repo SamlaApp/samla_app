@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:samla_app/features/training/presentation/widgets/startTraninig/history.dart';
+import 'package:samla_app/features/training/presentation/widgets/startTraining/history.dart';
 import '../../../../config/themes/new_style.dart';
 import '../../domain/entities/ExerciseLibrary.dart';
 import '../cubit/History/history_cubit.dart';
