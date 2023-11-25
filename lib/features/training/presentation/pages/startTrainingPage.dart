@@ -1,13 +1,11 @@
-import 'dart:async';
 import 'package:animate_gradient/animate_gradient.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:samla_app/features/training/presentation/cubit/History/history_cubit.dart';
 import '../../../../config/themes/new_style.dart';
 import '../../domain/entities/ExerciseLibrary.dart';
-import '../widgets/startTraninig/ExerciseScrollRow.dart';
-import '../widgets/startTraninig/progressSection.dart';
-import '../widgets/startTraninig/SelectedExerciseDisplay.dart';
+import '../widgets/startTraining/ExerciseScrollRow.dart';
+import '../widgets/startTraining/progressSection.dart';
+import '../widgets/startTraining/SelectedExerciseDisplay.dart';
 import 'package:samla_app/features/training/training_di.dart' as di;
 
 class StartTrainingNew extends StatefulWidget {
@@ -16,6 +14,7 @@ class StartTrainingNew extends StatefulWidget {
   final List<ExerciseLibrary> exercises;
 
   StartTrainingNew({
+    super.key,
     required this.dayName,
     required this.dayIndex,
     required this.exercises,
@@ -26,23 +25,15 @@ class StartTrainingNew extends StatefulWidget {
 }
 
 class _StartTrainingNewState extends State<StartTrainingNew> {
-  late int countdownValue; // Initial countdown value in seconds
-  late Timer? countdownTimer; // Timer for countdown
-  int totalSets = 3;
-  int finishedSets = 0;
   late ExerciseLibrary selectedExercise;
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final baseURL = 'https://samla.mohsowa.com/api/training/image/';
   TextEditingController kilogramsController = TextEditingController();
   TextEditingController repeatsController = TextEditingController();
   final historyCubit = di.sl.get<HistoryCubit>();
 
+
   @override
   void dispose() {
-    // Dispose controllers to free up resources when the widget is disposed
-    kilogramsController.dispose();
-    repeatsController.dispose();
-    countdownTimer?.cancel();
     super.dispose();
   }
 
@@ -51,33 +42,7 @@ class _StartTrainingNewState extends State<StartTrainingNew> {
     super.initState();
     if (widget.exercises.isNotEmpty) {
       selectedExercise = widget.exercises[0];
-      finishedSets = 0;
-      totalSets = 3;
-      countdownTimer = null;
-      countdownValue = 30;
     }
-  }
-
-  String formatTime(int seconds) {
-    // Format seconds as MM:SS
-    int minutes = seconds ~/ 60;
-    int remainingSeconds = seconds % 60;
-    return '$minutes:${remainingSeconds.toString().padLeft(2, '0')}';
-  }
-
-  void startCountdown() {
-    countdownTimer?.cancel(); // Cancel the timer if it's not null
-    countdownTimer = Timer.periodic(Duration(seconds: 1), (timer) {
-      setState(() {
-        if (countdownValue > 0) {
-          countdownValue--;
-        } else {
-          // Countdown finished, reset the value and cancel the timer
-          countdownValue = 30;
-          countdownTimer?.cancel();
-        }
-      });
-    });
   }
 
   void setHistory() {
@@ -97,12 +62,43 @@ class _StartTrainingNewState extends State<StartTrainingNew> {
     historyCubit.getHistory(id: selectedExercise.id!);
   }
 
+  void selectNextExercise() {
+    int currentIndex = widget.exercises.indexOf(selectedExercise);
+    if (currentIndex < widget.exercises.length - 1) {
+      setState(() {
+        selectedExercise = widget.exercises[currentIndex + 1];
+        loadHistoryForExercise();
+      });
+    } else {
+      // If it's the last exercise, show a thank you dialog
+      _showThankYouDialog();
+    }
+  }
+
+  void _showThankYouDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Test Dialog"),
+          content: Text("This is a test."),
+          actions: <Widget>[
+            TextButton(
+              child: Text("OK"),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.dayName.toUpperCase(),
-            style: TextStyle(
+            style: const TextStyle(
                 color: white,
                 fontSize: 22,
                 fontWeight: FontWeight.w700,
@@ -112,16 +108,16 @@ class _StartTrainingNewState extends State<StartTrainingNew> {
           primaryEnd: Alignment.bottomLeft,
           secondaryBegin: Alignment.bottomRight,
           secondaryEnd: Alignment.topLeft,
-          primaryColors: [
+          primaryColors: const [
             themeOrange,
             themePink,
           ],
-          secondaryColors: [
+          secondaryColors: const [
             themePink,
             themeRed,
           ],
         ),
-        iconTheme: IconThemeData(color: white),
+        iconTheme: const IconThemeData(color: white),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -133,11 +129,9 @@ class _StartTrainingNewState extends State<StartTrainingNew> {
             ),
             // buildProgressSection(),
             ProgressSection(
-              totalSets: totalSets,
-              finishedSets: finishedSets,
-              updateTotalSets: (newTotalSets) =>
-                  setState(() => totalSets = newTotalSets),
               selectedExercise: selectedExercise,
+              onAllSetsCompleted:
+              selectNextExercise, // Pass the new method as a callback
             ),
             // ## exercise scroll row
             ExerciseScrollRow(
@@ -146,9 +140,6 @@ class _StartTrainingNewState extends State<StartTrainingNew> {
               onExerciseSelect: (ExerciseLibrary exercise) {
                 setState(() {
                   selectedExercise = exercise;
-                  finishedSets = 0;
-                  totalSets = 3;
-                  countdownValue = 30;
                   loadHistoryForExercise();
                 });
               },
@@ -157,26 +148,5 @@ class _StartTrainingNewState extends State<StartTrainingNew> {
         ),
       ),
     );
-  }
-
-  String _getDayNameFromIndex(int index) {
-    switch (index) {
-      case 0:
-        return "Sunday";
-      case 1:
-        return "Monday";
-      case 2:
-        return "Tuesday";
-      case 3:
-        return "Wednesday";
-      case 4:
-        return "Thursday";
-      case 5:
-        return "Friday";
-      case 6:
-        return "Saturday";
-      default:
-        return "Unknown Day";
-    }
   }
 }

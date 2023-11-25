@@ -131,12 +131,6 @@ final class NutritionPlanMealsLoadingState extends NutritionPlanState {}
 
 // NutritionPlanMealDeleted
 final class NutritionPlanMealDeleted extends NutritionPlanState {
-  final NutritionPlanMeal nutritionPlanMeal;
-
-  const NutritionPlanMealDeleted(this.nutritionPlanMeal);
-
-  @override
-  List<Object> get props => [nutritionPlanMeal];
 }
 
 //NutritionPlanDeleted

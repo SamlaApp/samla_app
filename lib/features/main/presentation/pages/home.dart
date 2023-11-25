@@ -8,6 +8,7 @@ import 'package:samla_app/features/main/presentation/widgets/WeeklyProgress.dart
 import 'package:samla_app/features/main/home_di.dart' as di;
 import 'package:samla_app/features/auth/presentation/bloc/auth_bloc.dart';
 import '../cubits/ProgressCubit/progress_cubit.dart';
+import 'package:samla_app/features/main/presentation/widgets/WeightProgress.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -20,7 +21,7 @@ class _HomeState extends State<HomePage> {
   final user = di.sl.get<AuthBloc>().user;
   late ProgressCubit progressCubit;
 
-  late  StreakCubit streakCubit;
+  late StreakCubit streakCubit;
 
   @override
   void initState() {
@@ -47,28 +48,19 @@ class _HomeState extends State<HomePage> {
           return Text(
             state.streak.toString(),
             style: const TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
-              color: white
-            ),
+                fontSize: 14, fontWeight: FontWeight.w500, color: white),
           );
         } else if (state is StreakErrorState) {
           return const Text(
             '0',
             style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
-              color: white
-            ),
+                fontSize: 14, fontWeight: FontWeight.w500, color: white),
           );
         } else {
           return const Text(
             '0',
             style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
-              color: white
-            ),
+                fontSize: 14, fontWeight: FontWeight.w500, color: white),
           );
         }
       },
@@ -84,32 +76,27 @@ class _HomeState extends State<HomePage> {
         clipBehavior: Clip.none,
         child: Column(
           children: [
-
             // Welcome Container
             Container(
               padding: const EdgeInsets.fromLTRB(0, 30, 0, 0),
               child: Row(
                 children: [
-
                   CircleAvatar(
                       backgroundColor: Colors.white,
                       radius: 21,
                       child: ImageViewer.network(
-                        imageURL:user.photoUrl,
+                        imageURL: user.photoUrl,
                         width: 42,
                         height: 42,
                         placeholderImagePath: 'images/defaults/user.png',
                         viewerMode: false,
-                      )
-                  ),
-
+                      )),
                   const SizedBox(width: 10),
-
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                       Text(
+                      Text(
                         'Welcome,',
                         style: TextStyle(
                           fontSize: 18,
@@ -117,10 +104,9 @@ class _HomeState extends State<HomePage> {
                           color: themeDarkBlue.withOpacity(0.6),
                         ),
                       ),
-
                       Text(
                         user.name,
-                        style:  TextStyle(
+                        style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.w900,
                           color: themeDarkBlue.withOpacity(0.8),
@@ -128,11 +114,9 @@ class _HomeState extends State<HomePage> {
                       ),
                     ],
                   ),
-
                   const Spacer(
                     flex: 1,
                   ),
-
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
@@ -165,18 +149,15 @@ class _HomeState extends State<HomePage> {
                       ),
                     ],
                   ),
-
                 ],
               ),
             ),
 
-
             const SizedBox(height: 40),
             const Wrap(direction: Axis.horizontal, runSpacing: 25, children: [
-
               CircularIndicators(),
               WeeklyProgress(),
-
+              WeightProgress(),
             ]),
           ],
         ),
@@ -184,5 +165,4 @@ class _HomeState extends State<HomePage> {
     );
     // persistentFooterButtons: [MainButtons()],
   }
-
 }

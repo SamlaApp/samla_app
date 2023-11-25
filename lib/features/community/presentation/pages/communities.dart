@@ -165,16 +165,42 @@ class _CommunityPageState extends State<CommunitiesPage> {
                         .where((community) =>
                             showThisCommunity(community.id, communityCubit))
                         .toList();
-                    if (filteredCommunities.isNotEmpty){
+                    if (filteredCommunities.isNotEmpty) {
                       return Column(
                           children:
-                          buildCommunitiesList(filteredCommunities, false));
+                              buildCommunitiesList(filteredCommunities, false));
                     }
-                   return const Center(child: Text('No such a community'));
+                    return Center(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Icon(Icons.search_off_rounded,
+                              size: 75, color: themeBlue),
+                          Text('No such communities',
+                              style: TextStyle(
+                                  color: themeDarkBlue.withOpacity(0.7),
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500)),
+                        ],
+                      ),
+                    );
                   } else if (state is SearchError) {
                     return Center(child: Text(state.message));
                   }
-                  return const Center(child: Text('No such a community'));
+                  return Center(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(Icons.search_off_rounded,
+                            size: 75, color: themeBlue),
+                        Text('No such communities',
+                            style: TextStyle(
+                                color: themeDarkBlue.withOpacity(0.7),
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500)),
+                      ],
+                    ),
+                  );
                 },
               );
             } else if (myCommunityState is CommunityError) {
@@ -200,13 +226,26 @@ class _CommunityPageState extends State<CommunitiesPage> {
             ),
           );
         }
-        if (state is CommunitiesLoaded) {
+        if (state is CommunitiesLoaded && state.communities.isNotEmpty) {
           return Column(
               children: buildCommunitiesList(state.communities, false));
         } else if (state is CommunityError) {
           return Center(child: Text(state.message));
         } else
-          return const Center(child: Text('You are not in any community'));
+          return Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(Icons.group_outlined,
+                    size: 75, color: themeBlue),
+                Text('You are not a member of any community',
+                    style: TextStyle(
+                        color: themeDarkBlue.withOpacity(0.7),
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500)),
+              ],
+            ),
+          );
       },
     );
   }
@@ -218,8 +257,19 @@ class _CommunityPageState extends State<CommunitiesPage> {
       bloc: exploreCubit,
       builder: (context, state) {
         if (state is ExploreEmpty) {
-          return const Center(
-            child: Text('No communities found'),
+          return Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(Icons.explore_off_outlined,
+                    size: 75, color: themeBlue),
+                Text('No communities found',
+                    style: TextStyle(
+                        color: themeDarkBlue.withOpacity(0.7),
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500)),
+              ],
+            ),
           );
         }
 
@@ -268,7 +318,8 @@ Widget ButtonsBar(int currentIndex, Function(int) myCommunitiesOnTap,
               style: TextStyle(
                   color: currentIndex == 0 ? themeBlue : themeGrey,
                   fontSize: 16,
-                  fontWeight: currentIndex == 0 ? FontWeight.bold : FontWeight.normal),
+                  fontWeight:
+                      currentIndex == 0 ? FontWeight.bold : FontWeight.normal),
             ),
           ),
         ),
@@ -293,8 +344,8 @@ Widget ButtonsBar(int currentIndex, Function(int) myCommunitiesOnTap,
               style: TextStyle(
                   color: currentIndex == 1 ? themeBlue : themeGrey,
                   fontSize: 16,
-                  fontWeight: currentIndex == 1 ? FontWeight.bold : FontWeight.normal
-              ),
+                  fontWeight:
+                      currentIndex == 1 ? FontWeight.bold : FontWeight.normal),
             ),
           ),
         ),
