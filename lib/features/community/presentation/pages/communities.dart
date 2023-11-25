@@ -200,7 +200,7 @@ class _CommunityPageState extends State<CommunitiesPage> {
             ),
           );
         }
-        if (state is CommunitiesLoaded) {
+        if (state is CommunitiesLoaded && state.communities.isNotEmpty) {
           return Column(
               children: buildCommunitiesList(state.communities, false));
         } else if (state is CommunityError) {
