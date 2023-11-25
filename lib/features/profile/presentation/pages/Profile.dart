@@ -25,7 +25,7 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   int _selectedIndex = 0; // 0: info, 1: achievements, 2: settings
-  final String imagePath = 'images/download.jpeg';
+  // final String imagePath = 'images/download.jpeg';
 
   final authBloc = authDI.sl.get<AuthBloc>();
 
@@ -42,7 +42,7 @@ class _ProfilePageState extends State<ProfilePage> {
               height: 10,
             ),
             ProfileWidget(
-              imgPath: imagePath,
+              imageName: '${user.photoUrl}',
               onClicked: () async {},
             ),
             SizedBox(
@@ -92,7 +92,6 @@ class _ProfilePageState extends State<ProfilePage> {
                           ),
                         ),
                       ),
-
 
                       // Phone Button
                       Expanded(

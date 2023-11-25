@@ -11,6 +11,7 @@ class ProfileCubit extends Cubit<ProfileState> {
   final GoalsRepository goalsRepository;
   final authbloc = sl.get<AuthBloc>();
   UserGoals userGoals = UserGoals();
+
   ProfileCubit(this.goalsRepository) : super(ProfileInitial());
 
   // implements functions in the Goals repository
@@ -22,50 +23,56 @@ class ProfileCubit extends Cubit<ProfileState> {
       authbloc.add(UpdateUserEvent(newUser.copyWith(
           accessToken: authbloc
               .user.accessToken))); // since it will not return the access token
-      emit(ProfileInitial());
+      emit(UserGoalloaded(userGoal: userGoals));
     });
   }
 
   // set height
   Future<void> setHeight(double height) async {
+    emit(ProfileLoading());
     final result = await goalsRepository.setHeight(height);
     result.fold((l) => emit(ProfileError(message: l.message)), (newUser) {
       authbloc.add(UpdateUserEvent(
           newUser.copyWith(accessToken: authbloc.user.accessToken)));
-      emit(ProfileInitial());
+      emit(UserGoalloaded(userGoal: userGoals));
     });
   }
 
   // set weight target
   Future<void> setWeightTarget(double weightTarget) async {
+    emit(ProfileLoading());
     final result = await goalsRepository.setWeightTarget(weightTarget);
     result.fold((l) => emit(ProfileError(message: l.message)), (newGoals) {
       userGoals.targetWeight = newGoals.targetWeight;
-      emit(ProfileInitial());
+      emit(UserGoalloaded(userGoal: userGoals));
     });
   }
 
   // set steps target
   Future<void> setStepsTarget(int stepsTarget) async {
+    emit(ProfileLoading());
+
     final result = await goalsRepository.setStepsTarget(stepsTarget);
     result.fold((l) => emit(ProfileError(message: l.message)), (newGoals) {
       userGoals = newGoals;
-      emit(ProfileInitial());
+      emit(UserGoalloaded(userGoal: userGoals));
     });
   }
 
   // set calories target
   Future<void> setCaloriesTarget(int caloriesTarget) async {
+    emit(ProfileLoading());
+
     final result = await goalsRepository.setCaloriesTarget(caloriesTarget);
     result.fold((l) => emit(ProfileError(message: l.message)), (newGoals) {
       userGoals = newGoals;
-      emit(ProfileInitial());
+      emit(UserGoalloaded(userGoal: userGoals));
     });
   }
 
   void reset() {
     emit(ProfileInitial());
-  } 
+  }
 
   // finish set goals
   Future<void> finishSetGoals() async {
@@ -73,7 +80,18 @@ class ProfileCubit extends Cubit<ProfileState> {
     result.fold((l) => emit(ProfileError(message: l.message)), (_) {
       authbloc.add(UpdateUserEvent(
           authbloc.user.copyWith(accessToken: authbloc.user.accessToken)));
-      emit(ProfileInitial());
+      emit(UserGoalloaded(userGoal: userGoals));
+    });
+  }
+
+  Future<void> getGoal() async {
+    emit(ProfileLoading()); // Show loading state
+    final result = await goalsRepository.getUserGoals();
+    result.fold(
+        (failure) =>
+            emit(UserGoalErrorState(message: 'Failed loaded user profile')),
+        (userGoal) {
+      emit(UserGoalloaded(userGoal: userGoal));
     });
   }
 

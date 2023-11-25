@@ -8,17 +8,13 @@ import '../../cubit/History/history_cubit.dart';
 import 'package:samla_app/features/training/training_di.dart' as di;
 
 class ProgressSection extends StatefulWidget {
-  final int totalSets;
-  final int finishedSets;
-  final Function(int) updateTotalSets;
   final ExerciseLibrary selectedExercise;
+  final Function onAllSetsCompleted; // New callback
 
   const ProgressSection({
     super.key,
-    required this.totalSets,
-    required this.finishedSets,
-    required this.updateTotalSets,
     required this.selectedExercise,
+    required this.onAllSetsCompleted,
   });
 
   @override
@@ -46,7 +42,7 @@ class _ProgressSectionState extends State<ProgressSection>
 
   late AnimationController _animationController;
   late Animation<double>? _animation;
-
+  bool hasShownDialog = false;
   late final Map<String, int> exerciseSets;
 
   @override
@@ -85,6 +81,14 @@ class _ProgressSectionState extends State<ProgressSection>
 
   @override
   Widget build(BuildContext context) {
+    if (finishedSets == totalSets && !hasShownDialog) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!hasShownDialog) {
+          hasShownDialog = true; // Set the flag
+          widget.onAllSetsCompleted();
+        }
+      });
+    }
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
       decoration: primaryDecoration,
@@ -98,6 +102,7 @@ class _ProgressSectionState extends State<ProgressSection>
             buildNumber(context),
             const Divider(),
             buildExerciseSection(),
+
             // Text(widget.selectedExercise.bodyPart),
             // ElevatedButton(
             //     onPressed: () {
@@ -566,23 +571,26 @@ class _ProgressSectionState extends State<ProgressSection>
         ),
       ),
       onPressed: () {
+        // Start the timer (make sure this method is implemented correctly)
         startTimer();
 
+        // Update the state for finished sets
         setState(() {
-          totalSets;
-          finishedSets;
+          finishedSets++;
         });
-        finishedSets++;
+
+        // Show a snackbar message
         const snackBar = SnackBar(
-          content: Text('Great! rest now for 45 seconds'),
+          content: Text('Great! Rest now for 45 seconds'),
           duration: Duration(seconds: 3),
         );
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
+        // Record the history based on the type of exercise
         if (widget.selectedExercise.bodyPart == 'cardio') {
           double totalDistanceKm = kilometers + (meters / 100.0);
-          print("Time: $time minutes, Total Distance: $totalDistanceKm km");
           historyCubit.addHistory(
-            set: finishedSets + 1,
+            set: finishedSets,
             duration: time,
             repetitions: 0,
             weight: 0,
@@ -591,11 +599,9 @@ class _ProgressSectionState extends State<ProgressSection>
             exercise_library_id: widget.selectedExercise.id!,
           );
         } else {
-          // For non-cardio, print combined weight and reps
           double combinedWeight = wholeNumberWeight + fractionalWeight;
-          print("Combined Weight: $combinedWeight kg, Reps: $reps");
           historyCubit.addHistory(
-            set: finishedSets + 1,
+            set: finishedSets,
             duration: 0,
             repetitions: reps,
             weight: combinedWeight,
@@ -604,11 +610,16 @@ class _ProgressSectionState extends State<ProgressSection>
             exercise_library_id: widget.selectedExercise.id!,
           );
         }
+
+        // Notify the parent widget if all sets are finished
+        if (finishedSets >= totalSets) {
+          // Defer the callback to allow the UI to update
+          Future.delayed(Duration.zero, () {
+            widget.onAllSetsCompleted();
+          });
+        }
       },
-      child: const Icon(
-        Icons.check,
-        size: 30,
-      ),
+      child: const Icon(Icons.check, size: 30),
     );
   }
 
