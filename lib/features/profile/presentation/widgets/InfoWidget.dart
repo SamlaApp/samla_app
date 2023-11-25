@@ -29,9 +29,6 @@ class _InfoWidgetState extends State<InfoWidget> {
   UserGoals? userGoals;
   final profileCubit = di.sl.get<ProfileCubit>();
 
-  // Define controllers for the form fields and set initial values
-  // final TextEditingController _heightController =
-  //     TextEditingController(text: '$getUser().height');
   final TextEditingController _weightController = TextEditingController();
 
   final TextEditingController _caloriesController = TextEditingController();

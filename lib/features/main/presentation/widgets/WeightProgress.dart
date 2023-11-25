@@ -89,48 +89,48 @@ class WeightProgressState extends State<WeightProgress> {
             ),
             const SizedBox(height: 30),
             /*
-            LineChart(
-              LineChartData(
-                minX: 0,
-                maxX: weight.length - 1, //adjust to match number of data point
-                minY: 0,
-                maxY: weight
-                    .reduce(max)
-                    .toDouble(), //Find the maximum weight in the list //6
-                // titlesData: LineTitles.getTitleData(),
-                gridData: FlGridData(
-                  show: true, //false
-                  getDrawingHorizontalLine: (value) {
-                    return const FlLine(
-                      color: Color(0xff37434d),
-                      strokeWidth: 1,
-                    );
-                  },
-                  drawVerticalLine: true,
-                  getDrawingVerticalLine: (value) {
-                    return const FlLine(
-                      color: Color(0xff37434d),
-                      strokeWidth: 1,
-                    );
-                  },
-                ),
-                borderData: FlBorderData(
-                  show: true,
-                  border: Border.all(color: const Color(0xff37434d), width: 1),
-                ),
-                lineBarsData: [
-                  LineChartBarData(
-                    spots: weightSpots,
-                    isCurved: true,
-                    color: themeBlue,
-                    barWidth: 5,
-                    // dotData: FlDotData(show: false),
-                    belowBarData: BarAreaData(
-                        show: true, color: themePink.withOpacity(0.3)),
-                  ),
-                ],
-              ),
-            ),
+            // LineChart(
+            //   LineChartData(
+            //     minX: 0,
+            //     maxX: weight.length - 1, //adjust to match number of data point
+            //     minY: 0,
+            //     maxY: weight
+            //         .reduce(max)
+            //         .toDouble(), //Find the maximum weight in the list //6
+            //     // titlesData: LineTitles.getTitleData(),
+            //     gridData: FlGridData(
+            //       show: true, //false
+            //       getDrawingHorizontalLine: (value) {
+            //         return const FlLine(
+            //           color: Color(0xff37434d),
+            //           strokeWidth: 1,
+            //         );
+            //       },
+            //       drawVerticalLine: true,
+            //       getDrawingVerticalLine: (value) {
+            //         return const FlLine(
+            //           color: Color(0xff37434d),
+            //           strokeWidth: 1,
+            //         );
+            //       },
+            //     ),
+            //     borderData: FlBorderData(
+            //       show: true,
+            //       border: Border.all(color: const Color(0xff37434d), width: 1),
+            //     ),
+            //     lineBarsData: [
+            //       LineChartBarData(
+            //         spots: weightSpots,
+            //         isCurved: true,
+            //         color: themeBlue,
+            //         barWidth: 5,
+            //         // dotData: FlDotData(show: false),
+            //         belowBarData: BarAreaData(
+            //             show: true, color: themePink.withOpacity(0.3)),
+            //       ),
+            //     ],
+            //   ),
+            // ),
 
              */
           ],

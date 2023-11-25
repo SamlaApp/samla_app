@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:samla_app/features/auth/auth_injection_container.dart';
+import 'package:samla_app/features/auth/domain/entities/user.dart';
 import 'package:samla_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:samla_app/features/profile/data/goals_repository.dart';
 import 'package:samla_app/features/profile/domain/Goals.dart';
@@ -107,5 +108,17 @@ class ProfileCubit extends Cubit<ProfileState> {
           authbloc.add(UpdateUserEvent(user.copyWith(accessToken: authbloc.user.accessToken)));
           emit(UserAvatarLoaded(imageFile: image));
     });
+  }
+
+  Future<void> updateUserSetting(User user) async {
+    emit(UserSettingLoading()); // Show loading state
+    final result = await goalsRepository.updateUserSetting(user);
+    result.fold(
+            (failure) =>
+            emit(UpdateUserSettingState(message: 'Failed loaded user profile')),
+            (user) {
+          authbloc.add(UpdateUserEvent(user.copyWith(accessToken: authbloc.user.accessToken)));
+          emit(UpdateUserSettingLoaded(user: user));
+        });
   }
 }

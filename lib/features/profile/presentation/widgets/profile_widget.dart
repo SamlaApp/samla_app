@@ -69,14 +69,14 @@ class _ProfileWidgetState extends State<ProfileWidget> {
 
   Widget buildImage() {
     return buildCircle(
-      color: themeBlue,
+      color: Colors.transparent,
       all: 2,
       child: ClipOval(
         child: Material(
           color: Colors.transparent,
-          child: Image.network(
-            widget.imageName,
-            fit: BoxFit.cover,
+          child: ImageViewer.network(
+            placeholderImagePath: 'images/defaults/user.png',
+            imageURL: widget.imageName,
             width: 110,
             height: 110,
           ),
@@ -86,14 +86,14 @@ class _ProfileWidgetState extends State<ProfileWidget> {
   }
 
   Widget buildEditIcon(Color color) => buildCircle(
-        color: themeBlue,
+        color: themeDarkBlue,
         all: 3,
         child: buildCircle(
-          color: themeBlue,
+          color: themeDarkBlue,
           all: 8,
           child: Icon(
             Icons.edit,
-            color: primaryColor,
+            color: themeBlue,
             size: 20,
           ),
         ),
@@ -117,11 +117,12 @@ class _ProfileWidgetState extends State<ProfileWidget> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
+          surfaceTintColor: white,
           title: const Text("Edit Image"),
           content: Container(
             // You can customize the size of the image viewer here
             width: double.maxFinite,
-            height: 400,
+            height: 350,
             child: Form(
               key: _formKey,
               child: ImageViewer.file(
@@ -142,6 +143,9 @@ class _ProfileWidgetState extends State<ProfileWidget> {
               child: const Text("Close"),
             ),
             TextButton(
+              style: TextButton.styleFrom(
+                primary: themeBlue,
+              ),
               onPressed: () {
                 _submitForm();
                 Navigator.of(context).pop();

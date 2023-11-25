@@ -50,7 +50,7 @@ Future<void> HomeInit() async {
 
   await sl<SensorCubit>().init();
   await sl<StepsLogCubit>().init();
-  await stepsBackground(sl<SensorCubit>());
+  // await stepsBackground(sl<SensorCubit>());
 
   _isInitialized = true;
 }
