@@ -48,3 +48,19 @@ class UserAvatarErrorState extends ProfileState {
   const UserAvatarErrorState({required this.message});
 }
 
+
+class UserSettingLoading extends ProfileState {}
+
+class UpdateUserSettingLoaded extends ProfileState {
+  final User user;
+
+  const UpdateUserSettingLoaded({required this.user});
+}
+
+class UpdateUserSettingState extends ProfileState {
+  final String message;
+
+  const UpdateUserSettingState({required this.message});
+}
+
+

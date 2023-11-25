@@ -249,4 +249,34 @@ class GoalsRepository {
     }
   }
 
+  Future<Either<Failure, User>> updateUserSetting(User user) async {
+    if (await networkInfo.isConnected) {
+      try {
+        print('im heeereee');
+        print(user);
+        http.MultipartFile? multipartFile = null;
+        final data = UserModel.fromEntity(user).toJson();
+        final res = await samlaAPI(
+            data: data,
+            endPoint: '/user/update_profile',
+            method: 'POST',
+            file: multipartFile);
+
+        final resBody = json.decode(await res.stream.bytesToString());
+        print(resBody);
+        if (res.statusCode != 200) {
+          return Left(ServerFailure(message: resBody['message']));
+        }
+        return Right(UserModel.fromJson(resBody['user']));
+      } on ServerException catch (e) {
+        print(e.message);
+        return Left(ServerFailure(message: e.message));
+      } catch (e) {
+        return Left(ServerFailure(message: 'Something went wrong'));
+      }
+    } else {
+      return Left(ServerFailure(message: 'No Internet Connection'));
+    }
+  }
+
 }
