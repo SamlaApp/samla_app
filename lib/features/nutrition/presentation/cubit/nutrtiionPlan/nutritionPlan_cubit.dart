@@ -118,7 +118,7 @@ class NutritionPlanCubit extends Cubit<NutritionPlanState> {
         emit(NutritionPlanMealEmptyState());
         return;
       }
-      emit(NutritionPlanMealDeleted(nutritionPlanMeal));
+      emit(NutritionPlanMealDeleted());
     });
   }
 

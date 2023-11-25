@@ -192,7 +192,7 @@ class CommunityDetail extends StatelessWidget {
                                     }
                                   : null,
                               title: community.name,
-                              animationTag: 'imageHero',
+                              animationTag: 'communityImage${community.id}',
                             ),
 
                             const SizedBox(height: 10),
@@ -409,7 +409,6 @@ class CommunityDetail extends StatelessWidget {
                             ImageViewer.network(
                               imageURL: state.users[index].photoUrl,
                               placeholderImagePath: 'images/defaults/user.png',
-                              animationTag: 'memeberImage$user.id',
                               // viewerMode: false,
                             ),
                             const SizedBox(
@@ -521,7 +520,6 @@ class CommunityDetail extends StatelessWidget {
         leading: ImageViewer.network(
           imageURL: state.users[index].photoUrl,
           placeholderImagePath: 'images/defaults/user.png',
-          animationTag: 'memeberImage$user.id',
           viewerMode: false,
         ),
         title: Text(

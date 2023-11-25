@@ -123,11 +123,11 @@ class NutritionPlanRepositoryImpl implements NutritionPlanRepository {
   }
 
   @override
-  Future<Either<Failure, NutritionPlanMeal>> deleteNutritionPlanMeal({required int id}) async {
+  Future<Either<Failure, Unit>> deleteNutritionPlanMeal({required int id}) async {
     if (await networkInfo.isConnected) {
       try {
-        final nutritionPlanMeal = await remoteDataSource.deleteNutritionPlanMeal(id);
-        return Right(nutritionPlanMeal as NutritionPlanMeal);
+        await remoteDataSource.deleteNutritionPlanMeal(id);
+        return const Right(unit);
       } on ServerException catch (e) {
         return Left(ServerFailure(message: e.message));
       }

@@ -25,7 +25,7 @@ abstract class NutritionPlanRemoteDataSource {
   Future<NutritionPlanMeal> addNutritionPlanMeal(
       NutritionPlanMeal nutritionPlanMeal);
   Future<List<NutritionPlanMeal>> getNutritionPlanMeals(String query, int id);
-  Future<Either<Failure, NutritionPlanMeal>> deleteNutritionPlanMeal(int id);
+  Future<Either<Failure, Unit>> deleteNutritionPlanMeal(int id);
   Future<Either<Failure, Unit>> deleteNutritionPlan(int id);
   Future<List<NutritionPlan>> getTodayNutritionPlan(String query);
   Future<NutritionPlanStatus> getNutritionPlanStatus(int id);
@@ -157,7 +157,7 @@ class NutritionPlanRemoteDataSourceImpl
   }
 
   @override
-  Future<Either<Failure, NutritionPlanMeal>> deleteNutritionPlanMeal(
+  Future<Either<Failure, Unit>> deleteNutritionPlanMeal(
       int id) async {
     final response = await samlaAPI(
       endPoint: '/nutrition/plan/remove',
@@ -166,9 +166,7 @@ class NutritionPlanRemoteDataSourceImpl
     );
     final resBody = await response.stream.bytesToString();
     if (response.statusCode == 200) {
-      final NutritionPlanMealModel nutritionPlanMeal =
-          NutritionPlanMealModel.fromJson(json.decode(resBody)['user_meal']);
-      return Right(nutritionPlanMeal);
+      return const Right(unit);
     } else {
       throw ServerException(message: json.decode(resBody)['message']);
     }
@@ -176,14 +174,12 @@ class NutritionPlanRemoteDataSourceImpl
 
   @override
   Future<Either<Failure, Unit>> deleteNutritionPlan(int id) async {
-    print('deleteNutritionPlan called');
     final response = await samlaAPI(
       endPoint: '/nutrition/delete',
       method: 'POST',
       data: {'nutrition_plan_id': '$id'},
     );
     final resBody = await response.stream.bytesToString();
-    print(resBody);
     if (response.statusCode == 200) {
       return const Right(unit);
     } else {

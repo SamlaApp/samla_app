@@ -524,14 +524,12 @@ class _CommunityPageState extends State<CommunityPage> {
           SizedBox(
             width: 40, // Set the desired width
             height: 40, // Set the desired height
-            child: Hero(
-              tag: 'imageHero',
-              child: ImageViewer.network(
-                imageURL: community.imageURL,
-                viewerMode: false,
-                placeholderImagePath: 'images/defaults/community.png',
-                width: 50,
-              ),
+            child: ImageViewer.network(
+              animationTag: 'communityImage${community.id}',
+              imageURL: community.imageURL,
+              viewerMode: false,
+              placeholderImagePath: 'images/defaults/community.png',
+              width: 50,
             ),
           ),
           const SizedBox(
