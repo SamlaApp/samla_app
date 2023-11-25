@@ -19,6 +19,12 @@ class PostModel extends Post {
       });
 
   factory PostModel.fromJson(Map<String, dynamic> json) {
+    if (json['writer_photo'] != null &&
+        !json['writer_photo'].isEmpty &&
+        !json['writer_photo'].contains('http')) {
+      json['writer_photo'] =
+          'https://samla.mohsowa.com/api/user/user_photo/' + json['writer_photo'];
+    }
     return PostModel(
       writerName: json['writer_name'],
       writerImageURL: json['writer_photo'],

@@ -30,7 +30,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
         appBar: AppBar(
           title: const Text('Notifications'),
           centerTitle: true,
-          backgroundColor: theme_darkblue,
+          backgroundColor: themeDarkBlue,
         ),
         body: BlocBuilder<NotificationBloc, NotificationState>(
             builder: (context, state) {

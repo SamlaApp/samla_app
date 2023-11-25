@@ -21,10 +21,10 @@ class CommunityModel extends Community {
         description: json['description'],
         isPublic: json['is_public'] == 1 ? true : false,
         handle: json['handle'],
-        numOfMemebers: json['num_of_memebers'] ?? 0,
         id: json['id'],
         imageURL: json['avatar'],
         isMemeber: json['is_member'] ?? false,
+        numOfMemebers: 0,
         requestType: requestType,
         ownerID: json['owner_id']);
   }
@@ -35,7 +35,6 @@ class CommunityModel extends Community {
       'description': super.description,
       'is_public': super.isPublic ? '1' : '0',
       'handle': super.handle,
-      'num_of_memebers': super.numOfMemebers.toString(),
       'id': super.id.toString(),
       'is_member': super.isMemeber ? '1' : '0',
       'owner_id': super.ownerID.toString(),

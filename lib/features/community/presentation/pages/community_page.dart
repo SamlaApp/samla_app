@@ -3,7 +3,7 @@ import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:samla_app/config/themes/common_styles.dart';
+import 'package:samla_app/config/themes/new_style.dart';
 import 'package:samla_app/core/network/samlaAPI.dart';
 import 'package:samla_app/core/widgets/CustomTextFormField.dart';
 import 'package:samla_app/core/widgets/image_viewer.dart';
@@ -21,6 +21,7 @@ import 'package:samla_app/features/community/presentation/pages/community_detail
 // ignore: must_be_immutable
 class CommunityPage extends StatefulWidget {
   Community community;
+
   CommunityPage({super.key, required this.community});
 
   @override
@@ -36,7 +37,6 @@ class _CommunityPageState extends State<CommunityPage> {
     super.initState();
     community = widget.community;
   }
-
 
   void updateNameAndImageCallback(String newName, String? imageURL) {
     setState(() {
@@ -70,36 +70,63 @@ class _CommunityPageState extends State<CommunityPage> {
             onPressed: () {
               showAddPostModal(context);
             },
-            backgroundColor: theme_pink,
-            child: const Icon(Icons.add),
+            backgroundColor: themeDarkBlue,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0)),
+            child: const Icon(Icons.add, color: themeBlue, size: 30),
           ),
           appBar: AppBar(
             toolbarHeight: 60,
-            backgroundColor: theme_pink,
+            backgroundColor: themeDarkBlue.withOpacity(0.95),
             titleSpacing: 0,
             // leadingWidth: 35,
             leading: IconButton(
-              icon: const Icon(Icons.arrow_back_ios),
+              icon: const Icon(
+                Icons.arrow_back_ios,
+                size: 20,
+                color: white,
+              ),
               onPressed: () {
                 Navigator.of(context).pop();
               },
             ),
             title: titleWidget(context, updateNameAndImageCallback),
+            bottom: PreferredSize(
+              preferredSize: const Size.fromHeight(1.0),
+              child: Container(
+                color: themeBlue.withOpacity(1),
+                height: 2.0,
+              ),
+            ),
           ),
           body: BlocBuilder<GetPostsCubit, GetPostsState>(
             bloc: sl.get<GetPostsCubit>()..getPosts(community.id!),
             builder: (context, state) {
               if (state is GetPostsLoading) {
-                return const Center(child: CircularProgressIndicator());
+                return const Center(
+                    child: CircularProgressIndicator(
+                        color: themeBlue, backgroundColor: themePink));
               }
 
               if (state is GetPostsLoaded) {
                 if (state.posts.isEmpty) {
-                  return const Center(
-                      child: Text('No posts yet, be the first!'));
+                  return Center(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(Icons.post_add_rounded,
+                            size: 75, color: themeBlue),
+                        Text('No posts yet',
+                            style: TextStyle(
+                                color: themeDarkBlue.withOpacity(0.7),
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500)),
+                      ],
+                    ),
+                  );
                 }
                 return Container(
-                  color: primary_color,
+                  color: white,
                   child: ListView(
                     children: [
                       () {
@@ -129,7 +156,7 @@ class _CommunityPageState extends State<CommunityPage> {
     final textController = TextEditingController();
     showModalBottomSheet(
         isScrollControlled: true,
-        backgroundColor: theme_pink,
+        backgroundColor: themeDarkBlue,
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(
             top: Radius.circular(20.0),
@@ -143,25 +170,17 @@ class _CommunityPageState extends State<CommunityPage> {
             child: Column(
               mainAxisSize: MainAxisSize.max,
               children: [
-                Container(
-                  height: 40,
-                  decoration: BoxDecoration(
-                    color: theme_pink,
-                    borderRadius: const BorderRadius.vertical(
-                      top: Radius.circular(20.0),
-                    ),
-                  ),
-                ),
                 Expanded(
                   child: SingleChildScrollView(
                     child: Container(
                       alignment: Alignment.bottomCenter,
                       padding: const EdgeInsets.all(20),
-                      decoration: BoxDecoration(
-                          borderRadius: const BorderRadius.vertical(
-                            top: Radius.circular(20.0),
-                          ),
-                          color: primary_color),
+                      decoration: const BoxDecoration(
+                        borderRadius: BorderRadius.vertical(
+                          top: Radius.circular(20.0),
+                        ),
+                        color: white,
+                      ),
                       child: Column(
                         children: [
                           ImageViewer.empty(
@@ -177,7 +196,7 @@ class _CommunityPageState extends State<CommunityPage> {
                             controller: textController,
                             iconData: Icons.text_fields_rounded,
                             label: 'Post description',
-                            textArealike: true,
+                            textAreaLike: true,
                           ),
                           const SizedBox(height: 20),
                           Row(
@@ -195,7 +214,7 @@ class _CommunityPageState extends State<CommunityPage> {
                                               fontWeight: FontWeight.w400,
                                               fontSize: 16,
                                               decoration: TextDecoration.none,
-                                              color: theme_darkblue
+                                              color: themeDarkBlue
                                                   .withOpacity(0.95))),
                                     ),
                                   ),
@@ -203,11 +222,13 @@ class _CommunityPageState extends State<CommunityPage> {
                                 Expanded(
                                   child: SizedBox(
                                     height: 40,
-                                    child: TextButton(
-                                      style: ButtonStyle(
-                                        backgroundColor:
-                                            MaterialStateProperty.all<Color>(
-                                                theme_pink),
+                                    child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: themeBlue,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10.0),
+                                        ),
                                       ),
                                       onPressed: () {
                                         final post = Post(
@@ -227,8 +248,7 @@ class _CommunityPageState extends State<CommunityPage> {
                                               fontWeight: FontWeight.w400,
                                               fontSize: 16,
                                               decoration: TextDecoration.none,
-                                              color: primary_color
-                                                  .withOpacity(0.95))),
+                                              color: white.withOpacity(0.95))),
                                     ),
                                   ),
                                 ),
@@ -267,23 +287,11 @@ class _CommunityPageState extends State<CommunityPage> {
             },
             child: Container(
               margin: const EdgeInsets.fromLTRB(20.0, 10, 20, 0),
-              decoration: primary_decoration,
+              decoration: primaryDecoration,
               padding: const EdgeInsets.all(20.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  post.imageURL != null
-                      ? ImageViewer.network(
-                          animationTag: 'postImage${post.postID}',
-                          imageURL: post.imageURL,
-                          viewerMode: true,
-                          // placeholderImagePath: 'images/defaults/empty.png',
-                          width: double.maxFinite,
-                          height: 300,
-                          isRectangular: true,
-                        )
-                      : Container(),
-                  const SizedBox(height: 10),
                   Row(
                     children: [
                       ImageViewer.network(
@@ -295,17 +303,38 @@ class _CommunityPageState extends State<CommunityPage> {
                       const SizedBox(width: 10),
                       Text('${post.writerName}',
                           style: TextStyle(
-                              color: theme_darkblue.withOpacity(0.7),
+                              color: themeDarkBlue.withOpacity(0.7),
                               fontSize: 16,
                               fontWeight: FontWeight.w500)),
                     ],
                   ),
-                  const SizedBox(height: 5),
+                  const SizedBox(height: 20),
+                  post.imageURL != null
+                      ? ImageViewer.network(
+                          animationTag: 'postImage${post.postID}',
+                          imageURL: post.imageURL,
+                          viewerMode: true,
+                          // placeholderImagePath: 'images/defaults/empty.png',
+                          width: double.maxFinite,
+                          height: 300,
+                          isRectangular: true,
+                        )
+                      : Container(),
+                  const SizedBox(height: 20),
                   Text(
                     post.content ?? 'this a dummy content for this post',
                     style: TextStyle(
-                        fontSize: 14, color: theme_darkblue.withOpacity(0.6)),
-                  )
+                        fontSize: 14, color: themeDarkBlue.withOpacity(0.6)),
+                  ),
+                  const SizedBox(height: 20),
+
+                  Center(
+                    child: Icon(
+                      Icons.keyboard_arrow_down_rounded,
+                      color: themeDarkBlue.withOpacity(0.7),
+                      size: 20,
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -317,9 +346,9 @@ class _CommunityPageState extends State<CommunityPage> {
                 margin: const EdgeInsets.fromLTRB(30.0, 0, 30, 0),
 
                 // rounded corners from bottom only
-                decoration: BoxDecoration(
-                  color: inputField_color,
-                  borderRadius: const BorderRadius.only(
+                decoration: const BoxDecoration(
+                  color: inputFieldColor,
+                  borderRadius: BorderRadius.only(
                     bottomLeft: Radius.circular(10),
                     bottomRight: Radius.circular(10),
                   ),
@@ -344,9 +373,7 @@ class _CommunityPageState extends State<CommunityPage> {
       PostCubit cubit) {
     return Container(
       child: () {
-        // if (state is AddCommentLoading) {
-        //   return CircularProgressIndicator();
-        // }
+
         if (state is AddCommentError) {
           SchedulerBinding.instance.addPostFrameCallback((_) {
             ScaffoldMessenger.of(context).showSnackBar(
@@ -380,7 +407,7 @@ class _CommunityPageState extends State<CommunityPage> {
               return commentWidget(post.comments[index]);
             }
             return Container(
-              padding: EdgeInsets.all(10.0),
+              padding: const EdgeInsets.all(8.0),
               // height: 100,
               child: Row(
                 mainAxisSize: MainAxisSize.min,
@@ -406,7 +433,7 @@ class _CommunityPageState extends State<CommunityPage> {
                       cubit.emit(PostInitial());
                     },
                     icon: const Icon(Icons.send),
-                    color: theme_green,
+                    color: themeDarkBlue
                   )
                 ],
               ),
@@ -419,54 +446,60 @@ class _CommunityPageState extends State<CommunityPage> {
 
   Widget commentWidget(Comment comment) {
     return Container(
-      padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-      child: Column(
-        children: [
-          Row(
-            children: [
-              ImageViewer.network(
-                imageURL: comment.writerImageURL,
-                viewerMode: false,
-                placeholderImagePath: 'images/defaults/user.png',
-                width: 40,
-              ),
-              const SizedBox(width: 10),
-              Text('${comment.writerName}',
-                  style: TextStyle(
-                      color: theme_darkblue.withOpacity(0.7),
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500)),
-            ],
-          ),
-          const SizedBox(height: 10),
-          Row(
-            children: [
-              const SizedBox(width: 50),
-              Flexible(
-                child: Text(
-                  comment.content,
-                  style: TextStyle(
-                      fontSize: 14, color: theme_darkblue.withOpacity(0.6)),
+      margin: const EdgeInsets.fromLTRB(0, 0, 0, 10),
+      decoration: primaryDecoration,
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            Row(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                ImageViewer.network(
+                  imageURL: comment.writerImageURL,
+                  viewerMode: false,
+                  placeholderImagePath: 'images/defaults/user.png',
+                  width: 30,
                 ),
-              )
-            ],
-          ),
-          Divider(
-            color: theme_darkblue.withOpacity(0.6),
-          )
-        ],
+                const SizedBox(width: 10),
+                Text('${comment.writerName}',
+                    style: TextStyle(
+                        color: themeDarkBlue.withOpacity(0.7),
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500)),
+              ],
+            ),
+
+
+            const SizedBox(height: 10),
+            Row(
+              children: [
+                Flexible(
+                  child: Text(
+                    comment.content,
+                    style: TextStyle(
+                        fontSize: 14, color: themeDarkBlue.withOpacity(0.6)),
+                  ),
+                )
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
 
-  GestureDetector titleWidget(BuildContext context, Function(String name, String? imageURL) callback) {
+  GestureDetector titleWidget(
+      BuildContext context, Function(String name, String? imageURL) callback) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
           context,
           PageRouteBuilder(
             pageBuilder: (context, animation, secondaryAnimation) =>
-                CommunityDetail(community: community, updateNameAndImageCallback: callback),
+                CommunityDetail(
+                    community: community, updateNameAndImageCallback: callback),
             transitionsBuilder:
                 (context, animation, secondaryAnimation, child) {
               const begin = Offset(0.0, -1.0); // Slide from the top
@@ -489,8 +522,8 @@ class _CommunityPageState extends State<CommunityPage> {
       child: Row(
         children: [
           SizedBox(
-            width: 50, // Set the desired width
-            height: 50, // Set the desired height
+            width: 40, // Set the desired width
+            height: 40, // Set the desired height
             child: Hero(
               tag: 'imageHero',
               child: ImageViewer.network(
@@ -503,7 +536,12 @@ class _CommunityPageState extends State<CommunityPage> {
           ),
           const SizedBox(
               width: 8), // Add spacing between the avatar and the title
-          Text(community.name),
+          Text(community.name,
+              style: const TextStyle(
+                  color: white,
+                  fontSize: 20,
+                  fontWeight: FontWeight.normal,
+                  decoration: TextDecoration.none)),
         ],
       ),
     );

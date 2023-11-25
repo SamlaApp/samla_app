@@ -1,212 +1,317 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:samla_app/features/training/presentation/cubit/Templates/template_cubit.dart';
-import 'package:samla_app/features/training/presentation/pages/startTrainig.dart';
-import '../../../../config/themes/common_styles.dart';
+import 'package:samla_app/features/training/presentation/pages/startTrainingPage.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import '../../../../config/themes/new_style.dart';
+import '../../domain/entities/ExerciseLibrary.dart';
+import '../../domain/entities/Template.dart';
+import '../cubit/viewDayExercise/viewDayExercise_cubit.dart';
+import '../widgets/ExercisesbyDay.dart';
 import 'Tamplates_page.dart';
-import 'package:dots_indicator/dots_indicator.dart';
-
 import 'package:samla_app/features/training/training_di.dart' as di;
 
 class TrainingPage extends StatefulWidget {
-  TrainingPage({Key? key}) : super(key: key);
+  const TrainingPage({Key? key}) : super(key: key);
 
   @override
   _TrainingPageState createState() => _TrainingPageState();
 }
 
 class _TrainingPageState extends State<TrainingPage> {
-  final _controller = PageController();
-  double _currentPage = 0;
+  final String baseURL =
+      'https://samla.mohsowa.com/api/training/image/'; // api url for images
+  String capitalize(String s) =>
+      s[0].toUpperCase() + s.substring(1); // capitalize first letter of string
 
-  late TemplateCubit cubit;
+  late TemplateCubit templateCubit; // Declare the cubit
+  late ViewDayExerciseCubit viewDayExerciseCubit; // Declare the cubit
+
+  final _controller = PageController();
+  Map<String, List<ExerciseLibrary>> weeklyExercises = {};
+
+  ValueNotifier<int?> activeTemplateId = ValueNotifier(null);
 
   @override
   void initState() {
     super.initState();
 
     di.trainingInit(); // Initialize the training module
-    cubit = di.sl<TemplateCubit>(); // Get the cubit instance
+    templateCubit = di.sl.get<TemplateCubit>(); // Get the cubit instance
+    viewDayExerciseCubit =
+        di.sl.get<ViewDayExerciseCubit>(); // Get the cubit instance
 
+    templateCubit.activeTemplate(); // Get the active template
+
+    activeTemplateId.addListener(() {
+      if (activeTemplateId.value != null) {
+        _fetchWeeklyExercises();
+      }
+    });
+  }
+
+  void _fetchWeeklyExercises() {
+    const days = [
+      "Sunday",
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday"
+    ];
+    int templateId =
+        activeTemplateId.value ?? 0; // Use the value from the notifier
+    for (var day in days) {
+      viewDayExerciseCubit.repository
+          .getExercisesDay(day: day, templateID: templateId)
+          .then((result) {
+        setState(() {
+          weeklyExercises[day] = result.getOrElse(() => []);
+        });
+      });
+    }
+  }
+
+  String _getDayNameFromTemplate(Template template, int index) {
+    switch (index) {
+      case 0:
+        return template.sunday ?? "Sunday";
+      case 1:
+        return template.monday ?? "Monday";
+      case 2:
+        return template.tuesday ?? "Tuesday";
+      case 3:
+        return template.wednesday ?? "Wednesday";
+      case 4:
+        return template.thursday ?? "Thursday";
+      case 5:
+        return template.friday ?? "Friday";
+      case 6:
+        return template.saturday ?? "Saturday";
+      default:
+        return "Unknown Day";
+    }
+  }
+
+  void _navigateToTemplatesPage() async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const TemplatesPage()),
+    );
+
+    // This line will be executed after you pop back from TemplatesPage
+    _fetchDataOrRefreshState(); // Call your method to refresh or fetch data
+  }
+
+  void _fetchDataOrRefreshState() {
+    templateCubit.activeTemplate(); // To refresh the active template
+    if (activeTemplateId.value != null) {
+      _fetchWeeklyExercises(); // To refresh weekly exercises
+    }
+  }
+
+  String _getDayNameFromIndex(int index) {
+    switch (index) {
+      case 0:
+        return "Sunday";
+      case 1:
+        return "Monday";
+      case 2:
+        return "Tuesday";
+      case 3:
+        return "Wednesday";
+      case 4:
+        return "Thursday";
+      case 5:
+        return "Friday";
+      case 6:
+        return "Saturday";
+      default:
+        return "Unknown Day";
+    }
   }
 
   @override
   void dispose() {
     _controller.dispose();
+    activeTemplateId.dispose(); // Dispose the notifier
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.all(5),
-      child: Column(
-        children: [
-          _activeTemplate(),
-          Expanded(
-            child: Container(
-              // color: theme_darkblue,
-              child: PageView.builder(
-                controller: _controller,
-                itemCount: 3, // specify the number of days
-                itemBuilder: (BuildContext context, int index) {
-                  // Determine the day and routine based on the index
-                  String dayRoutine = '';
-                  List<Widget> exercises = [];
-                  switch (index) {
-                    case 0:
-                      dayRoutine = 'Day 1 - Pull Routine';
-                      exercises = [
-                        ExerciseTile(
-                          imageUrl: 'https://source.unsplash.com/featured/?gym',
-                          title: 'Pull-Ups',
-                          subtitle: '3 sets of 10 reps',
-                        ),
-                        ExerciseTile(
-                          imageUrl: 'https://source.unsplash.com/featured/?gym',
-                          title: 'Pull-Ups',
-                          subtitle: '3 sets of 10 reps',
-                        ),
-                        ExerciseTile(
-                          imageUrl: 'https://source.unsplash.com/featured/?gym',
-                          title: 'Pull-Ups',
-                          subtitle: '3 sets of 10 reps',
-                        ),
-                        ExerciseTile(
-                          imageUrl: 'https://source.unsplash.com/featured/?gym',
-                          title: 'Pull-Ups',
-                          subtitle: '3 sets of 10 reps',
-                        ),
-                        // Add more ExerciseTile widgets specific to Day 1
-                      ];
-                      break;
-                    case 1:
-                      dayRoutine = 'Day 2 - Push Routine';
-                      exercises = [
-                        ExerciseTile(
-                          imageUrl: 'https://source.unsplash.com/featured/?gym',
-                          title: 'Push-Ups',
-                          subtitle: '4 sets of 10 reps',
-                        ),
-                        ExerciseTile(
-                          imageUrl: 'https://source.unsplash.com/featured/?gym',
-                          title: 'Push-Ups',
-                          subtitle: '4 sets of 10 reps',
-                        ),
-                        ExerciseTile(
-                          imageUrl: 'https://source.unsplash.com/featured/?gym',
-                          title: 'Push-Ups',
-                          subtitle: '4 sets of 10 reps',
-                        ),
-                        ExerciseTile(
-                          imageUrl: 'https://source.unsplash.com/featured/?gym',
-                          title: 'Push-Ups',
-                          subtitle: '4 sets of 10 reps',
-                        ),
-                        // Add more ExerciseTile widgets specific to Day 2
-                      ];
-                      break;
-                    case 2:
-                      dayRoutine = 'Day 3 - Legs Routine';
-                      exercises = [
-                        ExerciseTile(
-                          imageUrl: 'https://source.unsplash.com/featured/?gym',
-                          title: 'Squats',
-                          subtitle: '5 sets of 8 reps',
-                        ),
-                        ExerciseTile(
-                          imageUrl: 'https://source.unsplash.com/featured/?gym',
-                          title: 'Squats',
-                          subtitle: '5 sets of 8 reps',
-                        ),
-                        ExerciseTile(
-                          imageUrl: 'https://source.unsplash.com/featured/?gym',
-                          title: 'Squats',
-                          subtitle: '5 sets of 8 reps',
-                        ),
-                        // Add more ExerciseTile widgets specific to Day 3
-                      ];
-                      break;
-                    // Add more cases for more days
-                  }
-
-                  // Build the content for the current day
-                  return Container(
-                    width: MediaQuery.of(context).size.width - 40,
-                    margin: const EdgeInsets.all(16),
-                    padding: const EdgeInsets.all(16),
-                    decoration: primary_decoration,
-                    // ensure this is defined in your project
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text(
-                          dayRoutine,
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const SizedBox(height: 16),
-                        ...exercises, // Insert the list of exercises
-                        SizedBox(
-                          width: double.infinity,
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: theme_green,
-                              // ensure theme_green is defined and accessible
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                            ),
-                            onPressed: () {
-                              print('Start Clicked');
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      startTraining(), // This is your Templates page widget
-                                ),
-                              );
-                            },
-                            child: const Text('Start Now'),
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
-                },
+    return BlocListener<TemplateCubit, TemplateState>(
+      bloc: templateCubit,
+      listener: (context, state) {
+        if (state is ActiveTemplateLoaded) {
+          activeTemplateId.value = state.template.id;
+        }
+      },
+      child: Container(
+        margin: const EdgeInsets.all(5),
+        child: Column(
+          children: [
+            _activeTemplate(),
+            Expanded(
+              child: _buildTemplatePageView(),
+            ),
+            SmoothPageIndicator(
+              controller: _controller, // make sure this is your PageController
+              count: 7, // the number of dots should match the number of pages
+              effect: const JumpingDotEffect(
+                dotHeight: 6,
+                dotWidth: 6,
+                jumpScale: 3,
+                activeDotColor: Color.fromRGBO(216, 46, 20, 1),
+                // use your theme color here
+                dotColor: Colors
+                    .grey, // use a color that suits your theme for inactive dots
               ),
             ),
-          ),
-
-          DotsIndicator(
-            dotsCount: 3,
-            // the number of dots should match the number of days/pages
-            position: _currentPage.round(),
-            // this should be the current page index
-            decorator: DotsDecorator(
-              activeColor: theme_green, // use your theme color here
-            ),
-          ),
-          const SizedBox(height: 16), // for spacing
-        ],
+          ],
+        ),
       ),
     );
   }
 
-  BlocBuilder<TemplateCubit, TemplateState> _activeTemplate() {
-    cubit.activeTemplate();
+  BlocBuilder<TemplateCubit, TemplateState> _buildTemplatePageView() {
     return BlocBuilder<TemplateCubit, TemplateState>(
-      bloc: cubit,
+      bloc: templateCubit,
       builder: (context, state) {
         if (state is TemplateLoadingState) {
-          return Center(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
+          return const Center(
               child: CircularProgressIndicator(
-                color: theme_green,
-                backgroundColor: theme_pink,
+            color: themeBlue,
+            backgroundColor: themePink,
+          ));
+        } else if (state is ActiveTemplateLoaded) {
+          return PageView.builder(
+            controller: _controller,
+            itemCount: 7, // One for each day of the week
+            itemBuilder: (BuildContext context, int index) {
+              String dayNameFromTemplate =
+                  _getDayNameFromTemplate(state.template, index);
+              return Container(
+                width: MediaQuery.of(context).size.width - 40,
+                margin: const EdgeInsets.all(16),
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(
+                    colors: [themePink, themeDarkBlue],
+                    tileMode: TileMode.clamp,
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  borderRadius: BorderRadius.circular(25),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          capitalize(dayNameFromTemplate),
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                            fontFamily: 'Cairo',
+                          ),
+                        ),
+                      ),
+
+                      // Exercises
+                      const SizedBox(height: 16),
+                      buildExercisesForDay(context, index, weeklyExercises),
+
+                      // buildGradientBorderButton(context),
+                      if (weeklyExercises[_getDayNameFromIndex(index)] !=
+                              null &&
+                          weeklyExercises[_getDayNameFromIndex(index)]!
+                              .isNotEmpty)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 16.0),
+                          child: Center(
+                            child: SizedBox(
+                              height: 50,
+                              child: ElevatedButton.icon(
+                                label: const Text(
+                                  'Start Now',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                    fontFamily: 'Cairo',
+                                  ),
+                                ),
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => StartTrainingNew(
+                                        dayName: dayNameFromTemplate,
+                                        // Pass the day name from the template
+                                        dayIndex: index,
+                                        // Pass the day index directly
+                                        exercises: weeklyExercises[
+                                                _getDayNameFromIndex(index)] ??
+                                            [],
+                                      ),
+                                    ),
+                                  );
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.transparent,
+                                  shadowColor: Colors.transparent,
+                                  elevation: 0,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(25),
+                                  ),
+                                  side: const BorderSide(
+                                      width: 2.0, color: Colors.white),
+                                ),
+                                icon: const Icon(Icons.play_arrow,
+                                    color: Colors.white, size: 30),
+                              ),
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          );
+        } else if (state is TemplateEmptyState) {
+          return const Center(child: Text('No active template found'));
+        } else if (state is TemplateErrorState) {
+          return Center(child: Text(state.message));
+        }
+        return const Center(
+            child: CircularProgressIndicator(
+          color: themeBlue,
+          backgroundColor: themePink,
+        ));
+      },
+    );
+  }
+
+  BlocBuilder<TemplateCubit, TemplateState> _activeTemplate() {
+    return BlocBuilder<TemplateCubit, TemplateState>(
+      bloc: templateCubit,
+      builder: (context, state) {
+        if (state is TemplateLoadingState) {
+          return const Center(
+            child: Padding(
+              padding: EdgeInsets.all(16.0),
+              child: CircularProgressIndicator(
+                color: themeBlue,
+                backgroundColor: themePink,
               ),
             ),
           );
@@ -215,16 +320,6 @@ class _TrainingPageState extends State<TrainingPage> {
             padding: const EdgeInsets.all(16.0),
             child: Container(
               padding: const EdgeInsets.all(16.0),
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [theme_red, theme_darkblue],
-                  tileMode: TileMode.clamp,
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-                borderRadius: BorderRadius.circular(12),
-                backgroundBlendMode: BlendMode.darken,
-              ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -233,21 +328,14 @@ class _TrainingPageState extends State<TrainingPage> {
                     style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
-                      color: Colors.white,
+                      color: themeDarkBlue,
                       fontFamily: 'Cairo',
                     ),
                   ),
                   IconButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                const TemplatesPage(), // This is your Templates page widget
-                          ),
-                        );
-                      },
-                      icon: const Icon(Icons.edit, color: Colors.white)
+                    onPressed: _navigateToTemplatesPage,
+                    icon:
+                        const Icon(Icons.dashboard_outlined, color: themeDarkBlue, size: 30),
                   ),
                 ],
               ),
@@ -267,93 +355,6 @@ class _TrainingPageState extends State<TrainingPage> {
         }
         return const SizedBox.shrink();
       },
-    );
-  }
-}
-
-class ExerciseTile extends StatelessWidget {
-  final String imageUrl;
-  final String title;
-  final String subtitle;
-
-  ExerciseTile({
-    required this.imageUrl,
-    required this.title,
-    required this.subtitle,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      clipBehavior: Clip.antiAlias,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            // Left side image
-            ClipRRect(
-              borderRadius: BorderRadius.circular(8.0),
-              // same as Card borderRadius
-              child: Image.network(
-                imageUrl,
-                width: 60,
-                height: 60,
-                fit: BoxFit.cover,
-              ),
-            ),
-
-            const SizedBox(width: 16), // spacing between the image and the texts
-
-            // Right side texts
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    title,
-                    style: const TextStyle(
-                      fontSize: 16, // for larger text
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 8), // spacing between title and subtitle
-                  Text(
-                    subtitle,
-                    style: const TextStyle(fontSize: 13), // for smaller text
-                  ),
-                ],
-              ),
-            ),
-            Column(
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    print('more Clicked');
-                  },
-                  child: const Icon(
-                    Icons.more_vert_outlined,
-                    size: 20,
-                  ),
-                ),
-                const SizedBox(height: 18),
-                GestureDetector(
-                  onTap: () {
-                    print('drag Clicked');
-                  },
-                  child: const Icon(
-                    Icons.drag_handle_rounded,
-                    size: 20,
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
     );
   }
 }

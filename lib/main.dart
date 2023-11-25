@@ -11,10 +11,11 @@ import 'package:samla_app/features/main/presentation/cubits/steps_timer_loop.dar
 import 'package:samla_app/features/notifications/presentation/bloc/notification_bloc.dart';
 import 'package:workmanager/workmanager.dart';
 import 'config/router/app_router.dart';
+//import 'config/themes/common_styles.dart';
+import 'config/themes/new_style.dart';
 import 'firebase_options.dart'; // Import your logical code
 import 'features/auth/auth_injection_container.dart' as auth_di;
-import 'features/notifications/notification_injection_container.dart'
-    as notifi_di;
+import 'features/notifications/notification_injection_container.dart' as notifi_di;
 
 class MyHttpOverrides extends HttpOverrides {
   @override
@@ -90,6 +91,7 @@ class MyApp extends StatelessWidget {
       child: BlocProvider(
         create: (context) => notifi_di.sl<NotificationBloc>(),
         child: MaterialApp(
+            theme:lightTheme,
             navigatorKey: navigatorKey,
             debugShowCheckedModeBanner: false,
             title: 'Samla App',
@@ -123,3 +125,4 @@ class MyApp extends StatelessWidget {
 //           (X509Certificate cert, String host, int port) => true;
 //   }
 // }
+

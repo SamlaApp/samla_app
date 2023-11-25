@@ -37,7 +37,7 @@ class _WeightWidgetState extends State<WeightWidget> {
             Text(
               "Enter your Weight",
               style: TextStyle(
-                  color: theme_darkblue.withOpacity(0.9),
+                  color: themeDarkBlue.withOpacity(0.9),
                   fontWeight: FontWeight.bold,
                   fontSize: 26),
             ),
@@ -101,11 +101,11 @@ class _WeightWidgetState extends State<WeightWidget> {
   NumberPicker _numberPickerBuilder(value, callback) {
     return NumberPicker(
       value: value,
-      textStyle: TextStyle(color: theme_darkblue, fontSize: 12),
+      textStyle: TextStyle(color: themeDarkBlue, fontSize: 12),
       itemWidth: 80,
       itemHeight: 60,
       selectedTextStyle: TextStyle(
-        color: theme_darkblue.withOpacity(0.9),
+        color: themeDarkBlue.withOpacity(0.9),
         fontWeight: FontWeight.bold,
         fontSize: 26,
       ),
@@ -113,11 +113,11 @@ class _WeightWidgetState extends State<WeightWidget> {
         border: Border(
           top: BorderSide(
             width: 2,
-            color: theme_darkblue.withOpacity(0.3),
+            color: themeDarkBlue.withOpacity(0.3),
           ),
           bottom: BorderSide(
             width: 2,
-            color: theme_darkblue.withOpacity(0.3),
+            color: themeDarkBlue.withOpacity(0.3),
           ),
         ),
       ),

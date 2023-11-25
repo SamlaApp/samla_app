@@ -3,10 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:countup/countup.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:samla_app/config/themes/common_styles.dart';
+import 'package:samla_app/config/themes/new_style.dart';
 import 'dart:async';
 import 'package:pedometer/pedometer.dart';
-import 'package:flutter/services.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:samla_app/features/main/home_di.dart';
 import 'package:samla_app/features/main/presentation/cubits/SensorCubit/steps_cubit.dart';
@@ -72,7 +71,7 @@ class _CircularIndicatorsState extends State<CircularIndicators> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Container(
-                      decoration: primary_decoration,
+                      decoration: primaryDecoration,
                       alignment: Alignment.center,
                       width: MediaQuery.of(context).size.width * 0.41,
                       height: MediaQuery.of(context).size.width * 0.41,
@@ -103,7 +102,7 @@ class _CircularIndicatorsState extends State<CircularIndicators> {
                                           style: TextStyle(
                                               fontSize: 27,
                                               fontWeight: FontWeight.bold,
-                                              color: theme_green),
+                                              color: themeBlue),
                                         ),
                                      
                                 Text(
@@ -111,12 +110,12 @@ class _CircularIndicatorsState extends State<CircularIndicators> {
                                   style: TextStyle(
                                       fontSize: 15,
                                       // fontWeight: FontWeight.bold,
-                                      color: theme_darkblue.withOpacity(0.3)),
+                                      color: themeDarkBlue.withOpacity(0.3)),
                                 )
                               ],
                             ),
-                            progressColor: theme_green,
-                            backgroundColor: theme_green.withOpacity(0.2),
+                            progressColor: themeBlue,
+                            backgroundColor: themeBlue.withOpacity(0.2),
                           );
                         },
                       ),
@@ -125,7 +124,7 @@ class _CircularIndicatorsState extends State<CircularIndicators> {
                     // _______________________ CALORIES _______________________
 
                     Container(
-                      decoration: primary_decoration,
+                      decoration: primaryDecoration,
                       alignment: Alignment.center,
                       width: MediaQuery.of(context).size.width * 0.41,
                       height: MediaQuery.of(context).size.width * 0.41,
@@ -156,19 +155,19 @@ class _CircularIndicatorsState extends State<CircularIndicators> {
                                       style: TextStyle(
                                           fontSize: 27,
                                           fontWeight: FontWeight.bold,
-                                          color: theme_pink),
+                                          color: themePink),
                                     ),
                               Text(
                                 'CALORIES',
                                 style: TextStyle(
                                     fontSize: 15,
                                     // fontWeight: FontWeight.bold,
-                                    color: theme_darkblue.withOpacity(0.3)),
+                                    color: themeDarkBlue.withOpacity(0.3)),
                               )
                             ],
                           ),
-                          progressColor: theme_pink,
-                          backgroundColor: theme_pink.withOpacity(0.2),
+                          progressColor: themePink,
+                          backgroundColor: themePink.withOpacity(0.2),
                         );
                       }),
                     ),

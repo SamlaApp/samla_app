@@ -137,11 +137,11 @@ class NutritionPlanRepositoryImpl implements NutritionPlanRepository {
   }
 
   @override
-  Future<Either<Failure, NutritionPlan>> deleteNutritionPlan({required int id}) async {
+  Future<Either<Failure, Unit>> deleteNutritionPlan({required int id}) async {
     if (await networkInfo.isConnected) {
       try {
-        final nutritionPlan = await remoteDataSource.deleteNutritionPlan(id);
-        return Right(nutritionPlan as NutritionPlan);
+        await remoteDataSource.deleteNutritionPlan(id);
+        return const Right(unit);
       } on ServerException catch (e) {
         return Left(ServerFailure(message: e.message));
       }
@@ -201,6 +201,21 @@ class NutritionPlanRepositoryImpl implements NutritionPlanRepository {
       try {
         final dailyNutritionPlanSummary = await remoteDataSource.getDailyNutritionPlanSummary();
         return Right(dailyNutritionPlanSummary);
+      } on ServerException catch (e) {
+        return Left(ServerFailure(message: e.message));
+      }
+    } else {
+      return Left(ServerFailure(message: 'No internet connection'));
+
+    }
+  }
+
+  @override
+  Future<Either<Failure, Unit>> setCustomCalories({required int calories}) async {
+    if (await networkInfo.isConnected) {
+      try {
+        await remoteDataSource.setCustomCalories(calories);
+        return const Right(unit);
       } on ServerException catch (e) {
         return Left(ServerFailure(message: e.message));
       }

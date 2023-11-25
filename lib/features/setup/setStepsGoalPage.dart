@@ -41,7 +41,7 @@ class _StepsGoalWidgetState extends State<StepsGoalWidget> {
               Text(
                 "Now let’s set your\n daily steps goal",
                 style: TextStyle(
-                    color: theme_darkblue,
+                    color: themeDarkBlue,
                     fontWeight: FontWeight.bold,
                     fontSize: 30),
               ),
@@ -116,7 +116,7 @@ class CustomTextField extends StatelessWidget {
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
           borderSide: BorderSide(
-            color: theme_green,
+            color: themeBlue,
           ),
         ),
         prefixIcon: Icon(iconData, color: Color.fromRGBO(64, 194, 210, 1)),
@@ -125,7 +125,7 @@ class CustomTextField extends StatelessWidget {
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
           borderSide: BorderSide(
-            color: theme_green,
+            color: themeBlue,
           ),
         ),
         errorBorder: OutlineInputBorder(

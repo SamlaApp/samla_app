@@ -64,7 +64,10 @@ class _SplashScreenState extends State<SplashScreen>
     nutritionInit();
     // initlizeing home featrues
     await HomeInit();
+
+    // await initWorkManager();
     // authentication handling
+
     await _checkCachedUserAndNavigate();
   }
 
@@ -109,8 +112,8 @@ class _SplashScreenState extends State<SplashScreen>
                   height: 40,
                 ),
                 LinearProgressIndicator(
-                  color: theme_pink,
-                  backgroundColor: theme_green,
+                  color: themePink,
+                  backgroundColor: themeBlue,
                   semanticsLabel: 'Linear progress indicator',
                 ),
               ],
@@ -123,7 +126,7 @@ class _SplashScreenState extends State<SplashScreen>
               style: textStyle.copyWith(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
-                  color: theme_darkblue.withOpacity(0.7)),
+                  color: themeDarkBlue.withOpacity(0.7)),
             ),
           )
         ],

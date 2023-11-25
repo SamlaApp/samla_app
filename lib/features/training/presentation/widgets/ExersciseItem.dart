@@ -3,6 +3,7 @@ import 'package:samla_app/config/themes/common_styles.dart';
 import 'package:samla_app/features/training/domain/entities/ExerciseDay.dart';
 import 'package:samla_app/features/training/presentation/cubit/Exercises/exercise_cubit.dart';
 import 'package:samla_app/features/training/training_di.dart' as di;
+import 'package:cached_network_image/cached_network_image.dart';
 
 
 class ExerciseItem extends StatefulWidget {
@@ -15,7 +16,6 @@ class ExerciseItem extends StatefulWidget {
   final String instructions;
   final List<String> secondaryMuscles;
   final LinearGradient gradient;
-  final VoidCallback onRemove;
   final int templateId;
 
   const ExerciseItem({
@@ -29,7 +29,6 @@ class ExerciseItem extends StatefulWidget {
     required this.instructions,
     required this.secondaryMuscles,
     required this.gradient,
-    required this.onRemove,
     required this.templateId,
   }) : super(key: key);
 
@@ -44,7 +43,6 @@ class _ExerciseItemState extends State<ExerciseItem> {
   final exercisesCubit = di.sl.get<ExerciseCubit>();
 
   bool _isExpanded = false;
-  bool _isAddedToPlan = false;
 
   // days of the week
   final _formKey = GlobalKey<FormState>();
@@ -163,15 +161,15 @@ class _ExerciseItemState extends State<ExerciseItem> {
                             onPressed: () {
                               _submitForm();
                             },
-                            icon: Icon(Icons.add, color: theme_darkblue, size: 20),
+                            icon: Icon(Icons.add, color: themeDarkBlue, size: 20),
                             label: Text('Add ',
                                 style: TextStyle(
-                                    color: theme_darkblue,
+                                    color: themeDarkBlue,
                                     fontSize: 12,
                                     fontWeight: FontWeight.bold)),
                             style: ElevatedButton.styleFrom(
                               primary: Colors.white,
-                              onPrimary: theme_darkblue,
+                              onPrimary: themeDarkBlue,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(32.0),
                               ),
@@ -206,7 +204,7 @@ class _ExerciseItemState extends State<ExerciseItem> {
                               });
                             },
                             shape: const CircleBorder(),
-                            activeColor: theme_darkblue,
+                            activeColor: themeDarkBlue,
                           ),
                         ],
                       ),
@@ -230,7 +228,7 @@ class _ExerciseItemState extends State<ExerciseItem> {
                               });
                             },
                             shape: const CircleBorder(),
-                            activeColor: theme_darkblue,
+                            activeColor: themeDarkBlue,
                           ),
                         ],
                       ),
@@ -254,7 +252,7 @@ class _ExerciseItemState extends State<ExerciseItem> {
                               });
                             },
                             shape: const CircleBorder(),
-                            activeColor: theme_darkblue,
+                            activeColor: themeDarkBlue,
                           ),
                         ],
                       ),
@@ -278,7 +276,7 @@ class _ExerciseItemState extends State<ExerciseItem> {
                               });
                             },
                             shape: const CircleBorder(),
-                            activeColor: theme_darkblue,
+                            activeColor: themeDarkBlue,
                           ),
                         ],
                       ),
@@ -302,7 +300,7 @@ class _ExerciseItemState extends State<ExerciseItem> {
                               });
                             },
                             shape: const CircleBorder(),
-                            activeColor: theme_darkblue,
+                            activeColor: themeDarkBlue,
                           ),
                         ],
                       ),
@@ -326,7 +324,7 @@ class _ExerciseItemState extends State<ExerciseItem> {
                               });
                             },
                             shape: const CircleBorder(),
-                            activeColor: theme_darkblue,
+                            activeColor: themeDarkBlue,
                           ),
                         ],
                       ),
@@ -350,7 +348,7 @@ class _ExerciseItemState extends State<ExerciseItem> {
                               });
                             },
                             shape: const CircleBorder(),
-                            activeColor: theme_darkblue,
+                            activeColor: themeDarkBlue,
                           ),
                         ],
                       ),
@@ -417,7 +415,7 @@ class _ExerciseItemState extends State<ExerciseItem> {
               child: Text(
                 label,
                 style: TextStyle(
-                  color: theme_darkblue,
+                  color: themeDarkBlue,
                   fontSize: 14,
                   fontWeight: FontWeight.normal,
                 ),
@@ -444,15 +442,32 @@ class _ExerciseItemState extends State<ExerciseItem> {
               child: Image.network(
                 _baseURL + widget.gifUrl,
                 fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) {
+                  return Container();
+                },
+                loadingBuilder: (context, child, loadingProgress) {
+                  if (loadingProgress == null) return child;
+                  return  const Center(
+                    child: CircularProgressIndicator(
+                      color: Colors.white,
+                    ),
+                  );
+                }
               ),
             ),
           ),
+
+
           const SizedBox(height: 10),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
                       'Target: ',
@@ -465,7 +480,9 @@ class _ExerciseItemState extends State<ExerciseItem> {
                   ],
                 ),
                 const SizedBox(height: 5),
-                Row(
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
                       'Secondary Muscles: ',

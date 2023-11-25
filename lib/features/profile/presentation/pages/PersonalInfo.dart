@@ -65,7 +65,7 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
         //   borderRadius: BorderRadius.circular(30),
         // ),
         toolbarHeight: 100,
-        backgroundColor: theme_darkblue,
+        backgroundColor: themeDarkBlue,
         title: Image(
           image: AssetImage('images/Logo/2x/Icon_1@2x.png'),
           height: 70,
@@ -107,7 +107,7 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 14.0,
-                  color: theme_green,
+                  color: themeBlue,
                 ),
               ),
               isEditing
@@ -142,7 +142,7 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 14.0,
-                  color: theme_green,
+                  color: themeBlue,
                 ),
               ),
               isEditing
@@ -177,7 +177,7 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 14.0,
-                  color: theme_green,
+                  color: themeBlue,
                 ),
               ),
               isEditing
@@ -212,7 +212,7 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 14.0,
-                  color: theme_green,
+                  color: themeBlue,
                 ),
               ),
               isEditing
@@ -254,7 +254,7 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 14.0,
-                            color: theme_green,
+                            color: themeBlue,
                           ),
                         ),
                         isEditing
@@ -286,7 +286,7 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 14.0,
-                            color: theme_green,
+                            color: themeBlue,
                           ),
                         ),
                         isEditing

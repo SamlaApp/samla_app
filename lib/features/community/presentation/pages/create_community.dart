@@ -3,8 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:form_field_validator/form_field_validator.dart';
-import 'package:samla_app/config/themes/common_styles.dart';
+import 'package:samla_app/config/themes/new_style.dart';
 import 'package:samla_app/core/widgets/CustomTextFormField.dart';
 import 'package:samla_app/core/widgets/image_helper.dart';
 import 'package:samla_app/core/widgets/image_viewer.dart';
@@ -90,7 +89,8 @@ class _CreateCommunityPageState extends State<CreateCommunityPage> {
           handle: _handleController.text.trim()[0] == '@'
               ? _handleController.text.trim()
               : '@${_handleController.text.trim()}',
-          isMemeber: true, // You can set this value as needed
+          isMemeber: true,
+          // You can set this value as needed
           avatar: _image,
           imageURL: '',
           numOfMemebers: 0,
@@ -123,8 +123,8 @@ class _CreateCommunityPageState extends State<CreateCommunityPage> {
           SchedulerBinding.instance.addPostFrameCallback((_) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                backgroundColor: theme_green.withOpacity(0.65),
-                content: Text('Community created successfully'),
+                backgroundColor: themeBlue.withOpacity(0.65),
+                content: const Text('Community created successfully'),
               ),
             );
 
@@ -147,78 +147,113 @@ class _CreateCommunityPageState extends State<CreateCommunityPage> {
           );
         } else {
           return Scaffold(
+            backgroundColor: themeDarkBlue,
             appBar: AppBar(
-              title: Text('New Community'),
-              backgroundColor: theme_green,
+              shadowColor: primaryColor,
+              backgroundColor: themeDarkBlue,
+              toolbarHeight: 150.0,
+              leading: IconButton(
+                icon: const Icon(Icons.arrow_back, color: white),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
+              title: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Image.asset(
+                    'images/Logo/2x/Icon_1@2x.png',
+                    height: 60, // Adjust the size as needed
+                  ),
+                  const SizedBox(height: 10),
+                  const Text('New Community',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontFamily: 'Cairo',
+                          fontWeight: FontWeight.bold)),
+                ],
+              ),
             ),
             body: SingleChildScrollView(
-              padding: const EdgeInsets.all(16.0),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    ImageViewer.file(
-                      imageFile: _image,
-                      editableCallback: (newImage) {
-                        setState(() {
-                          _image = newImage;
-                        });
-                      },
-                      title: 'Community Avatar',
-                    ),
-                    SizedBox(height: 60),
-                    CustomTextFormField(
-                      controller: _nameController,
-                      // decoration: InputDecoration(labelText: 'Name'),
-                      validator: _nameValidator,
-                      label: 'Name',
-                      iconData: Icons.person,
-                    ),
-                    SizedBox(height: 20),
-                    CustomTextFormField(
-                      controller: _descriptionController,
-                      label: 'Description',
-                      validator: _descriptionValidator,
-                      iconData: Icons.description,
-                    ),
-                    SizedBox(height: 20),
-                    CustomTextFormField(
-                      controller: _handleController,
-                      validator: _handleValidator,
-                      label: 'Handle',
-                      iconData: Icons.alternate_email,
-                    ),
-                    SwitchListTile(
-                      activeTrackColor: theme_green.withOpacity(0.65),
-                      thumbColor: MaterialStateProperty.all<Color>(theme_green),
-                      inactiveTrackColor: inputField_color,
-                      title: Text(
-                        'Public Community',
-                        style:
-                            TextStyle(color: theme_darkblue.withOpacity(0.95)),
+              child: Container(
+                padding: const EdgeInsets.all(16.0),
+                decoration: const BoxDecoration(
+                  color: white,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(30),
+                    topRight: Radius.circular(30),
+                  ),
+                ),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      ImageViewer.file(
+                        imageFile: _image,
+                        editableCallback: (newImage) {
+                          setState(() {
+                            _image = newImage;
+                          });
+                        },
+                        title: 'Community Avatar',
                       ),
-                      value: _isPublic,
-                      onChanged: (newValue) {
-                        setState(() {
-                          _isPublic = newValue;
-                        });
-                      },
-                    ),
-                    SizedBox(height: 40),
-                    Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: theme_green,
+                      const SizedBox(height: 60),
+                      CustomTextFormField(
+                        controller: _nameController,
+                        // decoration: InputDecoration(labelText: 'Name'),
+                        validator: _nameValidator,
+                        label: 'Name',
+                        iconData: Icons.person,
                       ),
-                      width: double.infinity,
-                      child: TextButton(
-                        onPressed: _submitForm,
-                        child: const Text('Create Community',
-                            style: TextStyle(color: Colors.white)),
+                      const SizedBox(height: 20),
+                      CustomTextFormField(
+                        controller: _descriptionController,
+                        label: 'Description',
+                        validator: _descriptionValidator,
+                        iconData: Icons.description,
                       ),
-                    ),
-                  ],
+                      const SizedBox(height: 20),
+                      CustomTextFormField(
+                        controller: _handleController,
+                        validator: _handleValidator,
+                        label: 'Handle',
+                        iconData: Icons.alternate_email,
+                      ),
+                      SwitchListTile(
+                        activeTrackColor: themeBlue.withOpacity(0.65),
+                        thumbColor: MaterialStateProperty.all<Color>(themeBlue),
+                        inactiveTrackColor: inputFieldColor,
+                        title: Text(
+                          'Public Community',
+                          style:
+                              TextStyle(color: themeDarkBlue.withOpacity(0.95)),
+                        ),
+                        value: _isPublic,
+                        onChanged: (newValue) {
+                          setState(() {
+                            _isPublic = newValue;
+                          });
+                        },
+                      ),
+                      const SizedBox(height: 20),
+                      Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: themeDarkBlue,
+                        ),
+                        width: double.infinity,
+                        child: TextButton(
+                          onPressed: _submitForm,
+                          child: const Text('Create Community',
+                              style: TextStyle(
+                                  color: white,
+                                  fontFamily: 'Cairo',
+                                  fontWeight: FontWeight.bold)),
+                        ),
+                      ),
+                      const SizedBox(height: 300),
+                    ],
+                  ),
                 ),
               ),
             ),

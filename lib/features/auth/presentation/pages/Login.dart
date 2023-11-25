@@ -2,6 +2,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
+import 'package:samla_app/config/themes/new_style.dart';
 import 'package:samla_app/core/widgets/loading.dart';
 import 'package:samla_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:samla_app/features/auth/presentation/pages/OTP.dart';
@@ -101,7 +102,7 @@ class _LoginState extends State<Login> {
             SchedulerBinding.instance.addPostFrameCallback((_) {
               Navigator.of(context).pushReplacement(
                 MaterialPageRoute(
-                  builder: (context) => WelcomePage(),
+                  builder: (context) => const WelcomePage(),
                 ),
               );
             });
@@ -200,7 +201,7 @@ class _LoginState extends State<Login> {
                                     style: TextStyle(
                                       fontSize: 16,
                                       color: Color.fromRGBO(10, 44, 64, 1),
-                                      fontWeight: FontWeight.bold,
+                                      fontWeight: FontWeight.normal,
                                       decoration: TextDecoration.none,
                                     ),
                                   ),
@@ -234,7 +235,7 @@ class _LoginState extends State<Login> {
                                     style: TextStyle(
                                       fontSize: 16,
                                       color: Color.fromRGBO(10, 44, 64, 1),
-                                      fontWeight: FontWeight.bold,
+                                      fontWeight: FontWeight.normal,
                                       decoration: TextDecoration.none,
                                     ),
                                   ),
@@ -268,7 +269,7 @@ class _LoginState extends State<Login> {
                                     style: TextStyle(
                                       fontSize: 16,
                                       color: Color.fromRGBO(10, 44, 64, 1),
-                                      fontWeight: FontWeight.bold,
+                                      fontWeight: FontWeight.normal,
                                       decoration: TextDecoration.none,
                                     ),
                                   ),
@@ -399,23 +400,7 @@ class _LoginState extends State<Login> {
                             decoration: TextDecoration.none,
                           ),
                         ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        Container(
-                          alignment: Alignment.centerLeft,
-                          child: GestureDetector(
-                            onTap: () {},
-                            child: const Text(
-                              'Forgot your password?',
-                              textAlign: TextAlign.left,
-                              style: TextStyle(
-                                color: Color.fromRGBO(10, 44, 64, 1),
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ),
+
                         const SizedBox(
                           height: 20,
                         ),
@@ -435,7 +420,7 @@ class _LoginState extends State<Login> {
                               _loginViaEmail();
                             }
                           },
-                          child: const Text('Login'),
+                          child: const Text('Login', style: TextStyle(color: Colors.white),),
                         ),
                       ],
                     )
@@ -551,23 +536,6 @@ class _LoginState extends State<Login> {
                         const SizedBox(
                           height: 20,
                         ),
-                        Container(
-                          alignment: Alignment.centerLeft,
-                          child: GestureDetector(
-                            onTap: () {},
-                            child: const Text(
-                              'Forgot your password?',
-                              textAlign: TextAlign.left,
-                              style: TextStyle(
-                                color: Color.fromRGBO(10, 44, 64, 1),
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        ),
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             minimumSize: const Size(double.infinity, 50),
@@ -583,7 +551,7 @@ class _LoginState extends State<Login> {
                               _loginViaUsername();
                             }
                           },
-                          child: const Text('Login'),
+                          child: const Text('Login', style: TextStyle(color: Colors.white),),
                         ),
                       ],
                     )
@@ -592,11 +560,9 @@ class _LoginState extends State<Login> {
                       children: [
                         InternationalPhoneNumberInput(
                           onInputChanged: (PhoneNumber number) {
-                            print(number.phoneNumber);
                             _phone = number.phoneNumber!;
                           },
                           onInputValidated: (bool value) {
-                            print(value);
                             if (value) {
                               setState(() {
                                 _isPhoneLoginEnable = true;
@@ -608,17 +574,43 @@ class _LoginState extends State<Login> {
                             }
                           },
                           initialValue: PhoneNumber(isoCode: 'SA'),
-                          selectorConfig: SelectorConfig(
+                          selectorConfig: const SelectorConfig(
                             selectorType: PhoneInputSelectorType.BOTTOM_SHEET,
                           ),
                           ignoreBlank: true,
                           autoValidateMode: AutovalidateMode.onUserInteraction,
-                          selectorTextStyle: TextStyle(color: Colors.black),
+                          selectorTextStyle: const TextStyle(color: themeDarkBlue),
+                          textStyle: const TextStyle(color: themeDarkBlue),
                           textFieldController: _phoneController,
                           formatInput: false,
-                          keyboardType: TextInputType.numberWithOptions(
+                          keyboardType: const TextInputType.numberWithOptions(
                               signed: true, decimal: true),
-                          inputBorder: OutlineInputBorder(),
+                          inputBorder: const OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Color.fromRGBO(64, 194, 210, 1),
+                            ),
+                          ),
+                          inputDecoration: const InputDecoration(
+                            hintText: 'Phone Number',
+                            hintStyle: TextStyle(color: themeDarkBlue),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Color.fromRGBO(64, 194, 210, 1),
+                              ),
+                            ),
+                            errorBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Colors.red,
+                              ),
+                            ),
+                            focusedErrorBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Colors.red,
+                              ),
+                            ),
+                            contentPadding: EdgeInsets.symmetric(
+                                vertical: 15, horizontal: 20),
+                          ),
                         ),
                         const SizedBox(
                           height: 10,
@@ -637,7 +629,7 @@ class _LoginState extends State<Login> {
                                   _loginViaPhone();
                                 }
                               : null,
-                          child: const Text('Login'),
+                          child: const Text('Login', style: TextStyle(color: Colors.white),),
                         ),
                       ],
                     ),

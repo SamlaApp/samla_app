@@ -1,9 +1,11 @@
 import 'package:animate_gradient/animate_gradient.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:samla_app/config/themes/common_styles.dart';
+import 'package:intl/intl.dart';
+import 'package:samla_app/config/themes/new_style.dart';
 import 'package:samla_app/features/nutrition/data/models/nutritionPlan_model.dart';
-import 'package:samla_app/features/nutrition/presentation/cubit/nutritionPlan_cubit.dart';
+import 'package:samla_app/features/nutrition/presentation/cubit/TodayPlan/todayPlan_cubit.dart';
+import 'package:samla_app/features/nutrition/presentation/cubit/nutrtiionPlan/nutritionPlan_cubit.dart';
 import 'package:samla_app/features/nutrition/presentation/pages/MealAdapt.dart';
 import 'package:samla_app/features/nutrition/presentation/pages/NewMeal.dart';
 import 'package:samla_app/features/nutrition/nutrition_di.dart' as di;
@@ -17,6 +19,7 @@ class NutritionPlan extends StatefulWidget {
 
 class _NutritionPlanState extends State<NutritionPlan> {
   final cubit = di.sl.get<NutritionPlanCubit>();
+  final todayPlanCubit = di.sl.get<TodayPlanCubit>();
 
   @override
   void initState() {
@@ -26,7 +29,6 @@ class _NutritionPlanState extends State<NutritionPlan> {
 
   @override
   void dispose() {
-    // cubit.close();
     super.dispose();
   }
 
@@ -42,17 +44,21 @@ class _NutritionPlanState extends State<NutritionPlan> {
       appBar: AppBar(
         title: const Text(
           "Nutrition Plan",
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          style: TextStyle(
+              color: white,
+              fontWeight: FontWeight.bold,
+              fontSize: 20,
+              fontFamily: 'Cairo'),
         ),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios),
+          icon: const Icon(Icons.arrow_back_ios, color: white),
           onPressed: () {
             Navigator.of(context).pop();
           },
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.add_circle_outline),
+            icon: const Icon(Icons.add_circle_outline, color: white),
             onPressed: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
@@ -67,14 +73,11 @@ class _NutritionPlanState extends State<NutritionPlan> {
           primaryEnd: Alignment.bottomLeft,
           secondaryBegin: Alignment.bottomRight,
           secondaryEnd: Alignment.topLeft,
-          primaryColors: [
-            theme_green,
+          primaryColors: const [
+            themeBlue,
             Colors.blueAccent,
           ],
-          secondaryColors: [
-            theme_green,
-            const Color.fromARGB(255, 120, 90, 255)
-          ],
+          secondaryColors: const [themeBlue, Color.fromARGB(255, 120, 90, 255)],
         ),
       ),
       body: SingleChildScrollView(
@@ -86,15 +89,15 @@ class _NutritionPlanState extends State<NutritionPlan> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
+                const Text(
                   'Nutrition Plans',
                   style: TextStyle(
-                      color: theme_darkblue,
+                      color: themeDarkBlue,
                       fontSize: 16,
                       fontWeight: FontWeight.bold),
                 ),
                 IconButton(
-                  icon: Icon(Icons.refresh, color: theme_darkblue),
+                  icon: const Icon(Icons.refresh, color: themeDarkBlue),
                   onPressed: () {
                     refresh();
                   },
@@ -112,22 +115,34 @@ class _NutritionPlanState extends State<NutritionPlan> {
     return BlocBuilder<NutritionPlanCubit, NutritionPlanState>(
       bloc: cubit,
       builder: (context, state) {
-        print(state);
+        todayPlanCubit.getTodayNutritionPlan(DateFormat('EEEE').format(DateTime.now()));
         if (state is NutritionPlanLoadingState) {
-          return Center(
+          return const Center(
             child: Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: EdgeInsets.all(16.0),
               child: CircularProgressIndicator(
-                color: theme_green,
-                backgroundColor: theme_pink,
+                color: themeBlue,
+                backgroundColor: themePink,
               ),
             ),
           );
         } else if (state is NutritionPlanLoaded) {
-          return Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: buildNutritionPlansList(
-                state.nutritionPlans.cast<NutritionPlanModel>(), false),
+          return GridView.builder(
+            shrinkWrap: true,
+            padding: const EdgeInsets.all(8.0),
+            physics: const NeverScrollableScrollPhysics(
+                parent: BouncingScrollPhysics()
+            ),
+            itemCount: state.nutritionPlans.length,
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              childAspectRatio: 1,
+              crossAxisSpacing: 2,
+            ),
+            itemBuilder: (context, index) {
+              return buildNutritionPlansList(
+                  state.nutritionPlans.cast<NutritionPlanModel>(), true)[index];
+            },
           );
         } else if (state is NutritionPlanEmptyState) {
           return const Center(
@@ -140,11 +155,21 @@ class _NutritionPlanState extends State<NutritionPlan> {
           return Center(
             child: Text(state.message),
           );
-        }
-        else if (state is NutritionPlanCreated){
+        } else if (state is NutritionPlanCreated) {
           cubit.getAllNutritionPlans();
         }
-        return const SizedBox.shrink();
+        else if (state is NutritionPlanDeleted) {
+          cubit.getAllNutritionPlans();
+        }
+          return const Center(
+            child: Padding(
+              padding: EdgeInsets.all(16.0),
+              child: CircularProgressIndicator(
+                color: themeBlue,
+                backgroundColor: themePink,
+              ),
+            ),
+          );
       },
     );
   }
@@ -167,35 +192,35 @@ class _NutritionPlanState extends State<NutritionPlan> {
 
     if (type == 'Breakfast') {
       icon = Icons.free_breakfast;
-      gradient = LinearGradient(
+      gradient = const LinearGradient(
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
         colors: [
-          theme_green,
+          themeBlue,
           Colors.blueAccent,
         ],
       );
     } else if (type == 'Lunch') {
       icon = Icons.lunch_dining;
-      gradient = LinearGradient(
+      gradient = const LinearGradient(
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
-        colors: [theme_orange, Colors.red],
+        colors: [themeOrange, Colors.red],
       );
     } else if (type == 'Dinner') {
       icon = Icons.dinner_dining;
-      gradient = LinearGradient(
+      gradient = const LinearGradient(
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
-        colors: [theme_darkblue, theme_green],
+        colors: [themeDarkBlue, themeBlue],
       );
     } else if (type == 'Snack') {
       icon = Icons.fastfood;
-      gradient = LinearGradient(
+      gradient = const LinearGradient(
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
         colors: [
-          theme_pink,
+          themePink,
           Colors.blueAccent,
         ],
       );
@@ -203,43 +228,50 @@ class _NutritionPlanState extends State<NutritionPlan> {
 
     return GestureDetector(
       onTap: () {
-        Navigator.of(context).push(
+        Navigator.push(
+          context,
           MaterialPageRoute(
             builder: (context) => MealAdapt(nutritionPlan: nutritionPlan),
           ),
-        );
+        ).then((_) {
+          refresh();
+        });
       },
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          gradient: gradient,
-          borderRadius: BorderRadius.circular(13),
-        ),
-        child: Row(
-          // mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(icon, color: Colors.white, size: 50),
-            const SizedBox(width: 10),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  nutritionPlan.name,
-                  style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  //time,
-                  '${nutritionPlan.start_time} - ${nutritionPlan.end_time}',
-                  style: TextStyle(
-                      color: Colors.white.withOpacity(0.8), fontSize: 15),
-                ),
-              ],
-            ),
-          ],
+      child: Card(
+        margin: const EdgeInsets.all(0),
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: gradient,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Icon(icon, color: Colors.white, size: 50),
+              const SizedBox(width: 10),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    nutritionPlan.name,
+                    style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    //time,
+                    '${nutritionPlan.start_time} - ${nutritionPlan.end_time}',
+                    style: TextStyle(
+                        color: Colors.white.withOpacity(0.8), fontSize: 15),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

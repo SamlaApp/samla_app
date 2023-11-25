@@ -1,16 +1,14 @@
 import 'package:animate_gradient/animate_gradient.dart';
 import 'package:flutter/material.dart';
-import 'package:samla_app/config/themes/common_styles.dart';
+import 'package:samla_app/config/themes/new_style.dart';
 import '../../../auth/presentation/bloc/auth_bloc.dart';
-import '../../../profile/presentation/pages/PersonalInfo.dart';
 import '../../data/datasources/remote_data_source.dart';
 import '../../data/models/chatMessage_model.dart';
 import 'chat_message.dart';
-import 'package:samla_app/features/auth/auth_injection_container.dart'
-as authDI;
+import 'package:samla_app/features/auth/auth_injection_container.dart' as di;
 
-const String openAi_token = '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';
-
+const String openAiToken =
+    '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';
 
 class AssistantPage extends StatefulWidget {
   const AssistantPage({super.key});
@@ -19,16 +17,13 @@ class AssistantPage extends StatefulWidget {
   State<AssistantPage> createState() => _AssistantPageState();
 }
 
-// make chatbot assistant using openAI
-class _AssistantPageState extends State<AssistantPage>{
-
+class _AssistantPageState extends State<AssistantPage> {
   final _textController = TextEditingController();
   final _scrollController = ScrollController();
   final List<ChatMessage> _messages = [];
   late bool isLoading;
 
-  final authBloc = authDI.sl.get<AuthBloc>();
-
+  final authBloc = di.sl.get<AuthBloc>();
 
   @override
   void initState() {
@@ -40,7 +35,6 @@ class _AssistantPageState extends State<AssistantPage>{
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-backgroundColor: const Color.fromRGBO(10, 44, 64, 1),
         title: const Text(
           'Samla\'s assistant',
           style: TextStyle(color: Colors.white, fontSize: 15),
@@ -54,13 +48,13 @@ backgroundColor: const Color.fromRGBO(10, 44, 64, 1),
           duration: const Duration(seconds: 10),
           reverse: true,
           animateAlignments: true,
-          primaryColors: [
-            theme_green,
+          primaryColors: const [
+            themeBlue,
             Colors.blueAccent,
           ],
-          secondaryColors: [
-            theme_green,
-            const Color.fromARGB(255, 120, 90, 255),
+          secondaryColors: const [
+            themeBlue,
+            Color.fromARGB(255, 120, 90, 255),
           ],
         ),
       ),
@@ -75,8 +69,8 @@ backgroundColor: const Color.fromRGBO(10, 44, 64, 1),
               child: const Padding(
                 padding: EdgeInsets.all(8.0),
                 child: CircularProgressIndicator(
-                  color: Color.fromRGBO(64, 194, 210, 1),
-                  backgroundColor: Color.fromRGBO(213, 20, 122, 1),
+                  color: themeBlue,
+                  backgroundColor: themePink
                 ),
               ),
             ),
@@ -84,7 +78,9 @@ backgroundColor: const Color.fromRGBO(10, 44, 64, 1),
               padding: const EdgeInsets.all(8.0),
               child: Row(
                 children: [
+                  if(!isLoading)
                   _buildInput(),
+                  if(!isLoading)
                   _buildSubmit(),
                 ],
               ),
@@ -103,11 +99,11 @@ backgroundColor: const Color.fromRGBO(10, 44, 64, 1),
         child: IconButton(
           icon: const Icon(
             Icons.send_rounded,
-            color: Color.fromRGBO(10, 44, 64, 1),
+            color: themeDarkBlue,
           ),
           onPressed: () async {
             setState(
-                  () {
+              () {
                 _messages.add(
                   ChatMessage(
                     text: _textController.text,
@@ -121,7 +117,7 @@ backgroundColor: const Color.fromRGBO(10, 44, 64, 1),
             _textController.clear();
             Future.delayed(const Duration(milliseconds: 50))
                 .then((_) => _scrollDown());
-            generateResponse(input,_messages).then((value) {
+            generateResponse(input, _messages).then((value) {
               setState(() {
                 isLoading = false;
                 _messages.add(
@@ -145,18 +141,25 @@ backgroundColor: const Color.fromRGBO(10, 44, 64, 1),
     return Expanded(
       child: TextField(
         textCapitalization: TextCapitalization.sentences,
-        style: const TextStyle(color: Colors.black),
         controller: _textController,
-        decoration: const InputDecoration(
+        decoration: InputDecoration(
+          labelStyle: const TextStyle(color: themeDarkBlue),
           hintText: 'Ask Samla\'s assistant',
-          hintStyle: TextStyle(color: Colors.grey),
           filled: true,
-          border: InputBorder.none,
-          focusedBorder: InputBorder.none,
-          enabledBorder: InputBorder.none,
-          errorBorder: InputBorder.none,
-          disabledBorder: InputBorder.none,
+          hintStyle: TextStyle(color: themeDarkBlue.withOpacity(0.3)),
+          alignLabelWithHint: true,
+          focusColor: themeDarkBlue,
+          fillColor: themeDarkBlue.withOpacity(0.05),
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: themeDarkBlue.withOpacity(0.4)),
+            borderRadius: BorderRadius.circular(20),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: themeDarkBlue.withOpacity(0.3)),
+            borderRadius: BorderRadius.circular(20),
+          ),
         ),
+        style: const TextStyle(color: themeDarkBlue),
       ),
     );
   }
@@ -182,11 +185,4 @@ backgroundColor: const Color.fromRGBO(10, 44, 64, 1),
       curve: Curves.easeOut,
     );
   }
-
-
-
 }
-
-
-
-

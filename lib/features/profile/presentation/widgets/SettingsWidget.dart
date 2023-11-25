@@ -80,7 +80,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 14.0,
-              color: theme_green,
+              color: themeBlue,
             ),
           ),
           Container(
@@ -90,6 +90,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
             child: TextField(
               controller: _nameController,
               style: inputText,
+                cursorColor: themeBlue,
               decoration: InputDecoration(
                 prefixIcon: Padding(
                   padding: const EdgeInsets.fromLTRB(0, 0, 0, 8),
@@ -111,7 +112,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 14.0,
-              color: theme_green,
+              color: themeBlue,
             ),
           ),
           Container(
@@ -121,8 +122,13 @@ class _SettingsWidgetState extends State<SettingsWidget> {
             child: TextField(
               controller: _userNameController,
               style: inputText,
+              cursorColor: themeBlue,
               decoration: InputDecoration(
-                prefixText: '@',
+                prefixText: '@ ',
+                prefixStyle: TextStyle(
+                  color: theme_grey,
+                  fontWeight: FontWeight.bold,
+                ),
                 prefixIcon: Padding(
                   padding: const EdgeInsets.fromLTRB(0, 0, 0, 8),
                   child: Icon(
@@ -144,7 +150,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 14.0,
-              color: theme_green,
+              color: themeBlue,
             ),
           ),
           Container(
@@ -154,6 +160,8 @@ class _SettingsWidgetState extends State<SettingsWidget> {
             child: TextField(
               controller: _emailController,
               style: inputText,
+              cursorColor: themeBlue,
+
               decoration: InputDecoration(
                 prefixIcon: Padding(
                   padding: const EdgeInsets.fromLTRB(0, 0, 0, 8),
@@ -176,7 +184,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 14.0,
-              color: theme_green,
+              color: themeBlue,
             ),
           ),
           Container(
@@ -186,6 +194,8 @@ class _SettingsWidgetState extends State<SettingsWidget> {
             child: TextField(
               controller: _phoneController,
               style: inputText,
+              cursorColor: themeBlue,
+
               decoration: InputDecoration(
                 prefixIcon: Padding(
                   padding: const EdgeInsets.fromLTRB(0, 0, 0, 8),
@@ -208,7 +218,8 @@ class _SettingsWidgetState extends State<SettingsWidget> {
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 14.0,
-              color: theme_green,
+              color: themeBlue,
+
             ),
           ),
           Container(
@@ -218,8 +229,13 @@ class _SettingsWidgetState extends State<SettingsWidget> {
             child: TextField(
               controller: _oldPassController,
               style: inputText,
+              cursorColor: themeBlue,
+
               decoration: InputDecoration(
                 hintText: 'Enter your current password',
+                hintStyle: TextStyle(
+                  color: theme_grey,
+                ),
                 prefixIcon: Padding(
                   padding: const EdgeInsets.fromLTRB(0, 0, 0, 8),
                   child: Icon(
@@ -241,7 +257,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 14.0,
-              color: theme_green,
+              color: themeBlue,
             ),
           ),
           Container(
@@ -251,8 +267,13 @@ class _SettingsWidgetState extends State<SettingsWidget> {
             child: TextField(
               controller: _newPassController,
               style: inputText,
+              cursorColor: themeBlue,
+
               decoration: InputDecoration(
                 hintText: 'Enter your new password',
+                hintStyle: TextStyle(
+                  color: theme_grey,
+                ),
                 prefixIcon: Padding(
                   padding: const EdgeInsets.fromLTRB(0, 0, 0, 8),
                   child: Icon(
@@ -269,7 +290,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
           Center(
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
-                  primary: theme_darkblue,
+                  primary: themeDarkBlue,
                   padding: EdgeInsets.symmetric(horizontal: 50, vertical: 13),
                   // Button padding
                   shape: RoundedRectangleBorder(
@@ -282,8 +303,8 @@ class _SettingsWidgetState extends State<SettingsWidget> {
               onPressed: _saveInfo,
               child: Text(
                 'Save Info',
-              ),
             ),
+          ),
           ),
 
           SizedBox(height: 10),
@@ -293,8 +314,6 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                   primary: theme_red,
                   padding: EdgeInsets.symmetric(horizontal: 20, vertical: 13),
 
-                  // padding: EdgeInsets.fromLTRB(14, 14, 14, 14),
-                  // Button padding
                   shape: RoundedRectangleBorder(
                     borderRadius:
                         BorderRadius.circular(8), // Button border radius

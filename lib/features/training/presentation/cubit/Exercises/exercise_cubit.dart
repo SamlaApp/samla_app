@@ -35,5 +35,16 @@ class ExerciseCubit extends Cubit<ExerciseState> {
     });
   }
 
+  @override
+  Future<void> removeExerciseFromPlan({required int exerciseID, required String day, required int templateID}) async {
+    emit(ExerciseDayLoadingState());
+    final result = await repository.removeExerciseFromPlan(exerciseID: exerciseID, day: day, templateID: templateID);
+    result.fold(
+            (failure) => emit(const ExerciseErrorState('Failed to remove exercise')),
+            (exercise) {emit(ExerciseRemovedState());
+    });
+  }
+
+
 
 }

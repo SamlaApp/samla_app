@@ -6,12 +6,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/Progress.dart';
 
-abstract class ProgressLocalDataSource {
+abstract class LocalDataSource {
   Future<void> cacheProgress(List<ProgressModel> progress);
   Future<List<ProgressModel>> getCachedProgress();
+  Future<void> cacheStreak(int streak);
+  Future<int> getCachedStreak();
 }
 
-class ProgressLocalDataSourceImpl implements ProgressLocalDataSource {
+class ProgressLocalDataSourceImpl implements LocalDataSource {
   final SharedPreferences sharedPreferences;
 
   ProgressLocalDataSourceImpl(this.sharedPreferences);
@@ -36,6 +38,24 @@ class ProgressLocalDataSourceImpl implements ProgressLocalDataSource {
       return Future.value((json.decode(jsonString) as List<dynamic>)
           .map<ProgressModel>((item) => ProgressModel.fromJson(item))
           .toList());
+    } else {
+      throw EmptyCacheException();
+    }
+  }
+
+  @override
+  Future<void> cacheStreak(int streak) {
+    return sharedPreferences.setInt(
+      'CACHED_STREAK',
+      streak,
+    );
+  }
+
+  @override
+  Future<int> getCachedStreak() {
+    final streak = sharedPreferences.getInt('CACHED_STREAK');
+    if (streak != null) {
+      return Future.value(streak);
     } else {
       throw EmptyCacheException();
     }

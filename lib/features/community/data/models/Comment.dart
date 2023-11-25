@@ -14,6 +14,12 @@ class CommentModel extends Comment {
   
 
   factory CommentModel.fromJson(Map<String, dynamic> json) {
+    if (json['writer_photo'] != null &&
+        !json['writer_photo'].isEmpty &&
+        !json['writer_photo'].contains('http')) {
+      json['writer_photo'] = 'https://samla.mohsowa.com/api/user/user_photo/' +
+          json['writer_photo'];
+    }
     return CommentModel(
       id: json['id'],
       communityID: json['community_id'],

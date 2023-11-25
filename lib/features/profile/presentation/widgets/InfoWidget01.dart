@@ -116,10 +116,10 @@ class _InfoWidgetState extends State<InfoWidget> {
                         ),
                         SliderTheme(
                           data: SliderTheme.of(context).copyWith(
-                            activeTrackColor: theme_pink,
-                            inactiveTrackColor: theme_green,
+                            activeTrackColor: themePink,
+                            inactiveTrackColor: themeBlue,
                             trackHeight: 3,
-                            thumbColor: theme_pink,
+                            thumbColor: themePink,
                             thumbShape:
                                 RoundSliderThumbShape(enabledThumbRadius: 8.0),
                             overlayColor: Colors.red.withAlpha(25),
@@ -168,7 +168,7 @@ class _InfoWidgetState extends State<InfoWidget> {
               child: isEditing
                   ? ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        primary: theme_darkblue,
+                        primary: themeDarkBlue,
                         padding:
                             EdgeInsets.symmetric(horizontal: 20, vertical: 13),
                         shape: RoundedRectangleBorder(
@@ -183,7 +183,7 @@ class _InfoWidgetState extends State<InfoWidget> {
                     )
                   : ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        primary: theme_darkblue,
+                        primary: themeDarkBlue,
                         padding:
                             EdgeInsets.symmetric(horizontal: 20, vertical: 13),
                         shape: RoundedRectangleBorder(

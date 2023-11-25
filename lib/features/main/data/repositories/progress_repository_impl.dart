@@ -8,8 +8,8 @@ import 'package:samla_app/features/main/domain/repositories/progress_repository.
 import 'package:samla_app/features/main/domain/entities/Progress.dart';
 
 class ProgressRepositoryImpl implements ProgressRepository {
-  final ProgressRemoteDataSource remoteDataSource;
-  final ProgressLocalDataSource localDataSource;
+  final RemoteDataSource remoteDataSource;
+  final LocalDataSource localDataSource;
   final NetworkInfo networkInfo;
 
   ProgressRepositoryImpl({

@@ -53,3 +53,17 @@ class TemplateCreatedState extends TemplateState {
   @override
   List<Object> get props => [template];
 }
+
+class TemplateDetailLoadingState extends TemplateState {}
+
+class TemplateDetailLoaded extends TemplateState {
+  final Template template;
+
+  const TemplateDetailLoaded(this.template);
+
+  @override
+  List<Object> get props => [template];
+}
+
+// TemplateDeletedState
+class TemplateDeletedState extends TemplateState {}

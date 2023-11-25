@@ -1,20 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:samla_app/features/auth/auth_injection_container.dart';
-import 'package:samla_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:samla_app/features/nutrition/data/models/nutritionPlan_model.dart';
 import 'package:samla_app/features/nutrition/domain/entities/NutritionPlanStatus.dart';
-import 'package:samla_app/features/nutrition/domain/repositories/nutritionPlan_repository.dart';
-import 'package:samla_app/features/nutrition/presentation/cubit/nutritionPlan_cubit.dart';
-// import 'package:samla_app/features/nutrition/nutrition_di.dart' as di;
+import 'package:samla_app/features/nutrition/presentation/cubit/PlanStatus/planStatus_cubit.dart';
+import 'package:samla_app/features/nutrition/presentation/cubit/TodayPlan/todayPlan_cubit.dart';
+import 'package:samla_app/features/nutrition/presentation/cubit/displayMeal/displayMeal_cubit.dart';
+import 'package:samla_app/features/nutrition/presentation/cubit/nutrtiionPlan/nutritionPlan_cubit.dart';
+import 'package:samla_app/features/nutrition/nutrition_di.dart' as di;
+import 'package:samla_app/features/nutrition/presentation/cubit/summary/summary_cubit.dart';
 import 'package:samla_app/features/nutrition/presentation/pages/MealAdapt.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import 'package:samla_app/config/themes/common_styles.dart';
+import 'package:samla_app/config/themes/new_style.dart';
 import 'package:samla_app/features/nutrition/presentation/pages/NutritionPlan.dart';
 
 class TodayPlan extends StatefulWidget {
-  TodayPlan({super.key});
+  const TodayPlan({super.key});
 
   @override
   _TodayPlanState createState() => _TodayPlanState();
@@ -24,27 +25,41 @@ class _TodayPlanState extends State<TodayPlan> {
   final PageController _pageController =
       PageController(viewportFraction: 1, initialPage: 0, keepPage: true);
 
-  final cubit = sl.get<NutritionPlanCubit>();
+  final nutritionCubit = di.sl.get<NutritionPlanCubit>();
+  final todayPlanCubit = di.sl.get<TodayPlanCubit>();
+  final displayMealCubit = di.sl.get<DisplayMealCubit>();
+  final statusCubit = di.sl.get<PlanStatusCubit>();
+  final summaryCubit = di.sl.get<SummaryCubit>();
+
+
+  String today = DateFormat('EEEE').format(DateTime.now());
 
   @override
   void initState() {
     super.initState();
-    cubit.getTodayNutritionPlan(DateFormat('EEEE').format(DateTime.now()));
+    todayPlanCubit.getTodayNutritionPlan(DateFormat('EEEE').format(DateTime.now()));
   }
 
-  BlocBuilder<NutritionPlanCubit, NutritionPlanState> getTodayPlans(gradient) {
-    return BlocBuilder<NutritionPlanCubit, NutritionPlanState>(
-      bloc: cubit,
+  BlocBuilder<TodayPlanCubit, TodayPlanState> getTodayPlans() {
+    return BlocBuilder<TodayPlanCubit, TodayPlanState>(
+      bloc: todayPlanCubit,
       builder: (context, state) {
-        print(state);
-        if (state is NutritionPlanInitial) {
-          return const Center(child: CircularProgressIndicator());
-        } else if (state is NutritionPlanLoadingState) {
-          return const Center(child: CircularProgressIndicator());
-        } else if (state is NutritionPlanLoaded) {
+        if (state is TodayPlanLoadingState) {
+          return const Center(
+              child: CircularProgressIndicator(
+            color: themeBlue,
+            backgroundColor: themePink,
+          ));
+        } else if (state is TodayPlanLoaded) {
+          statusCubit.getNutritionPlanStatus(state.nutritionPlans[0].id!);
+          displayMealCubit.getNutritionPlanMeals(today, state.nutritionPlans[0].id!);
           return Stack(
             children: [
               PageView(
+                onPageChanged: (index) {
+                  displayMealCubit.getNutritionPlanMeals(today, state.nutritionPlans[index].id!);
+                  statusCubit.getNutritionPlanStatus(state.nutritionPlans[index].id!);
+                },
                 controller: _pageController,
                 scrollDirection: Axis.horizontal,
                 children: [
@@ -74,7 +89,7 @@ class _TodayPlanState extends State<TodayPlan> {
               ),
             ],
           );
-        } else if (state is NutritionPlanErrorState) {
+        } else if (state is TodayPlanErrorState) {
           return Center(child: Text(state.message));
         } else if (state is NutritionPlanEmptyState) {
           return Center(
@@ -83,10 +98,10 @@ class _TodayPlanState extends State<TodayPlan> {
               child: Column(
                 children: [
                   const SizedBox(height: 40),
-                  Text(
+                  const Text(
                     'You have no nutrition plan for today',
                     style: TextStyle(
-                      color: theme_darkblue,
+                      color: themeDarkBlue,
                       fontSize: 16,
                       fontWeight: FontWeight.normal,
                     ),
@@ -95,7 +110,7 @@ class _TodayPlanState extends State<TodayPlan> {
                   ElevatedButton.icon(
                     icon: const Icon(Icons.add, color: Colors.white),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: theme_darkblue,
+                      backgroundColor: themeDarkBlue,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
@@ -110,13 +125,12 @@ class _TodayPlanState extends State<TodayPlan> {
               ),
             ),
           );
-        } else if (state is NutritionPlanCreated) {
-          return const Center(child: Text('Nutrition plan created'));
-        } else if (state is NutritionPlanMealLibraryLoaded) {
-          return const Center(
-              child: Text('Nutrition plan meal library loaded'));
         } else {
-          return const Center(child: Text('Unknown state'));
+          return const Center(
+              child: CircularProgressIndicator(
+            color: themeBlue,
+            backgroundColor: themePink,
+          ));
         }
       },
     );
@@ -126,32 +140,36 @@ class _TodayPlanState extends State<TodayPlan> {
   Widget build(BuildContext context) {
     return Container(
         margin: const EdgeInsets.all(10),
-        height: 375,
+        height: 400,
         child: Column(
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Today\'s Plan',
-                  style: TextStyle(
-                    color: theme_darkblue,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
+            Padding(
+              padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'Today\'s Plan',
+                    style: TextStyle(
+                      color: themeDarkBlue,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
-                IconButton(
-                  icon: Icon(Icons.list_sharp, color: theme_darkblue),
-                  onPressed: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => const NutritionPlan()));
-                  },
-                ),
-              ],
+                  IconButton(
+                    icon: const Icon(Icons.list_sharp, color: themeDarkBlue,size: 30),
+                    onPressed: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => const NutritionPlan()));
+                    },
+                  ),
+                ],
+              ),
             ),
-            Expanded(
-              child: getTodayPlans(background_gradient),
-            ),
+            if (true)
+              Expanded(
+                child: getTodayPlans(),
+              ),
           ],
         ));
   }
@@ -163,35 +181,35 @@ class _TodayPlanState extends State<TodayPlan> {
 
     if (type == 'Breakfast') {
       icon = Icons.free_breakfast;
-      gradient = LinearGradient(
+      gradient = const LinearGradient(
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
         colors: [
-          theme_green,
+          themeBlue,
           Colors.blueAccent,
         ],
       );
     } else if (type == 'Lunch') {
       icon = Icons.lunch_dining;
-      gradient = LinearGradient(
+      gradient = const LinearGradient(
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
-        colors: [theme_orange, Colors.red],
+        colors: [themeOrange, Colors.red],
       );
     } else if (type == 'Dinner') {
       icon = Icons.dinner_dining;
-      gradient = LinearGradient(
+      gradient = const LinearGradient(
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
-        colors: [theme_darkblue, theme_green],
+        colors: [themeDarkBlue, themeBlue],
       );
     } else if (type == 'Snack') {
       icon = Icons.fastfood;
-      gradient = LinearGradient(
+      gradient = const LinearGradient(
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
         colors: [
-          theme_pink,
+          themePink,
           Colors.blueAccent,
         ],
       );
@@ -201,9 +219,9 @@ class _TodayPlanState extends State<TodayPlan> {
       margin: const EdgeInsets.all(10),
       decoration: BoxDecoration(
         gradient: gradient,
-        backgroundBlendMode: BlendMode.multiply,
-        borderRadius: primary_decoration.borderRadius,
-        boxShadow: primary_decoration.boxShadow,
+        backgroundBlendMode: BlendMode.srcOver,
+        borderRadius: primaryDecoration.borderRadius,
+        boxShadow: primaryDecoration.boxShadow,
       ),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -221,15 +239,15 @@ class _TodayPlanState extends State<TodayPlan> {
                         const SizedBox(width: 10),
                         Text(
                           nutritionPlan.name,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
-                            color: primary_color,
+                            color: white
                           ),
                         ),
                       ],
                     ),
-                    TextButton(
+                    TextButton.icon(
                       onPressed: () {
                         Navigator.of(context).push(
                           MaterialPageRoute(
@@ -238,12 +256,13 @@ class _TodayPlanState extends State<TodayPlan> {
                           ),
                         );
                       },
-                      child: Text(
+                      icon:  Icon(Icons.edit, color: white.withOpacity(0.8),size: 20),
+                      label: Text(
                         'Edit',
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
-                          color: primary_color,
+                          color: white.withOpacity(0.7),
                         ),
                       ),
                     ),
@@ -262,10 +281,6 @@ class _TodayPlanState extends State<TodayPlan> {
                     ),
                   ],
                 ),
-                const Divider(
-                  color: Colors.white70,
-                  thickness: 0.5,
-                ),
                 const SizedBox(height: 10),
                 displayedMeals(nutritionPlan.id!),
               ],
@@ -277,14 +292,11 @@ class _TodayPlanState extends State<TodayPlan> {
     );
   }
 
-  BlocBuilder<NutritionPlanCubit, NutritionPlanState> displayedMeals(int id) {
-    String today = DateFormat('EEEE').format(DateTime.now());
-    final tempCubit = sl.get<NutritionPlanCubit>();
-    tempCubit.getNutritionPlanMeals(today, id);
-    return BlocBuilder<NutritionPlanCubit, NutritionPlanState>(
-      bloc: tempCubit,
+  BlocBuilder<DisplayMealCubit, DisplayMealState> displayedMeals(int id) {
+    return BlocBuilder<DisplayMealCubit, DisplayMealState>(
+      bloc: displayMealCubit,
       builder: (context, state) {
-        if (state is NutritionPlanMealsLoadingState) {
+        if (state is DisplayMealLoadingState) {
           return const Center(
             child: Padding(
               padding: EdgeInsets.all(16.0),
@@ -293,76 +305,99 @@ class _TodayPlanState extends State<TodayPlan> {
               ),
             ),
           );
-        } else if (state is NutritionPlanMealLoaded) {
-          return Column(
-            children: [
-              for (var meal in state.nutritionPlanMeals)
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        const Icon(Icons.circle,
-                            color: Colors.white70, size: 10),
-                        const SizedBox(width: 10),
-                        Text(
-                          '${meal.meal_name} (${meal.size}g)',
-                          style: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white70),
-                        ),
-                      ],
-                    ),
-                    Text(
-                      '${meal.calories} kcal',
-                      style: const TextStyle(
-                        fontSize: 16,
-                        color: Colors.white60,
+        } else if (state is DisplayMealErrorState) {
+          return const Center(
+            child: Padding(
+              padding: EdgeInsets.all(16.0),
+              child: Text('Failed to load meals',
+                  style: TextStyle(color: Colors.white70)),
+            ),
+          );
+        } else if (state is DisplayMealEmptyState) {
+          return const Center(
+            child: Padding(
+              padding: EdgeInsets.all(16.0),
+              child: Text('No meals', style: TextStyle(color: Colors.white70)),
+            ),
+          );
+        } else if (state is DisplayMealLoaded) {
+          return Container(
+            padding: const EdgeInsets.all(16.0),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: themeDarkBlue.withOpacity(0.2),
+            ),
+            child: Column(
+              children: [
+                for (var meal in state.nutritionPlanMeals)
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          const Icon(Icons.circle,
+                              color: Colors.white70, size: 10),
+                          const SizedBox(width: 10),
+                          Text(
+                            '${meal.meal_name} (${meal.size}g)',
+                            style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.normal,
+                                color: Colors.white70),
+                          ),
+                        ],
                       ),
-                    ),
-                  ],
-                ),
-            ],
+                      Text(
+                        '${meal.calories} kcal',
+                        style: const TextStyle(
+                          fontSize: 16,
+                          color: Colors.white60,
+                        ),
+                      ),
+                    ],
+                  ),
+              ],
+            ),
           );
         } else {
           return const Center(
             child: Padding(
                 padding: EdgeInsets.all(16.0),
-                child:
-                    Text('No meals', style: TextStyle(color: Colors.white70))),
+                child: Text('Failed to load meals',
+                    style: TextStyle(color: Colors.white70))),
           );
         }
       },
     );
   }
 
-  BlocBuilder<NutritionPlanCubit, NutritionPlanState> _planStatus(int id) {
-    final statusCubit = sl.get<NutritionPlanCubit>();
-    statusCubit.getNutritionPlanStatus(id);
+  BlocBuilder<PlanStatusCubit, PlanStatusState> _planStatus(int id) {
 
-    void _mealTaken() {
+    void mealTaken() {
       final status = NutritionPlanStatus(
         nutritionPlanStatusId: id,
         status: 'Taken',
       );
       statusCubit.updateNutritionPlanStatus(status);
       statusCubit.getNutritionPlanStatus(id);
+      summaryCubit.getDailyNutritionPlanSummary();
+
     }
 
-    void _mealSkipped() {
+    void mealSkipped() {
       final status = NutritionPlanStatus(
         nutritionPlanStatusId: id,
         status: 'Skipped',
       );
       statusCubit.updateNutritionPlanStatus(status);
       statusCubit.getNutritionPlanStatus(id);
+      summaryCubit.getDailyNutritionPlanSummary();
     }
 
-    return BlocBuilder<NutritionPlanCubit, NutritionPlanState>(
+    return BlocBuilder<PlanStatusCubit, PlanStatusState>(
       bloc: statusCubit,
       builder: (context, state) {
-        if (state is NutritionPlanLoadingState) {
+        if (state is PlanStatusLoadingState) {
           return const Center(
             child: Padding(
               padding: EdgeInsets.all(16.0),
@@ -371,7 +406,25 @@ class _TodayPlanState extends State<TodayPlan> {
               ),
             ),
           );
-        } else if (state is NutritionPlanStatusLoaded) {
+        } else if (state is PlanStatusErrorState) {
+          return const Center(
+            child: Padding(
+              padding: EdgeInsets.all(16.0),
+              child: Text('Failed to load status',
+                  style: TextStyle(color: Colors.white70)),
+            ),
+          );
+        } else if (state is PlanStatusEmptyState) {
+          return const Center(
+            child: Padding(
+              padding: EdgeInsets.all(16.0),
+              child: Text('Status Unknown',
+                  style: TextStyle(color: Colors.white70)),
+            ),
+          );
+        }
+
+        else if (state is PlanStatusLoaded) {
           if (state.nutritionPlanStatus.status == 'pending') {
             return Padding(
               padding: const EdgeInsets.all(8.0),
@@ -383,13 +436,13 @@ class _TodayPlanState extends State<TodayPlan> {
                   Expanded(
                     child: ElevatedButton.icon(
                       onPressed: () {
-                        _mealTaken();
+                        mealTaken();
                       },
                       icon: const Icon(Icons.check, color: Colors.white),
                       label: const Text('Meal Taken',
                           style: TextStyle(color: Colors.white)),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: theme_darkblue,
+                        backgroundColor: themeDarkBlue,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
@@ -402,13 +455,13 @@ class _TodayPlanState extends State<TodayPlan> {
                   Expanded(
                     child: ElevatedButton.icon(
                       onPressed: () {
-                        _mealSkipped();
+                        mealSkipped();
                       },
-                      icon: Icon(Icons.close, color: theme_darkblue),
-                      label: Text('Skip Meal',
-                          style: TextStyle(color: theme_darkblue)),
+                      icon: const Icon(Icons.close, color: themeDarkBlue),
+                      label: const Text('Skip Meal',
+                          style: TextStyle(color: themeDarkBlue)),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white70,
+                        backgroundColor: white,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
@@ -421,7 +474,7 @@ class _TodayPlanState extends State<TodayPlan> {
           }
 
           return Padding(
-            padding: EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(16.0),
             child: Container(
               width: 100,
               height: 30,
@@ -431,11 +484,13 @@ class _TodayPlanState extends State<TodayPlan> {
               ),
               child: Center(
                 child: Text(state.nutritionPlanStatus.status,
-                    style: TextStyle(color: theme_darkblue)),
+                    style: const TextStyle(color: themeDarkBlue)),
               ),
             ),
           );
-        } else {
+        }
+
+        else {
           return const Center(
             child: Padding(
               padding: EdgeInsets.all(16.0),

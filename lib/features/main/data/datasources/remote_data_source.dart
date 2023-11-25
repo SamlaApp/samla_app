@@ -5,11 +5,12 @@ import 'package:samla_app/features/main/data/models/Progress.dart';
 
 import '../../../../core/network/samlaAPI.dart';
 
-abstract class ProgressRemoteDataSource {
+abstract class RemoteDataSource {
   Future<List<ProgressModel>> getAllProgress();
+  Future<int> getStreak();
 }
 
-class ProgressRemoteDataSourceImpl implements ProgressRemoteDataSource {
+class ProgressRemoteDataSourceImpl implements RemoteDataSource {
   @override
   Future<List<ProgressModel>> getAllProgress() async {
     final response = await samlaAPI(
@@ -25,6 +26,21 @@ class ProgressRemoteDataSourceImpl implements ProgressRemoteDataSource {
       }
 
       return progress;
+    } else {
+      throw ServerException(message: 'Server Error');
+    }
+  }
+
+  @override
+  Future<int> getStreak() async {
+    final response = await samlaAPI(
+      endPoint: '/user/streak/get',
+      method: 'GET',
+    );
+    if (response.statusCode == 200) {
+      final body = await response.stream.bytesToString();
+      final parsed = jsonDecode(body)['streak'];
+      return parsed;
     } else {
       throw ServerException(message: 'Server Error');
     }

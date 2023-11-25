@@ -1,6 +1,8 @@
 import 'package:get_it/get_it.dart';
 import 'package:samla_app/features/auth/auth_injection_container.dart';
 import 'package:samla_app/features/main/data/repositories/steps_repository.dart';
+import 'package:samla_app/features/main/data/repositories/streak_repository_impl.dart';
+import 'package:samla_app/features/main/domain/repositories/streak_repository.dart';
 import 'package:samla_app/features/main/presentation/cubits/ProgressCubit/progress_cubit.dart';
 import 'package:samla_app/features/main/data/datasources/local_data_source.dart';
 import 'package:samla_app/features/main/data/datasources/remote_data_source.dart';
@@ -9,6 +11,7 @@ import 'package:samla_app/features/main/presentation/cubits/SensorCubit/steps_cu
 import 'package:samla_app/features/main/presentation/cubits/StepsLogCubit/steps_log_cubit.dart';
 import 'package:samla_app/features/main/presentation/cubits/steps_timer_loop.dart';
 import 'package:workmanager/workmanager.dart';
+import 'package:samla_app/features/main/presentation/cubits/StreakCubit/streak_cubit.dart';
 
 import 'data/repositories/progress_repository_impl.dart';
 
@@ -29,15 +32,20 @@ Future<void> HomeInit() async {
    */
 
   print('registering home dependencies');
-  sl.registerLazySingleton(() => ProgressCubit(sl()));
   sl.registerLazySingleton(() => SensorCubit());
   sl.registerLazySingleton<StepsLogCubit>(() => StepsLogCubit(sl()));
   sl.registerLazySingleton(() => StepsRepository(sl()));
+  sl.registerLazySingleton<ProgressCubit> (() => ProgressCubit(sl()));
+  sl.registerLazySingleton<StreakCubit> (() => StreakCubit(sl()));
+
+  sl.registerLazySingleton<StreakRepository>(() => StreakRepositoryImpl(
+      networkInfo: sl(), remoteDataSource: sl(), localDataSource: sl()));
+
   sl.registerLazySingleton<ProgressRepository>(() => ProgressRepositoryImpl(
       networkInfo: sl(), remoteDataSource: sl(), localDataSource: sl()));
-  sl.registerLazySingleton<ProgressRemoteDataSource>(
+  sl.registerLazySingleton<RemoteDataSource>(
       () => ProgressRemoteDataSourceImpl());
-  sl.registerLazySingleton<ProgressLocalDataSource>(
+  sl.registerLazySingleton<LocalDataSource>(
       () => ProgressLocalDataSourceImpl(sl()));
 
   await sl<SensorCubit>().init();

@@ -5,10 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:http/http.dart' as http;
-import 'package:samla_app/config/themes/common_styles.dart';
-import 'package:samla_app/core/error/exceptions.dart';
+import 'package:samla_app/config/themes/new_style.dart';
 import 'package:samla_app/core/widgets/loading.dart';
 import 'package:samla_app/features/auth/data/datasources/local_data_source.dart';
 import 'package:samla_app/features/auth/data/datasources/remote_data_source.dart';
@@ -216,7 +214,7 @@ class _OTPPageState extends State<OTPPage> {
   Scaffold OTPWidget(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: primary_color,
+        backgroundColor: primaryColor,
         elevation: 0,
         leading: IconButton(
           color: Colors.black,

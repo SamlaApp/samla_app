@@ -1,23 +1,16 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:photo_view/photo_view.dart';
-import 'package:samla_app/config/themes/common_styles.dart';
+import 'package:samla_app/config/themes/new_style.dart';
 import 'dart:io';
-import 'package:http/http.dart' as http;
-import 'package:path/path.dart';
-import 'package:path_provider/path_provider.dart';
 
 class ImageHelper {
-  final ImagePicker _imagePicker;
   final ImageCropper _imageCropper;
   ImageHelper({
     ImagePicker? imagePicker,
     ImageCropper? imageCropper,
-  })  : _imagePicker = imagePicker ?? ImagePicker(),
-        _imageCropper = imageCropper ?? ImageCropper();
+  })  : _imageCropper = imageCropper ?? ImageCropper();
 
   Future<String?> _pickImage(
       {required ImageSource source, int imageQuality = 100}) async {
@@ -43,9 +36,9 @@ class ImageHelper {
       uiSettings: [
         AndroidUiSettings(
             toolbarTitle: 'Cropper',
-            toolbarColor: theme_darkblue,
+            toolbarColor: themeDarkBlue,
             toolbarWidgetColor: Colors.white,
-            statusBarColor: theme_darkblue,
+            statusBarColor: themeDarkBlue,
             initAspectRatio: CropAspectRatioPreset.original,
             lockAspectRatio: cropAspectRatioLocked),
         IOSUiSettings(
@@ -70,7 +63,7 @@ class ImageHelper {
       int? maxWidth}) async {
     //show bottom sheet
     showModalBottomSheet(
-        backgroundColor: primary_color,
+        backgroundColor: themeDarkBlue,
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(
             top: Radius.circular(20.0),
@@ -78,19 +71,10 @@ class ImageHelper {
         ),
         context: context,
         builder: (context) {
-          return Container(
+          return SizedBox(
             height: 200,
             child: Column(
               children: [
-                Container(
-                  height: 40,
-                  decoration: BoxDecoration(
-                    color: theme_green,
-                    borderRadius: const BorderRadius.vertical(
-                      top: Radius.circular(20.0),
-                    ),
-                  ),
-                ),
                 Expanded(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -118,16 +102,21 @@ class ImageHelper {
                           },
                           child: Container(
                             color: Colors.transparent,
-                            child: Column(
+                            child: const Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               mainAxisSize: MainAxisSize.max,
                               children: [
                                 Icon(
                                   Icons.camera,
-                                  color: theme_green,
+                                  color: themeBlue,
                                   size: 60,
                                 ),
-                                Text('Camera'),
+                                Text('Camera',
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 16,
+                                        decoration: TextDecoration.none)),
                               ],
                             ),
                           ),
@@ -156,17 +145,22 @@ class ImageHelper {
                           },
                           child: Container(
                             color: Colors.transparent,
-                            child: Column(
+                            child: const Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 mainAxisSize: MainAxisSize.max,
                                 children: [
                                   Icon(
                                     Icons.image,
-                                    color: theme_green,
+                                    color: themeBlue,
                                     size: 60,
                                   ),
                                   Text(
                                     'Gallery',
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 16,
+                                        decoration: TextDecoration.none),
                                   ),
                                 ]),
                           ),
@@ -186,7 +180,7 @@ Future<XFile?> compressFile(File file) async {
 
   // Create output file path
   // eg:- "Volume/VM/abcd_out.jpeg"
-  final lastIndex = filePath.lastIndexOf(new RegExp(r'.jp'));
+  final lastIndex = filePath.lastIndexOf(RegExp(r'.jp'));
   final splitted = filePath.substring(0, (lastIndex));
   final outPath = "${splitted}_out${filePath.substring(lastIndex)}";
   var result = await FlutterImageCompress.compressAndGetFile(
@@ -194,9 +188,6 @@ Future<XFile?> compressFile(File file) async {
     outPath,
     quality: 25,
   );
-
-  print(file.lengthSync());
-  print(result?.length());
 
   return result;
 }

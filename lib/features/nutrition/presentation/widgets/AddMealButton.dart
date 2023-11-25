@@ -15,7 +15,7 @@ class AddMealButton extends StatelessWidget {
     return GestureDetector(
       onTap: () => onButtonPressed(context),
       child: Container(
-        color: theme_darkblue,
+        color: themeDarkBlue,
         decoration: const BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(12)),
         ),
@@ -27,7 +27,7 @@ class AddMealButton extends StatelessWidget {
              Text(
               'Add new food',
               style: TextStyle(
-                color: theme_green,
+                color: themeBlue,
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
               ),

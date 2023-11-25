@@ -38,7 +38,7 @@ class _DailyChallengeState extends State<DailyChallenge> {
           children: [
             SvgPicture.asset(
               widget.challengeImage,
-              color: theme_green,
+              color: themeBlue,
               height: 42,
             ),
             SizedBox(width: 20),
@@ -49,13 +49,13 @@ class _DailyChallengeState extends State<DailyChallenge> {
                     style: textStyle.copyWith(
                         fontSize: 14,
                         fontWeight: FontWeight.bold,
-                        color: theme_darkblue.withOpacity(0.5))),
+                        color: themeDarkBlue.withOpacity(0.5))),
                 SizedBox(height: 3),
                 Text(widget.challengeProgress,
                     style: textStyle.copyWith(
                         fontSize: 12,
                         fontWeight: FontWeight.w300,
-                        color: theme_darkblue.withOpacity(0.5)))
+                        color: themeDarkBlue.withOpacity(0.5)))
               ],
             ),
             Spacer(),
@@ -68,7 +68,7 @@ class _DailyChallengeState extends State<DailyChallenge> {
                 },
                 style: ButtonStyle(
                   backgroundColor:
-                      MaterialStateProperty.all<Color>(theme_green),
+                      MaterialStateProperty.all<Color>(themeBlue),
                 ),
                 child: Text("DONE",
                     style: textStyle.copyWith(

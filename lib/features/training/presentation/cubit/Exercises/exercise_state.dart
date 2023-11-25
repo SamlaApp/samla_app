@@ -44,3 +44,4 @@ class ExerciseAddedState extends ExerciseState {
   List<Object> get props => [exerciseDay];
 }
 
+class ExerciseRemovedState extends ExerciseState {}

@@ -43,6 +43,8 @@ Future<Map<String, dynamic>> getNutritionSummary() async {
   final res = await samlaAPI(endPoint: '/nutrition/summary/total', method: 'GET');
   final resBody = await res.stream.bytesToString();
 
+  print(resBody);
+
   if (res.statusCode == 200) {
     // if resBody is empty or only one element, add empty element
     if(json.decode(resBody)['nutrition_summary'].length == 0){
@@ -61,8 +63,20 @@ Future<Map<String, dynamic>> getNutritionSummary() async {
         "total_calories": 0,
         ...json.decode(resBody)['nutrition_summary'][0]
       };
+    }else{
+      return json.decode(resBody)['nutrition_summary'][0];
     }
-    return json.decode(resBody)['nutrition_summary'];
+  } else {
+    throw ServerException(message: json.decode(resBody)['message']);
+  }
+}
+// /training/summary/get
+
+Future<Map<String, dynamic>> getTrainingSummary() async {
+  final res = await samlaAPI(endPoint: '/training/summary/get', method: 'GET');
+  final resBody = await res.stream.bytesToString();
+  if (res.statusCode == 200) {
+    return json.decode(resBody)['summary'];
   } else {
     throw ServerException(message: json.decode(resBody)['message']);
   }
@@ -108,6 +122,10 @@ Future<String> generateResponse(String prompt,List<ChatMessage> _messages) async
         {
           "role": "system",
           "content": "this is my progress data: as json string => ${await getProgress()}"
+        },
+        {
+          "role": "system",
+          "content": "this is my training summary data: as json string => ${await getTrainingSummary()}"
         },
         for(var i in _messages)
           {

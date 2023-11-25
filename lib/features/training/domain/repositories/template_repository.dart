@@ -8,4 +8,7 @@ abstract class TemplateRepository {
   Future<Either<Failure, Template>> createTemplate(Template template);
   Future<Either<Failure, Template>> activeTemplate();
   Future<Either<Failure, Unit>> deleteTemplate(int id);
+  Future<Either<Failure, Template>> getTemplateDetails(int id);
+  Future<Either<Failure, Template>> updateTemplateDaysName(Template template);
+  Future<Either<Failure, Template>> updateTemplateInfo(Template template);
 }

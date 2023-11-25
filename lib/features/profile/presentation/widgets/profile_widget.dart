@@ -34,7 +34,7 @@ class ProfileWidget extends StatelessWidget {
     final image = Image.asset('images/download.jpeg');
 
     return buildCircle(
-      color: theme_green,
+      color: themeBlue,
       all: 2,
       child: ClipOval(
         child: Material(
@@ -52,14 +52,14 @@ class ProfileWidget extends StatelessWidget {
   }
 
   Widget buildEditIcon(Color color) => buildCircle(
-        color: Colors.white,
+        color: themeBlue,
         all: 3,
         child: buildCircle(
-          color: color,
+          color: themeBlue,
           all: 8,
           child: Icon(
             Icons.edit,
-            color: Colors.white,
+            color: primary_color,
             size: 20,
           ),
         ),

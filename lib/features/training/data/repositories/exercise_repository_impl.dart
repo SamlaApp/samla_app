@@ -47,4 +47,32 @@ class ExerciseRepositoryImpl implements ExerciseRepository {
     }
   }
 
+  @override
+  Future<Either<Failure, List<ExerciseLibrary>>> getExercisesDay({required String day, required int templateID}) async {
+    if (await networkInfo.isConnected) {
+      try {
+        final remoteExercises = await remoteDataSource.getExercisesDay(day: day, templateID: templateID);
+        return Right(remoteExercises);
+      } on ServerException catch (e) {
+        return Left(ServerFailure(message: e.message));
+      }
+    } else {
+      return Left(ServerFailure(message: "No Internet Connection"));
+    }
+  }
+
+  @override
+  Future<Either<Failure, Unit>> removeExerciseFromPlan({required int exerciseID, required String day, required int templateID}) async {
+    if (await networkInfo.isConnected) {
+      try {
+        await remoteDataSource.removeExerciseFromPlan(exerciseID: exerciseID, day: day, templateID: templateID);
+        return const Right(unit);
+      } on ServerException catch (e) {
+        return Left(ServerFailure(message: e.message));
+      }
+    } else {
+      return Left(ServerFailure(message: "No Internet Connection"));
+    }
+  }
+
 }
