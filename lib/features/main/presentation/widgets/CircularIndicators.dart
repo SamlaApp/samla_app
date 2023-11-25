@@ -55,7 +55,37 @@ class _CircularIndicatorsState extends State<CircularIndicators> {
               int _steps = 0;
 
               if (state is SensorError) {
-                return Center(child: Text('X'));
+                return Container(
+                  decoration: primaryDecoration,
+                  alignment: Alignment.center,
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        const Icon(
+                          Icons.dangerous_outlined,
+                          color: themePink,
+                          size: 40,
+                        ),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        Flexible(
+                          child: Text(
+                            'Sorry, we could not access to your activity recognition!',
+                            style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.normal,
+                                color: themeDarkBlue.withOpacity(0.7)
+                            ),
+                          
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                );
               } else {
                 if (logState is StepsLogInitial ||
                     _stepsLogCubit.offset != -1) {
@@ -97,9 +127,9 @@ class _CircularIndicatorsState extends State<CircularIndicators> {
                                           begin: firstTime? 0: previousSteps.toDouble(),
                                           end: _steps.toDouble(),
                                           duration:
-                                              Duration(milliseconds: 1500),
+                                              const Duration(milliseconds: 1500),
                                           separator: '',
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                               fontSize: 27,
                                               fontWeight: FontWeight.bold,
                                               color: themeBlue),
@@ -150,9 +180,9 @@ class _CircularIndicatorsState extends State<CircularIndicators> {
                                           .round()
                                           .toDouble(),
                                       end: (_steps * 0.07).round().toDouble(),
-                                      duration: Duration(milliseconds: 1500),
+                                      duration: const Duration(milliseconds: 1500),
                                       separator: '',
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                           fontSize: 27,
                                           fontWeight: FontWeight.bold,
                                           color: themePink),
