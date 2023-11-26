@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:samla_app/features/training/presentation/cubit/Templates/template_cubit.dart';
 import 'package:samla_app/features/training/presentation/pages/startTrainingPage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import '../../../../config/themes/new_style.dart';
 import '../../domain/entities/ExerciseLibrary.dart';
@@ -49,7 +50,17 @@ class _TrainingPageState extends State<TrainingPage> {
     });
   }
 
-  void _fetchWeeklyExercises() {
+  int findFirstIncompleteDayIndex() {
+    for (int i = 0; i < dayCompletionStatus.length; i++) {
+      if (!dayCompletionStatus[i]! &&
+          weeklyExercises[_getDayNameFromIndex(i)]!.isNotEmpty) {
+        return i;
+      }
+    }
+    return 0; // Default to the first day if all are complete or empty
+  }
+
+  Future<void> _fetchWeeklyExercises() async {
     const days = [
       "Sunday",
       "Monday",
@@ -59,19 +70,38 @@ class _TrainingPageState extends State<TrainingPage> {
       "Friday",
       "Saturday"
     ];
-    int templateId =
-        activeTemplateId.value ?? 0; // Use the value from the notifier
+    int templateId = activeTemplateId.value ?? 0;
+
     for (var day in days) {
-      viewDayExerciseCubit.repository
-          .getExercisesDay(day: day, templateID: templateId)
-          .then((result) {
-        setState(() {
-          weeklyExercises[day] = result.getOrElse(() => []);
-        });
+      var result = await viewDayExerciseCubit.repository
+          .getExercisesDay(day: day, templateID: templateId);
+      setState(() {
+        weeklyExercises[day] = result.getOrElse(() => []);
       });
+    }
+
+    for (int i = 0; i < 7; i++) {
+      bool? status = await _getCompletionStatus(i) ?? false;
+      dayCompletionStatus[i] = status;
+    }
+
+    int firstIncompleteDayIndex = findFirstIncompleteDayIndex();
+    if (_controller.hasClients) {
+      // Use animateToPage for a smoother transition
+      _controller.animateToPage(
+        firstIncompleteDayIndex,
+        duration: const Duration(milliseconds: 500),
+        curve: Curves.easeInOut,
+      );
     }
   }
 
+  Future<bool?> _getCompletionStatus(int dayIndex) async {
+    final prefs = await SharedPreferences.getInstance();
+    int? templateId = activeTemplateId.value;
+    String key = 'completed_status_${templateId}_$dayIndex';
+    return prefs.getBool(key);
+  }
 
   String _getDayNameFromTemplate(Template template, int index) {
     switch (index) {
@@ -144,7 +174,7 @@ class _TrainingPageState extends State<TrainingPage> {
     bool? isCompleted = await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => StartTrainingNew(
+        builder: (context) => StartTraining(
           dayName: dayName,
           dayIndex: dayIndex,
           exercises: exercises,
@@ -158,21 +188,38 @@ class _TrainingPageState extends State<TrainingPage> {
     }
   }
 
-  void _markDayAsComplete(int dayIndex) {
-    setState(() {
-      dayCompletionStatus[dayIndex] = true;
+  Future<void> _saveCompletionStatus(int dayIndex, bool status) async {
+    final prefs = await SharedPreferences.getInstance();
+    int? templateId = activeTemplateId.value;
+    String key = 'completed_status_${templateId}_$dayIndex';
+    await prefs.setBool(key, status);
+  }
 
-      // Check if all days are completed
-      if (dayIndex == 6 &&
-          dayCompletionStatus.values.every((status) => status)) {
-        // Reset all days
-        dayCompletionStatus = Map.fromIterable(
-          List.generate(7, (index) => index),
-          key: (item) => item,
-          value: (item) => false,
-        );
-      }
+  void _markDayAsComplete(int dayIndex) async {
+    setState(() => dayCompletionStatus[dayIndex] = true);
+    await _saveCompletionStatus(dayIndex, true);
+
+    // Check if all days with exercises are completed
+    bool allCompleted = dayCompletionStatus.entries.every((entry) {
+      int day = entry.key;
+      bool status = entry.value;
+      // Check if the day has exercises and if it's completed
+      return weeklyExercises[_getDayNameFromIndex(day)]?.isNotEmpty != true ||
+          status;
     });
+
+    if (allCompleted) {
+      // Reset logic remains the same
+      Map<int, bool> newStatus = {
+        for (var item in List.generate(7, (index) => index)) item: false
+      };
+
+      for (int i = 0; i < 7; i++) {
+        await _saveCompletionStatus(i, false);
+      }
+
+      setState(() => dayCompletionStatus = newStatus);
+    }
   }
 
   @override
@@ -287,7 +334,7 @@ class _TrainingPageState extends State<TrainingPage> {
                                   dayCompletionStatus[index] == true
                                       ? 'Completed'
                                       : 'Start Now',
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     fontSize: 18,
                                     fontWeight: FontWeight.bold,
                                     color: Colors.white,

@@ -104,7 +104,7 @@ class _ExerciseTilesState extends State<ExerciseTiles> {
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
           backgroundColor: Colors.white,
-          child: Container(
+          child: SizedBox(
             // take 90% of screen width
             width: MediaQuery.of(context).size.width * 0.9,
             child: Padding(
@@ -133,13 +133,13 @@ class _ExerciseTilesState extends State<ExerciseTiles> {
                         ),
                         Column(
                           children: [
-                            CustomBorderContainer(
+                            customBorderContainer(
                                 'BodyPart', widget.exercise.bodyPart),
-                            CustomBorderContainer(
+                            customBorderContainer(
                                 'Equipment', widget.exercise.equipment),
-                            CustomBorderContainer(
+                            customBorderContainer(
                                 'Target', widget.exercise.target),
-                            CustomBorderContainer('Secondary Muscles',
+                            customBorderContainer('Secondary Muscles',
                                 widget.exercise.secondaryMuscles.join(', ')),
                           ],
                         ),
@@ -158,7 +158,7 @@ class _ExerciseTilesState extends State<ExerciseTiles> {
                     width: MediaQuery.of(context).size.width * 0.9,
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child:  buildNumberedList(
+                      child: buildNumberedList(
                         widget.exercise.instructions,
                         const TextStyle(
                           fontSize: 12,
@@ -184,7 +184,8 @@ class _ExerciseTilesState extends State<ExerciseTiles> {
                         onPressed: () {
                           Navigator.of(context).pop(); // Close the dialog
                         },
-                        label: const Text('Close', style: TextStyle(color: white)),
+                        label:
+                            const Text('Close', style: TextStyle(color: white)),
                       ),
                     ),
                   ),
@@ -199,7 +200,7 @@ class _ExerciseTilesState extends State<ExerciseTiles> {
 
   Widget buildNumberedList(String instructions, TextStyle textStyle) {
     final lines =
-    instructions.split('\n').where((line) => line.trim().isNotEmpty);
+        instructions.split('\n').where((line) => line.trim().isNotEmpty);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: lines.map((line) {
@@ -227,7 +228,7 @@ class _ExerciseTilesState extends State<ExerciseTiles> {
     );
   }
 
-  Widget CustomBorderContainer(String label, String value) {
+  Widget customBorderContainer(String label, String value) {
     return Stack(
       clipBehavior: Clip.none,
       alignment: Alignment.center,
@@ -240,7 +241,8 @@ class _ExerciseTilesState extends State<ExerciseTiles> {
             padding: const EdgeInsets.fromLTRB(12, 12, 12, 12),
             // Smaller padding
             decoration: BoxDecoration(
-              border: Border.all(color: themeDarkBlue.withOpacity(0.5), width: 0.9),
+              border:
+                  Border.all(color: themeDarkBlue.withOpacity(0.5), width: 0.9),
               // Smaller border width
               borderRadius: BorderRadius.circular(6), // Smaller border radius
             ),
@@ -248,7 +250,7 @@ class _ExerciseTilesState extends State<ExerciseTiles> {
               padding: const EdgeInsets.only(top: 6.0, bottom: 2.0),
               child: Text(
                 capitalize(value),
-                style:  TextStyle(
+                style: TextStyle(
                   color: themeDarkBlue.withOpacity(0.7),
                   fontWeight: FontWeight.w600,
                   fontSize: 12, // Smaller font size

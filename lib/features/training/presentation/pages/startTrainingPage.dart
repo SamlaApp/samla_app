@@ -8,12 +8,12 @@ import '../widgets/startTraining/progressSection.dart';
 import '../widgets/startTraining/SelectedExerciseDisplay.dart';
 import 'package:samla_app/features/training/training_di.dart' as di;
 
-class StartTrainingNew extends StatefulWidget {
+class StartTraining extends StatefulWidget {
   final String dayName;
   final int dayIndex;
   final List<ExerciseLibrary> exercises;
 
-  StartTrainingNew({
+  const StartTraining({
     super.key,
     required this.dayName,
     required this.dayIndex,
@@ -21,21 +21,19 @@ class StartTrainingNew extends StatefulWidget {
   });
 
   @override
-  _StartTrainingNewState createState() => _StartTrainingNewState();
+  StartTrainingState createState() => StartTrainingState();
 }
 
-class _StartTrainingNewState extends State<StartTrainingNew>
+class StartTrainingState extends State<StartTraining>
     with TickerProviderStateMixin {
   late ExerciseLibrary selectedExercise;
   final baseURL = 'https://samla.mohsowa.com/api/training/image/';
   TextEditingController kilogramsController = TextEditingController();
   TextEditingController repeatsController = TextEditingController();
   final historyCubit = di.sl.get<HistoryCubit>();
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
+  late AnimationController smallStarController1;
+  late AnimationController largeStarController;
+  late AnimationController smallStarController2;
 
   @override
   void initState() {
@@ -43,6 +41,29 @@ class _StartTrainingNewState extends State<StartTrainingNew>
     if (widget.exercises.isNotEmpty) {
       selectedExercise = widget.exercises[0];
     }
+
+    smallStarController1 = AnimationController(
+      duration: const Duration(seconds: 2),
+      vsync: this,
+    )..repeat(reverse: true);
+
+    largeStarController = AnimationController(
+      duration: const Duration(seconds: 2),
+      vsync: this,
+    )..repeat(reverse: true);
+
+    smallStarController2 = AnimationController(
+      duration: const Duration(seconds: 2),
+      vsync: this,
+    )..repeat(reverse: true);
+  }
+
+  @override
+  void dispose() {
+    smallStarController1.dispose();
+    largeStarController.dispose();
+    smallStarController2.dispose();
+    super.dispose();
   }
 
   void setHistory() {
@@ -80,30 +101,13 @@ class _StartTrainingNewState extends State<StartTrainingNew>
   }
 
   Future<bool?> _showThankYouDialog() async {
-    // Animation Controllers for the icons
-    AnimationController smallStarController1 = AnimationController(
-      duration: const Duration(seconds: 2),
-      vsync: this,
-    )
-      ..repeat(reverse: true);
-    AnimationController largeStarController = AnimationController(
-      duration: const Duration(seconds: 2),
-      vsync: this,
-    )
-      ..repeat(reverse: true);
-    AnimationController smallStarController2 = AnimationController(
-      duration: const Duration(seconds: 2),
-      vsync: this,
-    )
-      ..repeat(reverse: true);
-
     return showDialog<bool>(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           backgroundColor: Colors.white,
           shape:
-          RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
           title: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -131,7 +135,7 @@ class _StartTrainingNewState extends State<StartTrainingNew>
               Text(
                 "Training Complete",
                 style:
-                TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+                    TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
                 textAlign: TextAlign.center,
               ),
             ],
@@ -145,12 +149,7 @@ class _StartTrainingNewState extends State<StartTrainingNew>
             TextButton(
               child: Text("Close", style: TextStyle(color: Colors.blueAccent)),
               onPressed: () {
-                Navigator.of(context).pop(
-                    true); // Pop with 'true' indicating completion
-
-                smallStarController1.dispose();
-                largeStarController.dispose();
-                smallStarController2.dispose();
+                Navigator.of(context).pop(true);
               },
             ),
           ],
@@ -197,7 +196,7 @@ class _StartTrainingNewState extends State<StartTrainingNew>
             ProgressSection(
               selectedExercise: selectedExercise,
               onAllSetsCompleted:
-              selectNextExercise, // Pass the new method as a callback
+                  selectNextExercise, // Pass the new method as a callback
             ),
             // ## exercise scroll row
             ExerciseScrollRow(
