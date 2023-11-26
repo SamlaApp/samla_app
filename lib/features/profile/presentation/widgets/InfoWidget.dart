@@ -61,9 +61,7 @@ class _InfoWidgetState extends State<InfoWidget> {
   }
 
   Future<void> _saveInfo() async {
-    // You can handle saving data here
-    print(double.parse(_weightController.text));
-    // if (_formKey.currentState != null && _formKey.currentState!.validate()) {
+    // You can handle saving data here// if (_formKey.currentState != null && _formKey.currentState!.validate()) {
     final weight = double.parse(_weightController.text);
     final steps = int.parse(_stepsController.text);
     final calories = int.parse(_caloriesController.text);
@@ -92,7 +90,7 @@ class _InfoWidgetState extends State<InfoWidget> {
               );
             });
 
-            return Center(child: Text('Could not fetch0111 the user goal'));
+            return Center(child: Text('Could not fetch the user goal'));
           } else if (state is UserGoalloaded) {
             var goal = state.userGoal;
             _weightController.text = '${goal.targetWeight}';
@@ -188,7 +186,7 @@ class _InfoWidgetState extends State<InfoWidget> {
                                           const EdgeInsets.fromLTRB(0, 0, 0, 8),
                                       child: Icon(
                                         Icons.directions_walk,
-                                        color: Colors.black38,
+                                        color: themeBlue,
                                       ),
                                     ),
                                     border: InputBorder.none,
@@ -243,7 +241,7 @@ class _InfoWidgetState extends State<InfoWidget> {
                                           const EdgeInsets.fromLTRB(0, 0, 0, 8),
                                       child: Icon(
                                         Icons.local_fire_department_sharp,
-                                        color: Colors.black38,
+                                        color: Colors.red,
                                       ),
                                     ),
                                     border: InputBorder.none,
@@ -282,6 +280,7 @@ class _InfoWidgetState extends State<InfoWidget> {
                         onPressed: _saveInfo,
                         child: Text(
                           'Save Info',
+                          style: TextStyle(color: Colors.white),
                         ),
                       ),
                     ),

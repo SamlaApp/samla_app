@@ -2,10 +2,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:io/ansi.dart';
 import 'package:samla_app/features/auth/data/models/user_model.dart';
+import 'package:samla_app/features/auth/presentation/pages/Login.dart';
 
 import '../../../../config/themes/common_styles.dart';
+import '../../../../core/network/samlaAPI.dart';
 import '../../../auth/auth_injection_container.dart';
 import '../../../auth/domain/entities/user.dart';
+import '../../../auth/presentation/bloc/auth_bloc.dart';
 import '../cubit/profile_cubit.dart';
 import '../pages/PersonalInfo.dart';
 import 'package:samla_app/features/profile/profile_di.dart' as di;
@@ -21,14 +24,14 @@ class SettingsWidget extends StatefulWidget {
 final user = getUser();
 
 class _SettingsWidgetState extends State<SettingsWidget> {
-  late User user2;
+  // late User user2;
   int selectedKilograms = 70; // Initial selected kilograms
   int selectedGrams = 0; // Initial selected grams
 
   final List<int> kilograms =
-      List.generate(200, (index) => index + 1); // 1 to 200 kilograms
+  List.generate(200, (index) => index + 1); // 1 to 200 kilograms
   final List<int> grams =
-      List.generate(10, (index) => index * 100); // 0 to 900 grams
+  List.generate(10, (index) => index * 100); // 0 to 900 grams
   double calories = 0; // Initial value
   double maxCalories = 3000;
   bool isEditing = false;
@@ -38,17 +41,16 @@ class _SettingsWidgetState extends State<SettingsWidget> {
 
   // Define controllers for the form fields and set initial values
   final TextEditingController _nameController =
-      TextEditingController(text: user.name);
+  TextEditingController(text: user.name);
   final TextEditingController _emailController =
-      TextEditingController(text: user.email);
+  TextEditingController(text: user.email);
   final TextEditingController _userNameController =
-      TextEditingController(text: user.username);
+  TextEditingController(text: user.username);
   final TextEditingController _phoneController =
-      TextEditingController(text: user.phone);
-  final TextEditingController _oldPassController = TextEditingController();
+  TextEditingController(text: user.phone);
   final TextEditingController _newPassController = TextEditingController();
-  final TextEditingController _ageController =
-      TextEditingController(text: '30');
+  final TextEditingController _confirmPassController = TextEditingController();
+
 
   @override
   void dispose() {
@@ -56,9 +58,9 @@ class _SettingsWidgetState extends State<SettingsWidget> {
     _userNameController.dispose();
     _emailController.dispose();
     _phoneController.dispose();
-    _oldPassController.dispose();
     _newPassController.dispose();
-    _ageController.dispose();
+    _confirmPassController.dispose();
+
     super.dispose();
   }
 
@@ -68,21 +70,38 @@ class _SettingsWidgetState extends State<SettingsWidget> {
     final userName = _userNameController.text;
     final email = _emailController.text;
     final phone = _phoneController.text;
-    final age = _ageController.text;
+    final  newPass = _newPassController.text.trim();
+    final  confirmPass = _newPassController.text.trim();
+
+    if (newPass.isNotEmpty && confirmPass.isNotEmpty) {
+      print('I entered in the condition of new password');
+      // Validate and update password
+      await profileCubit.updatePassword(newPass, confirmPass);
+    }
 
     UserModel userModel = UserModel.fromEntity(user.copyWith(
-name: name, username: userName, email: email, phone: phone)
+        name: name, username: userName, email: email, phone: phone)
     );
-    print("im in the save button");
-    print(name);
-    print(user);
+
     await profileCubit.updateUserSetting(userModel);
 
     print('Name: $name');
     print('UserName: $userName');
     print('Email: $email');
     print('Phone: $phone');
-    print('Age: $age');
+    print('Pass: $newPass');
+    print('Pass: $confirmPass');
+
+  }
+
+  Future<void> _deactiveAcount() async {
+    // Call the deactivate account function
+    print('im in the delete action');
+    await profileCubit.deleteUser();
+    authBloc.add(LogOutEvent(context));
+
+    profileCubit.onAccountDeactivated = () {
+    };
   }
 
   @override
@@ -233,43 +252,6 @@ name: name, username: userName, email: email, phone: phone)
             ),
 
             Text(
-              'Current Password',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 14.0,
-                color: themeBlue,
-              ),
-            ),
-            Container(
-              margin: EdgeInsets.fromLTRB(0, 5, 0, 0),
-              padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
-              decoration: textField_decoration,
-              child: TextField(
-                controller: _oldPassController,
-                style: inputText,
-                cursorColor: themeBlue,
-                decoration: InputDecoration(
-                  hintText: 'Enter your current password',
-                  hintStyle: TextStyle(
-                    color: theme_grey,
-                  ),
-                  prefixIcon: Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 0, 0, 8),
-                    child: Icon(
-                      Icons.key_outlined,
-                      color: Colors.black38,
-                    ),
-                  ),
-                  border: InputBorder.none,
-                ),
-              ),
-            ),
-
-            SizedBox(
-              height: 15,
-            ),
-
-            Text(
               'New Password',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
@@ -302,6 +284,43 @@ name: name, username: userName, email: email, phone: phone)
               ),
             ),
 
+            SizedBox(
+              height: 15,
+            ),
+
+            Text(
+              'Confirm Password',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 14.0,
+                color: themeBlue,
+              ),
+            ),
+            Container(
+              margin: EdgeInsets.fromLTRB(0, 5, 0, 0),
+              padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
+              decoration: textField_decoration,
+              child: TextField(
+                controller: _confirmPassController,
+                style: inputText,
+                cursorColor: themeBlue,
+                decoration: InputDecoration(
+                  hintText: 'Confirm your new password',
+                  hintStyle: TextStyle(
+                    color: theme_grey,
+                  ),
+                  prefixIcon: Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 0, 0, 8),
+                    child: Icon(
+                      Icons.key_outlined,
+                      color: Colors.black38,
+                    ),
+                  ),
+                  border: InputBorder.none,
+                ),
+              ),
+            ),
+
             SizedBox(height: 20),
             Center(
               child: ElevatedButton(
@@ -311,7 +330,7 @@ name: name, username: userName, email: email, phone: phone)
                     // Button padding
                     shape: RoundedRectangleBorder(
                       borderRadius:
-                          BorderRadius.circular(8), // Button border radius
+                      BorderRadius.circular(8), // Button border radius
                     ),
                     textStyle: TextStyle(
                       fontWeight: FontWeight.bold,
@@ -319,6 +338,9 @@ name: name, username: userName, email: email, phone: phone)
                 onPressed: _saveInfo,
                 child: Text(
                   'Save Info',
+                  style: TextStyle(
+                    color: Colors.white
+                  ),
                 ),
               ),
             ),
@@ -331,14 +353,17 @@ name: name, username: userName, email: email, phone: phone)
                     padding: EdgeInsets.symmetric(horizontal: 20, vertical: 13),
                     shape: RoundedRectangleBorder(
                       borderRadius:
-                          BorderRadius.circular(8), // Button border radius
+                      BorderRadius.circular(8), // Button border radius
                     ),
                     textStyle: TextStyle(
                       fontWeight: FontWeight.bold,
                     )),
-                onPressed: _saveInfo,
+                onPressed: _deactiveAcount,
                 child: Text(
                   'Deactive Account',
+                  style: TextStyle(
+                    color: Colors.white
+                  ),
                 ),
               ),
             ),

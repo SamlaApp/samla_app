@@ -63,4 +63,42 @@ class UpdateUserSettingState extends ProfileState {
   const UpdateUserSettingState({required this.message});
 }
 
+// // Add this class to your existing profile_state.dart file
+// class UpdatePasswordState extends ProfileState {
+//   final String message;
+//
+//   UpdatePasswordState({
+//     required this.message,
+//   });
+//
+//   @override
+//   List<Object> get props => [message];
+// }
 
+class UpdatePasswordLoading extends ProfileState {}
+
+// class UpdatePasswordLoaded extends ProfileState {
+//   final User user;
+//   const UpdatePasswordLoaded({required this.user});
+// }
+
+class UpdatePasswordErrorState extends ProfileState {
+  final String message;
+
+  const UpdatePasswordErrorState({required this.message});
+
+}
+
+class UpdatePasswordInitial extends ProfileState {}
+
+class UpdatePasswordSuccess extends ProfileState {}
+
+
+class DeactivationSuccess extends ProfileState {}
+
+class DeactivationFailure extends ProfileState {
+  final String errorMessage;
+
+  DeactivationFailure(this.errorMessage);
+
+}

@@ -10,6 +10,7 @@ import 'package:samla_app/core/network/samlaAPI.dart';
 import 'package:samla_app/features/auth/data/models/user_model.dart';
 import 'package:samla_app/features/auth/domain/entities/user.dart';
 import 'package:samla_app/features/profile/domain/Goals.dart';
+import 'package:samla_app/features/profile/presentation/widgets/SettingsWidget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http_parser/http_parser.dart';
 
@@ -252,8 +253,7 @@ class GoalsRepository {
   Future<Either<Failure, User>> updateUserSetting(User user) async {
     if (await networkInfo.isConnected) {
       try {
-        print('im heeereee');
-        print(user);
+
         http.MultipartFile? multipartFile = null;
         final data = UserModel.fromEntity(user).toJson();
         final res = await samlaAPI(
@@ -263,7 +263,7 @@ class GoalsRepository {
             file: multipartFile);
 
         final resBody = json.decode(await res.stream.bytesToString());
-        print(resBody);
+
         if (res.statusCode != 200) {
           return Left(ServerFailure(message: resBody['message']));
         }
@@ -278,5 +278,39 @@ class GoalsRepository {
       return Left(ServerFailure(message: 'No Internet Connection'));
     }
   }
+
+  Future<Either<Failure, Unit>> updatePassword(String newPassword, String confirmPass) async {
+    if (await networkInfo.isConnected) {
+      try {
+        final res = await samlaAPI(
+          data: {"password": newPassword, "password_confirmation": confirmPass},
+          endPoint: '/user/update_password',
+          method: 'POST',
+        );
+
+
+        final resBody = json.decode(await res.stream.bytesToString());
+
+        print('im in the resbody checking if the password has been passed or not');
+        print(resBody);
+        if (res.statusCode == 200) {
+          return Right(unit);
+        } else {
+          return Left(ServerFailure(message: resBody['message']));
+        }
+      } on ServerException catch (e) {
+        return Left(ServerFailure(message: e.message));
+      } catch (e) {
+        return Left(ServerFailure(message: 'Something went wrong'));
+      }
+    } else {
+      return Left(ServerFailure(message: 'No Internet Connection'));
+    }
+  }
+
+
+
+
+
 
 }
