@@ -4,7 +4,6 @@ import 'package:samla_app/features/training/domain/entities/ExerciseDay.dart';
 import 'package:samla_app/features/training/presentation/cubit/Exercises/exercise_cubit.dart';
 import 'package:samla_app/features/training/training_di.dart' as di;
 
-
 class ExerciseItem extends StatefulWidget {
   final int? id;
   final String name;
@@ -36,8 +35,10 @@ class ExerciseItem extends StatefulWidget {
 }
 
 class _ExerciseItemState extends State<ExerciseItem> {
-  final String _baseURL = 'https://samla.mohsowa.com/api/training/image/'; // api url for images
-  String capitalize(String s) => s[0].toUpperCase() + s.substring(1); // capitalize first letter of string
+  final String _baseURL =
+      'https://samla.mohsowa.com/api/training/image/'; // api url for images
+  String capitalize(String s) =>
+      s[0].toUpperCase() + s.substring(1); // capitalize first letter of string
 
   final exercisesCubit = di.sl.get<ExerciseCubit>();
 
@@ -62,7 +63,7 @@ class _ExerciseItemState extends State<ExerciseItem> {
             content: Text('Please select at least one day'),
           ),
         );
-      }else{
+      } else {
         ExerciseDay exerciseDay = ExerciseDay(
           id: widget.id,
           sunday: sun,
@@ -83,9 +84,7 @@ class _ExerciseItemState extends State<ExerciseItem> {
             content: Text('Exercise added to plan'),
           ),
         );
-
       }
-
     }
   }
 
@@ -129,243 +128,231 @@ class _ExerciseItemState extends State<ExerciseItem> {
               ],
             ),
           ),
-
           _buildSummaryRow(),
-
           if (!_isExpanded)
-          Form(
-            key: _formKey,
-            child: Column(
-              children: [
-                const SizedBox(height: 5),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 22.5),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      const Text(
-                        'Select Days: ',
-                        style: TextStyle(
-                          color: white,
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
+            Form(
+              key: _formKey,
+              child: Column(
+                children: [
+                  const SizedBox(height: 5),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 22.5),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        const Text(
+                          'Select Days: ',
+                          style: TextStyle(
+                            color: white,
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
-                      const Spacer(),
-                      SizedBox(
-                        height: 25,
-                        child: ElevatedButton.icon(
-                            onPressed: () {
-                              _submitForm();
-                            },
-                            icon: const Icon(Icons.add, color: themeDarkBlue, size: 20),
-                            label: const Text('Add ',
-                                style: TextStyle(
-                                    color: themeDarkBlue,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold)),
-                            style: ElevatedButton.styleFrom(
-                              primary: white,
-                              onPrimary: white,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(32.0),
-                              ),
-                            )),
-                      ),
-
-                    ],
+                        const Spacer(),
+                        SizedBox(
+                          height: 25,
+                          child: ElevatedButton.icon(
+                              onPressed: () {
+                                _submitForm();
+                              },
+                              icon: const Icon(Icons.add,
+                                  color: themeDarkBlue, size: 20),
+                              label: const Text('Add ',
+                                  style: TextStyle(
+                                      color: themeDarkBlue,
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.bold)),
+                              style: ElevatedButton.styleFrom(
+                                foregroundColor: white,
+                                backgroundColor: white,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(32.0),
+                                ),
+                              )),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                const SizedBox(height: 5),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          const Text(
-                            'Sun',
-                            style: TextStyle(
-                                color: white,
-                                fontSize: 14,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          Checkbox(
-                            value: sun,
-                            onChanged: (bool? value) {
-                              setState(() {
-                                sun = value!;
-                              });
-                            },
-                            shape: const CircleBorder(),
-                            activeColor: white,
-                          ),
-                        ],
-                      ),
-
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          const Text(
-                            'Mon',
-                            style: TextStyle(
-                                color: white,
-                                fontSize: 14,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          Checkbox(
-                            value: mon,
-                            onChanged: (bool? value) {
-                              setState(() {
-                                mon = value!;
-                              });
-                            },
-                            shape: const CircleBorder(),
-                            activeColor: white,
-                          ),
-                        ],
-                      ),
-
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          const Text(
-                            'Tue',
-                            style: TextStyle(
-                                color: white,
-                                fontSize: 14,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          Checkbox(
-                            value: tue,
-                            onChanged: (bool? value) {
-                              setState(() {
-                                tue = value!;
-                              });
-                            },
-                            shape: const CircleBorder(),
-                            activeColor: white,
-                          ),
-                        ],
-                      ),
-
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          const Text(
-                            'Wed',
-                            style: TextStyle(
-                                color: white,
-                                fontSize: 14,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          Checkbox(
-                            value: wed,
-                            onChanged: (bool? value) {
-                              setState(() {
-                                wed = value!;
-                              });
-                            },
-                            shape: const CircleBorder(),
-                            activeColor: white,
-                          ),
-                        ],
-                      ),
-
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          const Text(
-                            'Thu',
-                            style: TextStyle(
-                                color: white,
-                                fontSize: 14,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          Checkbox(
-                            value: thu,
-                            onChanged: (bool? value) {
-                              setState(() {
-                                thu = value!;
-                              });
-                            },
-                            shape: const CircleBorder(),
-                            activeColor: white,
-                          ),
-                        ],
-                      ),
-
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          const Text(
-                            'Fri',
-                            style: TextStyle(
-                                color: white,
-                                fontSize: 14,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          Checkbox(
-                            value: fri,
-                            onChanged: (bool? value) {
-                              setState(() {
-                                fri = value!;
-                              });
-                            },
-                            shape: const CircleBorder(),
-                            activeColor: white,
-                          ),
-                        ],
-                      ),
-
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          const Text(
-                            'Sat',
-                            style: TextStyle(
-                                color: white,
-                                fontSize: 14,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          Checkbox(
-                            value: sat,
-                            onChanged: (bool? value) {
-                              setState(() {
-                                sat = value!;
-                              });
-                            },
-                            shape: const CircleBorder(),
-                            activeColor: white,
-                          ),
-                        ],
-                      ),
-                    ],
+                  const SizedBox(height: 5),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            const Text(
+                              'Sun',
+                              style: TextStyle(
+                                  color: white,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            Checkbox(
+                              value: sun,
+                              onChanged: (bool? value) {
+                                setState(() {
+                                  sun = value!;
+                                });
+                              },
+                              shape: const CircleBorder(),
+                              activeColor: white,
+                            ),
+                          ],
+                        ),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            const Text(
+                              'Mon',
+                              style: TextStyle(
+                                  color: white,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            Checkbox(
+                              value: mon,
+                              onChanged: (bool? value) {
+                                setState(() {
+                                  mon = value!;
+                                });
+                              },
+                              shape: const CircleBorder(),
+                              activeColor: white,
+                            ),
+                          ],
+                        ),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            const Text(
+                              'Tue',
+                              style: TextStyle(
+                                  color: white,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            Checkbox(
+                              value: tue,
+                              onChanged: (bool? value) {
+                                setState(() {
+                                  tue = value!;
+                                });
+                              },
+                              shape: const CircleBorder(),
+                              activeColor: white,
+                            ),
+                          ],
+                        ),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            const Text(
+                              'Wed',
+                              style: TextStyle(
+                                  color: white,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            Checkbox(
+                              value: wed,
+                              onChanged: (bool? value) {
+                                setState(() {
+                                  wed = value!;
+                                });
+                              },
+                              shape: const CircleBorder(),
+                              activeColor: white,
+                            ),
+                          ],
+                        ),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            const Text(
+                              'Thu',
+                              style: TextStyle(
+                                  color: white,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            Checkbox(
+                              value: thu,
+                              onChanged: (bool? value) {
+                                setState(() {
+                                  thu = value!;
+                                });
+                              },
+                              shape: const CircleBorder(),
+                              activeColor: white,
+                            ),
+                          ],
+                        ),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            const Text(
+                              'Fri',
+                              style: TextStyle(
+                                  color: white,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            Checkbox(
+                              value: fri,
+                              onChanged: (bool? value) {
+                                setState(() {
+                                  fri = value!;
+                                });
+                              },
+                              shape: const CircleBorder(),
+                              activeColor: white,
+                            ),
+                          ],
+                        ),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            const Text(
+                              'Sat',
+                              style: TextStyle(
+                                  color: white,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            Checkbox(
+                              value: sat,
+                              onChanged: (bool? value) {
+                                setState(() {
+                                  sat = value!;
+                                });
+                              },
+                              shape: const CircleBorder(),
+                              activeColor: white,
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-
-
           if (_isExpanded) _buildExpandedContent(),
         ],
       ),
     );
   }
-
-
 
   Widget _buildSummaryRow() {
     return Padding(
@@ -432,31 +419,23 @@ class _ExerciseItemState extends State<ExerciseItem> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-
-
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(8),
-              child: Image.network(
-                _baseURL + widget.gifUrl,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) {
-                  return Container();
-                },
-                loadingBuilder: (context, child, loadingProgress) {
-                  if (loadingProgress == null) return child;
-                  return  const Center(
-                    child: CircularProgressIndicator(
-                      color: white,
-                    ),
-                  );
-                }
-              ),
+              child: Image.network(_baseURL + widget.gifUrl, fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) {
+                return Container();
+              }, loadingBuilder: (context, child, loadingProgress) {
+                if (loadingProgress == null) return child;
+                return const Center(
+                  child: CircularProgressIndicator(
+                    color: white,
+                  ),
+                );
+              }),
             ),
           ),
-
-
           const SizedBox(height: 10),
           Padding(
             padding: const EdgeInsets.all(8.0),

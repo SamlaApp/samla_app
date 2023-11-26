@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:samla_app/config/themes/common_styles.dart';
-import 'package:samla_app/features/training/domain/entities/ExerciseDay.dart';
 import 'package:samla_app/features/training/presentation/cubit/Exercises/exercise_cubit.dart';
 import 'package:samla_app/features/training/presentation/cubit/viewDayExercise/viewDayExercise_cubit.dart';
 import 'package:samla_app/features/training/training_di.dart' as di;
-
 
 class ViewDayExerciseItem extends StatefulWidget {
   final int? id;
@@ -41,8 +39,10 @@ class ViewDayExerciseItem extends StatefulWidget {
 }
 
 class _ViewDayExerciseItemState extends State<ViewDayExerciseItem> {
-  final String _baseURL = 'https://samla.mohsowa.com/api/training/image/'; // api url for images
-  String capitalize(String s) => s[0].toUpperCase() + s.substring(1); // capitalize first letter of string
+  final String _baseURL =
+      'https://samla.mohsowa.com/api/training/image/'; // api url for images
+  String capitalize(String s) =>
+      s[0].toUpperCase() + s.substring(1); // capitalize first letter of string
 
   final exercisesCubit = di.sl.get<ExerciseCubit>();
   final viewDayExerciseCubit = di.sl.get<ViewDayExerciseCubit>();
@@ -90,8 +90,12 @@ class _ViewDayExerciseItemState extends State<ViewDayExerciseItem> {
                 // delete button
                 IconButton(
                   onPressed: () {
-                    exercisesCubit.removeExerciseFromPlan(exerciseID: widget.id!, day: widget.day, templateID: widget.templateId);
-                    viewDayExerciseCubit.getExercisesDay(day: widget.day, templateID: widget.templateId);
+                    exercisesCubit.removeExerciseFromPlan(
+                        exerciseID: widget.id!,
+                        day: widget.day,
+                        templateID: widget.templateId);
+                    viewDayExerciseCubit.getExercisesDay(
+                        day: widget.day, templateID: widget.templateId);
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
                         content: Text('Exercise removed from plan'),
@@ -108,16 +112,12 @@ class _ViewDayExerciseItemState extends State<ViewDayExerciseItem> {
               ],
             ),
           ),
-
           _buildSummaryRow(),
-
           if (_isExpanded) _buildExpandedContent(),
         ],
       ),
     );
   }
-
-
 
   Widget _buildSummaryRow() {
     return Padding(
@@ -184,31 +184,23 @@ class _ViewDayExerciseItemState extends State<ViewDayExerciseItem> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-
-
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(8),
-              child: Image.network(
-                  _baseURL + widget.gifUrl,
-                  fit: BoxFit.cover,
+              child: Image.network(_baseURL + widget.gifUrl, fit: BoxFit.cover,
                   errorBuilder: (context, error, stackTrace) {
-                    return Container();
-                  },
-                  loadingBuilder: (context, child, loadingProgress) {
-                    if (loadingProgress == null) return child;
-                    return  const Center(
-                      child: CircularProgressIndicator(
-                        color: Colors.white,
-                      ),
-                    );
-                  }
-              ),
+                return Container();
+              }, loadingBuilder: (context, child, loadingProgress) {
+                if (loadingProgress == null) return child;
+                return const Center(
+                  child: CircularProgressIndicator(
+                    color: Colors.white,
+                  ),
+                );
+              }),
             ),
           ),
-
-
           const SizedBox(height: 10),
           Padding(
             padding: const EdgeInsets.all(8.0),

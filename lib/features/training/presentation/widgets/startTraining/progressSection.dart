@@ -240,75 +240,53 @@ class _ProgressSectionState extends State<ProgressSection>
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         totalSets > 1 // Check if there's more than 1 circle to delete
-            ? IconButton(
-                icon: const Icon(
-                  Icons.remove_circle,
-                  size: 33,
+            ? Container(
+                width: 40,
+                height: 40,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [themePink, themeDarkBlue],
+                  ),
+                  shape: BoxShape.circle,
+                  // You can adjust the shape as needed
                 ),
-                onPressed: () {
-                  setState(() {
-                    totalSets--;
-                  });
-                },
+                child: GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      totalSets--;
+                    });
+                  },
+                  child: const Icon(Icons.remove, size: 33, color: white),
+                ),
               )
             : const SizedBox(),
         SizedBox(
           height: 60,
           width: MediaQuery.of(context).size.width * 0.33,
-          child: ListView(
-            scrollDirection: Axis.horizontal,
-            children: [
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: List.generate(totalSets, (index) {
-                  return GestureDetector(
-                    onTap: () {
-                      // make the tapped one finished
-                      setState(() {
-                        finishedSets = index + 1;
-                      });
-                    },
-                    child: AnimatedContainer(
-                      duration: const Duration(milliseconds: 500),
-                      width: 30,
-                      height: 30,
-                      margin: const EdgeInsets.symmetric(horizontal: 4),
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(
-                          color: index < finishedSets ? themeBlue : Colors.grey,
-                          width: 2,
-                        ),
-                        color: index < finishedSets
-                            ? themeBlue
-                            : Colors.transparent,
-                      ),
-                      child: const Center(
-                        child: Icon(
-                          Icons.check,
-                          color: white,
-                          size: 20,
-                        ),
-                      ),
-                    ),
-                  );
-                }),
-              ),
-            ],
-          ),
+          child: customBorderContainer(),
         ),
-        IconButton(
-          icon: const Icon(
-            Icons.add_circle,
-            size: 33,
+        Container(
+          width: 40,
+          height: 40,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [themePink, themeDarkBlue],
+            ),
+            shape: BoxShape.circle,
+            // You can adjust the shape as needed
           ),
-          onPressed: () {
-            if (totalSets < 6) {
+          child: GestureDetector(
+            onTap: () {
               setState(() {
                 totalSets++;
               });
-            }
-          },
+            },
+            child: const Icon(
+              Icons.add,
+              size: 33,
+              color: Colors.white, // Set the icon color to match your needs
+            ),
+          ),
         ),
         const SizedBox(width: 10),
         Row(
@@ -578,14 +556,17 @@ class _ProgressSectionState extends State<ProgressSection>
         setState(() {
           finishedSets++;
         });
-
-        // Show a snackbar message
-        const snackBar = SnackBar(
-          content: Text('Great! Rest now for 45 seconds'),
-          duration: Duration(seconds: 3),
-        );
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
-
+        if (finishedSets >= totalSets) {
+          // Directly invoke the completion callback
+          widget.onAllSetsCompleted();
+        } else {
+          // Show a snackbar message for all sets except the last
+          const snackBar = SnackBar(
+            content: Text('Great! Rest now for 45 seconds'),
+            duration: Duration(seconds: 3),
+          );
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        }
         // Record the history based on the type of exercise
         if (widget.selectedExercise.bodyPart == 'cardio') {
           double totalDistanceKm = kilometers + (meters / 100.0);
@@ -682,6 +663,95 @@ class _ProgressSectionState extends State<ProgressSection>
           ),
         ],
       ),
+    );
+  }
+
+  Widget customBorderContainer() {
+    return Stack(
+      clipBehavior: Clip.none,
+      alignment: Alignment.center,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(top: 3, bottom: 0),
+          child: Container(
+            width: MediaQuery.of(context).size.width * 0.33,
+            height: MediaQuery.of(context).size.width * 0.15,
+            // Decreased width
+            padding: const EdgeInsets.fromLTRB(12, 15, 12, 12),
+            // Smaller padding
+            decoration: BoxDecoration(
+              border:
+                  Border.all(color: themeDarkBlue.withOpacity(0.5), width: 0.9),
+              // Smaller border width
+              borderRadius: BorderRadius.circular(6), // Smaller border radius
+            ),
+            child: ListView(
+              scrollDirection: Axis.horizontal,
+              children: [
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: List.generate(totalSets, (index) {
+                    return GestureDetector(
+                      onTap: () {
+                        // make the tapped one finished
+                        setState(() {
+                          finishedSets = index + 1;
+                        });
+                      },
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 500),
+                        width: 26,
+                        height: 26,
+                        margin: const EdgeInsets.symmetric(horizontal: 4),
+                        decoration: BoxDecoration(
+                          gradient: const LinearGradient(
+                            colors: [themePink, themeDarkBlue],
+                          ),
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: index < finishedSets ? white : Colors.grey,
+                            width: 2,
+                          ),
+                          color: index < finishedSets
+                              ? themeBlue
+                              : Colors.transparent,
+                        ),
+                        child: const Center(
+                          child: Icon(
+                            Icons.check,
+                            color: white,
+                            size: 15,
+                          ),
+                        ),
+                      ),
+                    );
+                  }),
+                ),
+              ],
+            ),
+          ),
+        ),
+        Positioned(
+          top: -6,
+          left: -5, // Adjusted left position
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(8), // Smaller border radius
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
+              decoration: const BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(8)),
+                gradient: LinearGradient(
+                  colors: [themePink, themeDarkBlue],
+                ),
+              ),
+              child: const Padding(
+                padding: EdgeInsets.all(1),
+                child: Text('Your Sets', style: TextStyle(color: Colors.white)),
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
