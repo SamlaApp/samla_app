@@ -2,13 +2,18 @@ import 'dart:io';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 import 'package:samla_app/features/auth/auth_injection_container.dart';
 import 'package:samla_app/features/auth/domain/entities/user.dart';
 import 'package:samla_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:samla_app/features/profile/data/goals_repository.dart';
 import 'package:samla_app/features/profile/domain/Goals.dart';
+import 'package:samla_app/features/profile/presentation/widgets/SettingsWidget.dart';
+import 'package:http/http.dart' as http;
 
 part 'profile_state.dart';
+
+
 
 class ProfileCubit extends Cubit<ProfileState> {
   final GoalsRepository goalsRepository;
@@ -121,4 +126,47 @@ class ProfileCubit extends Cubit<ProfileState> {
           emit(UpdateUserSettingLoaded(user: user));
         });
   }
+
+
+  Future<void> updatePassword(String newPassword, String confirmPassword) async {
+    emit(UpdatePasswordLoading());
+
+    if (newPassword != confirmPassword) {
+      emit(UpdatePasswordErrorState(message: 'Passwords do not match'));
+      return;
+    }
+    final result = await goalsRepository.updatePassword(newPassword,confirmPassword);
+    result.fold(
+          (failure) => emit(UpdatePasswordErrorState(message: failure.message)),
+          (_) => emit(UpdatePasswordSuccess()),
+    );
+  }
+
+  void Function()? onAccountDeactivated;
+  Future<void> deleteUser() async {
+print(user);
+    try {
+      // Make a DELETE request to the API endpoint
+      final response = await http.delete(
+        Uri.parse('https://samla.mohsowa.com/api/user/delete'),
+        headers: {
+          'Authorization': 'Bearer ${user.accessToken}', // Include your authentication token if required
+        },
+      );
+
+      print(response.body);
+
+      // Check if the request was successful (status code 200)
+      if (response.statusCode == 200) {
+        // Handle success, maybe navigate to the login screen
+        onAccountDeactivated?.call();
+      } else {
+        // Handle errors, you might want to show an error message
+      }
+    } catch (error) {
+      // Handle exceptions, e.g., network errors
+    }
+  }
+
+
 }
