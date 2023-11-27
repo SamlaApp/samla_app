@@ -184,38 +184,40 @@ class StartTrainingState extends State<StartTraining>
         ),
         iconTheme: const IconThemeData(color: white),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            // ## selected exercise section
-            SelectedExerciseDisplay(
-              selectedExercise: selectedExercise,
-              historyCubit: historyCubit,
-            ),
-            // buildProgressSection(),
-            ProgressSection(
-              selectedExercise: selectedExercise,
-              onAllSetsCompleted:
-                  selectNextExercise, // Pass the new method as a callback
-            ),
-            // ## exercise scroll row
-            ExerciseScrollRow(
-              exercises: widget.exercises,
-              selectedExercise: selectedExercise,
-              onExerciseSelect: (ExerciseLibrary exercise) {
-                setState(() {
-                  selectedExercise = exercise;
-                  loadHistoryForExercise();
-                });
-              },
-            ),
-            //_showThankYouDialog(), button to show the dialog
-            ElevatedButton(
-                onPressed: () {
-                  _showThankYouDialog();
+      body: Center(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              // ## selected exercise section
+              SelectedExerciseDisplay(
+                selectedExercise: selectedExercise,
+                historyCubit: historyCubit,
+              ),
+              // buildProgressSection(),
+              ProgressSection(
+                selectedExercise: selectedExercise,
+                onAllSetsCompleted:
+                    selectNextExercise, // Pass the new method as a callback
+              ),
+              // ## exercise scroll row
+              ExerciseScrollRow(
+                exercises: widget.exercises,
+                selectedExercise: selectedExercise,
+                onExerciseSelect: (ExerciseLibrary exercise) {
+                  setState(() {
+                    selectedExercise = exercise;
+                    loadHistoryForExercise();
+                  });
                 },
-                child: Text('set Dialog'))
-          ],
+              ),
+              //_showThankYouDialog(), button to show the dialog
+              // ElevatedButton(
+              //     onPressed: () {
+              //       _showThankYouDialog();
+              //     },
+              //     child: Text('set Dialog'))
+            ],
+          ),
         ),
       ),
     );

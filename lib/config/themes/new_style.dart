@@ -7,7 +7,7 @@ const Color themePink = Color.fromRGBO(213, 20, 122, 1);
 const Color themeRed = Color.fromRGBO(117, 20, 22, 1);
 // F7923F
 const Color themeOrange = Color.fromRGBO(247, 146, 63, 1);
-
+const Color themeDarkOrange = Color.fromRGBO(220, 95, 33, 1);
 Color primaryColor = themeDarkBlue.withOpacity(0.8);
 const Color inputFieldColor = Colors.white;
 Color themeGrey = themeDarkBlue.withOpacity(0.5);

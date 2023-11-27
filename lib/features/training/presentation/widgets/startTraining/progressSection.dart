@@ -23,7 +23,7 @@ class ProgressSection extends StatefulWidget {
 
 class _ProgressSectionState extends State<ProgressSection>
     with TickerProviderStateMixin {
-  int wholeNumberWeight = 0; // For the integer weight picker
+  int wholeNumberWeight = 25; // For the integer weight picker
   double fractionalWeight = 0; // For the fractional weight picker
   double totalWeight = 0; // To store the combined weight
   int reps = 10;
@@ -197,7 +197,7 @@ class _ProgressSectionState extends State<ProgressSection>
               children: [
                 SizedBox(
                   // according to the screen width
-                  width: MediaQuery.of(context).size.width * 0.12,
+                  width: MediaQuery.of(context).size.width * 0.15,
                   child: numberWeightPicker(),
                 ),
                 SizedBox(
@@ -217,7 +217,7 @@ class _ProgressSectionState extends State<ProgressSection>
             Row(
               children: [
                 SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.2,
+                  width: MediaQuery.of(context).size.width * 0.25,
                   child: buildRepsPicker(),
                 ),
               ],
@@ -433,15 +433,24 @@ class _ProgressSectionState extends State<ProgressSection>
   Widget buildMetersPicker() {
     List<int> meterOptions = [
       00,
+      05,
       10,
       15,
+      20,
       25,
+      30,
       35,
+      40,
       45,
+      50,
       55,
+      60,
       65,
+      70,
       75,
+      80,
       85,
+      90,
       95,
     ];
     int meterIndex =
@@ -479,7 +488,7 @@ class _ProgressSectionState extends State<ProgressSection>
     setState(() {
       // Convert kilometers to meters
       totalDistance = kilometers + (meters / 100);
-      print(totalDistance);
+      //print(totalDistance);
     });
   }
 
@@ -543,21 +552,18 @@ class _ProgressSectionState extends State<ProgressSection>
       style: ElevatedButton.styleFrom(
         padding:
             const EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 10),
-        backgroundColor: themeBlue,
+        backgroundColor: themeRed,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
         ),
       ),
       onPressed: () {
-        // Start the timer (make sure this method is implemented correctly)
         startTimer();
 
-        // Update the state for finished sets
         setState(() {
           finishedSets++;
         });
         if (finishedSets >= totalSets) {
-          // Directly invoke the completion callback
           widget.onAllSetsCompleted();
         } else {
           // Show a snackbar message for all sets except the last
@@ -600,7 +606,7 @@ class _ProgressSectionState extends State<ProgressSection>
           });
         }
       },
-      child: const Icon(Icons.check, size: 30),
+      child: const Icon(Icons.check, size: 30, color: white),
     );
   }
 
@@ -649,8 +655,8 @@ class _ProgressSectionState extends State<ProgressSection>
                   builder: (context, child) {
                     return CircularProgressIndicator(
                       value: _animation?.value,
-                      color: themeGrey,
-                      backgroundColor: themeBlue,
+                      color: themeRed,
+                      backgroundColor: themeDarkOrange,
                     );
                   },
                 ),
@@ -685,50 +691,7 @@ class _ProgressSectionState extends State<ProgressSection>
               // Smaller border width
               borderRadius: BorderRadius.circular(6), // Smaller border radius
             ),
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-              children: [
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: List.generate(totalSets, (index) {
-                    return GestureDetector(
-                      onTap: () {
-                        // make the tapped one finished
-                        setState(() {
-                          finishedSets = index + 1;
-                        });
-                      },
-                      child: AnimatedContainer(
-                        duration: const Duration(milliseconds: 500),
-                        width: 26,
-                        height: 26,
-                        margin: const EdgeInsets.symmetric(horizontal: 4),
-                        decoration: BoxDecoration(
-                          gradient: const LinearGradient(
-                            colors: [themePink, themeDarkBlue],
-                          ),
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                            color: index < finishedSets ? white : Colors.grey,
-                            width: 2,
-                          ),
-                          color: index < finishedSets
-                              ? themeBlue
-                              : Colors.transparent,
-                        ),
-                        child: const Center(
-                          child: Icon(
-                            Icons.check,
-                            color: white,
-                            size: 15,
-                          ),
-                        ),
-                      ),
-                    );
-                  }),
-                ),
-              ],
-            ),
+            child: buildSetsRow(),
           ),
         ),
         Positioned(
@@ -753,5 +716,57 @@ class _ProgressSectionState extends State<ProgressSection>
         ),
       ],
     );
+  }
+
+  Widget buildSetsRow() {
+    List<Widget> setsWidgets = List.generate(totalSets, (index) {
+      return GestureDetector(
+        onTap: () {
+          setState(() {
+            finishedSets = index + 1;
+          });
+        },
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 500),
+          width: 26,
+          height: 26,
+          margin: const EdgeInsets.symmetric(horizontal: 4),
+          decoration: BoxDecoration(
+            gradient: const LinearGradient(
+              colors: [themePink, themeDarkBlue],
+            ),
+            shape: BoxShape.circle,
+            border: Border.all(
+              color: index < finishedSets ? white : Colors.grey,
+              width: 2,
+            ),
+            color: index < finishedSets ? themeBlue : Colors.transparent,
+          ),
+          child: const Center(
+            child: Icon(
+              Icons.check,
+              color: white,
+              size: 15,
+            ),
+          ),
+        ),
+      );
+    });
+
+    if (totalSets <= 3) {
+      return Center(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: setsWidgets,
+        ),
+      );
+    } else {
+      return SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          children: setsWidgets,
+        ),
+      );
+    }
   }
 }
