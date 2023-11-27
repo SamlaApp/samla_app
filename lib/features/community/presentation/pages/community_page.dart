@@ -306,15 +306,15 @@ class _CommunityPageState extends State<CommunityPage> {
                               color: themeDarkBlue.withOpacity(0.7),
                               fontSize: 16,
                               fontWeight: FontWeight.w500)),
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: Text(
-                          '${post.date}',
-                          style: TextStyle(
-                              color: themeDarkBlue.withOpacity(0.7),
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500),
-                      )),
+                      // Align(
+                      //   alignment: Alignment.centerRight,
+                      //   child: Text(
+                      //     '${post.date}',
+                      //     style: TextStyle(
+                      //         color: themeDarkBlue.withOpacity(0.7),
+                      //         fontSize: 14,
+                      //         fontWeight: FontWeight.w500),
+                      // )),
                     ],
                   ),
                   const SizedBox(height: 20),

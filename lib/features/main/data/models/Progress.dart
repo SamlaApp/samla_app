@@ -14,13 +14,14 @@ class ProgressModel extends Progress {
   @override
   factory ProgressModel.fromJson(Map<String, dynamic> json) {
     return ProgressModel(
-      id: json['id'],
-      weight: (json['weight'] as num)
+      id: json['id'] is String ? int.parse(json['id']): json['id'],
+      weight: (json['weight'] is String ? double.parse(json['weight']) : json['weight']),
+      height:  (json['height'] is String
+              ? double.parse(json['height'])
+              : json['height'])
           .toDouble(), // Ensure it's converted to a double
-      height: (json['height'] as num)
-          .toDouble(), // Ensure it's converted to a double
-      steps: json['steps'],
-      calories: json['calories'],
+      steps: json['steps'] is String ? int.parse(json['steps']): json['steps'],
+      calories: json['calories'] is String ? int.parse(json['calories']) : json['calories'],
       date: DateTime.parse(json['created_at']),
     );
   }

@@ -13,7 +13,6 @@ class User extends Equatable {
   String? photoUrl;
   String? gender;
   double? height;
-  double? weight;
   bool hasGoal;
   File? image;
 

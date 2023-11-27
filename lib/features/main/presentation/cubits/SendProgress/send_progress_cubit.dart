@@ -41,7 +41,7 @@ class SendProgressCubit extends Cubit<SendProgressState> {
           final steps = sensorState.reads - offset + oldSteps;
           Progress progress = Progress(
             height: sl<AuthBloc>().user.height ?? 0,
-            weight: sl<AuthBloc>().user.weight ?? 0,
+            weight: 0,
             calories: (steps * 0.7).toInt(),
             steps: steps,
             date: DateTime.now(),
