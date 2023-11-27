@@ -83,39 +83,47 @@ class _HomeState extends State<HomePage> {
                 padding: const EdgeInsets.fromLTRB(0, 30, 0, 0),
                 child: Row(
                   children: [
-                    CircleAvatar(
-                        backgroundColor: Colors.white,
-                        radius: 21,
-                        child: ImageViewer.network(
-                          imageURL: user.photoUrl,
-                          width: 42,
-                          height: 42,
-                          placeholderImagePath: 'images/defaults/user.png',
-                          viewerMode: false,
-                        )),
-                    const SizedBox(width: 10),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          'Welcome,',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w500,
-                            color: themeDarkBlue.withOpacity(0.6),
+                    GestureDetector(
+                      onTap: () => Navigator.pushNamed(context, '/Profile'),
+                      child: Row(
+                        children: [
+                          CircleAvatar(
+                              backgroundColor: Colors.white,
+                              radius: 21,
+                              child: ImageViewer.network(
+                                imageURL: user.photoUrl,
+                                width: 42,
+                                height: 42,
+                                placeholderImagePath: 'images/defaults/user.png',
+                                viewerMode: false,
+                              )),
+                          const SizedBox(width: 10),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                'Welcome,',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w500,
+                                  color: themeDarkBlue.withOpacity(0.6),
+                                ),
+                              ),
+                              Text(
+                                user.name,
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w900,
+                                  color: themeDarkBlue.withOpacity(0.8),
+                                ),
+                              ),
+                            ],
                           ),
-                        ),
-                        Text(
-                          user.name,
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w900,
-                            color: themeDarkBlue.withOpacity(0.8),
-                          ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
+
                     const Spacer(
                       flex: 1,
                     ),

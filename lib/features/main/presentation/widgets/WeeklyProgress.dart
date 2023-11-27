@@ -217,9 +217,9 @@ class WeeklyProgress extends StatefulWidget {
 
 class WeeklyProgressState extends State<WeeklyProgress> {
   String dropdownValue = 'STEPS';
-  final List<double> stepsValues = [1000, 2040, 3000, 1500, 500, 1800, 90];
-  final List<double> caloriesValues = [300, 230, 540, 46, 450, 220, 110];
-  final  List<double> distanceValues = [10, 1, 14, 7, 5, 12, 17];
+  final List<double> stepsValues = [0, 0, 0, 0, 0, 0, 0];
+  final List<double> caloriesValues = [0, 0, 0, 0, 0, 0, 0];
+  final  List<double> distanceValues = [0, 0, 0, 0, 0, 0, 0];
 
   @override
   Widget build(BuildContext context) {
