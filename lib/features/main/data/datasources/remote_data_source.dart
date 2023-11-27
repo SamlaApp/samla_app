@@ -8,6 +8,7 @@ import '../../../../core/network/samlaAPI.dart';
 abstract class RemoteDataSource {
   Future<List<ProgressModel>> getAllProgress();
   Future<int> getStreak();
+  Future<void> sendProgress(ProgressModel progress);
 }
 
 class ProgressRemoteDataSourceImpl implements RemoteDataSource {
@@ -16,9 +17,11 @@ class ProgressRemoteDataSourceImpl implements RemoteDataSource {
     final response = await samlaAPI(
       endPoint: '/progress/get_all',
       method: 'GET',
+
     );
+          final body = await response.stream.bytesToString();
+
     if (response.statusCode == 200) {
-      final body = await response.stream.bytesToString();
       final List<ProgressModel> progress = [];
       final parsed = jsonDecode(body)['user_progress'];
       for (var item in parsed) {
@@ -27,7 +30,8 @@ class ProgressRemoteDataSourceImpl implements RemoteDataSource {
 
       return progress;
     } else {
-      throw ServerException(message: 'Server Error');
+      
+      throw ServerException(message: json.decode(body)['message']);
     }
   }
 
@@ -42,6 +46,18 @@ class ProgressRemoteDataSourceImpl implements RemoteDataSource {
       final parsed = jsonDecode(body)['streak'];
       return parsed;
     } else {
+      throw ServerException(message: 'Server Error');
+    }
+  }
+
+  @override
+  Future<void> sendProgress(ProgressModel progress) async {
+    final res = await samlaAPI(
+      endPoint: '/progress/set',
+      method: 'POST',
+      data: progress.toJson(),
+    );
+    if (res.statusCode != 200) {
       throw ServerException(message: 'Server Error');
     }
   }

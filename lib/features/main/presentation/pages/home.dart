@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:samla_app/config/themes/new_style.dart';
 import 'package:samla_app/core/widgets/image_viewer.dart';
+import 'package:samla_app/features/main/presentation/cubits/ProgressCubit/progress_cubit.dart';
+import 'package:samla_app/features/main/presentation/cubits/SendProgress/send_progress_cubit.dart';
 import 'package:samla_app/features/main/presentation/cubits/StreakCubit/streak_cubit.dart';
 import 'package:samla_app/features/main/presentation/widgets/CircularIndicators.dart';
 import 'package:samla_app/features/main/presentation/widgets/WeeklyProgress.dart';
 import 'package:samla_app/features/main/home_di.dart' as di;
 import 'package:samla_app/features/auth/presentation/bloc/auth_bloc.dart';
-import '../cubits/ProgressCubit/progress_cubit.dart';
 import 'package:samla_app/features/main/presentation/widgets/WeightProgress.dart';
 
 class HomePage extends StatefulWidget {
@@ -29,6 +30,7 @@ class _HomeState extends State<HomePage> {
     progressCubit = di.sl.get<ProgressCubit>();
     streakCubit = di.sl.get<StreakCubit>();
     streakCubit.getStreak();
+    di.sl<SendProgressCubit>().refreashProgress();
   }
 
   bool dailyChallengeStatus = true;

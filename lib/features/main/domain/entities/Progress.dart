@@ -10,7 +10,7 @@ class Progress extends Equatable {
   final DateTime? date;
 
   const Progress({
-    required this.id,
+    this.id,
     required this.weight,
     required this.height,
     required this.steps,
@@ -20,7 +20,24 @@ class Progress extends Equatable {
 
   @override
   List<Object?> get props => [id, weight, height, steps, calories, date];
-
+  //copyWith
+  Progress copyWith({
+    int? id,
+    double? weight,
+    double? height,
+    int? steps,
+    int? calories,
+    DateTime? date,
+  }) {
+    return Progress(
+      id: id ?? this.id,
+      weight: weight ?? this.weight,
+      height: height ?? this.height,
+      steps: steps ?? this.steps,
+      calories: calories ?? this.calories,
+      date: date ?? this.date,
+    );
+  }
 
 }
 

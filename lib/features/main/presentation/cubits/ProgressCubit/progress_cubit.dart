@@ -14,7 +14,7 @@ class ProgressCubit extends Cubit<ProgressState> {
     final result = await repository.getAllProgress();
     result.fold(
       (failure) => emit(ProgressErrorState('Failed to get progress')),
-      (progress) => emit(ProgressLoadedState(progress.cast<Progress>())),
+      (progress) => emit(ProgressLoadedState(progress)),
     );
   }
 }
