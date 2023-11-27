@@ -30,7 +30,8 @@ class ProgressRepositoryImpl implements ProgressRepository {
         return Right(remoteProgress);
       } on ServerException catch (e) {
         return Left(ServerFailure(message: e.message));
-      } catch (e) {
+      } 
+      catch (e) {
         print(e.toString());
         return Left(ServerFailure(message: e.toString()));
       }

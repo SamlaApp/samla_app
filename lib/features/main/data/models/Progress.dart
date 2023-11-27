@@ -15,7 +15,7 @@ class ProgressModel extends Progress {
   factory ProgressModel.fromJson(Map<String, dynamic> json) {
     return ProgressModel(
       id: json['id'] is String ? int.parse(json['id']): json['id'],
-      weight: (json['weight'] is String ? double.parse(json['weight']) : json['weight']),
+      weight: (json['weight'] is String ? double.parse(json['weight']) :json['weight'] is int ? json['weight'].toDouble() : json['weight']),
       height:  (json['height'] is String
               ? double.parse(json['height'])
               : json['height'])

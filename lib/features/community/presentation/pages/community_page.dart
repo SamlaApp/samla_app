@@ -3,6 +3,7 @@ import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:samla_app/config/themes/new_style.dart';
 import 'package:samla_app/core/network/samlaAPI.dart';
 import 'package:samla_app/core/widgets/CustomTextFormField.dart';
@@ -293,28 +294,32 @@ class _CommunityPageState extends State<CommunityPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      ImageViewer.network(
-                        imageURL: post.writerImageURL,
-                        viewerMode: false,
-                        placeholderImagePath: 'images/defaults/user.png',
-                        width: 30,
+                      Row(
+                        children: [
+                          ImageViewer.network(
+                            imageURL: post.writerImageURL,
+                            viewerMode: false,
+                            placeholderImagePath: 'images/defaults/user.png',
+                            width: 30,
+                          ),
+                          const SizedBox(width: 10),
+                          Text('${post.writerName}',
+                              style: TextStyle(
+                                  color: themeDarkBlue.withOpacity(0.7),
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500)),
+                        ],
                       ),
-                      const SizedBox(width: 10),
-                      Text('${post.writerName}',
-                          style: TextStyle(
-                              color: themeDarkBlue.withOpacity(0.7),
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500)),
-                      // Align(
-                      //   alignment: Alignment.centerRight,
-                      //   child: Text(
-                      //     '${post.date}',
-                      //     style: TextStyle(
-                      //         color: themeDarkBlue.withOpacity(0.7),
-                      //         fontSize: 14,
-                      //         fontWeight: FontWeight.w500),
-                      // )),
+                      Text(
+                        '${DateFormat('yyyy/MM/dd hh:mma').format(DateTime.parse(post.date!))}',
+                        style: TextStyle(
+                            color: themeDarkBlue.withOpacity(0.7),
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500),
+                      ),
                     ],
                   ),
                   const SizedBox(height: 20),
@@ -336,7 +341,6 @@ class _CommunityPageState extends State<CommunityPage> {
                         fontSize: 14, color: themeDarkBlue.withOpacity(0.6)),
                   ),
                   const SizedBox(height: 20),
-
                   Center(
                     child: Icon(
                       Icons.keyboard_arrow_down_rounded,
@@ -382,7 +386,6 @@ class _CommunityPageState extends State<CommunityPage> {
       PostCubit cubit) {
     return Container(
       child: () {
-
         if (state is AddCommentError) {
           SchedulerBinding.instance.addPostFrameCallback((_) {
             ScaffoldMessenger.of(context).showSnackBar(
@@ -430,20 +433,19 @@ class _CommunityPageState extends State<CommunityPage> {
                   ),
                   const SizedBox(width: 10),
                   IconButton(
-                    onPressed: () {
-                      final comment = Comment(
-                        communityID: community.id!,
-                        writerID: int.parse(userID),
-                        content: commentController.text,
-                        postID: post.postID!,
-                        writerName: authBloc.user.name,
-                      );
-                      commentCubit.addComment(comment);
-                      cubit.emit(PostInitial());
-                    },
-                    icon: const Icon(Icons.send),
-                    color: themeDarkBlue
-                  )
+                      onPressed: () {
+                        final comment = Comment(
+                          communityID: community.id!,
+                          writerID: int.parse(userID),
+                          content: commentController.text,
+                          postID: post.postID!,
+                          writerName: authBloc.user.name,
+                        );
+                        commentCubit.addComment(comment);
+                        cubit.emit(PostInitial());
+                      },
+                      icon: const Icon(Icons.send),
+                      color: themeDarkBlue)
                 ],
               ),
             );
@@ -479,8 +481,6 @@ class _CommunityPageState extends State<CommunityPage> {
                         fontWeight: FontWeight.w500)),
               ],
             ),
-
-
             const SizedBox(height: 10),
             Row(
               children: [
