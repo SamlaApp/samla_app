@@ -3,9 +3,8 @@ import 'package:samla_app/features/training/presentation/widgets/startTraining/h
 import '../../../../config/themes/new_style.dart';
 import '../../domain/entities/ExerciseLibrary.dart';
 import '../cubit/History/history_cubit.dart';
+
 class ExerciseInfoStartPage extends StatefulWidget {
-
-
   final String name;
   final String gifUrl;
   final String bodyPart;
@@ -35,6 +34,7 @@ class ExerciseInfoStartPage extends StatefulWidget {
 
 class ExerciseInfoStartPageState extends State<ExerciseInfoStartPage> {
   bool _isExpanded = false;
+
   String capitalize(String s) => s[0].toUpperCase() + s.substring(1);
 
   @override
@@ -76,7 +76,7 @@ class ExerciseInfoStartPageState extends State<ExerciseInfoStartPage> {
                   Expanded(
                     child: SingleChildScrollView(
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           const SizedBox(height: 8),
                           customBorderContainer(
@@ -217,7 +217,8 @@ class ExerciseInfoStartPageState extends State<ExerciseInfoStartPage> {
             padding: const EdgeInsets.fromLTRB(12, 12, 12, 12),
             // Smaller padding
             decoration: BoxDecoration(
-              border: Border.all(color: themeDarkBlue.withOpacity(0.5), width: 0.9),
+              border:
+                  Border.all(color: themeDarkBlue.withOpacity(0.5), width: 0.9),
               // Smaller border width
               borderRadius: BorderRadius.circular(6), // Smaller border radius
             ),
@@ -225,7 +226,7 @@ class ExerciseInfoStartPageState extends State<ExerciseInfoStartPage> {
               padding: const EdgeInsets.only(top: 6.0, bottom: 2.0),
               child: Text(
                 capitalize(value),
-                style:  TextStyle(
+                style: TextStyle(
                   color: themeDarkBlue.withOpacity(0.7),
                   fontWeight: FontWeight.w600,
                   fontSize: 12, // Smaller font size

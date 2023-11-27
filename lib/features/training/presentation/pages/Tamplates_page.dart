@@ -1,4 +1,3 @@
-import 'package:animate_gradient/animate_gradient.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:samla_app/config/themes/new_style.dart';
@@ -217,8 +216,7 @@ class _TemplatesPageState extends State<TemplatesPage> {
               backgroundColor: themePink,
             ),
           );
-        }
-        else if (state is TemplateDeletedState) {
+        } else if (state is TemplateDeletedState) {
           cubit.getAllTemplates();
           return const Center(
             child: CircularProgressIndicator(
@@ -236,14 +234,12 @@ class _TemplatesPageState extends State<TemplatesPage> {
               backgroundColor: themePink,
             ),
           );
-        }
-
-        else if (state is TemplateLoaded) {
+        } else if (state is TemplateLoaded) {
           return ListView.builder(
             itemCount: state.templates.length,
             itemBuilder: (context, index) {
               final template = state.templates[index];
-              return _buildTemplateCard(template,state.templates.length); 
+              return _buildTemplateCard(template, state.templates.length);
             },
           );
         } else {
@@ -258,7 +254,8 @@ class _TemplatesPageState extends State<TemplatesPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Icon(Icons.gpp_maybe_rounded, color: themeOrange, size: 50),
+                const Icon(Icons.gpp_maybe_rounded,
+                    color: themeOrange, size: 50),
                 const SizedBox(height: 10),
                 const Text('Something went wrong',
                     style: TextStyle(
@@ -279,7 +276,6 @@ class _TemplatesPageState extends State<TemplatesPage> {
                 ),
               ],
             ),
-
           );
         }
       },
@@ -330,7 +326,8 @@ class _TemplatesPageState extends State<TemplatesPage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => TemplatePage(template: template, length: length),
+                    builder: (context) =>
+                        TemplatePage(template: template, length: length),
                   ),
                 ).then((_) {
                   // This block runs when you pop back to TemplatesPage

@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:samla_app/features/training/domain/entities/Template.dart';
@@ -27,8 +26,8 @@ class _TemplatePageState extends State<TemplatePage> {
   final exercisesCubit = di.sl.get<ExerciseCubit>();
   final viewDayExerciseCubit = di.sl.get<ViewDayExerciseCubit>();
 
-  String capitalize(String s) => s[0].toUpperCase() + s.substring(1); // capitalize first letter of string
-
+  String capitalize(String s) =>
+      s[0].toUpperCase() + s.substring(1); // capitalize first letter of string
 
   String _selectedBodyPart = 'Back';
   String _selectedDay = 'Sunday';
@@ -47,8 +46,10 @@ class _TemplatePageState extends State<TemplatePage> {
     super.initState();
 
     templateCubit.getTemplateDetails(widget.template.id!);
-    exercisesCubit.getBodyPartExerciseLibrary(part: _selectedBodyPart, templateID: widget.template.id!);
-    viewDayExerciseCubit.getExercisesDay(day: _selectedDay, templateID: widget.template.id!);
+    exercisesCubit.getBodyPartExerciseLibrary(
+        part: _selectedBodyPart, templateID: widget.template.id!);
+    viewDayExerciseCubit.getExercisesDay(
+        day: _selectedDay, templateID: widget.template.id!);
     _updateDayName();
   }
 
@@ -148,8 +149,7 @@ class _TemplatePageState extends State<TemplatePage> {
   }
 
   void _deleteTemplate() {
-
-    if(widget.length == 1) {
+    if (widget.length == 1) {
       // return message you can't delete the last template
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -166,7 +166,6 @@ class _TemplatePageState extends State<TemplatePage> {
       templateCubit.deleteTemplate(widget.template.id!);
       Navigator.pop(context);
     }
-
   }
 
   @override
@@ -218,15 +217,14 @@ class _TemplatePageState extends State<TemplatePage> {
                                   color: Colors.white,
                                 ),
                               ),
-
-                              if(widget.template.is_active)
+                              if (widget.template.is_active)
                                 const Row(
                                   children: [
                                     SizedBox(width: 10),
-                                    Icon(Icons.verified, color: Colors.white, size: 20),
+                                    Icon(Icons.verified,
+                                        color: Colors.white, size: 20),
                                   ],
                                 ),
-
                             ],
                           ),
                           const SizedBox(height: 10),
@@ -312,7 +310,6 @@ class _TemplatePageState extends State<TemplatePage> {
     );
   }
 
-
   // First tab
   Widget _currentPlanContent() {
     return SingleChildScrollView(
@@ -373,7 +370,6 @@ class _TemplatePageState extends State<TemplatePage> {
                 ],
               ),
             ),
-
             const SizedBox(height: 16),
             _buildDayExercises(),
           ],
@@ -427,7 +423,6 @@ class _TemplatePageState extends State<TemplatePage> {
     return BlocBuilder<ExerciseCubit, ExerciseState>(
       bloc: exercisesCubit,
       builder: (context, state) {
-        print(exercisesCubit.state);
         if (state is ExerciseLoadingState) {
           return const Center(child: CircularProgressIndicator());
         } else if (state is ExerciseLoadedState) {
@@ -473,9 +468,10 @@ class _TemplatePageState extends State<TemplatePage> {
   BlocBuilder<ViewDayExerciseCubit, ViewDayExerciseState> _buildDayExercises() {
     return BlocBuilder<ViewDayExerciseCubit, ViewDayExerciseState>(
       bloc: viewDayExerciseCubit,
-      builder: (context, state){
+      builder: (context, state) {
         if (state is ExercisesDayLoadingState) {
-          return  Center(child: CircularProgressIndicator(
+          return Center(
+              child: CircularProgressIndicator(
             color: themeBlue,
             backgroundColor: themePink,
           ));
@@ -502,7 +498,8 @@ class _TemplatePageState extends State<TemplatePage> {
                     ),
                     day: _selectedDay,
                     onRemove: () {
-                      viewDayExerciseCubit.getExercisesDay(day: _selectedDay, templateID: widget.template.id!);
+                      viewDayExerciseCubit.getExercisesDay(
+                          day: _selectedDay, templateID: widget.template.id!);
                     },
                   ),
               ],
@@ -530,14 +527,14 @@ class _TemplatePageState extends State<TemplatePage> {
                     )),
               ],
             ),
-
           );
         } else if (state is ExerciseDayErrorState) {
           return Center(
             child: Text(state.message),
           );
         } else if (state is ExerciseDayAddedState) {
-          viewDayExerciseCubit.getExercisesDay(day: _selectedDay, templateID: widget.template.id!);
+          viewDayExerciseCubit.getExercisesDay(
+              day: _selectedDay, templateID: widget.template.id!);
           return const Center(child: CircularProgressIndicator());
         } else {
           return const Center(child: Text('Something went wrong'));
@@ -546,147 +543,146 @@ class _TemplatePageState extends State<TemplatePage> {
     );
   }
 
+  void _showUpdateTemplateDialog(BuildContext context) {
+    TextEditingController nameController = TextEditingController();
+    bool isActivated = widget.template.is_active;
+    nameController.text = widget.template.name;
 
+    void updateTemplate() {
+      Template template = Template(
+        id: widget.template.id,
+        name: nameController.text,
+        is_active: isActivated,
+      );
 
+      templateCubit.updateTemplateInfo(template);
+      templateCubit.getTemplateDetails(widget.template.id!);
+      Navigator.pop(context);
+    }
 
-void _showUpdateTemplateDialog(BuildContext context) {
-  TextEditingController nameController = TextEditingController();
-  bool isActivated = widget.template.is_active;
-  nameController.text = widget.template.name!;
-
-  void _updateTemplate() {
-    Template template = Template(
-      id: widget.template.id,
-      name: nameController.text,
-      is_active: isActivated,
-    );
-
-    templateCubit.updateTemplateInfo(template);
-    templateCubit.getTemplateDetails(widget.template.id!);
-    Navigator.pop(context);
-  }
-
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: Text(
-          'Update The Template',
-          style: TextStyle(color: themeDarkBlue, fontSize: 16,fontWeight: FontWeight.bold),
-        ),
-        content: Stack(
-          clipBehavior: Clip.none,
-          children: [
-            Container(
-              width: MediaQuery.of(context).size.width * 0.7,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  TextField(
-                    controller: nameController,
-                    decoration: InputDecoration(
-                      hintText: 'Enter new template name',
-                      fillColor: inputField_color,
-                      filled: true,
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide.none,
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
-                  ),
-
-                  if(!widget.template.is_active)
-                  Column(
-                    children: [
-                      const SizedBox(height: 20),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Text('Activate Plan?',
-                                style: TextStyle(color: theme_grey)),
-                            Switch(
-                              value: isActivated,
-                              onChanged: (bool value) {
-                                isActivated = value;
-                                (context as Element).markNeedsBuild();
-                              },
-                              activeColor: themeBlue,
-                              inactiveThumbColor: theme_grey,
-                              inactiveTrackColor: theme_grey.withOpacity(0.5),
-                            ),
-                          ],
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            'Update The Template',
+            style: TextStyle(
+                color: themeDarkBlue,
+                fontSize: 16,
+                fontWeight: FontWeight.bold),
+          ),
+          content: Stack(
+            clipBehavior: Clip.none,
+            children: [
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.7,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    TextField(
+                      controller: nameController,
+                      decoration: InputDecoration(
+                        hintText: 'Enter new template name',
+                        fillColor: inputField_color,
+                        filled: true,
+                        border: OutlineInputBorder(
+                          borderSide: BorderSide.none,
+                          borderRadius: BorderRadius.circular(8),
                         ),
                       ),
-                    ],
-                  ),
-
-                ],
-              ),
-            ),
-            Positioned(
-              right: -45,
-              top: -80,
-              child: Container(
-                width: 75,
-                height: 75,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  gradient: LinearGradient(
-                    colors: [themePink, themeDarkBlue],
-                    tileMode: TileMode.clamp,
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                ),
-                child: Icon(
-                  Icons.edit,
-                  color: primary_color,
-                  size: 34.0,
-                ),
-              ),
-            ),
-          ],
-        ),
-        actions: <Widget>[
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              ElevatedButton.icon(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                icon: const Icon(Icons.cancel),
-                label: const Text('Cancel'),
-                style: ElevatedButton.styleFrom(
-                  foregroundColor: Colors.white,
-                  backgroundColor: theme_red,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(32.0),
-                  ),
+                    ),
+                    if (!widget.template.is_active)
+                      Column(
+                        children: [
+                          const SizedBox(height: 20),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Text('Activate Plan?',
+                                    style: TextStyle(color: theme_grey)),
+                                Switch(
+                                  value: isActivated,
+                                  onChanged: (bool value) {
+                                    isActivated = value;
+                                    (context as Element).markNeedsBuild();
+                                  },
+                                  activeColor: themeBlue,
+                                  inactiveThumbColor: theme_grey,
+                                  inactiveTrackColor:
+                                      theme_grey.withOpacity(0.5),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                  ],
                 ),
               ),
-              const SizedBox(width: 10.0),
-              ElevatedButton.icon(
-                onPressed: () {
-                  _updateTemplate();
-                },
-                icon: const Icon(Icons.add),
-                label: const Text('Create'),
-                style: ElevatedButton.styleFrom(
-                  foregroundColor: Colors.white,
-                  backgroundColor: themeDarkBlue,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(32.0),
+              Positioned(
+                right: -45,
+                top: -80,
+                child: Container(
+                  width: 75,
+                  height: 75,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    gradient: LinearGradient(
+                      colors: [themePink, themeDarkBlue],
+                      tileMode: TileMode.clamp,
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                  ),
+                  child: Icon(
+                    Icons.edit,
+                    color: primary_color,
+                    size: 34.0,
                   ),
                 ),
               ),
             ],
           ),
-        ],
-      );
-    },
-  );
-}
+          actions: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton.icon(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  icon: const Icon(Icons.cancel),
+                  label: const Text('Cancel'),
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: Colors.white,
+                    backgroundColor: theme_red,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(32.0),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 10.0),
+                ElevatedButton.icon(
+                  onPressed: () {
+                    updateTemplate();
+                  },
+                  icon: const Icon(Icons.add),
+                  label: const Text('Create'),
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: Colors.white,
+                    backgroundColor: themeDarkBlue,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(32.0),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        );
+      },
+    );
+  }
 }
