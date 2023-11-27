@@ -306,15 +306,16 @@ class _CommunityPageState extends State<CommunityPage> {
                               color: themeDarkBlue.withOpacity(0.7),
                               fontSize: 16,
                               fontWeight: FontWeight.w500)),
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: Text(
-                          '${post.date}',
-                          style: TextStyle(
-                              color: themeDarkBlue.withOpacity(0.7),
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500),
-                      )),
+                      // Align(
+                      //   alignment: Alignment.centerRight,
+                      //   child: Text(
+                      //     '${post.date}',
+                      //     style: TextStyle(
+                      //         color: themeDarkBlue.withOpacity(0.7),
+                      //         fontSize: 14,
+                      //         fontWeight: FontWeight.w500),
+                      // )
+                      // ),
                     ],
                   ),
                   const SizedBox(height: 20),
@@ -336,7 +337,6 @@ class _CommunityPageState extends State<CommunityPage> {
                         fontSize: 14, color: themeDarkBlue.withOpacity(0.6)),
                   ),
                   const SizedBox(height: 20),
-
                   Center(
                     child: Icon(
                       Icons.keyboard_arrow_down_rounded,
@@ -382,7 +382,6 @@ class _CommunityPageState extends State<CommunityPage> {
       PostCubit cubit) {
     return Container(
       child: () {
-
         if (state is AddCommentError) {
           SchedulerBinding.instance.addPostFrameCallback((_) {
             ScaffoldMessenger.of(context).showSnackBar(
@@ -430,20 +429,19 @@ class _CommunityPageState extends State<CommunityPage> {
                   ),
                   const SizedBox(width: 10),
                   IconButton(
-                    onPressed: () {
-                      final comment = Comment(
-                        communityID: community.id!,
-                        writerID: int.parse(userID),
-                        content: commentController.text,
-                        postID: post.postID!,
-                        writerName: authBloc.user.name,
-                      );
-                      commentCubit.addComment(comment);
-                      cubit.emit(PostInitial());
-                    },
-                    icon: const Icon(Icons.send),
-                    color: themeDarkBlue
-                  )
+                      onPressed: () {
+                        final comment = Comment(
+                          communityID: community.id!,
+                          writerID: int.parse(userID),
+                          content: commentController.text,
+                          postID: post.postID!,
+                          writerName: authBloc.user.name,
+                        );
+                        commentCubit.addComment(comment);
+                        cubit.emit(PostInitial());
+                      },
+                      icon: const Icon(Icons.send),
+                      color: themeDarkBlue)
                 ],
               ),
             );
@@ -479,8 +477,6 @@ class _CommunityPageState extends State<CommunityPage> {
                         fontWeight: FontWeight.w500)),
               ],
             ),
-
-
             const SizedBox(height: 10),
             Row(
               children: [
