@@ -38,9 +38,9 @@ Map<String, num> getLast7DaysProgress(List<Progress> progressList) {
 
     // Store the progress for the day in the map
     if (progressForDate.isNotEmpty) {
-      last7DaysProgressMap[dayName] = progressForDate.first.steps;
+      // last7DaysProgressMap[dayName] = progressForDate.first.steps;
     } else {
-            last7DaysProgressMap[dayName] = 0;
+      last7DaysProgressMap[dayName] = 0;
     }
   }
 

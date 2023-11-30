@@ -10,6 +10,13 @@ import 'package:samla_app/features/main/domain/entities/Progress.dart';
 import 'package:samla_app/features/main/home_di.dart';
 import 'package:samla_app/features/main/presentation/cubits/ProgressCubit/progress_cubit.dart';
 
+import 'package:samla_app/features/auth/auth_injection_container.dart'
+    as authDI;
+import 'package:samla_app/features/main/data/datasources/local_data_source.dart';
+import 'package:samla_app/features/main/data/datasources/remote_data_source.dart';
+import 'package:samla_app/features/main/data/models/Progress.dart';
+import 'package:samla_app/features/setup/BMIcalculator.dart';
+
 class WeightProgress extends StatefulWidget {
   // const WeightProgress({super.key, required double weight});
   const WeightProgress({
@@ -24,8 +31,20 @@ class WeightProgressState extends State<WeightProgress> {
   List<double> weights = [0, 0, 0, 0, 0, 0, 0, 0];
   double height = 0;
 
+  double currentWeight = 0;
+  double currentHeight = 0;
+  double currentBMI = 0;
+  String currentBMICatogry = '';
+
   @override
   Widget build(BuildContext context) {
+    // final user = authDI.getUser();
+
+    // currentWeight = user .weight == null ? 0 : user.weight as double;
+    // currentHeight = user.height == null ? 0 : user.height as double;
+    // getCurrentBMI = calculateBMI(currentWeight, currentHeight);
+    // getCurrentBMICatogry = getBMIcategory(getCurrentBMI);
+
     final List<FlSpot> weightSpots = weights.asMap().entries.map((entry) {
       return FlSpot(entry.key.toDouble(), entry.value);
     }).toList();
@@ -38,20 +57,41 @@ class WeightProgressState extends State<WeightProgress> {
           height = state.progress.last.height ?? 0;
           print('weights:');
           print(weights);
+          int currentWeightIndex = weights.length - 1; //
+          currentWeight = weights[currentWeightIndex]; //
+          currentBMI = calculateBMI(currentWeight, height); //
+          currentBMICatogry = getBMIcategory(currentBMI); //
         }
         return AspectRatio(
           aspectRatio: 1.65,
+          // aspectRatio: 1.4,
           child: Container(
             padding: const EdgeInsets.fromLTRB(20, 0, 20, 5),
             decoration: primary_decoration,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                Text("Weight",
+                    style: textStyle.copyWith(
+                        fontSize: 28,
+                        fontWeight: FontWeight.bold,
+                        color: themeDarkBlue)),
+                const SizedBox(
+                  height: 10,
+                ),
+                Text("$currentWeight kg",
+                    style: textStyle.copyWith(
+                        fontSize: 26,
+                        fontWeight: FontWeight.bold,
+                        color: themePink)),
+                const SizedBox(
+                  height: 10,
+                ),
                 Row(
                   children: [
-                    Text("Weight",
-                        style: textStyle.copyWith(
-                            fontSize: 16, fontWeight: FontWeight.bold)),
+                    // Text("Weight",
+                    //     style: textStyle.copyWith(
+                    //         fontSize: 16, fontWeight: FontWeight.bold)),
                     const Spacer(),
                     Container(
                       alignment: Alignment.centerRight,
@@ -60,7 +100,7 @@ class WeightProgressState extends State<WeightProgress> {
                       child: Column(
                         children: [
                           Text(
-                            '170 cm', //should get the height here!
+                            '$height cm', //should get the height here!
                             style: textStyle.copyWith(
                               fontSize: 12,
                               fontWeight: FontWeight.w500,
@@ -82,7 +122,7 @@ class WeightProgressState extends State<WeightProgress> {
                             height: 30,
                           ),
                           Text(
-                            '17.8 BMI',
+                            '$currentBMI BMI',
                             style: textStyle.copyWith(
                               //should get the BMI here!
                               fontSize: 12,
@@ -91,7 +131,7 @@ class WeightProgressState extends State<WeightProgress> {
                             ),
                           ),
                           Text(
-                            'Overweight',
+                            currentBMICatogry,
                             style: textStyle.copyWith(
                               fontSize: 12,
                               fontWeight: FontWeight.w300,
@@ -104,51 +144,50 @@ class WeightProgressState extends State<WeightProgress> {
                   ],
                 ),
                 const SizedBox(height: 30),
-                /*
-                // LineChart(
-                //   LineChartData(
-                //     minX: 0,
-                //     maxX: weight.length - 1, //adjust to match number of data point
-                //     minY: 0,
-                //     maxY: weight
-                //         .reduce(max)
-                //         .toDouble(), //Find the maximum weight in the list //6
-                //     // titlesData: LineTitles.getTitleData(),
-                //     gridData: FlGridData(
-                //       show: true, //false
-                //       getDrawingHorizontalLine: (value) {
-                //         return const FlLine(
-                //           color: Color(0xff37434d),
-                //           strokeWidth: 1,
-                //         );
-                //       },
-                //       drawVerticalLine: true,
-                //       getDrawingVerticalLine: (value) {
-                //         return const FlLine(
-                //           color: Color(0xff37434d),
-                //           strokeWidth: 1,
-                //         );
-                //       },
-                //     ),
-                //     borderData: FlBorderData(
-                //       show: true,
-                //       border: Border.all(color: const Color(0xff37434d), width: 1),
-                //     ),
-                //     lineBarsData: [
-                //       LineChartBarData(
-                //         spots: weightSpots,
-                //         isCurved: true,
-                //         color: themeBlue,
-                //         barWidth: 5,
-                //         // dotData: FlDotData(show: false),
-                //         belowBarData: BarAreaData(
-                //             show: true, color: themePink.withOpacity(0.3)),
-                //       ),
-                //     ],
-                //   ),
-                // ),
-    
-                 */
+                LineChart(
+                  LineChartData(
+                    minX: 0,
+                    maxX: weights.length -
+                        1, //adjust to match number of data point
+                    minY: 0,
+                    maxY: weights
+                        .reduce(max)
+                        .toDouble(), //Find the maximum weight in the list //6
+                    // titlesData: LineTitles.getTitleData(),
+                    gridData: FlGridData(
+                      show: true, //false
+                      getDrawingHorizontalLine: (value) {
+                        return const FlLine(
+                          color: Color(0xff37434d),
+                          strokeWidth: 1,
+                        );
+                      },
+                      drawVerticalLine: true,
+                      getDrawingVerticalLine: (value) {
+                        return const FlLine(
+                          color: Color(0xff37434d),
+                          strokeWidth: 1,
+                        );
+                      },
+                    ),
+                    borderData: FlBorderData(
+                      show: true,
+                      border:
+                          Border.all(color: const Color(0xff37434d), width: 1),
+                    ),
+                    lineBarsData: [
+                      LineChartBarData(
+                        spots: weightSpots,
+                        isCurved: true,
+                        color: themeBlue,
+                        barWidth: 5,
+                        // dotData: FlDotData(show: false),
+                        belowBarData: BarAreaData(
+                            show: true, color: themePink.withOpacity(0.3)),
+                      ),
+                    ],
+                  ),
+                ),
               ],
             ),
           ),
