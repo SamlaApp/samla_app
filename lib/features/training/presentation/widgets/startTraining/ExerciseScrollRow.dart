@@ -39,7 +39,7 @@ class ExerciseScrollRow extends StatelessWidget {
               width: MediaQuery.of(context).size.width * 0.18,
               decoration: BoxDecoration(
                 border: Border.all(
-                  color: isSelected ? themeRed : themeGrey,
+                  color: isSelected ? themeBlue : themeGrey,
                   width: isSelected ? 3 : 1,
                 ),
                 borderRadius: BorderRadius.circular(6.0),

@@ -116,23 +116,23 @@ class StartTrainingState extends State<StartTraining>
                 children: [
                   FadeTransition(
                     opacity: smallStarController1,
-                    child: Icon(Icons.star_rate,
+                    child: const Icon(Icons.star_rate,
                         size: 22, color: themeRed), // Smaller star
                   ),
                   FadeTransition(
                     opacity: largeStarController,
-                    child: Icon(Icons.star_rate,
+                    child: const Icon(Icons.star_rate,
                         size: 45, color: themeRed), // Larger star
                   ),
                   FadeTransition(
                     opacity: smallStarController2,
-                    child: Icon(Icons.star_rate,
+                    child: const Icon(Icons.star_rate,
                         size: 22, color: themeRed), // Smaller star
                   ),
                 ],
               ),
-              SizedBox(height: 16),
-              Text(
+              const SizedBox(height: 16),
+              const Text(
                 "Training Complete",
                 style:
                     TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
@@ -140,14 +140,14 @@ class StartTrainingState extends State<StartTraining>
               ),
             ],
           ),
-          content: Text(
+          content: const Text(
             "Congratulations! You've completed today's training session. Great job!",
             style: TextStyle(color: Colors.black87, fontSize: 18),
             textAlign: TextAlign.center,
           ),
           actions: <Widget>[
             TextButton(
-              child: Text("Close", style: TextStyle(color: Colors.blueAccent)),
+              child: const Text("Close", style: TextStyle(color: Colors.blueAccent)),
               onPressed: () {
                 Navigator.of(context).pop(true);
               },
@@ -168,20 +168,7 @@ class StartTrainingState extends State<StartTraining>
                 fontSize: 22,
                 fontWeight: FontWeight.w700,
                 fontFamily: 'Cairo')),
-        flexibleSpace: AnimateGradient(
-          primaryBegin: Alignment.topLeft,
-          primaryEnd: Alignment.bottomLeft,
-          secondaryBegin: Alignment.bottomRight,
-          secondaryEnd: Alignment.topLeft,
-          primaryColors: const [
-            themeOrange,
-            themePink,
-          ],
-          secondaryColors: const [
-            themePink,
-            themeRed,
-          ],
-        ),
+        backgroundColor: themeDarkBlue,
         iconTheme: const IconThemeData(color: white),
       ),
       body: Center(

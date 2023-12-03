@@ -90,25 +90,25 @@ class _ProgressSectionState extends State<ProgressSection>
       });
     }
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
-      decoration: primaryDecoration,
-      // decoration: primaryDecoration.copyWith(
-      //   color: Colors.blue,
-      // ),
+      margin: const EdgeInsets.only(top: 1),
       child: Padding(
         padding: const EdgeInsets.all(12.0),
         child: Column(
           children: [
-            buildNumber(context),
-            const Divider(),
-            buildExerciseSection(),
-
-            // Text(widget.selectedExercise.bodyPart),
-            // ElevatedButton(
-            //     onPressed: () {
-            //       startTimer();
-            //     },
-            //     child: const Text("start the timer", style: TextStyle(color: Colors.black))),
+            Container(
+                decoration: primaryDecoration,
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: buildNumber(context),
+                )),
+            const SizedBox(height: 20),
+            Container(
+                decoration: primaryDecoration,
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                      left: 10.0, right: 10, top: 16, bottom: 10),
+                  child: buildExerciseSection(),
+                )),
           ],
         ),
       ),
@@ -133,9 +133,21 @@ class _ProgressSectionState extends State<ProgressSection>
         Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Text("DISTANCE",
-                style: TextStyle(
-                    color: themeDarkBlue, fontSize: 17, fontFamily: 'Cairo')),
+            Container(
+              width: MediaQuery.of(context).size.width * 0.33,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  colors: [themeBlue, themeDarkBlue],
+                ),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Text("DISTANCE",
+                    style: TextStyle(color: white, fontSize: 14,  fontFamily: 'Cairo', fontWeight: FontWeight.bold)),
+              ),
+            ),
             Row(
               children: [
                 Row(
@@ -190,9 +202,21 @@ class _ProgressSectionState extends State<ProgressSection>
       children: [
         Column(
           children: [
-            const Text("WEIGHT",
-                style: TextStyle(
-                    color: themeDarkBlue, fontSize: 17, fontFamily: 'Cairo')),
+            Container(
+              width: MediaQuery.of(context).size.width * 0.33,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  colors: [themeBlue, themeDarkBlue],
+                ),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Text("WEIGHT",
+                    style: TextStyle(color: white, fontSize: 14,  fontFamily: 'Cairo', fontWeight: FontWeight.bold)),
+              ),
+            ),
             Row(
               children: [
                 SizedBox(
@@ -211,9 +235,21 @@ class _ProgressSectionState extends State<ProgressSection>
         const SizedBox(width: 10),
         Column(
           children: [
-            const Text("REPS",
-                style: TextStyle(
-                    color: themeDarkBlue, fontSize: 17, fontFamily: 'Cairo')),
+            Container(
+              width: MediaQuery.of(context).size.width * 0.33,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  colors: [themeBlue, themeDarkBlue],
+                ),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Text("REPS",
+                    style: TextStyle(color: white, fontSize: 14,  fontFamily: 'Cairo', fontWeight: FontWeight.bold)),
+              ),
+            ),
             Row(
               children: [
                 SizedBox(
@@ -226,8 +262,11 @@ class _ProgressSectionState extends State<ProgressSection>
         ),
         const SizedBox(width: 10),
         Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Text(""),
+            // show timer
+            timerDisplay(),
+            const SizedBox(height: 20),
             submitButton(),
           ],
         ),
@@ -239,16 +278,22 @@ class _ProgressSectionState extends State<ProgressSection>
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            "SET $totalSets",
+            style: const TextStyle(
+                color: themeDarkBlue, fontSize: 17, fontFamily: 'Cairo'),
+          ),
+        ),
         totalSets > 1 // Check if there's more than 1 circle to delete
             ? Container(
-                width: 40,
-                height: 40,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [themePink, themeDarkBlue],
-                  ),
+                width: 30,
+                height: 30,
+                decoration: const BoxDecoration(
                   shape: BoxShape.circle,
-                  // You can adjust the shape as needed
+                   color: themeDarkBlue,
+
                 ),
                 child: GestureDetector(
                   onTap: () {
@@ -256,24 +301,23 @@ class _ProgressSectionState extends State<ProgressSection>
                       totalSets--;
                     });
                   },
-                  child: const Icon(Icons.remove, size: 33, color: white),
+                  child: const Icon(Icons.remove, color: white),
                 ),
               )
-            : const SizedBox(),
+            : const SizedBox(
+                width: 30,
+              ),
         SizedBox(
           height: 60,
           width: MediaQuery.of(context).size.width * 0.33,
           child: customBorderContainer(),
         ),
         Container(
-          width: 40,
-          height: 40,
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [themePink, themeDarkBlue],
-            ),
+          width: 30,
+          height: 30,
+          decoration: const BoxDecoration(
             shape: BoxShape.circle,
-            // You can adjust the shape as needed
+            color: themeDarkBlue,
           ),
           child: GestureDetector(
             onTap: () {
@@ -283,16 +327,9 @@ class _ProgressSectionState extends State<ProgressSection>
             },
             child: const Icon(
               Icons.add,
-              size: 33,
               color: Colors.white, // Set the icon color to match your needs
             ),
           ),
-        ),
-        const SizedBox(width: 10),
-        Row(
-          children: [
-            timerDisplay(),
-          ],
         ),
       ],
     );
@@ -326,7 +363,7 @@ class _ProgressSectionState extends State<ProgressSection>
         fontSize: 17,
       ),
       selectedTextStyle: const TextStyle(
-        color: themeRed,
+        color: themeBlue,
         fontSize: 32,
       ),
       minValue: 0,
@@ -393,7 +430,7 @@ class _ProgressSectionState extends State<ProgressSection>
         fontSize: 17,
       ),
       selectedTextStyle: const TextStyle(
-        color: themeRed,
+        color: themeBlue,
         fontSize: 27,
       ),
     );
@@ -414,7 +451,7 @@ class _ProgressSectionState extends State<ProgressSection>
         fontSize: 17,
       ),
       selectedTextStyle: const TextStyle(
-        color: themeRed,
+        color: themeBlue,
         fontSize: 25,
       ),
       decoration: const BoxDecoration(
@@ -468,7 +505,7 @@ class _ProgressSectionState extends State<ProgressSection>
         return '.${(meterValue)} km'; // Display as .1 km, .2 km, etc.
       },
       selectedTextStyle: const TextStyle(
-        color: themeRed,
+        color: themeBlue,
         fontSize: 25,
       ),
       decoration: const BoxDecoration(
@@ -515,7 +552,7 @@ class _ProgressSectionState extends State<ProgressSection>
         fontSize: 17,
       ),
       selectedTextStyle: const TextStyle(
-        color: themeRed,
+        color: themeBlue,
         fontSize: 25,
       ),
     );
@@ -537,7 +574,7 @@ class _ProgressSectionState extends State<ProgressSection>
         fontSize: 17,
       ),
       selectedTextStyle: const TextStyle(
-          color: themeRed,
+          color: themeBlue,
           // according to the screen size
           fontSize: 25),
       decoration: BoxDecoration(
@@ -550,12 +587,14 @@ class _ProgressSectionState extends State<ProgressSection>
   Widget submitButton() {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
-        padding:
-            const EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 10),
-        backgroundColor: themeRed,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
+        padding: const EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 10),
+        shape: const CircleBorder(
+          side: BorderSide(
+            color: themeBlue,
+            width: 4,
+          ),
         ),
+        primary: themeDarkBlue,
       ),
       onPressed: () {
         startTimer();
@@ -606,7 +645,7 @@ class _ProgressSectionState extends State<ProgressSection>
           });
         }
       },
-      child: const Icon(Icons.check, size: 30, color: white),
+      child: const Icon(Icons.check, size: 30, color: themeBlue),
     );
   }
 
@@ -655,8 +694,8 @@ class _ProgressSectionState extends State<ProgressSection>
                   builder: (context, child) {
                     return CircularProgressIndicator(
                       value: _animation?.value,
-                      color: themeRed,
-                      backgroundColor: themeDarkOrange,
+                      color: themeDarkBlue,
+                      backgroundColor: themeBlue,
                     );
                   },
                 ),
@@ -673,48 +712,12 @@ class _ProgressSectionState extends State<ProgressSection>
   }
 
   Widget customBorderContainer() {
-    return Stack(
-      clipBehavior: Clip.none,
-      alignment: Alignment.center,
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(top: 3, bottom: 0),
-          child: Container(
-            width: MediaQuery.of(context).size.width * 0.33,
-            height: MediaQuery.of(context).size.width * 0.15,
-            // Decreased width
-            padding: const EdgeInsets.fromLTRB(12, 15, 12, 12),
-            // Smaller padding
-            decoration: BoxDecoration(
-              border:
-                  Border.all(color: themeDarkBlue.withOpacity(0.5), width: 0.9),
-              // Smaller border width
-              borderRadius: BorderRadius.circular(6), // Smaller border radius
-            ),
-            child: buildSetsRow(),
-          ),
-        ),
-        Positioned(
-          top: -6,
-          left: -5, // Adjusted left position
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(8), // Smaller border radius
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
-              decoration: const BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(8)),
-                gradient: LinearGradient(
-                  colors: [themePink, themeDarkBlue],
-                ),
-              ),
-              child: const Padding(
-                padding: EdgeInsets.all(1),
-                child: Text('Your Sets', style: TextStyle(color: Colors.white)),
-              ),
-            ),
-          ),
-        ),
-      ],
+    return Padding(
+      padding: const EdgeInsets.only(top: 3, bottom: 0),
+      child: Container(
+        // Smaller padding
+        child: buildSetsRow(),
+      ),
     );
   }
 
