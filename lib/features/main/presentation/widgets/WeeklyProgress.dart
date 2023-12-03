@@ -208,7 +208,7 @@ class WeeklyProgress extends StatefulWidget {
 }
 
 class WeeklyProgressState extends State<WeeklyProgress> {
-  String dropdownValue = 'STEPS';
+  int selected_index = 0;
   Map<String, double> stepsValues = emptyMap;
   Map<String, double> caloriesValues = emptyMap;
 
@@ -228,64 +228,75 @@ class WeeklyProgressState extends State<WeeklyProgress> {
         return AspectRatio(
           aspectRatio: 1.65,
           child: Container(
-              padding: EdgeInsets.fromLTRB(20, 0, 20, 5),
+              padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
               decoration: primary_decoration,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
                     Text("Weekly Progress",
                         style: textStyle.copyWith(
                             fontSize: 16, fontWeight: FontWeight.bold)),
-                    Spacer(),
-                    Container(
-                      alignment: Alignment.centerRight,
-                      margin: EdgeInsets.fromLTRB(0, 0, 5, 0),
-                      width: 80,
-                      child: DropdownButton<String>(
-                        isExpanded: true,
-                        borderRadius: BorderRadius.circular(5),
-                        underline:
-                            DropdownButtonHideUnderline(child: Container()),
-                        icon: SvgPicture.asset(
-                          'images/arrow-down.svg',
-                          height: 10,
-                          color: themeDarkBlue.withOpacity(0.3),
+                    
+                    Row(
+                      children: [
+                        SizedBox(width: 10),
+                        InkWell(
+                          onTap: () {
+                            setState(() {
+                              selected_index = 0;
+                            });
+                          },
+                          child: Container(
+                            padding: EdgeInsets.all(5),
+                            decoration: BoxDecoration(
+                                color: selected_index == 0
+                                    ? themeDarkBlue.withOpacity(0.1)
+                                    : Colors.transparent,
+                                borderRadius: BorderRadius.circular(5)),
+                            child: Icon(
+                              Icons.directions_walk,
+                              color: themeDarkBlue,)
+
+                            
+                            // Text("Steps",
+                            //     style: textStyle.copyWith(
+                            //         fontSize: 14,
+                            //         color: themeDarkBlue)),
+                          ),
                         ),
-                        alignment: Alignment.centerRight,
-                        // Step 3.
-                        value: dropdownValue,
-                        elevation: 1,
-                        // Step 4.
-                        items: <String>['STEPS', 'CALORIES']
-                            .map<DropdownMenuItem<String>>((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Align(
-                              alignment: Alignment.center,
-                              child: Text(
-                                value,
-                                style: textStyle.copyWith(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w300,
-                                  color: themeDarkBlue.withOpacity(0.3),
-                                ),
-                              ),
-                            ),
-                          );
-                        }).toList(),
-                        // Step 5.
-                        onChanged: (String? newValue) {
-                          setState(() {
-                            dropdownValue = newValue!;
-                          });
-                        },
-                      ),
-                    ),
+                        SizedBox(width: 10),
+                        InkWell(
+                          onTap: () {
+                            setState(() {
+                              selected_index = 1;
+                            });
+                          },
+                          child: Container(
+                            padding: EdgeInsets.all(5),
+                            decoration: BoxDecoration(
+                                color: selected_index == 1
+                                    ? themeDarkBlue.withOpacity(0.1)
+                                    : Colors.transparent,
+                                borderRadius: BorderRadius.circular(5)),
+                            child: Icon(
+                              Icons.local_fire_department,
+                              color: themeDarkBlue,)
+                            
+                            // Text("Calories",
+                            //     style: textStyle.copyWith(
+                            //         fontSize: 14,
+                            //         color: themeDarkBlue)),
+                          ),
+                        ),
+                      ],
+                    )
                   ]),
-                  SizedBox(height: 30),
+                  SizedBox(height: 40),
                   () {
-                    if (dropdownValue == 'STEPS') {
+                    if (selected_index == 0) {
                       return Expanded(
                           child: _BarChart(progresses: stepsValues!));
                     } else {

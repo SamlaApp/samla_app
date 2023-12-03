@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:samla_app/config/themes/common_styles.dart';
+import 'package:samla_app/core/widgets/CustomTextFormField.dart';
 import 'dart:math';
 
 import 'package:samla_app/features/main/domain/entities/Progress.dart';
@@ -34,7 +35,6 @@ class WeightProgressState extends State<WeightProgress> {
     final List<FlSpot> weightSpots = weights.asMap().entries.map((entry) {
       return FlSpot(entry.key.toDouble(), entry.value);
     }).toList();
-
 
     return BlocBuilder<ProgressCubit, ProgressState>(
       bloc: sl<ProgressCubit>(),
@@ -81,7 +81,6 @@ class WeightProgressState extends State<WeightProgress> {
                                           color: themePink)),
                                 ],
                               ),
-
                               Column(
                                 children: [
                                   Text("Height",
@@ -96,8 +95,6 @@ class WeightProgressState extends State<WeightProgress> {
                                           color: themePink)),
                                 ],
                               ),
-
-
                               Column(
                                 children: [
                                   Text("Overall BMI",
@@ -114,11 +111,7 @@ class WeightProgressState extends State<WeightProgress> {
                               ),
                             ],
                           ),
-
                           const SizedBox(height: 20),
-
-
-
                           Container(
                             height: 150,
                             width: 350,
@@ -167,10 +160,8 @@ class WeightProgressState extends State<WeightProgress> {
                               ),
                             ),
                           ),
-                        ]
-                    ),
+                        ]),
                   ),
-
                 ],
               ),
             ],
@@ -212,4 +203,31 @@ Map<String, double> getLast7DaysProgress(List<Progress> progressList) {
   }
 
   return last7DaysProgressMap;
+}
+
+Widget UpdateWeight(callback(String value)) {
+  final controller = TextEditingController();
+  return Container(
+      child: Column(
+    children: [
+      CustomTextFormField(
+        controller: controller,
+        iconData: Icons.monitor_weight_outlined,
+        label: 'Weight',
+        keyboardType: TextInputType.number,
+        onChanged: (value) {
+          // setState(() {
+          //   _weight = int.parse(value);
+          // });
+        },
+      ),
+      const SizedBox(height: 20),
+      ElevatedButton(
+        onPressed: () {
+          callback(controller.text);
+        },
+        child: const Text('Update'),
+      ),
+    ],
+  ));
 }

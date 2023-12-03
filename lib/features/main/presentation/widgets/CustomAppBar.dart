@@ -25,67 +25,71 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<AuthBloc, AuthState>(
       builder: (context, state) {
-        return SafeArea(
-          child: Container(
-              padding: const EdgeInsets.fromLTRB(25, 0, 15, 0),
-              height: preferredSize.height,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  // row of profile
-                  GestureDetector(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Image.asset(
-                          'images/Logo/2x/Icon_1@2x.png',
-                          width: 42,
-                          height: 42,
-                        ),
-
-                        const SizedBox(
-                          width: 10,
-                        ),
-
-                        const Text(
-                          'SAMLA',
-                          style: TextStyle(
-                            fontFamily: 'Cairo',
-                              fontSize: 24,
-                              color: themeDarkBlue,
-                              fontWeight: FontWeight.w700
+        return Container(
+          color: primaryDecoration.color,
+          child: SafeArea(
+            child: Container(
+                decoration: primaryDecoration,
+                padding: const EdgeInsets.fromLTRB(25, 0, 15, 0),
+                height: preferredSize.height,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    // row of profile
+                    GestureDetector(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                            'images/Logo/2x/Icon_1@2x.png',
+                            width: 42,
+                            height: 42,
                           ),
-
-                        ),
-
-                      ],
-
+        
+                          const SizedBox(
+                            width: 10,
+                          ),
+        
+                          const Text(
+                            'SAMLA',
+                            style: TextStyle(
+                              fontFamily: 'Cairo',
+                                fontSize: 24,
+                                color: themeDarkBlue,
+                                fontWeight: FontWeight.w700
+                            ),
+        
+                          ),
+        
+                        ],
+        
+                      ),
                     ),
-                  ),
-                  // row of upper buttons
-                  Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-                    IconButton(
-                        icon: Icon(
-                          Icons.notifications_none_outlined,
-                          size: sizeOfIcon,
-                          color: themeDarkBlue,
-                        ),
-                        onPressed: () =>
-                            Navigator.pushNamed(context, '/Notifications')),
-                    IconButton(
-                        icon: Icon(
-                          Icons.logout,
-                          size: sizeOfIcon,
-                          color: themePink,
-                        ),
-                        onPressed: () {
-                          authBloc.add(LogOutEvent(context));
-                        }),
-                  ]),
-                ],
-              )),
+                    // row of upper buttons
+                    Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+                      IconButton(
+                          icon: Icon(
+                            Icons.notifications_none_outlined,
+                            size: sizeOfIcon,
+                            color: themeDarkBlue,
+                          ),
+                          onPressed: () =>
+                              Navigator.pushNamed(context, '/Notifications')),
+                      IconButton(
+                          icon: Icon(
+                            Icons.logout,
+                            size: sizeOfIcon,
+                            color: themePink,
+                          ),
+                          onPressed: () {
+                            authBloc.add(LogOutEvent(context));
+                          }),
+                    ]),
+                  ],
+                )),
+          ),
         );
       },
     );
