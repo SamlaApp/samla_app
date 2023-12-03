@@ -1,7 +1,6 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:samla_app/config/themes/common_styles.dart';
 import 'dart:math';
@@ -9,12 +8,6 @@ import 'dart:math';
 import 'package:samla_app/features/main/domain/entities/Progress.dart';
 import 'package:samla_app/features/main/home_di.dart';
 import 'package:samla_app/features/main/presentation/cubits/ProgressCubit/progress_cubit.dart';
-
-import 'package:samla_app/features/auth/auth_injection_container.dart'
-    as authDI;
-import 'package:samla_app/features/main/data/datasources/local_data_source.dart';
-import 'package:samla_app/features/main/data/datasources/remote_data_source.dart';
-import 'package:samla_app/features/main/data/models/Progress.dart';
 import 'package:samla_app/features/setup/BMIcalculator.dart';
 
 class WeightProgress extends StatefulWidget {
@@ -38,16 +31,10 @@ class WeightProgressState extends State<WeightProgress> {
 
   @override
   Widget build(BuildContext context) {
-    // final user = authDI.getUser();
-
-    // currentWeight = user .weight == null ? 0 : user.weight as double;
-    // currentHeight = user.height == null ? 0 : user.height as double;
-    // getCurrentBMI = calculateBMI(currentWeight, currentHeight);
-    // getCurrentBMICatogry = getBMIcategory(getCurrentBMI);
-
     final List<FlSpot> weightSpots = weights.asMap().entries.map((entry) {
       return FlSpot(entry.key.toDouble(), entry.value);
     }).toList();
+
 
     return BlocBuilder<ProgressCubit, ProgressState>(
       bloc: sl<ProgressCubit>(),
@@ -61,135 +48,132 @@ class WeightProgressState extends State<WeightProgress> {
           currentWeight = weights[currentWeightIndex]; //
           currentBMI = calculateBMI(currentWeight, height); //
           currentBMICatogry = getBMIcategory(currentBMI); //
+
+          currentBMI = double.parse(currentBMI.toStringAsFixed(2));
         }
-        return AspectRatio(
-          aspectRatio: 1.65,
-          // aspectRatio: 1.4,
-          child: Container(
-            padding: const EdgeInsets.fromLTRB(20, 0, 20, 5),
-            decoration: primary_decoration,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text("Weight",
-                    style: textStyle.copyWith(
-                        fontSize: 28,
-                        fontWeight: FontWeight.bold,
-                        color: themeDarkBlue)),
-                const SizedBox(
-                  height: 10,
-                ),
-                Text("$currentWeight kg",
-                    style: textStyle.copyWith(
-                        fontSize: 26,
-                        fontWeight: FontWeight.bold,
-                        color: themePink)),
-                const SizedBox(
-                  height: 10,
-                ),
-                Row(
-                  children: [
-                    // Text("Weight",
-                    //     style: textStyle.copyWith(
-                    //         fontSize: 16, fontWeight: FontWeight.bold)),
-                    const Spacer(),
-                    Container(
-                      alignment: Alignment.centerRight,
-                      margin: const EdgeInsets.fromLTRB(0, 0, 5, 0),
-                      width: 80,
-                      child: Column(
+        return Container(
+          padding: const EdgeInsets.all(20),
+          decoration: primary_decoration,
+          child: Column(
+            children: [
+              Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            '$height cm', //should get the height here!
-                            style: textStyle.copyWith(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500,
-                              color: themePink,
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Column(
+                                children: [
+                                  Text("Weight",
+                                      style: textStyle.copyWith(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                          color: themeDarkBlue)),
+                                  Text("$currentWeight kg",
+                                      style: textStyle.copyWith(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                          color: themePink)),
+                                ],
+                              ),
+
+                              Column(
+                                children: [
+                                  Text("Height",
+                                      style: textStyle.copyWith(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                          color: themeDarkBlue)),
+                                  Text("$height cm",
+                                      style: textStyle.copyWith(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                          color: themePink)),
+                                ],
+                              ),
+
+
+                              Column(
+                                children: [
+                                  Text("Overall BMI",
+                                      style: textStyle.copyWith(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                          color: themeDarkBlue)),
+                                  Text("$currentBMI",
+                                      style: textStyle.copyWith(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                          color: themePink)),
+                                ],
+                              ),
+                            ],
+                          ),
+
+                          const SizedBox(height: 20),
+
+
+
+                          Container(
+                            height: 150,
+                            width: 350,
+                            child: LineChart(
+                              LineChartData(
+                                minX: 0,
+                                maxX: weights.length - 1,
+                                //adjust to match number of data point
+                                minY: 0,
+                                maxY: weights.reduce(max).toDouble(),
+                                //Find the maximum weight in the list //6
+                                // titlesData: LineTitles.getTitleData(),
+                                gridData: FlGridData(
+                                  show: true, //false
+                                  getDrawingHorizontalLine: (value) {
+                                    return const FlLine(
+                                      color: Color(0xff37434d),
+                                      strokeWidth: 1,
+                                    );
+                                  },
+                                  drawVerticalLine: true,
+                                  getDrawingVerticalLine: (value) {
+                                    return const FlLine(
+                                      color: Color(0xff37434d),
+                                      strokeWidth: 1,
+                                    );
+                                  },
+                                ),
+                                borderData: FlBorderData(
+                                  show: true,
+                                  border: Border.all(
+                                      color: const Color(0xff37434d), width: 1),
+                                ),
+                                lineBarsData: [
+                                  LineChartBarData(
+                                    spots: weightSpots,
+                                    isCurved: true,
+                                    color: themeBlue,
+                                    barWidth: 5,
+                                    // dotData: FlDotData(show: false),
+                                    belowBarData: BarAreaData(
+                                        show: true,
+                                        color: themePink.withOpacity(0.3)),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          Text(
-                            'Height',
-                            style: textStyle.copyWith(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w300,
-                              color: themeDarkBlue.withOpacity(0.3),
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 30,
-                          ),
-                          Text(
-                            '$currentBMI BMI',
-                            style: textStyle.copyWith(
-                              //should get the BMI here!
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500,
-                              color: themePink,
-                            ),
-                          ),
-                          Text(
-                            currentBMICatogry,
-                            style: textStyle.copyWith(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w300,
-                              color: themeDarkBlue.withOpacity(0.3),
-                            ),
-                          ),
-                        ],
-                      ),
+                        ]
                     ),
-                  ],
-                ),
-                const SizedBox(height: 30),
-                LineChart(
-                  LineChartData(
-                    minX: 0,
-                    maxX: weights.length -
-                        1, //adjust to match number of data point
-                    minY: 0,
-                    maxY: weights
-                        .reduce(max)
-                        .toDouble(), //Find the maximum weight in the list //6
-                    // titlesData: LineTitles.getTitleData(),
-                    gridData: FlGridData(
-                      show: true, //false
-                      getDrawingHorizontalLine: (value) {
-                        return const FlLine(
-                          color: Color(0xff37434d),
-                          strokeWidth: 1,
-                        );
-                      },
-                      drawVerticalLine: true,
-                      getDrawingVerticalLine: (value) {
-                        return const FlLine(
-                          color: Color(0xff37434d),
-                          strokeWidth: 1,
-                        );
-                      },
-                    ),
-                    borderData: FlBorderData(
-                      show: true,
-                      border:
-                          Border.all(color: const Color(0xff37434d), width: 1),
-                    ),
-                    lineBarsData: [
-                      LineChartBarData(
-                        spots: weightSpots,
-                        isCurved: true,
-                        color: themeBlue,
-                        barWidth: 5,
-                        // dotData: FlDotData(show: false),
-                        belowBarData: BarAreaData(
-                            show: true, color: themePink.withOpacity(0.3)),
-                      ),
-                    ],
                   ),
-                ),
-              ],
-            ),
+
+                ],
+              ),
+            ],
           ),
         );
       },
