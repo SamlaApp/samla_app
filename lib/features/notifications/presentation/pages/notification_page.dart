@@ -1,5 +1,5 @@
 
-import 'package:samla_app/config/themes/common_styles.dart';
+import 'package:samla_app/config/themes/new_style.dart';
 import 'package:flutter/material.dart';
 
 class NotificationsPage extends StatefulWidget {
@@ -17,7 +17,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Notifications'),
+        title: const Text('Notifications', style: TextStyle(color: white)),
         centerTitle: true,
         backgroundColor: themeDarkBlue,
       ),

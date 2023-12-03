@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:samla_app/config/themes/common_styles.dart';
+import 'package:samla_app/config/themes/new_style.dart';
 import 'package:samla_app/features/notifications/domain/entities/notification.dart';
 import 'package:samla_app/features/notifications/notification_injection_container.dart'
     as di;
@@ -28,9 +28,15 @@ class _NotificationsPageState extends State<NotificationsPage> {
     // return Scaffold NotificationWidget(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Notifications'),
+          title: const Text('Notifications', style: TextStyle(color: white)),
           centerTitle: true,
           backgroundColor: themeDarkBlue,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back_ios, color: white),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          )
         ),
         body: BlocBuilder<NotificationBloc, NotificationState>(
             builder: (context, state) {
