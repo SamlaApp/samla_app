@@ -14,14 +14,21 @@ class ProgressModel extends Progress {
   @override
   factory ProgressModel.fromJson(Map<String, dynamic> json) {
     return ProgressModel(
-      id: json['id'] is String ? int.parse(json['id']): json['id'],
-      weight: (json['weight'] is String ? double.parse(json['weight']) :json['weight'] is int ? json['weight'].toDouble() : json['weight']),
-      height:  (json['height'] is String
+      id: json['id'] is String ? int.parse(json['id']) : json['id'],
+      weight: (json['weight'] is String
+          ? double.parse(json['weight'])
+          : json['weight'] is int
+              ? json['weight'].toDouble()
+              : json['weight']),
+      // weight: 77,
+      height: (json['height'] is String
               ? double.parse(json['height'])
               : json['height'])
           .toDouble(), // Ensure it's converted to a double
-      steps: json['steps'] is String ? int.parse(json['steps']): json['steps'],
-      calories: json['calories'] is String ? int.parse(json['calories']) : json['calories'],
+      steps: json['steps'] is String ? int.parse(json['steps']) : json['steps'],
+      calories: json['calories'] is String
+          ? int.parse(json['calories'])
+          : json['calories'],
       date: DateTime.parse(json['created_at']),
     );
   }
