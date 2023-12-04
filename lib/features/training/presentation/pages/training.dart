@@ -247,16 +247,14 @@ class _TrainingPageState extends State<TrainingPage> {
               child: _buildTemplatePageView(),
             ),
             SmoothPageIndicator(
-              controller: _controller, // make sure this is your PageController
+              controller: _controller,
               count: 7, // the number of dots should match the number of pages
               effect: const JumpingDotEffect(
                 dotHeight: 6,
                 dotWidth: 6,
                 jumpScale: 3,
-                activeDotColor: Color.fromRGBO(216, 46, 20, 1),
-                // use your theme color here
-                dotColor: Colors
-                    .grey, // use a color that suits your theme for inactive dots
+                activeDotColor: themeDarkBlue,
+                dotColor: Colors.grey,
               ),
             ),
           ],
@@ -288,7 +286,7 @@ class _TrainingPageState extends State<TrainingPage> {
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
                   gradient: const LinearGradient(
-                    colors: [themePink, themeDarkBlue],
+                    colors: [themeDarkBlue, themeBlue],
                     tileMode: TileMode.clamp,
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
