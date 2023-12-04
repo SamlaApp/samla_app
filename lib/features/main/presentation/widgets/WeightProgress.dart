@@ -87,7 +87,7 @@ class WeightProgressState extends State<WeightProgress> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.all(0.0),
+                    padding: const EdgeInsets.all(2.0),
                     child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
