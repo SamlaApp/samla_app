@@ -20,7 +20,7 @@ class ProgressModel extends Progress {
           : json['weight'] is int
               ? json['weight'].toDouble()
               : json['weight']),
-      // weight: 77,
+      //weight: 77,
       height: (json['height'] is String
               ? double.parse(json['height'])
               : json['height'])

@@ -87,7 +87,7 @@ class WeightProgressState extends State<WeightProgress> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.all(2.0),
+                    padding: const EdgeInsets.all(5.0),
                     child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -124,7 +124,8 @@ class WeightProgressState extends State<WeightProgress> {
                                 children: [
                                   Column(
                                     children: [
-                                      Text("Overall BMI",
+                                      //  Text("Overall BMI",
+                                      Text("BMI",
                                           style: textStyle.copyWith(
                                               fontSize: 16,
                                               fontWeight: FontWeight.bold)),
@@ -196,7 +197,7 @@ class WeightProgressState extends State<WeightProgress> {
                                 lineBarsData: [
                                   LineChartBarData(
                                     spots: weightSpots,
-                                    isCurved: true,
+                                    isCurved: false, //true
                                     color: Color.fromRGBO(219, 119, 172, 1),
                                     barWidth: 3,
                                     dotData: FlDotData(
