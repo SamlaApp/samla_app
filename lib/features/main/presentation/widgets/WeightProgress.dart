@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:samla_app/config/themes/common_styles.dart';
 import 'package:samla_app/core/widgets/CustomTextFormField.dart';
+import 'package:samla_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'dart:math';
 
 import 'package:samla_app/features/main/domain/entities/Progress.dart';
@@ -59,6 +60,8 @@ class WeightProgressState extends State<WeightProgress> {
     }).toList();
 
     Progress? lastProgress;
+    height = sl<AuthBloc>().user!.height!.toDouble();
+    print('weights progress after api : $height');
 
     return BlocBuilder<ProgressCubit, ProgressState>(
       bloc: sl<ProgressCubit>(),
@@ -70,18 +73,15 @@ class WeightProgressState extends State<WeightProgress> {
           weightSpots = weights.asMap().entries.map((entry) {
             return FlSpot(entry.key.toDouble(), entry.value);
           }).toList();
-          print('weights progress after api : $weights');
 
           if (weights.isEmpty) {
             weights = [33, 44, 55, 66, 77, 88, 99, 100];
           }
-          height = state.progress.last.height ?? 0;
-          print('weights:');
-          print(weights);
+
           // int currentWeightIndex = weights.length - 1; /
           int currentWeightIndex = weights.length - 2; //
           print('currentWeightIndex $currentWeightIndex');
-          currentWeight = weights[currentWeightIndex]; //
+          currentWeight = weights.last; //
           currentBMI = calculateBMI(currentWeight, height); //
           currentBMICatogry = getBMIcategory(currentBMI); //
 
@@ -96,7 +96,7 @@ class WeightProgressState extends State<WeightProgress> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.all(2.0),
+                    padding: const EdgeInsets.all(5.0),
                     child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -131,15 +131,20 @@ class WeightProgressState extends State<WeightProgress> {
                               ),
                               Column(
                                 children: [
-                                  Text("Overall BMI",
-                                      style: textStyle.copyWith(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.bold)),
-                                  Text("$currentBMI",
-                                      style: textStyle.copyWith(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.bold,
-                                          color: themePink)),
+                                  Column(
+                                    children: [
+                                      //  Text("Overall BMI",
+                                      Text("BMI",
+                                          style: textStyle.copyWith(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold)),
+                                      Text("$currentBMI",
+                                          style: textStyle.copyWith(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
+                                              color: themePink)),
+                                    ],
+                                  ),
                                 ],
                               ),
                               Container(
@@ -193,12 +198,15 @@ class WeightProgressState extends State<WeightProgress> {
                                                       width: double.maxFinite,
                                                       child: TextButton(
                                                         onPressed: () {
-                                                          final steps = sl<StepsLogCubit>().getToDaySteps();
+                                                          final steps = sl<
+                                                                  StepsLogCubit>()
+                                                              .getToDaySteps();
                                                           sl<SendProgressCubit>()
                                                               .sendProgress(Progress(
-                                                                  height: height,
+                                                                  height:
+                                                                      height,
                                                                   calories: (steps *
-                                                                      0.07)
+                                                                          0.07)
                                                                       .round(),
                                                                   steps: steps,
                                                                   weight: double.parse(
@@ -292,7 +300,7 @@ class WeightProgressState extends State<WeightProgress> {
                                   LineChartBarData(
                                     preventCurveOverShooting: true,
                                     spots: weightSpots,
-                                    isCurved: true,
+                                    isCurved: false, //true
                                     color: Color.fromRGBO(219, 119, 172, 1),
                                     barWidth: 3,
                                     dotData: FlDotData(
