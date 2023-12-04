@@ -374,7 +374,7 @@ class _ExerciseItemState extends State<ExerciseItem> {
         Padding(
           padding: const EdgeInsets.only(top: 10, bottom: 20),
           child: Container(
-            width: 160,
+            width: MediaQuery.of(context).size.width * 0.4,
             padding: const EdgeInsets.fromLTRB(16, 20, 16, 16),
             decoration: BoxDecoration(
               border: Border.all(color: white),

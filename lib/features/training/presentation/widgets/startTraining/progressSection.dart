@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:numberpicker/numberpicker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../../config/themes/new_style.dart';
 import '../../../domain/entities/ExerciseLibrary.dart';
 import '../../cubit/History/history_cubit.dart';
@@ -9,12 +10,14 @@ import 'package:samla_app/features/training/training_di.dart' as di;
 
 class ProgressSection extends StatefulWidget {
   final ExerciseLibrary selectedExercise;
-  final Function onAllSetsCompleted; // New callback
+  final Function onAllSetsCompleted;
+  final int dayIndex;
 
   const ProgressSection({
     super.key,
     required this.selectedExercise,
     required this.onAllSetsCompleted,
+    required this.dayIndex,
   });
 
   @override
@@ -57,6 +60,7 @@ class _ProgressSectionState extends State<ProgressSection>
       ..addListener(() {
         setState(() {});
       });
+    _loadCompletedSetsForExercise();
   }
 
   @override
@@ -67,20 +71,49 @@ class _ProgressSectionState extends State<ProgressSection>
         .dispose(); // Dispose of the AnimationController when the widget is disposed.
   }
 
+  Future<int> _getCompletedSetsFromPrefs(int exerciseId, int dayIndex) async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getInt('completed_sets_${exerciseId}_$dayIndex') ?? 0;
+  }
+
+  Future<void> _saveCompletedSetsToPrefs(
+      int exerciseId, int completedSets, int dayIndex) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('completed_sets_${exerciseId}_$dayIndex', completedSets);
+  }
+
+  void _loadCompletedSetsForExercise() async {
+    int completedSets = await _getCompletedSetsFromPrefs(
+        widget.selectedExercise.id!, widget.dayIndex);
+    setState(() {
+      finishedSets = completedSets;
+    });
+  }
+
   @override
   void didUpdateWidget(covariant ProgressSection oldWidget) {
     super.didUpdateWidget(oldWidget);
-
     if (widget.selectedExercise.id != oldWidget.selectedExercise.id) {
-      setState(() {
-        totalSets = 3;
-        finishedSets = 0;
-      });
+      _loadCompletedSetsForExercise();
     }
+  }
+
+  Future<void> saveCompletedSets() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('sets_${widget.selectedExercise.id}', finishedSets);
+  }
+
+  Future<void> loadCompletedSets() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      finishedSets = prefs.getInt('sets_${widget.selectedExercise.id}') ?? 0;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    // Print all the history data that grttin passes in one line
+    //
     if (finishedSets == totalSets && !hasShownDialog) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (!hasShownDialog) {
@@ -89,39 +122,51 @@ class _ProgressSectionState extends State<ProgressSection>
         }
       });
     }
-    return Container(
-      margin: const EdgeInsets.only(top: 1),
-      child: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: Column(
-          children: [
-            Container(
-                decoration: primaryDecoration,
-                child: Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: buildNumber(context),
-                )),
-            const SizedBox(height: 20),
-            Container(
-                decoration: primaryDecoration,
-                child: Padding(
-                  padding: const EdgeInsets.only(
-                      left: 10.0, right: 10, top: 16, bottom: 10),
-                  child: buildExerciseSection(),
-                )),
-          ],
-        ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 4),
+      child: Column(
+        children: [
+          // Container(
+          //     decoration: primaryDecoration,
+          //     child: Padding(
+          //       padding: const EdgeInsets.fromLTRB(13, 5, 13, 5),
+          //       child: buildNumber(context),
+          //     )),
+          // const SizedBox(height: 12),
+          Container(
+              decoration: primaryDecoration,
+              child: Padding(
+                padding: const EdgeInsets.only(
+                    left: 10.0, right: 10, top: 5, bottom: 5),
+                child: buildExerciseSection(context),
+              )),
+        ],
       ),
     );
   }
 
-  Widget buildExerciseSection() {
+  Widget buildExerciseSection(BuildContext context) {
     if (widget.selectedExercise.bodyPart == 'cardio') {
       // Return pickers for cardio exercises
-      return buildCardioPickers();
+      return Column(
+        children: [
+          buildNumber(context),
+          const Divider(
+            thickness: .5,
+          ),
+          buildCardioPickers(),
+        ],
+      );
     } else {
-      // Return pickers for non-cardio exercises
-      return buildNonCardioPickers();
+      return Column(
+        children: [
+          buildNumber(context),
+          const Divider(
+            thickness: .5,
+          ),
+          buildNonCardioPickers(),
+        ],
+      );
     }
   }
 
@@ -145,7 +190,11 @@ class _ProgressSectionState extends State<ProgressSection>
               child: const Padding(
                 padding: EdgeInsets.all(8.0),
                 child: Text("DISTANCE",
-                    style: TextStyle(color: white, fontSize: 14,  fontFamily: 'Cairo', fontWeight: FontWeight.bold)),
+                    style: TextStyle(
+                        color: white,
+                        fontSize: 14,
+                        fontFamily: 'Cairo',
+                        fontWeight: FontWeight.bold)),
               ),
             ),
             Row(
@@ -170,9 +219,25 @@ class _ProgressSectionState extends State<ProgressSection>
         ),
         Column(
           children: [
-            const Text("TIME",
-                style: TextStyle(
-                    color: themeDarkBlue, fontSize: 17, fontFamily: 'Cairo')),
+            Container(
+              width: MediaQuery.of(context).size.width * 0.25,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  colors: [themeBlue, themeDarkBlue],
+                ),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Text("TIME",
+                    style: TextStyle(
+                        color: white,
+                        fontSize: 14,
+                        fontFamily: 'Cairo',
+                        fontWeight: FontWeight.bold)),
+              ),
+            ),
             Row(
               children: [
                 SizedBox(
@@ -188,7 +253,7 @@ class _ProgressSectionState extends State<ProgressSection>
         Column(
           children: [
             const Text(""),
-            submitButton(), // Assuming this is defined elsewhere
+            submitButton(),
           ],
         ),
       ],
@@ -203,7 +268,7 @@ class _ProgressSectionState extends State<ProgressSection>
         Column(
           children: [
             Container(
-              width: MediaQuery.of(context).size.width * 0.33,
+              width: MediaQuery.of(context).size.width * 0.38,
               alignment: Alignment.center,
               decoration: BoxDecoration(
                 gradient: const LinearGradient(
@@ -214,14 +279,18 @@ class _ProgressSectionState extends State<ProgressSection>
               child: const Padding(
                 padding: EdgeInsets.all(8.0),
                 child: Text("WEIGHT",
-                    style: TextStyle(color: white, fontSize: 14,  fontFamily: 'Cairo', fontWeight: FontWeight.bold)),
+                    style: TextStyle(
+                        color: white,
+                        fontSize: 14,
+                        fontFamily: 'Cairo',
+                        fontWeight: FontWeight.bold)),
               ),
             ),
             Row(
               children: [
                 SizedBox(
                   // according to the screen width
-                  width: MediaQuery.of(context).size.width * 0.15,
+                  width: MediaQuery.of(context).size.width * 0.16,
                   child: numberWeightPicker(),
                 ),
                 SizedBox(
@@ -236,7 +305,7 @@ class _ProgressSectionState extends State<ProgressSection>
         Column(
           children: [
             Container(
-              width: MediaQuery.of(context).size.width * 0.33,
+              width: MediaQuery.of(context).size.width * 0.23,
               alignment: Alignment.center,
               decoration: BoxDecoration(
                 gradient: const LinearGradient(
@@ -247,13 +316,17 @@ class _ProgressSectionState extends State<ProgressSection>
               child: const Padding(
                 padding: EdgeInsets.all(8.0),
                 child: Text("REPS",
-                    style: TextStyle(color: white, fontSize: 14,  fontFamily: 'Cairo', fontWeight: FontWeight.bold)),
+                    style: TextStyle(
+                        color: white,
+                        fontSize: 14,
+                        fontFamily: 'Cairo',
+                        fontWeight: FontWeight.bold)),
               ),
             ),
             Row(
               children: [
                 SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.25,
+                  width: MediaQuery.of(context).size.width * 0.22,
                   child: buildRepsPicker(),
                 ),
               ],
@@ -261,14 +334,19 @@ class _ProgressSectionState extends State<ProgressSection>
           ],
         ),
         const SizedBox(width: 10),
-        Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            // show timer
-            timerDisplay(),
-            const SizedBox(height: 20),
-            submitButton(),
-          ],
+        Flexible(
+          flex: 1, // Take up only necessary space
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            // Center content vertically
+            children: [
+              // show timer at the top
+              timerDisplay(),
+              const SizedBox(height: 30),
+              // show button in the middle
+              submitButton(),
+            ],
+          ),
         ),
       ],
     );
@@ -278,12 +356,24 @@ class _ProgressSectionState extends State<ProgressSection>
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text(
-            "SET $totalSets",
+        RichText(
+          text: TextSpan(
             style: const TextStyle(
-                color: themeDarkBlue, fontSize: 17, fontFamily: 'Cairo'),
+              fontSize: 17,
+              fontFamily: 'Cairo',
+              color: themeDarkBlue,
+            ),
+            children: [
+              const TextSpan(text: 'SET '),
+              TextSpan(
+                text: '${finishedSets}',
+              ),
+              const TextSpan(text: ' OF '),
+              TextSpan(
+                text: '$totalSets',
+                style: const TextStyle(fontWeight: FontWeight.w900),
+              ),
+            ],
           ),
         ),
         totalSets > 1 // Check if there's more than 1 circle to delete
@@ -292,8 +382,7 @@ class _ProgressSectionState extends State<ProgressSection>
                 height: 30,
                 decoration: const BoxDecoration(
                   shape: BoxShape.circle,
-                   color: themeDarkBlue,
-
+                  color: themeDarkBlue,
                 ),
                 child: GestureDetector(
                   onTap: () {
@@ -310,7 +399,7 @@ class _ProgressSectionState extends State<ProgressSection>
         SizedBox(
           height: 60,
           width: MediaQuery.of(context).size.width * 0.33,
-          child: customBorderContainer(),
+          child: buildSetsRow(),
         ),
         Container(
           width: 30,
@@ -587,7 +676,8 @@ class _ProgressSectionState extends State<ProgressSection>
   Widget submitButton() {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
-        padding: const EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 10),
+        padding:
+            const EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 10),
         shape: const CircleBorder(
           side: BorderSide(
             color: themeBlue,
@@ -596,12 +686,16 @@ class _ProgressSectionState extends State<ProgressSection>
         ),
         primary: themeDarkBlue,
       ),
-      onPressed: () {
+      onPressed: () async {
         startTimer();
 
         setState(() {
           finishedSets++;
         });
+        await _saveCompletedSetsToPrefs(
+            widget.selectedExercise.id!, finishedSets, widget.dayIndex);
+
+        saveCompletedSets();
         if (finishedSets >= totalSets) {
           widget.onAllSetsCompleted();
         } else {
@@ -711,16 +805,6 @@ class _ProgressSectionState extends State<ProgressSection>
     );
   }
 
-  Widget customBorderContainer() {
-    return Padding(
-      padding: const EdgeInsets.only(top: 3, bottom: 0),
-      child: Container(
-        // Smaller padding
-        child: buildSetsRow(),
-      ),
-    );
-  }
-
   Widget buildSetsRow() {
     List<Widget> setsWidgets = List.generate(totalSets, (index) {
       return GestureDetector(
@@ -736,7 +820,7 @@ class _ProgressSectionState extends State<ProgressSection>
           margin: const EdgeInsets.symmetric(horizontal: 4),
           decoration: BoxDecoration(
             gradient: const LinearGradient(
-              colors: [themePink, themeDarkBlue],
+              colors: [themeBlue, themeDarkBlue],
             ),
             shape: BoxShape.circle,
             border: Border.all(

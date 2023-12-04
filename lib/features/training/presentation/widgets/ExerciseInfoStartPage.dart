@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:samla_app/features/training/presentation/widgets/startTraining/history.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import '../../../../config/themes/new_style.dart';
 import '../../domain/entities/ExerciseLibrary.dart';
 import '../cubit/History/history_cubit.dart';
@@ -34,6 +35,27 @@ class ExerciseInfoStartPage extends StatefulWidget {
 
 class ExerciseInfoStartPageState extends State<ExerciseInfoStartPage> {
   bool _isExpanded = false;
+  PageController _pageController = PageController();
+  int _currentPage = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _pageController.addListener(() {
+      int next = _pageController.page!.round();
+      if (_currentPage != next) {
+        setState(() {
+          _currentPage = next;
+        });
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
 
   String capitalize(String s) => s[0].toUpperCase() + s.substring(1);
 
@@ -44,7 +66,7 @@ class ExerciseInfoStartPageState extends State<ExerciseInfoStartPage> {
         border: Border.all(color: Colors.grey[300]!),
         borderRadius: BorderRadius.circular(12),
       ),
-      margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+      margin: const EdgeInsets.fromLTRB(12, 0, 12, 8),
       width: MediaQuery.of(context).size.width * 0.95,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -54,55 +76,65 @@ class ExerciseInfoStartPageState extends State<ExerciseInfoStartPage> {
             padding: const EdgeInsets.all(8.0),
             child: SizedBox(
               // 30% of screen hight
-              height: MediaQuery.of(context).size.height * 0.31,
-              child: Row(
-                //center image
-                mainAxisAlignment: MainAxisAlignment.center,
+              height: MediaQuery.of(context).size.height * 0.26,
+              child: PageView(
+                controller: _pageController,
                 children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(8.0),
-                    child: Image.network(
-                      widget.gifUrl,
-                      width: 200,
-                      // max hight is 20% of screen hight
-                      height: MediaQuery.of(context).size.height * 0.22,
-                      fit: BoxFit.cover,
-                    ),
+                  Image.network(
+                    widget.gifUrl,
+                    // max hight is 16% of screen hight
+                    height: MediaQuery.of(context).size.height * 0.16,
+                    fit: BoxFit.fitHeight,
                   ),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  // scrollable list of info
-                  Expanded(
-                    child: SingleChildScrollView(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          const SizedBox(height: 8),
-                          customBorderContainer(
-                            'Body Part',
-                            widget.bodyPart,
-                          ),
-                          const SizedBox(height: 5),
-                          customBorderContainer(
-                            'Equipment',
-                            widget.equipment,
-                          ),
-                          const SizedBox(height: 5),
-                          customBorderContainer(
-                            'Target',
-                            widget.target,
-                          ),
-                          const SizedBox(height: 5),
-                          customBorderContainer(
-                            'Secondary Muscles',
-                            widget.secondaryMuscles.join(', '),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+                  GridView.count(
+                    // disable GridView's scrolling
+                    physics: const NeverScrollableScrollPhysics(),
+                    // to disable GridView's scrolling
+                    shrinkWrap: false,
+                    // Use this to fit the grid within the PageView
+                    crossAxisCount: 2,
+                    // Number of columns
+                    childAspectRatio: 23 / 14,
+                    // Adjust the size ratio
+                    crossAxisSpacing: 10,
+                    // Horizontal space between items
+                    mainAxisSpacing: 10,
+                    // Vertical space between items
+                    children: [
+                      customBorderContainer('Body Part', widget.bodyPart),
+                      customBorderContainer('Equipment', widget.equipment),
+                      customBorderContainer('Target', widget.target),
+                      customBorderContainer('Secondary Muscles',
+                          widget.secondaryMuscles.join(', ')),
+                    ],
+                  )
                 ],
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(6.0),
+            child: Center(
+              child: SmoothPageIndicator(
+                controller: _pageController, // your PageController
+                count: 2, // the total number of pages in the PageView
+                effect: const ExpandingDotsEffect(
+                  expansionFactor: 4,
+                  // the expansion factor of the active dot
+                  spacing: 8,
+                  // the space between dots
+                  radius: 4,
+                  // the radius of each dot
+                  dotWidth: 6,
+                  // the width of each dot
+                  dotHeight: 6,
+                  // the height of each dot
+                  paintStyle: PaintingStyle.fill,
+                  // style of the dot
+                  strokeWidth: 1.5,
+                  // the stroke width of the dot
+                  activeDotColor: themeBlue,
+                ),
               ),
             ),
           ),
@@ -205,64 +237,48 @@ class ExerciseInfoStartPageState extends State<ExerciseInfoStartPage> {
   }
 
   Widget customBorderContainer(String label, String value) {
-    return Stack(
-      clipBehavior: Clip.none,
-      alignment: Alignment.center,
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(top: 5, bottom: 10),
-          child: Container(
-            width: MediaQuery.of(context).size.width * 0.33,
-            // Decreased width
-            padding: const EdgeInsets.fromLTRB(12, 12, 12, 12),
-            // Smaller padding
-            decoration: BoxDecoration(
-              border:
-                  Border.all(color: themeDarkBlue.withOpacity(0.5), width: 0.9),
-              // Smaller border width
-              borderRadius: BorderRadius.circular(6), // Smaller border radius
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
+      decoration: BoxDecoration(
+        border: Border.all(color: themeDarkBlue.withOpacity(1), width: 0.9),
+        borderRadius: BorderRadius.circular(9),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+            decoration: const BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(8)),
+              gradient: LinearGradient(
+                colors: [themeBlue, themeDarkBlue],
+              ),
             ),
-            child: Padding(
-              padding: const EdgeInsets.only(top: 6.0, bottom: 2.0),
+            child: Align(
+              alignment: Alignment.center,
               child: Text(
-                capitalize(value),
-                style: TextStyle(
-                  color: themeDarkBlue.withOpacity(0.7),
-                  fontWeight: FontWeight.w600,
-                  fontSize: 12, // Smaller font size
+                label,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 14.5,
+                  fontWeight: FontWeight.w700,
                 ),
               ),
             ),
           ),
-        ),
-        Positioned(
-          top: -2,
-          left: -5, // Adjusted left position
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(8), // Smaller border radius
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
-              decoration: const BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(8)),
-                gradient: LinearGradient(
-                  colors: [themePink, themeDarkBlue],
-                ),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(1),
-                child: Text(
-                  label,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 12, // Smaller font size
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ),
+          SizedBox(height: 5), // Space between label and value
+          Text(
+            capitalize(value),
+            style: TextStyle(
+              color: themeDarkBlue.withOpacity(0.7),
+              fontWeight: FontWeight.w600,
+              fontSize: 14,
             ),
+            textAlign: TextAlign.center,
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

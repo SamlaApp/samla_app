@@ -25,37 +25,40 @@ class ExerciseScrollRow extends StatelessWidget {
       height: MediaQuery.of(context).size.height * 0.1,
       width: MediaQuery.of(context).size.width * 0.95,
       margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: exercises.length,
-        itemBuilder: (context, index) {
-          final exercise = exercises[index];
-          bool isSelected = selectedExercise == exercise;
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 15.0),
+        child: ListView.builder(
+          scrollDirection: Axis.horizontal,
+          itemCount: exercises.length,
+          itemBuilder: (context, index) {
+            final exercise = exercises[index];
+            bool isSelected = selectedExercise == exercise;
 
-          return InkWell(
-            onTap: () => onExerciseSelect(exercise),
-            child: Container(
-              margin: const EdgeInsets.all(8.0),
-              width: MediaQuery.of(context).size.width * 0.18,
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: isSelected ? themeBlue : themeGrey,
-                  width: isSelected ? 3 : 1,
+            return InkWell(
+              onTap: () => onExerciseSelect(exercise),
+              child: Container(
+                margin: const EdgeInsets.all(8.0),
+                width: MediaQuery.of(context).size.width * 0.18,
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: isSelected ? themeBlue : themeGrey,
+                    width: isSelected ? 3 : 1,
+                  ),
+                  borderRadius: BorderRadius.circular(6.0),
                 ),
-                borderRadius: BorderRadius.circular(6.0),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Image.network(
-                  baseURL + exercise.gifUrl,
-                  fit: BoxFit.cover,
-                  width: MediaQuery.of(context).size.width * 0.18,
-                  height: MediaQuery.of(context).size.height * 0.09,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Image.network(
+                    baseURL + exercise.gifUrl,
+                    fit: BoxFit.cover,
+                    width: MediaQuery.of(context).size.width * 0.18,
+                    height: MediaQuery.of(context).size.height * 0.09,
+                  ),
                 ),
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }

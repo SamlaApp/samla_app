@@ -179,7 +179,7 @@ class _TemplatePageState extends State<TemplatePage> {
             body: Center(
                 child: CircularProgressIndicator(
               color: themeBlue,
-              backgroundColor: themePink,
+              backgroundColor: themeDarkBlue,
             )),
           );
         } else if (state is TemplateDetailLoaded) {
@@ -254,7 +254,7 @@ class _TemplatePageState extends State<TemplatePage> {
                 flexibleSpace: Container(
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
-                      colors: [themePink, themeDarkBlue],
+                      colors: [themeBlue, themeDarkBlue],
                       tileMode: TileMode.clamp,
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
@@ -302,7 +302,7 @@ class _TemplatePageState extends State<TemplatePage> {
             body: Center(
                 child: CircularProgressIndicator(
               color: themeBlue,
-              backgroundColor: themePink,
+              backgroundColor: themeDarkBlue,
             )),
           );
         }
@@ -364,6 +364,7 @@ class _TemplatePageState extends State<TemplatePage> {
                         },
                         icon: const Icon(Icons.edit),
                         color: themeBlue,
+                        splashColor: Colors.lightBlue,
                       )
                     ],
                   ),
@@ -441,7 +442,7 @@ class _TemplatePageState extends State<TemplatePage> {
                     instructions: exercise.instructions,
                     secondaryMuscles: exercise.secondaryMuscles,
                     gradient: LinearGradient(
-                      colors: [themePink, themeBlue],
+                      colors: [themeDarkBlue, themeBlue],
                       tileMode: TileMode.clamp,
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
@@ -473,7 +474,7 @@ class _TemplatePageState extends State<TemplatePage> {
           return Center(
               child: CircularProgressIndicator(
             color: themeBlue,
-            backgroundColor: themePink,
+            backgroundColor: themeDarkBlue,
           ));
         } else if (state is ExerciseDayLoadedState) {
           return SingleChildScrollView(
@@ -491,7 +492,7 @@ class _TemplatePageState extends State<TemplatePage> {
                     instructions: exercise.instructions,
                     secondaryMuscles: exercise.secondaryMuscles,
                     gradient: LinearGradient(
-                      colors: [themePink, themeBlue],
+                      colors: [themeDarkBlue, themeBlue],
                       tileMode: TileMode.clamp,
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
@@ -630,7 +631,7 @@ class _TemplatePageState extends State<TemplatePage> {
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     gradient: LinearGradient(
-                      colors: [themePink, themeDarkBlue],
+                      colors: [themeBlue, themeDarkBlue],
                       tileMode: TileMode.clamp,
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
@@ -668,8 +669,8 @@ class _TemplatePageState extends State<TemplatePage> {
                   onPressed: () {
                     updateTemplate();
                   },
-                  icon: const Icon(Icons.add),
-                  label: const Text('Create'),
+                  icon: const Icon(Icons.check),
+                  label: const Text('Confirm'),
                   style: ElevatedButton.styleFrom(
                     foregroundColor: Colors.white,
                     backgroundColor: themeDarkBlue,

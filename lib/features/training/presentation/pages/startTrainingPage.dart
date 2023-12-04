@@ -34,6 +34,12 @@ class StartTrainingState extends State<StartTraining>
   late AnimationController smallStarController1;
   late AnimationController largeStarController;
   late AnimationController smallStarController2;
+  int initialSets = 0;
+  int wholeNumberWeight = 0;
+  double fractionalWeight = 0.0;
+  int initialReps = 0;
+  int kilometers = 0;
+  int meters = 0;
 
   @override
   void initState() {
@@ -79,9 +85,31 @@ class StartTrainingState extends State<StartTraining>
     loadHistoryForExercise();
   }
 
-  void loadHistoryForExercise() {
-    historyCubit.getHistory(id: selectedExercise.id!);
+  void loadHistoryForExercise() async {
+    await historyCubit.getHistory(id: selectedExercise.id!);
+    historyCubit.stream.listen((state) {
+      if (!mounted) return; // Check if the widget is still in the tree
+
+      if (state is HistoryLoadedState && state.history.isNotEmpty) {
+        var lastSet = state.history.last;
+        setState(() {
+          initialSets = lastSet.sets!;
+          initialReps = lastSet.repetitions!;
+          wholeNumberWeight = lastSet.weight!.truncate();
+          fractionalWeight = lastSet.weight! - wholeNumberWeight;
+
+          if (selectedExercise.bodyPart == 'cardio') {
+            kilometers = lastSet.distance!.truncate();
+            meters = ((lastSet.distance! - kilometers) * 1000).round();
+          }
+        });
+      }
+    });
   }
+
+  // void loadHistoryForExercise() {
+  //   historyCubit.getHistory(id: selectedExercise.id!);
+  // }
 
   void selectNextExercise() async {
     int currentIndex = widget.exercises.indexOf(selectedExercise);
@@ -147,7 +175,8 @@ class StartTrainingState extends State<StartTraining>
           ),
           actions: <Widget>[
             TextButton(
-              child: const Text("Close", style: TextStyle(color: Colors.blueAccent)),
+              child: const Text("Close",
+                  style: TextStyle(color: Colors.blueAccent)),
               onPressed: () {
                 Navigator.of(context).pop(true);
               },
@@ -160,49 +189,67 @@ class StartTrainingState extends State<StartTraining>
 
   @override
   Widget build(BuildContext context) {
+    // print the progress of the exercise before the user starts in one line
+    // print(
+    //     'initialSets: $initialSets, initialReps: $initialReps, wholeNumberWeight: $wholeNumberWeight, fractionalWeight: $fractionalWeight, kilometers: $kilometers, meters: $meters');
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.dayName.toUpperCase(),
-            style: const TextStyle(
-                color: white,
-                fontSize: 22,
-                fontWeight: FontWeight.w700,
-                fontFamily: 'Cairo')),
-        backgroundColor: themeDarkBlue,
-        iconTheme: const IconThemeData(color: white),
+        title: Text(
+          widget.dayName.toUpperCase(),
+          style: const TextStyle(
+            color: white,
+            fontSize: 22,
+            fontWeight: FontWeight.w700,
+            fontFamily: 'Cairo',
+          ),
+        ),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios, color: white),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+        flexibleSpace: AnimateGradient(
+          primaryBegin: Alignment.topLeft,
+          primaryEnd: Alignment.bottomLeft,
+          secondaryBegin: Alignment.bottomRight,
+          secondaryEnd: Alignment.topLeft,
+          primaryColors: const [themeDarkBlue, themeBlue],
+          // Use your colors
+          secondaryColors: const [themeDarkBlue, themeBlue],
+          // Use your colors
+        ),
       ),
       body: Center(
         child: SingleChildScrollView(
-          child: Column(
+          child: Stack(
             children: [
-              // ## selected exercise section
-              SelectedExerciseDisplay(
-                selectedExercise: selectedExercise,
-                historyCubit: historyCubit,
+              Column(
+                children: [
+                  // ## selected exercise section
+                  SelectedExerciseDisplay(
+                    selectedExercise: selectedExercise,
+                    historyCubit: historyCubit,
+                  ),
+                  ProgressSection(
+                    selectedExercise: selectedExercise,
+                    onAllSetsCompleted:
+                        selectNextExercise, // Pass the new method as a callback
+                    dayIndex: widget.dayIndex, // Pass the dayIndex here
+                  ),
+                  // ## exercise scroll row
+                  ExerciseScrollRow(
+                    exercises: widget.exercises,
+                    selectedExercise: selectedExercise,
+                    onExerciseSelect: (ExerciseLibrary exercise) {
+                      setState(() {
+                        selectedExercise = exercise;
+                        loadHistoryForExercise();
+                      });
+                    },
+                  ),
+                ],
               ),
-              // buildProgressSection(),
-              ProgressSection(
-                selectedExercise: selectedExercise,
-                onAllSetsCompleted:
-                    selectNextExercise, // Pass the new method as a callback
-              ),
-              // ## exercise scroll row
-              ExerciseScrollRow(
-                exercises: widget.exercises,
-                selectedExercise: selectedExercise,
-                onExerciseSelect: (ExerciseLibrary exercise) {
-                  setState(() {
-                    selectedExercise = exercise;
-                    loadHistoryForExercise();
-                  });
-                },
-              ),
-              //_showThankYouDialog(), button to show the dialog
-              // ElevatedButton(
-              //     onPressed: () {
-              //       _showThankYouDialog();
-              //     },
-              //     child: Text('set Dialog'))
             ],
           ),
         ),

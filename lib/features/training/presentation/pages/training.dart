@@ -288,7 +288,7 @@ class _TrainingPageState extends State<TrainingPage> {
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
                   gradient: const LinearGradient(
-                    colors: [themePink, themeDarkBlue],
+                    colors: [themeDarkBlue, themeBlue],
                     tileMode: TileMode.clamp,
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
