@@ -218,6 +218,7 @@ class StartTrainingState extends State<StartTraining>
           // Use your colors
           secondaryColors: const [themeDarkBlue, themeBlue],
           // Use your colors
+          duration: const Duration(seconds: 50),
         ),
       ),
       body: Center(
