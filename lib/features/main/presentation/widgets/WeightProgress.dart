@@ -32,7 +32,7 @@ class WeightProgressState extends State<WeightProgress> {
 
   @override
   Widget build(BuildContext context) {
-    final List<FlSpot> weightSpots = weights.asMap().entries.map((entry) {
+    List<FlSpot> weightSpots = weights.asMap().entries.map((entry) {
       return FlSpot(entry.key.toDouble(), entry.value);
     }).toList();
 
