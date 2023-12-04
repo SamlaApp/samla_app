@@ -41,5 +41,13 @@ class StepsLogCubit extends Cubit<StepsLogState> {
     }
   }
 
+  int getToDaySteps() {
+    final sensorState = sensorCubit.state;
+    if (sensorState is SensorWorks) {
+      final newSteps = sensorState.reads - offset + steps;
+      return newSteps;
+    } return 0;
+  }
+
   final SharedPreferences prefs;
 }

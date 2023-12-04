@@ -9,6 +9,9 @@ import 'dart:math';
 import 'package:samla_app/features/main/domain/entities/Progress.dart';
 import 'package:samla_app/features/main/home_di.dart';
 import 'package:samla_app/features/main/presentation/cubits/ProgressCubit/progress_cubit.dart';
+import 'package:samla_app/features/main/presentation/cubits/SendProgress/send_progress_cubit.dart';
+import 'package:samla_app/features/main/presentation/cubits/SensorCubit/steps_cubit.dart';
+import 'package:samla_app/features/main/presentation/cubits/StepsLogCubit/steps_log_cubit.dart';
 import 'package:samla_app/features/setup/BMIcalculator.dart';
 //weightprogress without catogry
 
@@ -55,12 +58,18 @@ class WeightProgressState extends State<WeightProgress> {
       return FlSpot(entry.key.toDouble(), entry.value);
     }).toList();
 
+    Progress? lastProgress;
+
     return BlocBuilder<ProgressCubit, ProgressState>(
       bloc: sl<ProgressCubit>(),
       builder: (context, state) {
-        if (state is ProgressLoadedState) {
+        if (state is ProgressLoadedState && state.progress.isNotEmpty) {
           weights = getLast7DaysProgress(state.progress).values.toList();
+          lastProgress = state.progress.last;
           weightsTitles = getLast7DaysProgress(state.progress).keys.toList();
+          weightSpots = weights.asMap().entries.map((entry) {
+            return FlSpot(entry.key.toDouble(), entry.value);
+          }).toList();
           print('weights progress after api : $weights');
 
           if (weights.isEmpty) {
@@ -98,11 +107,11 @@ class WeightProgressState extends State<WeightProgress> {
                                 children: [
                                   Text("Weight",
                                       style: textStyle.copyWith(
-                                          fontSize: 16,
+                                          fontSize: 14,
                                           fontWeight: FontWeight.bold)),
                                   Text("$currentWeight kg",
                                       style: textStyle.copyWith(
-                                          fontSize: 16,
+                                          fontSize: 14,
                                           fontWeight: FontWeight.bold,
                                           color: themePink)),
                                 ],
@@ -111,32 +120,116 @@ class WeightProgressState extends State<WeightProgress> {
                                 children: [
                                   Text("Height",
                                       style: textStyle.copyWith(
-                                          fontSize: 16,
+                                          fontSize: 14,
                                           fontWeight: FontWeight.bold)),
                                   Text("$height cm",
                                       style: textStyle.copyWith(
-                                          fontSize: 16,
+                                          fontSize: 14,
                                           fontWeight: FontWeight.bold,
                                           color: themePink)),
                                 ],
                               ),
-                              Row(
+                              Column(
                                 children: [
-                                  Column(
-                                    children: [
-                                      Text("Overall BMI",
-                                          style: textStyle.copyWith(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold)),
-                                      Text("$currentBMI",
-                                          style: textStyle.copyWith(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold,
-                                              color: themePink)),
-                                    ],
-                                  ),
+                                  Text("Overall BMI",
+                                      style: textStyle.copyWith(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.bold)),
+                                  Text("$currentBMI",
+                                      style: textStyle.copyWith(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.bold,
+                                          color: themePink)),
                                 ],
                               ),
+                              Container(
+                                  height: 40,
+                                  width: 100,
+                                  // border radius
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: themePink,
+                                  ),
+                                  child: TextButton(
+                                    onPressed: () {
+                                      //show dialog
+                                      showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            final controller =
+                                                TextEditingController();
+                                            return AlertDialog(
+                                                title: Text(
+                                                  'Update Weight',
+                                                  textAlign: TextAlign.center,
+                                                  style: TextStyle(
+                                                    color: themeBlue,
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                                content: Column(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  children: [
+                                                    CustomTextFormField(
+                                                      controller: controller,
+                                                      iconData: Icons
+                                                          .monitor_weight_outlined,
+                                                      label: 'Weight',
+                                                      keyboardType:
+                                                          TextInputType.number,
+                                                    ),
+                                                    const SizedBox(height: 20),
+                                                    Container(
+                                                      // border radius
+                                                      decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10),
+                                                        color: themeBlue,
+                                                      ),
+                                                      height: 40,
+                                                      width: double.maxFinite,
+                                                      child: TextButton(
+                                                        onPressed: () {
+                                                          final steps = sl<StepsLogCubit>().getToDaySteps();
+                                                          sl<SendProgressCubit>()
+                                                              .sendProgress(Progress(
+                                                                  height: height,
+                                                                  calories: (steps *
+                                                                      0.07)
+                                                                      .round(),
+                                                                  steps: steps,
+                                                                  weight: double.parse(
+                                                                      controller
+                                                                          .text),
+                                                                  date: DateTime
+                                                                      .now()));
+                                                          Navigator.pop(
+                                                              context);
+                                                        },
+                                                        child: const Text(
+                                                          'Update',
+                                                          style: TextStyle(
+                                                            color: Colors.white,
+                                                            fontSize: 14,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    )
+                                                  ],
+                                                ));
+                                          });
+                                    },
+                                    child: Text(
+                                      'Update',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 14,
+                                      ),
+                                    ),
+                                  ))
                             ],
                           ),
                           const SizedBox(height: 30),
@@ -174,11 +267,11 @@ class WeightProgressState extends State<WeightProgress> {
                                       color: const Color(0xff37434d), width: 1),
                                 ),
                                 titlesData: FlTitlesData(
-                                  show: true,
+                                  show: false,
                                   bottomTitles: AxisTitles(
                                     sideTitles: SideTitles(
                                       showTitles: true,
-                                      reservedSize: 30,
+                                      reservedSize: 40,
                                       getTitlesWidget: getTitles,
                                     ),
                                   ),
@@ -186,15 +279,18 @@ class WeightProgressState extends State<WeightProgress> {
                                       sideTitles:
                                           SideTitles(showTitles: false)),
                                   topTitles: AxisTitles(
-                                      sideTitles:
-                                          SideTitles(showTitles: false)),
+                                      sideTitles: SideTitles(
+                                    showTitles: false,
+                                  )),
                                   rightTitles: AxisTitles(
-                                      sideTitles:
-                                          SideTitles(showTitles: false)),
+                                      sideTitles: SideTitles(
+                                    showTitles: false,
+                                  )),
                                 ),
 
                                 lineBarsData: [
                                   LineChartBarData(
+                                    preventCurveOverShooting: true,
                                     spots: weightSpots,
                                     isCurved: true,
                                     color: Color.fromRGBO(219, 119, 172, 1),

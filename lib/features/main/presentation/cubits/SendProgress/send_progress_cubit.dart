@@ -48,21 +48,21 @@ class SendProgressCubit extends Cubit<SendProgressState> {
           );
           print('before send to server: $progress.date');
           await sendProgress(progress);
-          return;
+          return Future<void>.value();
         }
-      }
-      final lastProgress =
-          (sl<ProgressCubit>().state as ProgressLoadedState).progress.first;
-
-      if (sensorState is SensorWorks) {
-        final oldSteps = sl<StepsLogCubit>().steps;
-        final offset = sl<StepsLogCubit>().offset;
-        Progress progress = lastProgress.copyWith(
-          steps: sensorState.reads - offset + oldSteps,
-          date: DateTime.now(),
-        );
-        print('before send to server: $progress.date');
-        await sendProgress(progress);
+      } else {
+        if (sensorState is SensorWorks) {
+          final lastProgress =
+              (sl<ProgressCubit>().state as ProgressLoadedState).progress.first;
+          final oldSteps = sl<StepsLogCubit>().steps;
+          final offset = sl<StepsLogCubit>().offset;
+          Progress progress = lastProgress.copyWith(
+            steps: sensorState.reads - offset + oldSteps,
+            date: DateTime.now(),
+          );
+          print('before send to server: $progress.date');
+          await sendProgress(progress);
+        }
       }
     } on Exception catch (e) {
       print('Error during refreash progress: $e');
