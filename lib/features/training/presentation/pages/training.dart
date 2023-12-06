@@ -253,7 +253,7 @@ class _TrainingPageState extends State<TrainingPage> {
                 dotHeight: 6,
                 dotWidth: 6,
                 jumpScale: 3,
-                activeDotColor: themeDarkBlue,
+                activeDotColor: themeBlue,
                 dotColor: Colors.grey,
               ),
             ),

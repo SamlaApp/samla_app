@@ -269,7 +269,7 @@ class _ExerciseTilesState extends State<ExerciseTiles> {
               decoration: const BoxDecoration(
                 borderRadius: BorderRadius.all(Radius.circular(8)),
                 gradient: LinearGradient(
-                  colors: [themePink, themeDarkBlue],
+                  colors: [themeBlue, themeDarkBlue],
                 ),
               ),
               child: Padding(

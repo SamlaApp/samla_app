@@ -4,6 +4,7 @@ import 'package:samla_app/features/training/presentation/cubit/History/history_c
 import '../../../../config/themes/new_style.dart';
 import '../../domain/entities/ExerciseLibrary.dart';
 import '../widgets/startTraining/ExerciseScrollRow.dart';
+import '../widgets/startTraining/customThanks.dart';
 import '../widgets/startTraining/progressSection.dart';
 import '../widgets/startTraining/SelectedExerciseDisplay.dart';
 import 'package:samla_app/features/training/training_di.dart' as di;
@@ -107,20 +108,22 @@ class StartTrainingState extends State<StartTraining>
     });
   }
 
-  // void loadHistoryForExercise() {
-  //   historyCubit.getHistory(id: selectedExercise.id!);
-  // }
-
   void selectNextExercise() async {
     int currentIndex = widget.exercises.indexOf(selectedExercise);
+    print("Current index: $currentIndex");
     if (currentIndex < widget.exercises.length - 1) {
       setState(() {
         selectedExercise = widget.exercises[currentIndex + 1];
+      });
+
+      // Wait for the next frame to ensure the state is updated
+      await Future.delayed(Duration.zero, () {
         loadHistoryForExercise();
       });
     } else {
       print("Last exercise completed, showing dialog");
-      bool? trainingCompleted = await _showThankYouDialog();
+      bool? trainingCompleted = await showThankYouDialog(context,
+          smallStarController1, largeStarController, smallStarController2);
       print("Dialog closed with value: $trainingCompleted");
       if (trainingCompleted == true) {
         Navigator.of(context).pop(true);
@@ -128,70 +131,8 @@ class StartTrainingState extends State<StartTraining>
     }
   }
 
-  Future<bool?> _showThankYouDialog() async {
-    return showDialog<bool>(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          backgroundColor: Colors.white,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-          title: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  FadeTransition(
-                    opacity: smallStarController1,
-                    child: const Icon(Icons.star_rate,
-                        size: 22, color: themeRed), // Smaller star
-                  ),
-                  FadeTransition(
-                    opacity: largeStarController,
-                    child: const Icon(Icons.star_rate,
-                        size: 45, color: themeRed), // Larger star
-                  ),
-                  FadeTransition(
-                    opacity: smallStarController2,
-                    child: const Icon(Icons.star_rate,
-                        size: 22, color: themeRed), // Smaller star
-                  ),
-                ],
-              ),
-              const SizedBox(height: 16),
-              const Text(
-                "Training Complete",
-                style:
-                    TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-                textAlign: TextAlign.center,
-              ),
-            ],
-          ),
-          content: const Text(
-            "Congratulations! You've completed today's training session. Great job!",
-            style: TextStyle(color: Colors.black87, fontSize: 18),
-            textAlign: TextAlign.center,
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: const Text("Close",
-                  style: TextStyle(color: Colors.blueAccent)),
-              onPressed: () {
-                Navigator.of(context).pop(true);
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
-    // print the progress of the exercise before the user starts in one line
-    // print(
-    //     'initialSets: $initialSets, initialReps: $initialReps, wholeNumberWeight: $wholeNumberWeight, fractionalWeight: $fractionalWeight, kilometers: $kilometers, meters: $meters');
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -213,44 +154,54 @@ class StartTrainingState extends State<StartTraining>
           primaryBegin: Alignment.topLeft,
           primaryEnd: Alignment.bottomLeft,
           secondaryBegin: Alignment.bottomRight,
-          secondaryEnd: Alignment.topLeft,
+          secondaryEnd: Alignment.topRight,
           primaryColors: const [themeDarkBlue, themeBlue],
           // Use your colors
           secondaryColors: const [themeDarkBlue, themeBlue],
           // Use your colors
-          duration: const Duration(seconds: 50),
+          duration: const Duration(seconds: 3),
         ),
       ),
       body: Center(
         child: SingleChildScrollView(
           child: Stack(
             children: [
-              Column(
-                children: [
-                  // ## selected exercise section
-                  SelectedExerciseDisplay(
-                    selectedExercise: selectedExercise,
-                    historyCubit: historyCubit,
-                  ),
-                  ProgressSection(
-                    selectedExercise: selectedExercise,
-                    onAllSetsCompleted:
-                        selectNextExercise, // Pass the new method as a callback
-                    dayIndex: widget.dayIndex, // Pass the dayIndex here
-                  ),
-                  // ## exercise scroll row
-                  ExerciseScrollRow(
-                    exercises: widget.exercises,
-                    selectedExercise: selectedExercise,
-                    onExerciseSelect: (ExerciseLibrary exercise) {
-                      setState(() {
-                        selectedExercise = exercise;
-                        loadHistoryForExercise();
-                      });
+              Column(children: [
+                // ## selected exercise section
+                SelectedExerciseDisplay(
+                  selectedExercise: selectedExercise,
+                  historyCubit: historyCubit,
+                ),
+                ProgressSection(
+                  selectedExercise: selectedExercise,
+                  onAllSetsCompleted:
+                      selectNextExercise, // Pass the new method as a callback
+                  dayIndex: widget.dayIndex, // Pass the dayIndex here
+                ),
+                // ## exercise scroll row
+                ExerciseScrollRow(
+                  exercises: widget.exercises,
+                  selectedExercise: selectedExercise,
+                  onExerciseSelect: (ExerciseLibrary exercise) {
+                    setState(() {
+                      selectedExercise = exercise;
+                      loadHistoryForExercise();
+                    });
+                  },
+                ),
+                // showThankYouDialog(
+                //           context,
+                //           smallStarController1,
+                //           largeStarController,
+                //           smallStarController2
+                //       );
+                ElevatedButton(
+                    onPressed: () {
+                      showThankYouDialog(context, smallStarController1,
+                          largeStarController, smallStarController2);
                     },
-                  ),
-                ],
-              ),
+                    child: const Text('Show Dialog')),
+              ]),
             ],
           ),
         ),

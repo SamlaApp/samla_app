@@ -1,12 +1,15 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../../config/themes/new_style.dart';
 import '../../../domain/entities/ExerciseLibrary.dart';
 import '../../cubit/History/history_cubit.dart';
 import 'package:samla_app/features/training/training_di.dart' as di;
+
+import 'customTimer.dart';
 
 class ProgressSection extends StatefulWidget {
   final ExerciseLibrary selectedExercise;
@@ -47,6 +50,7 @@ class _ProgressSectionState extends State<ProgressSection>
   late Animation<double>? _animation;
   bool hasShownDialog = false;
   late final Map<String, int> exerciseSets;
+  OverlayEntry? _overlayEntry;
 
   @override
   void initState() {
@@ -63,10 +67,56 @@ class _ProgressSectionState extends State<ProgressSection>
     _loadCompletedSetsForExercise();
   }
 
+  void _showCustomToast() {
+    _overlayEntry = OverlayEntry(
+      builder: (context) => Positioned.fill(
+        // Cover the entire screen
+        child: GestureDetector(
+          onTap: _removeOverlay, // Remove overlay when background is tapped
+          behavior: HitTestBehavior.opaque,
+          child: Container(
+            color: Colors.black54, // Semi-transparent background
+            alignment: Alignment.center,
+            child: GestureDetector(
+              onTap: () {}, // Prevent taps on the dialog from closing it
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Material(
+                  color: Colors.transparent,
+                  child: CustomTimerWidget(
+                    onClose: () {
+                      _removeOverlay();
+                    },
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+
+    Overlay.of(context)?.insert(_overlayEntry!);
+
+    // Optionally, set a timer to automatically remove the toast
+    Future.delayed(Duration(seconds: 45), () {
+      _removeOverlay();
+    });
+  }
+
+  void _removeOverlay() {
+    if (_overlayEntry != null) {
+      _overlayEntry?.remove();
+      _overlayEntry = null;
+      _animationController.stop(); // Stop the animation
+    }
+  }
+
   @override
   void dispose() {
     _timer?.cancel();
     _animationController.dispose();
+    _removeOverlay();
     super
         .dispose(); // Dispose of the AnimationController when the widget is disposed.
   }
@@ -112,8 +162,6 @@ class _ProgressSectionState extends State<ProgressSection>
 
   @override
   Widget build(BuildContext context) {
-    // Print all the history data that grttin passes in one line
-    //
     if (finishedSets == totalSets && !hasShownDialog) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (!hasShownDialog) {
@@ -126,13 +174,6 @@ class _ProgressSectionState extends State<ProgressSection>
       padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 4),
       child: Column(
         children: [
-          // Container(
-          //     decoration: primaryDecoration,
-          //     child: Padding(
-          //       padding: const EdgeInsets.fromLTRB(13, 5, 13, 5),
-          //       child: buildNumber(context),
-          //     )),
-          // const SizedBox(height: 12),
           Container(
               decoration: primaryDecoration,
               child: Padding(
@@ -179,7 +220,7 @@ class _ProgressSectionState extends State<ProgressSection>
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Container(
-              width: MediaQuery.of(context).size.width * 0.33,
+              width: MediaQuery.of(context).size.width * 0.38,
               alignment: Alignment.center,
               decoration: BoxDecoration(
                 gradient: const LinearGradient(
@@ -203,7 +244,7 @@ class _ProgressSectionState extends State<ProgressSection>
                   children: [
                     SizedBox(
                       width: MediaQuery.of(context).size.width *
-                          0.12, // Adjust as needed
+                          0.16, // Adjust as needed
                       child: buildKilometersPicker(),
                     ),
                     SizedBox(
@@ -217,6 +258,7 @@ class _ProgressSectionState extends State<ProgressSection>
             ),
           ],
         ),
+        const SizedBox(width: 8),
         Column(
           children: [
             Container(
@@ -301,11 +343,11 @@ class _ProgressSectionState extends State<ProgressSection>
             ),
           ],
         ),
-        const SizedBox(width: 10),
+        const SizedBox(width: 8),
         Column(
           children: [
             Container(
-              width: MediaQuery.of(context).size.width * 0.23,
+              width: MediaQuery.of(context).size.width * 0.25,
               alignment: Alignment.center,
               decoration: BoxDecoration(
                 gradient: const LinearGradient(
@@ -326,7 +368,7 @@ class _ProgressSectionState extends State<ProgressSection>
             Row(
               children: [
                 SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.22,
+                  width: MediaQuery.of(context).size.width * 0.24,
                   child: buildRepsPicker(),
                 ),
               ],
@@ -341,10 +383,13 @@ class _ProgressSectionState extends State<ProgressSection>
             // Center content vertically
             children: [
               // show timer at the top
-              timerDisplay(),
-              const SizedBox(height: 30),
+              // timerDisplay(),
+              // const SizedBox(height: 30),
               // show button in the middle
+              // simple button for _showCustomToast();
               submitButton(),
+              ElevatedButton(
+                  onPressed: _showCustomToast, child: const Text('S')),
             ],
           ),
         ),
@@ -378,12 +423,10 @@ class _ProgressSectionState extends State<ProgressSection>
         ),
         totalSets > 1 // Check if there's more than 1 circle to delete
             ? Container(
-                width: 30,
-                height: 30,
+                width: 27,
+                height: 27,
                 decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: themeDarkBlue,
-                ),
+                    shape: BoxShape.circle, color: themeBlue),
                 child: GestureDetector(
                   onTap: () {
                     setState(() {
@@ -397,17 +440,14 @@ class _ProgressSectionState extends State<ProgressSection>
                 width: 30,
               ),
         SizedBox(
-          height: 60,
+          height: 50,
           width: MediaQuery.of(context).size.width * 0.33,
           child: buildSetsRow(),
         ),
         Container(
-          width: 30,
-          height: 30,
-          decoration: const BoxDecoration(
-            shape: BoxShape.circle,
-            color: themeDarkBlue,
-          ),
+          width: 27,
+          height: 27,
+          decoration: BoxDecoration(shape: BoxShape.circle, color: themeBlue),
           child: GestureDetector(
             onTap: () {
               setState(() {
@@ -416,7 +456,7 @@ class _ProgressSectionState extends State<ProgressSection>
             },
             child: const Icon(
               Icons.add,
-              color: Colors.white, // Set the icon color to match your needs
+              color: Colors.white,
             ),
           ),
         ),
@@ -468,9 +508,9 @@ class _ProgressSectionState extends State<ProgressSection>
           bottomLeft: Radius.circular(12),
         ),
         border: Border(
-          left: BorderSide(color: themeDarkBlue, width: 1.5),
-          top: BorderSide(color: themeDarkBlue, width: 1.5),
-          bottom: BorderSide(color: themeDarkBlue, width: 1.5),
+          left: BorderSide(color: themeDarkBlue, width: .5),
+          top: BorderSide(color: themeDarkBlue, width: .5),
+          bottom: BorderSide(color: themeDarkBlue, width: .5),
         ),
       ),
     );
@@ -483,8 +523,7 @@ class _ProgressSectionState extends State<ProgressSection>
       50,
       75,
     ];
-    int fractionalWeightInt =
-        (fractionalWeight * 100).round(); // Scale and round
+    int fractionalWeightInt = (fractionalWeight * 100).round();
 
     // Convert fractionalWeight to int for comparison
     int index = fractionalWeights.contains(fractionalWeightInt)
@@ -497,9 +536,9 @@ class _ProgressSectionState extends State<ProgressSection>
           bottomRight: Radius.circular(12),
         ),
         border: Border(
-          right: BorderSide(color: themeDarkBlue, width: 1.5),
-          top: BorderSide(color: themeDarkBlue, width: 1.5),
-          bottom: BorderSide(color: themeDarkBlue, width: 1.5),
+          right: BorderSide(color: themeDarkBlue, width: .5),
+          top: BorderSide(color: themeDarkBlue, width: .5),
+          bottom: BorderSide(color: themeDarkBlue, width: .5),
         ),
       ),
       value: index,
@@ -549,9 +588,9 @@ class _ProgressSectionState extends State<ProgressSection>
             bottomLeft: Radius.circular(12),
           ),
           border: Border(
-            top: BorderSide(color: themeDarkBlue, width: 1.5),
-            bottom: BorderSide(color: themeDarkBlue, width: 1.5),
-            left: BorderSide(color: themeDarkBlue, width: 1.5),
+            top: BorderSide(color: themeDarkBlue, width: .5),
+            bottom: BorderSide(color: themeDarkBlue, width: .5),
+            left: BorderSide(color: themeDarkBlue, width: .5),
           )),
     );
   }
@@ -603,9 +642,9 @@ class _ProgressSectionState extends State<ProgressSection>
             bottomRight: Radius.circular(12),
           ),
           border: Border(
-            top: BorderSide(color: themeDarkBlue, width: 1.5),
-            bottom: BorderSide(color: themeDarkBlue, width: 1.5),
-            right: BorderSide(color: themeDarkBlue, width: 1.5),
+            top: BorderSide(color: themeDarkBlue, width: .5),
+            bottom: BorderSide(color: themeDarkBlue, width: .5),
+            right: BorderSide(color: themeDarkBlue, width: .5),
           )),
     );
   }
@@ -628,7 +667,7 @@ class _ProgressSectionState extends State<ProgressSection>
     return NumberPicker(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: themeDarkBlue, width: 1.5),
+        border: Border.all(color: themeDarkBlue, width: .5),
       ),
       value: reps,
       minValue: 1,
@@ -668,7 +707,7 @@ class _ProgressSectionState extends State<ProgressSection>
           fontSize: 25),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: themeDarkBlue, width: 1.5),
+        border: Border.all(color: themeDarkBlue, width: .5),
       ),
     );
   }
@@ -687,8 +726,6 @@ class _ProgressSectionState extends State<ProgressSection>
         primary: themeDarkBlue,
       ),
       onPressed: () async {
-        startTimer();
-
         setState(() {
           finishedSets++;
         });
@@ -696,16 +733,7 @@ class _ProgressSectionState extends State<ProgressSection>
             widget.selectedExercise.id!, finishedSets, widget.dayIndex);
 
         saveCompletedSets();
-        if (finishedSets >= totalSets) {
-          widget.onAllSetsCompleted();
-        } else {
-          // Show a snackbar message for all sets except the last
-          const snackBar = SnackBar(
-            content: Text('Great! Rest now for 45 seconds'),
-            duration: Duration(seconds: 3),
-          );
-          ScaffoldMessenger.of(context).showSnackBar(snackBar);
-        }
+
         // Record the history based on the type of exercise
         if (widget.selectedExercise.bodyPart == 'cardio') {
           double totalDistanceKm = kilometers + (meters / 100.0);
@@ -731,77 +759,16 @@ class _ProgressSectionState extends State<ProgressSection>
           );
         }
 
-        // Notify the parent widget if all sets are finished
-        if (finishedSets >= totalSets) {
-          // Defer the callback to allow the UI to update
-          Future.delayed(Duration.zero, () {
-            widget.onAllSetsCompleted();
-          });
+        // Show toast if not all sets are completed
+        if (finishedSets < totalSets) {
+          _showCustomToast();
+          return; // Return early to prevent calling onAllSetsCompleted
         }
+
+        // Notify the parent widget if all sets are finished
+        widget.onAllSetsCompleted(); // Directly call the callback here
       },
       child: const Icon(Icons.check, size: 30, color: themeBlue),
-    );
-  }
-
-  void startTimer() {
-    setState(() {
-      remainingTime = 45; // Reset the timer to 45 seconds
-    });
-
-    if (_animationController.isAnimating) {
-      _animationController.stop();
-    }
-
-    _animationController
-      ..duration = const Duration(seconds: 45)
-      ..reverse(from: 1.0); // Start the animation
-
-    _timer?.cancel(); // Cancel any existing timer
-    _timer = Timer.periodic(const Duration(seconds: 1), (Timer timer) {
-      if (remainingTime > 0) {
-        setState(() {
-          remainingTime--;
-        });
-      } else {
-        timer.cancel();
-      }
-    });
-  }
-
-  Widget timerDisplay() {
-    if (!mounted) {
-      return Container();
-    }
-    return Container(
-      constraints: const BoxConstraints(maxWidth: 50),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: <Widget>[
-          Stack(
-            alignment: Alignment.center,
-            children: [
-              SizedBox(
-                width: 50,
-                height: 50,
-                child: AnimatedBuilder(
-                  animation: _animation!,
-                  builder: (context, child) {
-                    return CircularProgressIndicator(
-                      value: _animation?.value,
-                      color: themeDarkBlue,
-                      backgroundColor: themeBlue,
-                    );
-                  },
-                ),
-              ),
-              Text(
-                remainingTime == 0 ? '45' : '$remainingTime',
-                style: TextStyle(fontSize: 20, color: themeGrey),
-              ),
-            ],
-          ),
-        ],
-      ),
     );
   }
 

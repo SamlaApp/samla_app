@@ -9,34 +9,56 @@ Widget buildExercisesForDay(BuildContext context, int index, weeklyExercises) {
 
   if (exercises.isEmpty) {
     return const Center(
-      child: Text(
-        "No exercises for today, take a rest!",
-        style: TextStyle(
-          fontSize: 18,
-          fontWeight: FontWeight.w500,
-          color: Colors.white,
-        ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          Icon(
+            Icons.battery_charging_full,
+            size: 120,
+            color: Colors.white,
+          ),
+          SizedBox(height: 20),
+          Text(
+            "No exercises for today, take a rest!",
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.w500,
+              color: Colors.white,
+            ),
+          ),
+          SizedBox(height: 100),
+        ],
       ),
     );
   }
   return _buildExercisesList(exercises);
 }
+
 String _getDayNameFromIndex(int index) {
   switch (index) {
-    case 0: return "Sunday";
-    case 1: return "Monday";
-    case 2: return "Tuesday";
-    case 3: return "Wednesday";
-    case 4: return "Thursday";
-    case 5: return "Friday";
-    case 6: return "Saturday";
-    default: return "Unknown Day";
+    case 0:
+      return "Sunday";
+    case 1:
+      return "Monday";
+    case 2:
+      return "Tuesday";
+    case 3:
+      return "Wednesday";
+    case 4:
+      return "Thursday";
+    case 5:
+      return "Friday";
+    case 6:
+      return "Saturday";
+    default:
+      return "Unknown Day";
   }
 }
 
-
 Widget _buildExercisesList(List<ExerciseLibrary> exercises) {
-  return Expanded( // Wrap ListView with Expanded
+  return Expanded(
+    // Wrap ListView with Expanded
     child: ListView.builder(
       itemCount: exercises.length,
       itemBuilder: (context, index) {

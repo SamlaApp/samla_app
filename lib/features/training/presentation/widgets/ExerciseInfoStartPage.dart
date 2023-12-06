@@ -240,7 +240,7 @@ class ExerciseInfoStartPageState extends State<ExerciseInfoStartPage> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
       decoration: BoxDecoration(
-        border: Border.all(color: themeDarkBlue.withOpacity(1), width: 0.9),
+        border: Border.all(color: themeDarkBlue.withOpacity(.5), width: 0.9),
         borderRadius: BorderRadius.circular(9),
       ),
       child: Column(
