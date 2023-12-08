@@ -12,6 +12,7 @@ import 'package:samla_app/features/main/presentation/widgets/mainPagesLayout.dar
 import 'package:samla_app/features/notifications/presentation/pages/notification.dart';
 import 'package:samla_app/features/profile/presentation/pages/PersonalInfo.dart';
 import 'package:samla_app/features/profile/presentation/pages/Profile.dart';
+import '../../features/friends/presentation/pages/Friend.dart';
 import '../../features/nutrition/presentation/pages/NutritionPlan.dart';
 // final user = LocalAuth.user;
 
@@ -26,4 +27,6 @@ Map<String, Widget Function(BuildContext)> routes = {
   '/Register': (context) => RegisterPage(),
   '/PersonalInfo': (context) => PersonalInfoPage(),
   '/NutritionPlan': (context) => NutritionPlan(),
+  '/Friend': (context) => FriendPage(),
+
 };

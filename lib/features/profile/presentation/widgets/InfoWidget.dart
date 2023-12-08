@@ -71,6 +71,28 @@ class _InfoWidgetState extends State<InfoWidget> {
     await profileCubit.setStepsTarget(steps);
     await profileCubit.setCaloriesTarget(calories);
     // }
+
+    _showSuccessDialog();
+  }
+
+  void _showSuccessDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Success'),
+          content: Text('Your goal information updated'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override

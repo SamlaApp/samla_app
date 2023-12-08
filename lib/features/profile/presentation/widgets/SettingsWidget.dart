@@ -91,8 +91,30 @@ class _SettingsWidgetState extends State<SettingsWidget> {
     print('Phone: $phone');
     print('Pass: $newPass');
     print('Pass: $confirmPass');
+    _showSuccessDialog();
 
   }
+
+  void _showSuccessDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Success'),
+          content: Text('Your setting information updated'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
 
   Future<void> _deactiveAcount() async {
     // Call the deactivate account function
@@ -102,6 +124,34 @@ class _SettingsWidgetState extends State<SettingsWidget> {
 
     profileCubit.onAccountDeactivated = () {
     };
+  }
+
+  void _showDeactivateConfirmationDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Confirmation'),
+          content: Text('Are you sure you want to deactivate your account?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+              },
+              child: Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                // Call the deactivate account function
+                _deactiveAcount();
+                Navigator.of(context).pop(); // Close the dialog
+              },
+              child: Text('Deactivate'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -204,8 +254,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                 decoration: InputDecoration(
                   prefixIcon: Padding(
                     padding: const EdgeInsets.fromLTRB(0, 0, 0, 8),
-                    child: Icon(
-                      Icons.email,
+                    child: Icon(Icons.email,
                       color: Colors.black38,
                     ),
                   ),
@@ -358,7 +407,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                     textStyle: TextStyle(
                       fontWeight: FontWeight.bold,
                     )),
-                onPressed: _deactiveAcount,
+                onPressed: _showDeactivateConfirmationDialog,
                 child: Text(
                   'Deactive Account',
                   style: TextStyle(
