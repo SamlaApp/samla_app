@@ -87,8 +87,10 @@ class RemoteDataSourceImpl implements RemoteDataSource {
   @override
   Future<List<UserModel>> getFriends() async {
     try {
-      final res = await samlaAPI(endPoint: '/friend/all/get', method: 'GET');
+      final res =
+          await samlaAPI(endPoint: '/chat/friend/all/get', method: 'GET');
       final resBody = json.decode(await res.stream.bytesToString());
+      print(resBody);
       if (res.statusCode != 200) {
         throw ServerException(message: resBody['message']);
       }
