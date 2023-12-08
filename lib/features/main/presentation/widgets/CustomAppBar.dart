@@ -29,7 +29,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           color: primaryDecoration.color,
           child: SafeArea(
             child: Container(
-                decoration: primaryDecoration,
+                // decoration: primaryDecoration,
                 padding: const EdgeInsets.fromLTRB(25, 0, 15, 0),
                 height: preferredSize.height,
                 child: Row(
@@ -47,28 +47,32 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                             width: 42,
                             height: 42,
                           ),
-        
                           const SizedBox(
                             width: 10,
                           ),
-        
                           const Text(
                             'SAMLA',
                             style: TextStyle(
-                              fontFamily: 'Cairo',
+                                fontFamily: 'Cairo',
                                 fontSize: 24,
                                 color: themeDarkBlue,
-                                fontWeight: FontWeight.w700
-                            ),
-        
+                                fontWeight: FontWeight.w700),
                           ),
-        
                         ],
-        
                       ),
                     ),
                     // row of upper buttons
                     Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+                      IconButton(
+                          // get this icon from images carbon_chat-bot.svg
+                          icon: Icon(
+                            Icons.help,
+                            size: sizeOfIcon,
+                            color: themeDarkBlue,
+                          ),
+                          // go to AssistantPage(); page without pushname push
+                          onPressed: () =>
+                              Navigator.pushNamed(context, '/AssistantPage')),
                       IconButton(
                           icon: Icon(
                             Icons.notifications_none_outlined,

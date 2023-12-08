@@ -26,14 +26,14 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         iconTheme: MaterialStateProperty.all(
-           IconThemeData(
+          IconThemeData(
             size: 25,
             color: themeGrey,
           ),
         ),
         surfaceTintColor: themeGrey,
         labelTextStyle: MaterialStateProperty.all(
-           TextStyle(
+          TextStyle(
             fontSize: 12,
             fontWeight: FontWeight.w700,
             color: themeDarkBlue.withOpacity(0.4),
@@ -73,10 +73,10 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
                     color: widget.index == 3 ? selectedColor : unselectedColor),
                 label: "Community"),
             NavigationDestination(
-                icon: Icon(Icons.help,
+                icon: Icon(Icons.people_alt_outlined,
                     size: sizeOficon,
                     color: widget.index == 4 ? selectedColor : unselectedColor),
-                label: "Assistant"),
+                label: "Chat"),
           ],
         ),
       ),

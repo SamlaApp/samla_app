@@ -37,9 +37,10 @@ class _AssistantPageState extends State<AssistantPage> {
       appBar: AppBar(
         title: const Text(
           'Samla\'s assistant',
-          style: TextStyle(color: Colors.white, fontSize: 15),
+          style: TextStyle(color: Colors.white),
         ),
-        toolbarHeight: 30,
+        // toolbarHeight: 30,
+        iconTheme: const IconThemeData(color: Colors.white),
         flexibleSpace: AnimateGradient(
           primaryBegin: Alignment.topLeft,
           primaryEnd: Alignment.bottomLeft,
@@ -69,19 +70,15 @@ class _AssistantPageState extends State<AssistantPage> {
               child: const Padding(
                 padding: EdgeInsets.all(8.0),
                 child: CircularProgressIndicator(
-                  color: themeBlue,
-                  backgroundColor: themePink
-                ),
+                    color: themeBlue, backgroundColor: themePink),
               ),
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Row(
                 children: [
-                  if(!isLoading)
-                  _buildInput(),
-                  if(!isLoading)
-                  _buildSubmit(),
+                  if (!isLoading) _buildInput(),
+                  if (!isLoading) _buildSubmit(),
                 ],
               ),
             ),

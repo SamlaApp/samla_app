@@ -5,6 +5,7 @@ import 'package:samla_app/features/community/presentation/pages/communities.dart
 import 'package:samla_app/features/main/presentation/pages/home.dart';
 import 'package:samla_app/features/nutrition/presentation/pages/nutrition.dart';
 
+import '../../../friends/presentation/pages/friends.dart';
 import '../../../training/presentation/pages/training.dart';
 import 'CustomAppBar.dart';
 import 'CustomNavigationBar.dart';
@@ -24,7 +25,8 @@ class _MainPagesState extends State<MainPages> {
     NutritionPage(),
     HomePage(),
     CommunitiesPage(),
-    AssistantPage(),
+    // AssistantPage(),
+    FriendsPage(),
   ];
 
   void changePage(int index) {
@@ -48,5 +50,3 @@ class _MainPagesState extends State<MainPages> {
     );
   }
 }
-
-

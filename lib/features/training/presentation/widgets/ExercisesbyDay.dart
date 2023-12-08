@@ -8,17 +8,18 @@ Widget buildExercisesForDay(BuildContext context, int index, weeklyExercises) {
   var exercises = weeklyExercises[dayName] ?? [];
 
   if (exercises.isEmpty) {
-    return const Center(
+    return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         mainAxisSize: MainAxisSize.max,
         children: [
+          // big icon in the centre icon.auto_awesome_motion
           Icon(
-            Icons.battery_charging_full,
+            Icons.battery_saver,
             size: 120,
             color: Colors.white,
           ),
-          SizedBox(height: 20),
+          SizedBox(height: MediaQuery.of(context).size.height * 0.03),
           Text(
             "No exercises for today, take a rest!",
             style: TextStyle(
@@ -27,7 +28,8 @@ Widget buildExercisesForDay(BuildContext context, int index, weeklyExercises) {
               color: Colors.white,
             ),
           ),
-          SizedBox(height: 100),
+          // meadia query for the size of the screen
+          SizedBox(height: MediaQuery.of(context).size.height * 0.1),
         ],
       ),
     );
