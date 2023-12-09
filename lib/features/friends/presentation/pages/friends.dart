@@ -66,12 +66,12 @@ class _FriendsPageState extends State<FriendsPage> {
                               controller: _searchController,
                               label: 'Search for friends',
                               iconData: Icons.search,
-                              onChanged: (value) {
-                                if (value.length > 2) {
-                                  if (selectedIndex == 0) {
-                                    friendCubit.searchFriends(value);
-                                  } else {
-                                    exploreCubit.searchExplore(value);
+                              onChanged: (value) async{
+                                if (selectedIndex == 0) {
+                                  friendCubit.searchFriends(value);
+                                } else {
+                                  if (value.length > 2) {
+                                   await exploreCubit.searchExplore(value);
                                   }
                                 }
                               },

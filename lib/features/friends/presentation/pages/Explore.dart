@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:samla_app/config/themes/new_style.dart';
+import 'package:samla_app/core/widgets/image_viewer.dart';
 import 'package:samla_app/features/friends/presentation/cubit/explore/explore_cubit.dart';
 
 class ExploreWidget extends StatelessWidget {
@@ -39,12 +40,11 @@ class ExploreWidget extends StatelessWidget {
                       leading: CircleAvatar(
                         backgroundColor: themeBlue,
                         radius: 28,
-                        child: Image.network(
-                          '$_baseImageUrl${user.photoUrl}',
-                          fit: BoxFit.cover,
-                          // Add errorBuilder and loadingBuilder
-                          // ...
-                        ),
+                        child: ImageViewer.network(
+                          imageURL:user.photoUrl,
+                          placeholderImagePath: 'images/defaults/user.png',
+                          viewerMode: false,
+                        )
                       ),
                       title: Text(user.name,
                           style: TextStyle(

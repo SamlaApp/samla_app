@@ -67,6 +67,24 @@ class FriendCubit extends Cubit<FriendState> {
     }
   }
 
+  // searchFriend
+
+  void searchFriends(String query) {
+    print(query);
+    if (query.isEmpty) {
+      emit(FriendLoaded(
+          friends: allFriends)); // Show all friends if query is empty
+      return;
+    }
+
+    final filteredFriends = allFriends.where((friend) {
+      return friend.name.toLowerCase().contains(query.toLowerCase());
+    }).toList();
+
+    emit(FriendLoaded(friends: filteredFriends));
+  }
+
+  
 
   bool isExistInList(String id) {
     for (var friend in allFriends) {

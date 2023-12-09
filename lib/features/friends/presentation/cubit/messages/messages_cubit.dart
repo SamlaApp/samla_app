@@ -1,6 +1,8 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:samla_app/features/friends/chat_di.dart';
 import 'package:samla_app/features/friends/domain/entities/message.dart';
+import 'package:samla_app/features/friends/domain/repositories/friend_repo.dart';
 import '../../../domain/repositories/messages_repo.dart';
 
 part 'messages_state.dart';
@@ -34,4 +36,6 @@ class MessagesCubit extends Cubit<MessagesState> {
       },
     );
   }
+
+ 
 }

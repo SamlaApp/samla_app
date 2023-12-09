@@ -41,9 +41,9 @@ class FriendError extends FriendState {
 // class FriendShipLoading extends FriendState {}
 
 // class FriendShipLoaded extends FriendState {
-//   final FriendsModel friends;
+//   List<UserModel> friends;
 
-//   const FriendShipLoaded({required this.friends});
+//   FriendShipLoaded({required this.friends});
 
 //   @override
 //   List<Object> get props => [friends];
