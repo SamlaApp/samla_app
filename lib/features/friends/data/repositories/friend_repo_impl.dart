@@ -1,4 +1,6 @@
 import 'package:dartz/dartz.dart';
+import 'package:samla_app/features/auth/domain/entities/user.dart';
+import 'package:samla_app/features/friends/domain/entities/status.dart';
 
 import '../../../../core/error/exceptions.dart';
 import '../../../../core/error/failures.dart';
@@ -22,10 +24,10 @@ class FriendRepositoryImpl extends FriendRepository {
 
   //addFriend
   @override
-  Future<Either<Failure, FriendsModel>> addFriend(int friendId) async {
+  Future<Either<Failure, FriendStatus>> addFriend(int friendId) async {
     try {
-      final friends = await remoteDataSource.addFriend(friendId);
-      return Right(friends);
+      final status = await remoteDataSource.addFriend(friendId);
+      return Right(status);
     } on ServerException catch (e) {
       return Left(ServerFailure(message: e.message));
     } catch (e) {
@@ -35,7 +37,7 @@ class FriendRepositoryImpl extends FriendRepository {
 
   //getFriends
   @override
-  Future<Either<Failure, List<UserModel>>> getFriends() async {
+  Future<Either<Failure, List<User>>> getFriends() async {
     if (await networkInfo.isConnected) {
       try {
         final friends = await remoteDataSource.getFriends();
@@ -52,11 +54,11 @@ class FriendRepositoryImpl extends FriendRepository {
 
   //getFriendshipStatus
   @override
-  Future<Either<Failure, FriendsModel>> getFriendshipStatus(
+  Future<Either<Failure, FriendStatus>> getFriendshipStatus(
       int friendId) async {
     try {
-      final friends = await remoteDataSource.getFriendshipStatus(friendId);
-      return Right(friends);
+      final status = await remoteDataSource.getFriendshipStatus(friendId);
+      return Right(status);
     } on ServerException catch (e) {
       return Left(ServerFailure(message: e.message));
     } catch (e) {
@@ -66,10 +68,10 @@ class FriendRepositoryImpl extends FriendRepository {
 
   //acceptFriend
   @override
-  Future<Either<Failure, FriendsModel>> acceptFriend(int id) async {
+  Future<Either<Failure, FriendStatus>> acceptFriend(int id) async {
     try {
-      final friends = await remoteDataSource.acceptFriend(id);
-      return Right(friends);
+      final status = await remoteDataSource.acceptFriend(id);
+      return Right(status);
     } on ServerException catch (e) {
       return Left(ServerFailure(message: e.message));
     } catch (e) {
@@ -79,10 +81,10 @@ class FriendRepositoryImpl extends FriendRepository {
 
   //rejectFriend
   @override
-  Future<Either<Failure, FriendsModel>> rejectFriend(int id) async {
+  Future<Either<Failure, FriendStatus>> rejectFriend(int id) async {
     try {
-      final friends = await remoteDataSource.rejectFriend(id);
-      return Right(friends);
+      final status = await remoteDataSource.rejectFriend(id);
+      return Right(status);
     } on ServerException catch (e) {
       return Left(ServerFailure(message: e.message));
     } catch (e) {

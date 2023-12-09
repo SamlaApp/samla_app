@@ -1,8 +1,8 @@
 import 'package:dartz/dartz.dart';
+import 'package:samla_app/features/auth/domain/entities/user.dart';
 
 import '../../../../core/error/failures.dart';
-import '../../../auth/data/models/user_model.dart';
 
 abstract class ExploreRepository {
-  Future<Either<Failure, List<UserModel>>> searchExplore(String query);
+  Future<Either<Failure, List<User>>> searchExplore(String query);
 }

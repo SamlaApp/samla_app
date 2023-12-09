@@ -18,7 +18,7 @@ class ExploreError extends ExploreState {
 }
 
 class ExploreLoaded extends ExploreState {
-  final List<UserModel> users;
+  final List<User> users;
 
   const ExploreLoaded({required this.users});
 

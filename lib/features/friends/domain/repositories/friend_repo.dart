@@ -1,16 +1,17 @@
+import 'package:samla_app/features/auth/domain/entities/user.dart';
+import 'package:samla_app/features/friends/domain/entities/status.dart';
+
 import '../../../../core/error/failures.dart';
-import '../../../auth/data/models/user_model.dart';
-import '../../data/models/friends_model.dart';
 import 'package:dartz/dartz.dart';
 
 abstract class FriendRepository {
-  Future<Either<Failure, FriendsModel>> addFriend(int friendId);
+  Future<Either<Failure, FriendStatus>> addFriend(int friendId);
 
-  Future<Either<Failure, List<UserModel>>> getFriends();
+  Future<Either<Failure, List<User>>> getFriends();
 
-  Future<Either<Failure, FriendsModel>> getFriendshipStatus(int friendId);
+  Future<Either<Failure, FriendStatus>> getFriendshipStatus(int friendId);
 
-  Future<Either<Failure, FriendsModel>> acceptFriend(int id);
+  Future<Either<Failure, FriendStatus>> acceptFriend(int id);
 
-  Future<Either<Failure, FriendsModel>> rejectFriend(int id);
+  Future<Either<Failure, FriendStatus>> rejectFriend(int id);
 }

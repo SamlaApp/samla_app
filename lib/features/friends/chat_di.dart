@@ -2,9 +2,6 @@ import 'package:get_it/get_it.dart';
 import 'package:samla_app/features/friends/presentation/cubit/explore/explore_cubit.dart';
 import 'package:samla_app/features/friends/presentation/cubit/friends/friends_cubit.dart';
 import 'package:samla_app/features/friends/presentation/cubit/messages/messages_cubit.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:http/http.dart' as http;
-
 import 'data/datasources/localDataSource.dart';
 import 'data/datasources/remoteDataSource.dart';
 import 'data/repositories/explore_repo_impl.dart';
@@ -16,7 +13,7 @@ import 'domain/repositories/messages_repo.dart';
 
 final sl = GetIt.instance;
 
-bool isChatInitialized = false; // Add this flag
+bool isChatInitialized = false;
 
 Future<void> chatInit() async {
   if (isChatInitialized) {
@@ -38,8 +35,7 @@ Future<void> chatInit() async {
   sl.registerLazySingleton<FriendRepository>(() => FriendRepositoryImpl(
       localDataSource: sl(), remoteDataSource: sl(), networkInfo: sl()));
 
-  sl.registerLazySingleton<RemoteDataSource>(
-      () => RemoteDataSourceImpl(client: sl()));
+  sl.registerLazySingleton<RemoteDataSource>(() => RemoteDataSourceImpl());
 
   sl.registerLazySingleton<LocalDataSource>(
       () => LocalDataSourceImpl(sharedPreferences: sl()));

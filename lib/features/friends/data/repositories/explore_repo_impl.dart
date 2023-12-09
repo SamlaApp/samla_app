@@ -1,9 +1,9 @@
 import 'package:dartz/dartz.dart';
+import 'package:samla_app/features/auth/domain/entities/user.dart';
 
 import '../../../../core/error/exceptions.dart';
 import '../../../../core/error/failures.dart';
 import '../../../../core/network/network_info.dart';
-import '../../../auth/data/models/user_model.dart';
 import '../../domain/repositories/explore_repo.dart';
 import '../datasources/localDataSource.dart';
 import '../datasources/remoteDataSource.dart';
@@ -21,7 +21,7 @@ class ExploreRepositoryImpl implements ExploreRepository {
 
   //searchExplore
   @override
-  Future<Either<Failure, List<UserModel>>> searchExplore(String query) async {
+  Future<Either<Failure, List<User>>> searchExplore(String query) async {
     try {
       final users = await remoteDataSource.searchExplore(query);
       return Right(users);

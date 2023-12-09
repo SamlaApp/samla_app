@@ -1,44 +1,40 @@
 import 'dart:convert';
-import 'dart:io';
-
 import 'package:http/http.dart' as http;
+import 'package:samla_app/features/friends/data/models/friend_status.dart';
 import '../../../../core/error/exceptions.dart';
 import '../../../../core/network/samlaAPI.dart';
 import '../../../auth/data/models/user_model.dart';
-import '../models/friends_model.dart';
 import '../models/message_model.dart';
+import 'package:http_parser/http_parser.dart';
 
 abstract class RemoteDataSource {
   // searchExplore
   Future<List<UserModel>> searchExplore(String query);
 
   //addFriend
-  Future<FriendsModel> addFriend(int friendId);
+  Future<FriendStatusModel> addFriend(int friendId);
 
   //getFriends
   Future<List<UserModel>> getFriends();
 
   // getFriendshipStatus
-  Future<FriendsModel> getFriendshipStatus(int friendId);
+  Future<FriendStatusModel> getFriendshipStatus(int friendId);
 
   // acceptFriend
-  Future<FriendsModel> acceptFriend(int id);
+  Future<FriendStatusModel> acceptFriend(int id);
 
   // rejectFriend
-  Future<FriendsModel> rejectFriend(int id);
+  Future<FriendStatusModel> rejectFriend(int id);
 
   // sendMessage
-  Future<List<MessageModel>> sendMessage(
-      {required int friend_id, required String message, required String type});
+  Future<List<MessageModel>> sendMessage(MessageModel message);
 
   // getMessages
-  Future<List<MessageModel>> getMessages({required int friend_id});
+  Future<List<MessageModel>> getMessages(int friend_id);
 }
 
 class RemoteDataSourceImpl implements RemoteDataSource {
-  final http.Client client;
-
-  RemoteDataSourceImpl({required this.client});
+  RemoteDataSourceImpl();
 
   // searchExplore
   @override
@@ -48,7 +44,6 @@ class RemoteDataSourceImpl implements RemoteDataSource {
         'search': query,
       }, endPoint: '/chat/explore_search', method: 'POST');
       final resBody = json.decode(await res.stream.bytesToString());
-      print(resBody);
       if (res.statusCode != 200) {
         throw ServerException(message: resBody['message']);
       }
@@ -65,17 +60,17 @@ class RemoteDataSourceImpl implements RemoteDataSource {
 
   //addFriend
   @override
-  Future<FriendsModel> addFriend(int friendId) async {
+  Future<FriendStatusModel> addFriend(int friendId) async {
     try {
       final res = await samlaAPI(data: {
         'friend_id': friendId.toString(),
-      }, endPoint: '/friend/add', method: 'POST');
+      }, endPoint: '/chat/friend/add', method: 'POST');
       final resBody = json.decode(await res.stream.bytesToString());
       if (res.statusCode != 200) {
         throw ServerException(message: resBody['message']);
       }
-      final friends = FriendsModel.fromJson(resBody['friend']);
-      return friends;
+      final status = FriendStatusModel.fromJson(resBody['friend']);
+      return status;
     } on ServerException catch (e) {
       throw ServerException(message: e.message);
     } catch (e) {
@@ -87,7 +82,8 @@ class RemoteDataSourceImpl implements RemoteDataSource {
   @override
   Future<List<UserModel>> getFriends() async {
     try {
-      final res = await samlaAPI(endPoint: '/friend/all/get', method: 'GET');
+      final res =
+          await samlaAPI(endPoint: '/chat/friend/all/get', method: 'GET');
       final resBody = json.decode(await res.stream.bytesToString());
       if (res.statusCode != 200) {
         throw ServerException(message: resBody['message']);
@@ -105,18 +101,18 @@ class RemoteDataSourceImpl implements RemoteDataSource {
 
   //getFriendshipStatus
   @override
-  Future<FriendsModel> getFriendshipStatus(int friendId) async {
+  Future<FriendStatusModel> getFriendshipStatus(int friendId) async {
     try {
       final res = await samlaAPI(
-        endPoint: '/friend/get/$friendId',
+        endPoint: '/chat/friend/get/$friendId',
         method: 'GET',
       );
       final resBody = json.decode(await res.stream.bytesToString());
       if (res.statusCode != 200) {
         throw ServerException(message: resBody['message']);
       }
-      final friends = FriendsModel.fromJson(resBody['friend']);
-      return friends;
+      final status = FriendStatusModel.fromJson(resBody['friend']);
+      return status;
     } on ServerException catch (e) {
       throw ServerException(message: e.message);
     } catch (e) {
@@ -126,18 +122,20 @@ class RemoteDataSourceImpl implements RemoteDataSource {
 
   //acceptFriend
   @override
-  Future<FriendsModel> acceptFriend(int id) async {
+  Future<FriendStatusModel> acceptFriend(int id) async {
     try {
-      final res =
-          await samlaAPI(endPoint: '/friend/accept', method: 'POST', data: {
-        'id': id.toString(),
-      });
+      final res = await samlaAPI(
+          endPoint: '/chat/friend/accept',
+          method: 'POST',
+          data: {
+            'id': id.toString(),
+          });
       final resBody = json.decode(await res.stream.bytesToString());
       if (res.statusCode != 200) {
         throw ServerException(message: resBody['message']);
       }
-      final friends = FriendsModel.fromJson(resBody['friend']);
-      return friends;
+      final status = FriendStatusModel.fromJson(resBody['friend']);
+      return status;
     } on ServerException catch (e) {
       throw ServerException(message: e.message);
     } catch (e) {
@@ -147,18 +145,21 @@ class RemoteDataSourceImpl implements RemoteDataSource {
 
   //rejectFriend
   @override
-  Future<FriendsModel> rejectFriend(int id) async {
+  Future<FriendStatusModel> rejectFriend(int id) async {
     try {
-      final res =
-          await samlaAPI(endPoint: '/friend/reject', method: 'POST', data: {
-        'id': id.toString(),
-      });
+      final res = await samlaAPI(
+          endPoint: '/chat/friend/reject',
+          method: 'POST',
+          data: {
+            'id': id.toString(),
+          });
       final resBody = json.decode(await res.stream.bytesToString());
       if (res.statusCode != 200) {
         throw ServerException(message: resBody['message']);
       }
-      final friends = FriendsModel.fromJson(resBody['friend']);
-      return friends;
+      print(resBody);
+      final status = FriendStatusModel.fromJson(resBody['friend']);
+      return status;
     } on ServerException catch (e) {
       throw ServerException(message: e.message);
     } catch (e) {
@@ -168,19 +169,26 @@ class RemoteDataSourceImpl implements RemoteDataSource {
 
   //sendMessage
   @override
-  Future<List<MessageModel>> sendMessage(
-      {required int friend_id,
-      required String message,
-      required String type}) async {
+  Future<List<MessageModel>> sendMessage(MessageModel message) async {
     try {
-      final res =
-          await samlaAPI(endPoint: '/message/send', method: 'POST', data: {
-        'friend_id': friend_id.toString(),
-        'message': message,
-        'type': type,
-      });
+      http.MultipartFile? multipartFile = null;
+
+      if (message.imageFile != null) {
+        multipartFile = http.MultipartFile(
+          'image', // The field name in the multipart request
+          http.ByteStream(message.imageFile!.openRead()),
+          await message.imageFile!.length(),
+          filename: 'image.jpg',
+          contentType: MediaType('image', 'jpeg'),
+        );
+      }
+      final res = await samlaAPI(
+          endPoint: '/chat/message/send',
+          method: 'POST',
+          data: message.toJson(),
+          file: multipartFile);
+
       final resBody = json.decode(await res.stream.bytesToString());
-      print(resBody);
       if (res.statusCode != 200) {
         throw ServerException(message: resBody['message']);
       }
@@ -197,10 +205,10 @@ class RemoteDataSourceImpl implements RemoteDataSource {
 
   //getMessages
   @override
-  Future<List<MessageModel>> getMessages({required int friend_id}) async {
+  Future<List<MessageModel>> getMessages(int friend_id) async {
     try {
       final res = await samlaAPI(
-        endPoint: '/message/get/$friend_id',
+        endPoint: '/chat/message/get/$friend_id',
         method: 'GET',
       );
       final resBody = json.decode(await res.stream.bytesToString());
@@ -216,5 +224,30 @@ class RemoteDataSourceImpl implements RemoteDataSource {
     } catch (e) {
       throw ServerException(message: e.toString());
     }
+  }
+}
+
+void main(List<String> args) async {
+  try {
+    final datasource = RemoteDataSourceImpl();
+    final friends = await datasource.getFriends();
+    print(friends[0].name);
+
+    // final friendStatus = await datasource.addFriend(5);
+    // final friendStatus = await datasource.rejectFriend(8);
+    // final friendStatus = await datasource.acceptFriend(10);
+    // final friendStatus = await datasource.getFriendshipStatus(4);
+    // final explore = await datasource.searchExplore('adhm');
+    // // print(explore[0].name);
+
+    // final msg = await datasource.sendMessage(
+    //     MessageModel(friend_id: 3, message: 'hello, world!', type: 'text'));
+    // print(msg[0].message);
+
+    // final msg = await datasource.getMessages(3);
+    // print(msg[0].message);
+  } on ServerException catch (e) {
+    // TODO
+    print(e.message);
   }
 }

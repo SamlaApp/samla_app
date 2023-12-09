@@ -1,5 +1,7 @@
 part of 'messages_cubit.dart';
 
+
+
 abstract class MessagesState extends Equatable {
   const MessagesState();
 
@@ -12,12 +14,12 @@ class MessagesInitial extends MessagesState {}
 class MessagesLoading extends MessagesState {}
 
 class MessagesLoaded extends MessagesState {
-  final MessageModel message;
+  final List<Message> messages;
 
-  MessagesLoaded({required this.message});
+  MessagesLoaded({required this.messages});
 
   @override
-  List<Object> get props => [message];
+  List<Object> get props => [messages];
 }
 
 class MessagesError extends MessagesState {
@@ -29,20 +31,20 @@ class MessagesError extends MessagesState {
   List<Object> get props => [message];
 }
 
-class MessagesLoadedList extends MessagesState {
-  final List<MessageModel> messages;
+// class MessagesLoadedList extends FetchMessagesState {
+//   final List<MessageModel> messages;
 
-  const MessagesLoadedList({required this.messages});
+//   const MessagesLoadedList({required this.messages});
 
-  @override
-  List<Object> get props => [messages];
-}
+//   @override
+//   List<Object> get props => [messages];
+// }
 
-class MessagesLoadedListCheck extends MessagesState {
-  final List<MessageModel> messages;
+// class MessagesLoadedListCheck extends FetchMessagesState {
+//   final List<MessageModel> messages;
 
-  const MessagesLoadedListCheck({required this.messages});
+//   const MessagesLoadedListCheck({required this.messages});
 
-  @override
-  List<Object> get props => [messages];
-}
+//   @override
+//   List<Object> get props => [messages];
+// }

@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:dartz/dartz.dart';
+import 'package:samla_app/features/friends/domain/entities/message.dart';
 
 import '../../../../core/error/exceptions.dart';
 import '../../../../core/error/failures.dart';
@@ -24,14 +25,11 @@ class MessageRepositoryImpl extends MessageRepository {
   });
 
   @override
-  Future<Either<Failure, List<MessageModel>>> sendMessage(
-      {required int friend_id,
-      required String message,
-      required String type}) async {
+  Future<Either<Failure, List<Message>>> sendMessage(Message message) async {
     if (await networkInfo.isConnected) {
       try {
-        final msg = await remoteDataSource.sendMessage(
-            friend_id: friend_id, message: message, type: type);
+        final msg = await remoteDataSource
+            .sendMessage(MessageModel.fromEntity(message));
         return Right(msg);
       } on ServerException catch (e) {
         return Left(ServerFailure(message: e.message));
@@ -43,16 +41,16 @@ class MessageRepositoryImpl extends MessageRepository {
 
   @override
   Future<Either<Failure, List<MessageModel>>> getMessages(
-      {required int friend_id}) async {
+      int friendship_id) async {
     if (await networkInfo.isConnected) {
       try {
-        final messages =
-            await remoteDataSource.getMessages(friend_id: friend_id);
+        final messages = await remoteDataSource.getMessages(friendship_id);
         return Right(messages);
       } on ServerException catch (e) {
         return Left(ServerFailure(message: e.message));
       }
     } else {
+      //TODO: get it from cache instead
       return Left(ServerFailure(message: 'No internet connection'));
     }
   }

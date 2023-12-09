@@ -12,7 +12,7 @@ class FriendInitial extends FriendState {}
 class FriendLoading extends FriendState {}
 
 class FriendLoaded extends FriendState {
-  final FriendsModel friends;
+  final List<User> friends;
 
   const FriendLoaded({required this.friends});
 
@@ -29,22 +29,22 @@ class FriendError extends FriendState {
   List<Object> get props => [message];
 }
 
-class FriendListLoaded extends FriendState {
-  final List<UserModel> friends;
+// class FriendListLoaded extends FriendState {
+//   final List<UserModel> friends;
 
-  const FriendListLoaded({required this.friends});
+//   const FriendListLoaded({required this.friends});
 
-  @override
-  List<Object> get props => [friends];
-}
+//   @override
+//   List<Object> get props => [friends];
+// }
 
-class FriendShipLoading extends FriendState {}
+// class FriendShipLoading extends FriendState {}
 
-class FriendShipLoaded extends FriendState {
-  final FriendsModel friends;
+// class FriendShipLoaded extends FriendState {
+//   final FriendsModel friends;
 
-  const FriendShipLoaded({required this.friends});
+//   const FriendShipLoaded({required this.friends});
 
-  @override
-  List<Object> get props => [friends];
-}
+//   @override
+//   List<Object> get props => [friends];
+// }

@@ -16,13 +16,11 @@ class UserModel extends User {
 
 // coming from server
   factory UserModel.fromJson(Map<String, dynamic> json) {
-    print(json['photo']);
     if (json['photo'] != null &&
         !json['photo'].isEmpty &&
         !json['photo'].contains('http')) {
       json['photo'] =
           'https://samla.mohsowa.com/api/user/user_photo/' + json['photo'];
-      print(json['photo']);
     }
 
     return UserModel(

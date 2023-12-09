@@ -1,12 +1,11 @@
 import 'package:dartz/dartz.dart';
+import 'package:samla_app/features/friends/domain/entities/message.dart';
 
 import '../../../../core/error/failures.dart';
-import '../../data/models/message_model.dart';
 
 abstract class MessageRepository {
-  Future<Either<Failure, List<MessageModel>>> sendMessage(
-      {required int friend_id, required String message, required String type});
+  Future<Either<Failure, List<Message>>> sendMessage(
+      Message message);
 
-  Future<Either<Failure, List<MessageModel>>> getMessages(
-      {required int friend_id});
+  Future<Either<Failure, List<Message>>> getMessages(int freindship_id);
 }

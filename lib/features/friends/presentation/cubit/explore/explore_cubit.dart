@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:bloc/bloc.dart';
+import 'package:samla_app/features/auth/domain/entities/user.dart';
 
 import '../../../../auth/data/models/user_model.dart';
 import '../../../domain/repositories/explore_repo.dart';
@@ -22,4 +23,5 @@ class ExploreCubit extends Cubit<ExploreState> {
       emit(ExploreLoaded(users: users));
     });
   }
+  
 }
