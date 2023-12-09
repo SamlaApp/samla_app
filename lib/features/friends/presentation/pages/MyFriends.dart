@@ -37,20 +37,22 @@ class MyFriendsWidget extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => ChatPage(userID:int.parse(user.id!))),
+                            builder: (context) => ChatPage(
+                                  userID: int.parse(user.id!),
+                                  friend: user,
+                                )),
                       );
                     },
                     child: ListTile(
                       leading: ClipOval(
                         child: CircleAvatar(
-                          backgroundColor: themeBlue,
-                          radius: 28,
-                          child: ImageViewer.network(
+                            backgroundColor: themeBlue,
+                            radius: 28,
+                            child: ImageViewer.network(
                               imageURL: user.photoUrl,
                               placeholderImagePath: 'images/defaults/user.png',
                               viewerMode: false,
-                            )
-                        ),
+                            )),
                       ),
                       title: Text(
                         user.name,

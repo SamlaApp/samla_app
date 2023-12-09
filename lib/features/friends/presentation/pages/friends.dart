@@ -66,12 +66,12 @@ class _FriendsPageState extends State<FriendsPage> {
                               controller: _searchController,
                               label: 'Search for friends',
                               iconData: Icons.search,
-                              onChanged: (value) async{
+                              onChanged: (value) async {
                                 if (selectedIndex == 0) {
                                   friendCubit.searchFriends(value);
                                 } else {
                                   if (value.length > 2) {
-                                   await exploreCubit.searchExplore(value);
+                                    await exploreCubit.searchExplore(value);
                                   }
                                 }
                               },
@@ -122,7 +122,7 @@ class _FriendsPageState extends State<FriendsPage> {
             child: TextButton(
               onPressed: () => onTap(0),
               child: Text(
-                'My Friends',
+                'Chat',
                 style: TextStyle(
                   color: currentIndex == 0 ? themeBlue : themeGrey,
                   fontSize: 16,

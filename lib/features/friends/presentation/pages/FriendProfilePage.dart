@@ -5,25 +5,28 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:samla_app/config/themes/common_styles.dart';
-import 'package:samla_app/features/auth/auth_injection_container.dart' as authDI;
+import 'package:samla_app/features/auth/auth_injection_container.dart'
+    as authDI;
 import 'package:samla_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:samla_app/features/profile/presentation/cubit/profile_cubit.dart';
 import 'package:samla_app/features/profile/presentation/widgets/AppBar_Widget01.dart';
 import 'package:samla_app/features/friends/presentation/widgets/friendProfile_widget.dart';
 import 'package:samla_app/features/profile/profile_di.dart' as di;
 
+import '../../../../core/widgets/image_viewer.dart';
 import '../../../main/presentation/widgets/WeeklyProgress.dart';
 
-class FriendPage extends StatefulWidget {
-  const FriendPage({super.key});
+class FriendProfilePage extends StatefulWidget {
+  const FriendProfilePage({super.key});
 
   @override
-  State<FriendPage> createState() => _FriendPageState();
+  State<FriendProfilePage> createState() => _FriendProfilePageState();
 }
 
-class _FriendPageState extends State<FriendPage> {
+class _FriendProfilePageState extends State<FriendProfilePage> {
   final authBloc = authDI.sl.get<AuthBloc>();
   final profileCubit = di.sl.get<ProfileCubit>();
+  final _baseImageUrl = 'https://chat.mohsowa.com/api/image';
 
   @override
   Widget build(BuildContext context) {
@@ -33,16 +36,26 @@ class _FriendPageState extends State<FriendPage> {
       bloc: authBloc,
       builder: (context, state) {
         return Scaffold(
-          appBar: buildAAppBar(),
+          appBar: AppBar(
+            title: Text('Profile'),
+          ),
           body: ListView(
             physics: BouncingScrollPhysics(),
             children: [
               SizedBox(
-                height: 10,
+                height: 40,
               ),
-              FriendProfileWidget(
-                imageName: '${user.photoUrl}',
-                onClicked: () async {},
+              ClipOval(
+                child: Material(
+                  color: Colors.transparent,
+                  child: ImageViewer.network(
+                    placeholderImagePath: 'images/defaults/user.png',
+                    imageURL: _baseImageUrl + (user.photoUrl ?? ''),
+                    // Use empty string as default if photoUrl is null
+                    width: 130,
+                    height: 130,
+                  ),
+                ),
               ),
               SizedBox(
                 height: 20,
@@ -57,15 +70,13 @@ class _FriendPageState extends State<FriendPage> {
                 padding: EdgeInsets.symmetric(horizontal: 20),
                 child: Column(
                   children: <Widget>[
-                        WeeklyProgress(),
-
+                    WeeklyProgress(),
                   ],
                 ),
               ),
               SizedBox(
                 height: 20,
               ),
-
             ],
           ),
         );
@@ -89,7 +100,6 @@ class _FriendPageState extends State<FriendPage> {
           style: TextStyle(),
         ),
       ]);
-
 }
 
 //-------Widget for creating textfields with the correct parameters--------

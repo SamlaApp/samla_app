@@ -25,11 +25,20 @@ class MessageRepositoryImpl extends MessageRepository {
   });
 
   @override
-  Future<Either<Failure, List<Message>>> sendMessage(Message message) async {
+  Future<Either<Failure, List<Message>>> sendMessage({
+    required int friend_id,
+    String? message,
+    required String type,
+    File? file,
+  }) async {
     if (await networkInfo.isConnected) {
       try {
-        final msg = await remoteDataSource
-            .sendMessage(MessageModel.fromEntity(message));
+        final msg = await remoteDataSource.sendMessage(
+          friend_id: friend_id,
+          message: message,
+          type: type,
+          file: file,
+        );
         return Right(msg);
       } on ServerException catch (e) {
         return Left(ServerFailure(message: e.message));

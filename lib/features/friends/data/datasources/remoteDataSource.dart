@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:samla_app/features/friends/data/models/friend_status.dart';
 import '../../../../core/error/exceptions.dart';
@@ -27,7 +28,11 @@ abstract class RemoteDataSource {
   Future<FriendStatusModel> rejectFriend(int id);
 
   // sendMessage
-  Future<List<MessageModel>> sendMessage(MessageModel message);
+  Future<List<MessageModel>> sendMessage(
+      {required int friend_id,
+      required String? message,
+      required String type,
+      File? file});
 
   // getMessages
   Future<List<MessageModel>> getMessages(int friend_id);
@@ -168,17 +173,24 @@ class RemoteDataSourceImpl implements RemoteDataSource {
     }
   }
 
-  //sendMessage
+  // ####this has to check the type if it's text or image or both####
+
+  // sendMessage
   @override
-  Future<List<MessageModel>> sendMessage(MessageModel message) async {
+  Future<List<MessageModel>> sendMessage({
+    required int friend_id,
+    String? message,
+    required String type,
+    File? file,
+  }) async {
     try {
       http.MultipartFile? multipartFile = null;
 
-      if (message.imageFile != null) {
+      if (file != null) {
         multipartFile = http.MultipartFile(
           'image', // The field name in the multipart request
-          http.ByteStream(message.imageFile!.openRead()),
-          await message.imageFile!.length(),
+          http.ByteStream(file!.openRead()),
+          await file!.length(),
           filename: 'image.jpg',
           contentType: MediaType('image', 'jpeg'),
         );
@@ -186,17 +198,28 @@ class RemoteDataSourceImpl implements RemoteDataSource {
       final res = await samlaAPI(
           endPoint: '/chat/message/send',
           method: 'POST',
-          data: message.toJson(),
+          data: {
+            'friend_id': friend_id.toString(),
+            'message': message!,
+            'type': type,
+          },
           file: multipartFile);
 
       final resBody = json.decode(await res.stream.bytesToString());
+      print(resBody);
+
       if (res.statusCode != 200) {
         throw ServerException(message: resBody['message']);
       }
-      final messages = resBody['messages'].map<MessageModel>((message) {
-        return MessageModel.fromJson(message);
-      }).toList();
-      return messages;
+
+      if (resBody.containsKey('messages') && resBody['messages'] is List) {
+        final messages = resBody['messages'].map<MessageModel>((message) {
+          return MessageModel.fromJson(message);
+        }).toList();
+        return messages;
+      } else {
+        throw ServerException(message: 'Invalid response format for messages.');
+      }
     } on ServerException catch (e) {
       throw ServerException(message: e.message);
     } catch (e) {
