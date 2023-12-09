@@ -85,6 +85,7 @@ class RemoteDataSourceImpl implements RemoteDataSource {
       final res =
           await samlaAPI(endPoint: '/chat/friend/all/get', method: 'GET');
       final resBody = json.decode(await res.stream.bytesToString());
+      print(resBody);
       if (res.statusCode != 200) {
         throw ServerException(message: resBody['message']);
       }
