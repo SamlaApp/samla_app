@@ -22,7 +22,6 @@ class SensorCubit extends Cubit<SensorState> {
       return;
     }
     completer = Completer<void>();
-    print('hello');
     await _requestPermissions();
     await completer.future;
 
@@ -33,8 +32,8 @@ class SensorCubit extends Cubit<SensorState> {
   late Stream<PedestrianStatus> _pedestrianStatusStream;
 
   Future<void> _requestPermissions() async {
-    await Permission.activityRecognition.request();
-    await Permission.sensors.request();
+    await Permission.activityRecognition.request().isGranted;
+    await Permission.sensors.request().isGranted;
     _initPlatformState();
   }
 
@@ -46,10 +45,15 @@ class SensorCubit extends Cubit<SensorState> {
 
     _stepCountStream = Pedometer.stepCountStream;
     _stepCountStream.listen(_onStepCount).onError(onStepCountError);
+    if (!_isInitialized) {
+      _isInitialized = true;
+      completer.complete();
+    }
   }
 
   // when the steps are updated
   void _onStepCount(StepCount event) {
+    print('onStepCount: $event');
     if (!_isInitialized) {
       _isInitialized = true;
       completer.complete();

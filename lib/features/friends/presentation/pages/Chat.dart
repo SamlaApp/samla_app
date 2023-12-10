@@ -1,10 +1,17 @@
+import 'dart:async';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:samla_app/config/themes/common_styles.dart';
+import 'package:intl/intl.dart';
+import 'package:samla_app/config/themes/new_style.dart';
+import 'package:samla_app/core/widgets/image_helper.dart';
+import 'package:samla_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:samla_app/features/friends/chat_di.dart';
 import 'package:samla_app/features/friends/presentation/cubit/friendShip/friend_ship_cubit.dart';
 import 'package:samla_app/features/friends/presentation/cubit/friends/friends_cubit.dart';
 import 'package:samla_app/features/friends/presentation/cubit/messages/messages_cubit.dart';
+import 'package:samla_app/features/profile/presentation/pages/PersonalInfo.dart';
 
 import '../../../../core/widgets/image_viewer.dart';
 import '../../../auth/domain/entities/user.dart';
@@ -14,28 +21,36 @@ import 'FriendProfilePage.dart';
 class ChatPage extends StatelessWidget {
   final int userID;
   final User friend;
+  final thisUserID = int.parse(sl<AuthBloc>().user.id!);
 
   ChatPage({super.key, required this.userID, required this.friend});
 
   final TextEditingController _messageController = TextEditingController();
-
+  late BuildContext gContext;
   @override
   Widget build(BuildContext context) {
+    gContext = context;
     final messagesCubit = sl<MessagesCubit>();
     final statusCubit = sl<FriendShipCubit>()..getStatus(userID);
     final friendCubit = sl<FriendCubit>();
     final _baseImageUrl =
         'https://chat.mohsowa.com/api/image'; // Replace with your image URL
     //frint has these
-    print(friend.id);
-    print(friend.name);
-    print(friend.email);
-    print(friend.image);
-    print(friend.photoUrl);
+    // print(friend.id);
+    // print(friend.name);
+    // print(friend.email);
+    // print(friend.image);
+    // print(friend.photoUrl);
 
     // Function to build AppBar with user's profile and name
     AppBar _buildAppBar(user) {
       return AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
         title: Row(
           children: [
             ClipOval(
@@ -75,20 +90,29 @@ class ChatPage extends StatelessWidget {
     }
 
     return Scaffold(
+
       appBar: _buildAppBar(friend),
-      body: BlocBuilder<FriendShipCubit, FriendShipState>(
-        bloc: statusCubit,
-        builder: (context, state) {
-          if (state is FriendShipLoading) {
-            return Center(child: CircularProgressIndicator());
-          } else if (state is FriendShipError) {
-            return Center(child: Text(state.message));
-          } else if (state is FriendShipLoaded) {
-            return _buildChatInterface(
-                state, context, friendCubit, messagesCubit);
-          }
-          return Center(child: Text('Something went wrong'));
-        },
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage("images/defaults/chat_background.png"),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: BlocBuilder<FriendShipCubit, FriendShipState>(
+          bloc: statusCubit,
+          builder: (context, state) {
+            if (state is FriendShipLoading) {
+              return Center(child: CircularProgressIndicator());
+            } else if (state is FriendShipError) {
+              return Center(child: Text(state.message));
+            } else if (state is FriendShipLoaded) {
+              return _buildChatInterface(
+                  state, context, friendCubit, messagesCubit);
+            }
+            return Center(child: Text('Something went wrong'));
+          },
+        ),
       ),
     );
   }
@@ -101,7 +125,7 @@ class ChatPage extends StatelessWidget {
           _buildFriendRequestButtons(context, state.status.id, friendCubit),
         Expanded(child: _buildMessagesSection(messagesCubit, state.status.id)),
         _buildMessageInputField(
-            messagesCubit, _messageController, state.status.id),
+            messagesCubit, _messageController, state.status.id, context),
       ],
     );
   }
@@ -140,20 +164,36 @@ class ChatPage extends StatelessWidget {
 
   // still not done with the ui i just want to see if it works ;)
   Widget _buildMessagesSection(MessagesCubit messagesCubit, int friendID) {
+    ScrollController _scrollController = ScrollController();
+
     return BlocBuilder<MessagesCubit, MessagesState>(
       bloc: messagesCubit..getMessages(friend_id: friendID),
       builder: (context, messagesState) {
         if (messagesState is MessagesLoaded) {
-          // Build the messages list
-          return ListView.builder(
-            itemCount: messagesState.messages.length,
-            itemBuilder: (context, index) {
-              final message = messagesState.messages[index];
-              // Add message list item UI
-              return ListTile(
-                title: Text(message.message.toString()),
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (_scrollController.hasClients) {
+              _scrollController.animateTo(
+                _scrollController.position.maxScrollExtent + 300,
+                curve: Curves.easeOut,
+                duration: const Duration(milliseconds: 500),
               );
-            },
+            }
+          });
+          // if not empty print last message
+
+          // Build the messages list
+          return Container(
+            child: LayoutBuilder(
+              builder: (context, constraints) => ListView.builder(
+                controller: _scrollController,
+                itemCount: messagesCubit.messages.length,
+                itemBuilder: (context, index) {
+                  final message = messagesCubit.messages[index];
+                  // Add message list item UI
+                  return MessageWidget(message, constraints);
+                },
+              ),
+            ),
           );
         } else if (messagesState is MessagesError) {
           return Center(child: Text(messagesState.message));
@@ -163,16 +203,148 @@ class ChatPage extends StatelessWidget {
     );
   }
 
+  Widget MessageWidget(Message message, constraints) {
+    final align = message.sender_id != thisUserID
+        ? Alignment.centerLeft
+        : Alignment.centerRight;
+
+    return Align(
+      alignment: align,
+      child: SizedBox(
+        // width: ,
+        child: Container(
+            constraints: BoxConstraints(
+                minWidth: 80, maxWidth: constraints.maxWidth * 0.7),
+            padding: EdgeInsets.all(10),
+            margin: EdgeInsets.all(20),
+            // change border according to user sender
+            decoration: BoxDecoration(
+              //box shadow
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.5),
+                  spreadRadius: 1,
+                  blurRadius: 13,
+                  offset: Offset(0, 0), // changes position of shadow
+                ),
+              ],
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(10),
+                topRight: Radius.circular(10),
+                bottomLeft: message.sender_id != thisUserID
+                    ? Radius.circular(0)
+                    : Radius.circular(10),
+                bottomRight: message.sender_id != thisUserID
+                    ? Radius.circular(10)
+                    : Radius.circular(0),
+              ),
+              color: message.sender_id != thisUserID
+                  ? Colors.white
+                  : themeDarkBlue.withOpacity(0.8),
+            ),
+            child: Stack(children: [
+              Column(
+                // crossAxisAlignment: CrossAxisAlignment.end,
+                // mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (message.type == 'both')
+                    message.imageFile != null
+                        ? ImageViewer.file(
+                            isRectangular: true,
+                            imageFile: message.imageFile!,
+                            width: constraints.maxWidth * 0.7 ,
+                            height: constraints.maxWidth * 0.7,
+                          )
+                        : ImageViewer.network(
+                            isRectangular: true,
+                            imageURL: message.imageURL ?? '',
+                            width: constraints.maxWidth * 0.7,
+                            height: constraints.maxWidth * 0.7,
+                          ),
+                  if (message.type == 'both')
+                    SizedBox(
+                      height: 10,
+                    ),
+                  Text(message.message.toString(),
+                      style: TextStyle(
+                        fontSize: 17,
+                          color: message.sender_id != thisUserID
+                              ? Colors.black
+                              : Colors.white), textAlign: TextAlign.left),
+                  SizedBox(
+                    height: 20,
+                  ),
+                ],
+              ),
+              Positioned(
+                
+                child:message.created_at != 'pending' ? Text(
+                  formatDate(message.created_at.toString()),
+                  style: TextStyle(fontSize: 13, color: Colors.grey.shade500),
+                  textAlign: message.sender_id != thisUserID
+                      ? TextAlign.left
+                      : TextAlign.right,
+                ): Icon(Icons.access_time, color: Colors.grey.shade500, size: 13,),
+                bottom: 0,
+                right: 0,
+              ),
+            ])),
+      ),
+    );
+  }
+
+  String formatDate(date) {
+    final dateObject = DateTime.parse(date);
+    // if same less than 24 hours show time only
+    if (dateObject.difference(DateTime.now()).inHours < 24) {
+      return '${DateFormat('hh:mma').format(DateTime.parse(date))}';
+    }
+
+    return '${DateFormat('yy/MM/dd').format(DateTime.parse(date))}';
+  }
+
   Widget _buildMessageInputField(MessagesCubit messagesCubit,
-      TextEditingController messageController, int friendID) {
+      TextEditingController messageController, int friendID, _context) {
     return Container(
+      //top border
+      decoration: BoxDecoration(
+        color: themeDarkBlue.withOpacity(0.9),
+        border: Border(
+          top: BorderSide(
+            color: Colors.grey.shade300,
+            width: 1.0,
+          ),
+        ),
+      ),
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
-      color: Colors.white,
       child: Row(
         children: <Widget>[
+          IconButton(
+            onPressed: () {
+              Completer<File> completer = Completer();
+              // File? image;
+              ImageHelper helper = ImageHelper();
+              helper.pickImage(_context, (image) {
+                if (image != null) {
+                  print('image selected');
+                  completer.complete(image);
+                  // show dialog with image and input to add caption
+                }
+              });
+              completer.future.then((image) {
+                addCaptionDialog(
+                    _context, messageController, messagesCubit, friendID, image, MediaQuery.of(_context).size.width);
+              });
+            },
+            icon: Icon(
+              Icons.camera_alt,
+              color: Colors.white,
+            ),
+          ),
           Expanded(
             child: SafeArea(
               child: TextField(
+                style: TextStyle(color: Colors.white),
                 controller: messageController,
                 decoration: InputDecoration(
                   hintText: "Type a message",
@@ -182,17 +354,20 @@ class ChatPage extends StatelessWidget {
             ),
           ),
           IconButton(
-            icon: Icon(Icons.send),
+            icon: Icon(
+              Icons.send,
+              color: Colors.white,
+            ),
             onPressed: () {
               if (messageController.text.isNotEmpty) {
-                print('Sending message: ${messageController.text}');
-                print('Friend ID: $friendID');
                 messagesCubit.sendMessage(
-                    friend_id: 6,
-                    message: _messageController.text,
-                    type:
-                        'text' // Assuming 'text' is a valid type in your setup
-                    );
+                  Message(
+                      sender_id: thisUserID,
+                      friend_id: friendID,
+                      message: messageController.text,
+                      type: 'text',
+                      created_at: 'pending'),
+                );
                 messageController.clear();
               }
             },
@@ -200,5 +375,104 @@ class ChatPage extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Future<void> addCaptionDialog(
+      context,
+      TextEditingController messageController,
+      MessagesCubit messagesCubit,
+      int friendID,
+      File image,
+      width) async {
+    print('add caption dialog');
+    await showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            contentPadding: EdgeInsets.all(15),
+            backgroundColor: themeDarkBlue.withOpacity(0.8),
+            // title: Text('Add Caption'),
+
+            content: SingleChildScrollView(
+              child: SizedBox(
+                height: 350,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    ImageViewer.file(
+                      isRectangular: true,
+                      imageFile: image,
+                      width: 300,
+                      height: 300,
+                    ),
+                    SizedBox(
+                      height: 50,
+                      width: 300,
+                      child: Row(
+                        // mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Expanded(
+                            child: SafeArea(
+                              child: TextField(
+                                style: TextStyle(color: Colors.white),
+                                controller: messageController,
+                                decoration: InputDecoration(
+                                  hintText: "Type a caption",
+                                  hintStyle: TextStyle(color: Colors.grey.shade500),
+                                ),
+                              ),
+                            ),
+                          ),
+                          IconButton(
+                            icon: Icon(
+                              Icons.send,
+                              color: Colors.white,
+                            ),
+                            onPressed: () {
+                              if (messageController.text.isNotEmpty) {
+                                Navigator.pop(context);
+                                messagesCubit.sendMessage(
+                                  Message(
+                                      sender_id: thisUserID,
+                                      friend_id: friendID,
+                                      message: messageController.text,
+                                      type: messageController.text.isNotEmpty ? 'both' : 'image',
+                                      created_at: 'pending',
+                                      imageFile: image),
+                                );
+                                messageController.clear();
+                              }
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            // actions: [
+            //   TextButton(
+            //       onPressed: () {
+            //         Navigator.pop(context);
+            //       },
+            //       child: Text('Cancel', style: TextStyle(color: Colors.grey))),
+            //   TextButton(
+            //       onPressed: () {
+            //         Navigator.pop(context);
+            //         messagesCubit.sendMessage(
+            //           Message(
+            //               sender_id: thisUserID,
+            //               friend_id: friendID,
+            //               message: messageController.text,
+            //               type: 'both',
+            //               created_at: DateTime.now().toString(),
+            //               imageFile: image),
+            //         );
+            //       },
+            //       child: Text('Send', style: TextStyle(color: Colors.white))),
+            // ],
+          );
+        });
   }
 }

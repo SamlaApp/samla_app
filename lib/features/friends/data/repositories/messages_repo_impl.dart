@@ -25,23 +25,16 @@ class MessageRepositoryImpl extends MessageRepository {
   });
 
   @override
-  Future<Either<Failure, List<Message>>> sendMessage({
-    required int friend_id,
-    String? message,
-    required String type,
-    File? file,
-  }) async {
+  Future<Either<Failure, List<Message>>> sendMessage(Message message) async {
     if (await networkInfo.isConnected) {
       try {
         final msg = await remoteDataSource.sendMessage(
-          friend_id: friend_id,
-          message: message,
-          type: type,
-          file: file,
-        );
+          MessageModel.fromEntity(message));
         return Right(msg);
       } on ServerException catch (e) {
         return Left(ServerFailure(message: e.message));
+      } catch (e) {
+        return Left(ServerFailure(message: e.toString()));
       }
     } else {
       return Left(ServerFailure(message: 'No internet connection'));
@@ -57,6 +50,8 @@ class MessageRepositoryImpl extends MessageRepository {
         return Right(messages);
       } on ServerException catch (e) {
         return Left(ServerFailure(message: e.message));
+      } catch (e) {
+        return Left(ServerFailure(message: e.toString()));
       }
     } else {
       //TODO: get it from cache instead

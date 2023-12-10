@@ -10,10 +10,12 @@ class Message extends Equatable {
   final String? imageURL;
   final File? imageFile;
   final String type;
+  final String? created_at;
 
   // final updated_at
 
   const Message({
+    this.created_at,
     this.imageFile,
     this.imageURL,
     this.id,
@@ -24,5 +26,5 @@ class Message extends Equatable {
   });
 
   @override
-  List<Object?> get props => [id, friend_id, message, type, sender_id,imageFile, imageURL ];
+  List<Object?> get props => [id, friend_id, message, type, sender_id,imageFile, imageURL];
 }

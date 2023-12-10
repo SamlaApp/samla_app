@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:samla_app/features/friends/data/models/friend_status.dart';
+import 'package:samla_app/features/friends/domain/entities/message.dart';
 import '../../../../core/error/exceptions.dart';
 import '../../../../core/network/samlaAPI.dart';
 import '../../../auth/data/models/user_model.dart';
@@ -29,10 +30,7 @@ abstract class RemoteDataSource {
 
   // sendMessage
   Future<List<MessageModel>> sendMessage(
-      {required int friend_id,
-      required String? message,
-      required String type,
-      File? file});
+      MessageModel messageModel);
 
   // getMessages
   Future<List<MessageModel>> getMessages(int friend_id);
@@ -90,7 +88,6 @@ class RemoteDataSourceImpl implements RemoteDataSource {
       final res =
           await samlaAPI(endPoint: '/chat/friend/all/get', method: 'GET');
       final resBody = json.decode(await res.stream.bytesToString());
-      print(resBody);
       if (res.statusCode != 200) {
         throw ServerException(message: resBody['message']);
       }
@@ -163,7 +160,6 @@ class RemoteDataSourceImpl implements RemoteDataSource {
       if (res.statusCode != 200) {
         throw ServerException(message: resBody['message']);
       }
-      print(resBody);
       final status = FriendStatusModel.fromJson(resBody['friend']);
       return status;
     } on ServerException catch (e) {
@@ -177,14 +173,11 @@ class RemoteDataSourceImpl implements RemoteDataSource {
 
   // sendMessage
   @override
-  Future<List<MessageModel>> sendMessage({
-    required int friend_id,
-    String? message,
-    required String type,
-    File? file,
-  }) async {
+  Future<List<MessageModel>> sendMessage(
+    MessageModel message) async {
     try {
       http.MultipartFile? multipartFile = null;
+      final file = message.imageFile;
 
       if (file != null) {
         multipartFile = http.MultipartFile(
@@ -199,14 +192,13 @@ class RemoteDataSourceImpl implements RemoteDataSource {
           endPoint: '/chat/message/send',
           method: 'POST',
           data: {
-            'friend_id': friend_id.toString(),
-            'message': message!,
-            'type': type,
+            'friend_id': message.friend_id.toString(),
+            'message':message.message!,
+            'type': message.type,
           },
           file: multipartFile);
 
       final resBody = json.decode(await res.stream.bytesToString());
-      print(resBody);
 
       if (res.statusCode != 200) {
         throw ServerException(message: resBody['message']);

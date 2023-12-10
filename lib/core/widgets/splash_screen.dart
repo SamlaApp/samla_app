@@ -56,14 +56,19 @@ class _SplashScreenState extends State<SplashScreen>
 
     // initlizeing notification service
     await NotificationInit();
+    print('notification initlized');
     // initlizeing auth service
     await di.AuthInit();
+    print('auth initlized');
     // initlizeing profile service
     ProfileInit();
+    print('profile initlized');
     // initlizeing nutrition service
     nutritionInit();
+    print('nutrition initlized');
     // initlizeing home featrues
     await HomeInit();
+    print('home initlized');
 
     // await initWorkManager();
     // authentication handling

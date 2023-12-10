@@ -99,6 +99,7 @@ class ProfileCubit extends Cubit<ProfileState> {
         (failure) =>
             emit(UserGoalErrorState(message: 'Failed loaded user profile')),
         (userGoal) {
+          
       emit(UserGoalloaded(userGoal: userGoal));
     });
   }

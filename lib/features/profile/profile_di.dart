@@ -13,6 +13,7 @@ void ProfileInit() {
   
 //cubits
   sl.registerLazySingleton(() => ProfileCubit(sl()));
+
   
   //repositories
   sl.registerLazySingleton<GoalsRepository>(() => GoalsRepository(sl(), sl()));
