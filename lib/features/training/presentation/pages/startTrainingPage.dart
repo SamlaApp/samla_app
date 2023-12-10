@@ -195,12 +195,6 @@ class StartTrainingState extends State<StartTraining>
                 //           largeStarController,
                 //           smallStarController2
                 //       );
-                ElevatedButton(
-                    onPressed: () {
-                      showThankYouDialog(context, smallStarController1,
-                          largeStarController, smallStarController2);
-                    },
-                    child: const Text('Show Dialog')),
               ]),
             ],
           ),

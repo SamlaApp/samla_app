@@ -60,12 +60,6 @@ class _ChatPageState extends State<ChatPage> {
     // Function to build AppBar with user's profile and name
     AppBar _buildAppBar(user) {
       return AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
         title: Row(
           children: [
             ClipOval(
@@ -99,7 +93,7 @@ class _ChatPageState extends State<ChatPage> {
           ],
         ),
         // gradient:
-        backgroundColor: themeDarkBlue.withOpacity(.8),
+        backgroundColor: themeDarkBlue,
         iconTheme: IconThemeData(color: Colors.white),
       );
     }
@@ -321,7 +315,7 @@ class _ChatPageState extends State<ChatPage> {
     return Container(
       //top border
       decoration: BoxDecoration(
-        color: themeDarkBlue.withOpacity(0.9),
+        color: themeDarkBlue,
         border: Border(
           top: BorderSide(
             color: Colors.grey.shade300,

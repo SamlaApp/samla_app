@@ -25,13 +25,33 @@ class buildAAppBar extends StatelessWidget implements PreferredSizeWidget {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: Text('Profile',
-              style: TextStyle(
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            // Center the "Profile" title
+            children: [
+              Text(
+                'Profile  ',
+                style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  fontSize: 17,
+                  fontSize: 22,
                   decoration: TextDecoration.none,
-                  color: themeDarkBlue.withOpacity(1))),
-          backgroundColor: primary_color,
+                  color: themeDarkBlue.withOpacity(1),
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            IconButton(
+              icon: Icon(
+                Icons.logout,
+                size: 30,
+                color: themePink,
+              ),
+              onPressed: () {
+                authBloc.add(LogOutEvent(context));
+              },
+            ),
+          ],
           elevation: 0,
           leading: IconButton(
             icon: Icon(

@@ -66,7 +66,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                       IconButton(
                           // get this icon from images carbon_chat-bot.svg
                           icon: Icon(
-                            Icons.help,
+                            Icons.help_outline,
                             size: sizeOfIcon,
                             color: themeDarkBlue,
                           ),
@@ -81,15 +81,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                           ),
                           onPressed: () =>
                               Navigator.pushNamed(context, '/Notifications')),
-                      IconButton(
-                          icon: Icon(
-                            Icons.logout,
-                            size: sizeOfIcon,
-                            color: themePink,
-                          ),
-                          onPressed: () {
-                            authBloc.add(LogOutEvent(context));
-                          }),
                     ]),
                   ],
                 )),
