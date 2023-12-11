@@ -94,7 +94,8 @@ class _HomeState extends State<HomePage> {
                                 imageURL: user.photoUrl,
                                 width: 42,
                                 height: 42,
-                                placeholderImagePath: 'images/defaults/user.png',
+                                placeholderImagePath:
+                                    'images/defaults/user.png',
                                 viewerMode: false,
                               )),
                           const SizedBox(width: 10),
@@ -123,29 +124,13 @@ class _HomeState extends State<HomePage> {
                         ],
                       ),
                     ),
-
                     const Spacer(
                       flex: 1,
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        TextButton(
-                          onPressed: () {
-                             Navigator.pushNamed(context, '/Friend');
-                          },
-                          style: TextButton.styleFrom(
-                            backgroundColor: Colors.blue, // Set your desired background color
-                            padding: EdgeInsets.all(10), // Adjust padding as needed
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8), // Adjust the border radius
-                            ),
-                          ),
-                          child:Text(
-                              'Friends'
-                          ),
-                        ),
-                              const SizedBox(width: 10),
+                        const SizedBox(width: 10),
                         Container(
                           alignment: Alignment.center,
                           height: 30,

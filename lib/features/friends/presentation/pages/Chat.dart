@@ -18,20 +18,35 @@ import '../../../auth/domain/entities/user.dart';
 import '../../domain/entities/message.dart';
 import 'FriendProfilePage.dart';
 
-class ChatPage extends StatelessWidget {
+class ChatPage extends StatefulWidget {
   final int userID;
   final User friend;
-  final thisUserID = int.parse(sl<AuthBloc>().user.id!);
 
   ChatPage({super.key, required this.userID, required this.friend});
 
+  @override
+  State<ChatPage> createState() => _ChatPageState();
+}
+
+class _ChatPageState extends State<ChatPage> {
+  final ScrollController _scrollController = ScrollController();
+  final thisUserID = int.parse(sl<AuthBloc>().user.id!);
+
   final TextEditingController _messageController = TextEditingController();
+
   late BuildContext gContext;
+
+  @override
+  void dispose() {
+    _messageController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     gContext = context;
     final messagesCubit = sl<MessagesCubit>();
-    final statusCubit = sl<FriendShipCubit>()..getStatus(userID);
+    final statusCubit = sl<FriendShipCubit>()..getStatus(widget.userID);
     final friendCubit = sl<FriendCubit>();
     final _baseImageUrl =
         'https://chat.mohsowa.com/api/image'; // Replace with your image URL
@@ -45,12 +60,6 @@ class ChatPage extends StatelessWidget {
     // Function to build AppBar with user's profile and name
     AppBar _buildAppBar(user) {
       return AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
         title: Row(
           children: [
             ClipOval(
@@ -84,14 +93,13 @@ class ChatPage extends StatelessWidget {
           ],
         ),
         // gradient:
-        backgroundColor: themeDarkBlue.withOpacity(.8),
+        backgroundColor: themeDarkBlue,
         iconTheme: IconThemeData(color: Colors.white),
       );
     }
 
     return Scaffold(
-
-      appBar: _buildAppBar(friend),
+      appBar: _buildAppBar(widget.friend),
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
@@ -164,36 +172,28 @@ class ChatPage extends StatelessWidget {
 
   // still not done with the ui i just want to see if it works ;)
   Widget _buildMessagesSection(MessagesCubit messagesCubit, int friendID) {
-    ScrollController _scrollController = ScrollController();
+    // Fetch messages for the friend
+    messagesCubit.getMessages(friend_id: friendID);
 
     return BlocBuilder<MessagesCubit, MessagesState>(
-      bloc: messagesCubit..getMessages(friend_id: friendID),
+      bloc: messagesCubit,
       builder: (context, messagesState) {
         if (messagesState is MessagesLoaded) {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            if (_scrollController.hasClients) {
-              _scrollController.animateTo(
-                _scrollController.position.maxScrollExtent + 300,
-                curve: Curves.easeOut,
-                duration: const Duration(milliseconds: 500),
-              );
-            }
-          });
-          // if not empty print last message
+          // Scroll to bottom when a new message is added
+          if (_scrollController.hasClients) {
+            _scrollController.jumpTo(0);
+          }
 
-          // Build the messages list
-          return Container(
-            child: LayoutBuilder(
-              builder: (context, constraints) => ListView.builder(
-                controller: _scrollController,
-                itemCount: messagesCubit.messages.length,
-                itemBuilder: (context, index) {
-                  final message = messagesCubit.messages[index];
-                  // Add message list item UI
-                  return MessageWidget(message, constraints);
-                },
-              ),
-            ),
+          return ListView.builder(
+            controller: _scrollController,
+            reverse: true,
+            itemCount: messagesCubit.messages.length,
+            itemBuilder: (context, index) {
+              // Since the list is reversed, adjust the index accordingly
+              final message = messagesCubit
+                  .messages[messagesCubit.messages.length - 1 - index];
+              return MessageWidget(message);
+            },
           );
         } else if (messagesState is MessagesError) {
           return Center(child: Text(messagesState.message));
@@ -203,18 +203,18 @@ class ChatPage extends StatelessWidget {
     );
   }
 
-  Widget MessageWidget(Message message, constraints) {
+  Widget MessageWidget(Message message) {
     final align = message.sender_id != thisUserID
         ? Alignment.centerLeft
         : Alignment.centerRight;
-
+    final constraints = MediaQuery.of(gContext).size.width;
     return Align(
       alignment: align,
       child: SizedBox(
         // width: ,
         child: Container(
-            constraints: BoxConstraints(
-                minWidth: 80, maxWidth: constraints.maxWidth * 0.7),
+            constraints:
+                BoxConstraints(minWidth: 80, maxWidth: constraints * 0.7),
             padding: EdgeInsets.all(10),
             margin: EdgeInsets.all(20),
             // change border according to user sender
@@ -252,14 +252,14 @@ class ChatPage extends StatelessWidget {
                         ? ImageViewer.file(
                             isRectangular: true,
                             imageFile: message.imageFile!,
-                            width: constraints.maxWidth * 0.7 ,
-                            height: constraints.maxWidth * 0.7,
+                            width: constraints * 0.7,
+                            height: constraints * 0.7,
                           )
                         : ImageViewer.network(
                             isRectangular: true,
                             imageURL: message.imageURL ?? '',
-                            width: constraints.maxWidth * 0.7,
-                            height: constraints.maxWidth * 0.7,
+                            width: constraints * 0.7,
+                            height: constraints * 0.7,
                           ),
                   if (message.type == 'both')
                     SizedBox(
@@ -267,24 +267,31 @@ class ChatPage extends StatelessWidget {
                     ),
                   Text(message.message.toString(),
                       style: TextStyle(
-                        fontSize: 17,
+                          fontSize: 17,
                           color: message.sender_id != thisUserID
                               ? Colors.black
-                              : Colors.white), textAlign: TextAlign.left),
+                              : Colors.white),
+                      textAlign: TextAlign.left),
                   SizedBox(
                     height: 20,
                   ),
                 ],
               ),
               Positioned(
-                
-                child:message.created_at != 'pending' ? Text(
-                  formatDate(message.created_at.toString()),
-                  style: TextStyle(fontSize: 13, color: Colors.grey.shade500),
-                  textAlign: message.sender_id != thisUserID
-                      ? TextAlign.left
-                      : TextAlign.right,
-                ): Icon(Icons.access_time, color: Colors.grey.shade500, size: 13,),
+                child: message.created_at != 'pending'
+                    ? Text(
+                        formatDate(message.created_at.toString()),
+                        style: TextStyle(
+                            fontSize: 13, color: Colors.grey.shade500),
+                        textAlign: message.sender_id != thisUserID
+                            ? TextAlign.left
+                            : TextAlign.right,
+                      )
+                    : Icon(
+                        Icons.access_time,
+                        color: Colors.grey.shade500,
+                        size: 13,
+                      ),
                 bottom: 0,
                 right: 0,
               ),
@@ -308,7 +315,7 @@ class ChatPage extends StatelessWidget {
     return Container(
       //top border
       decoration: BoxDecoration(
-        color: themeDarkBlue.withOpacity(0.9),
+        color: themeDarkBlue,
         border: Border(
           top: BorderSide(
             color: Colors.grey.shade300,
@@ -317,32 +324,32 @@ class ChatPage extends StatelessWidget {
         ),
       ),
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
-      child: Row(
-        children: <Widget>[
-          IconButton(
-            onPressed: () {
-              Completer<File> completer = Completer();
-              // File? image;
-              ImageHelper helper = ImageHelper();
-              helper.pickImage(_context, (image) {
-                if (image != null) {
-                  print('image selected');
-                  completer.complete(image);
-                  // show dialog with image and input to add caption
-                }
-              });
-              completer.future.then((image) {
-                addCaptionDialog(
-                    _context, messageController, messagesCubit, friendID, image, MediaQuery.of(_context).size.width);
-              });
-            },
-            icon: Icon(
-              Icons.camera_alt,
-              color: Colors.white,
+      child: SafeArea(
+        child: Row(
+          children: <Widget>[
+            IconButton(
+              onPressed: () {
+                Completer<File> completer = Completer();
+                // File? image;
+                ImageHelper helper = ImageHelper();
+                helper.pickImage(_context, (image) {
+                  if (image != null) {
+                    print('image selected');
+                    completer.complete(image);
+                    // show dialog with image and input to add caption
+                  }
+                });
+                completer.future.then((image) {
+                  addCaptionDialog(_context, messageController, messagesCubit,
+                      friendID, image, MediaQuery.of(_context).size.width);
+                });
+              },
+              icon: Icon(
+                Icons.camera_alt,
+                color: Colors.white,
+              ),
             ),
-          ),
-          Expanded(
-            child: SafeArea(
+            Expanded(
               child: TextField(
                 style: TextStyle(color: Colors.white),
                 controller: messageController,
@@ -352,27 +359,27 @@ class ChatPage extends StatelessWidget {
                 ),
               ),
             ),
-          ),
-          IconButton(
-            icon: Icon(
-              Icons.send,
-              color: Colors.white,
+            IconButton(
+              icon: Icon(
+                Icons.send,
+                color: Colors.white,
+              ),
+              onPressed: () {
+                if (messageController.text.isNotEmpty) {
+                  messagesCubit.sendMessage(
+                    Message(
+                        sender_id: thisUserID,
+                        friend_id: friendID,
+                        message: messageController.text,
+                        type: 'text',
+                        created_at: 'pending'),
+                  );
+                  messageController.clear();
+                }
+              },
             ),
-            onPressed: () {
-              if (messageController.text.isNotEmpty) {
-                messagesCubit.sendMessage(
-                  Message(
-                      sender_id: thisUserID,
-                      friend_id: friendID,
-                      message: messageController.text,
-                      type: 'text',
-                      created_at: 'pending'),
-                );
-                messageController.clear();
-              }
-            },
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -418,7 +425,8 @@ class ChatPage extends StatelessWidget {
                                 controller: messageController,
                                 decoration: InputDecoration(
                                   hintText: "Type a caption",
-                                  hintStyle: TextStyle(color: Colors.grey.shade500),
+                                  hintStyle:
+                                      TextStyle(color: Colors.grey.shade500),
                                 ),
                               ),
                             ),
@@ -436,7 +444,9 @@ class ChatPage extends StatelessWidget {
                                       sender_id: thisUserID,
                                       friend_id: friendID,
                                       message: messageController.text,
-                                      type: messageController.text.isNotEmpty ? 'both' : 'image',
+                                      type: messageController.text.isNotEmpty
+                                          ? 'both'
+                                          : 'image',
                                       created_at: 'pending',
                                       imageFile: image),
                                 );

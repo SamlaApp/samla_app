@@ -14,7 +14,8 @@ import 'package:samla_app/features/friends/presentation/widgets/friendProfile_wi
 import 'package:samla_app/features/profile/profile_di.dart' as di;
 
 import '../../../../core/widgets/image_viewer.dart';
-import '../../../main/presentation/widgets/WeeklyProgress.dart';
+
+import '../widgets/Progress.dart';
 
 class FriendProfilePage extends StatefulWidget {
   const FriendProfilePage({super.key});
@@ -27,6 +28,42 @@ class _FriendProfilePageState extends State<FriendProfilePage> {
   final authBloc = authDI.sl.get<AuthBloc>();
   final profileCubit = di.sl.get<ProfileCubit>();
   final _baseImageUrl = 'https://chat.mohsowa.com/api/image';
+  Map<String, double> userProgress = {
+    'Mon': 3000,
+    'Tue': 5000,
+    'Wed': 2500,
+    'Thu': 4000,
+    'Fri': 3000,
+    'Sat': 3500,
+    'SUN': 2000,
+  };
+  Map<String, double> friendProgress = {
+    'Mon': 4000,
+    'Tue': 2000,
+    'Wed': 3000,
+    'Thu': 2000,
+    'Fri': 4000,
+    'Sat': 3000,
+    'SUN': 3000,
+  };
+  Map<String, double> userCalories = {
+    'Mon': 3000,
+    'Tue': 5000,
+    'Wed': 2500,
+    'Thu': 4000,
+    'Fri': 3000,
+    'Sat': 3500,
+    'SUN': 2000,
+  };
+  Map<String, double> friendCalories = {
+    'Mon': 200,
+    'Tue': 4000,
+    'Wed': 5000,
+    'Thu': 2000,
+    'Fri': 1000,
+    'Sat': 2000,
+    'SUN': 1000,
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +107,12 @@ class _FriendProfilePageState extends State<FriendProfilePage> {
                 padding: EdgeInsets.symmetric(horizontal: 20),
                 child: Column(
                   children: <Widget>[
-                    WeeklyProgress(),
+                    FriendWeeklyProgress(
+                      userSteps: userProgress,
+                      friendSteps: friendProgress,
+                      userCalories: userCalories,
+                      friendCalories: friendCalories,
+                    ),
                   ],
                 ),
               ),

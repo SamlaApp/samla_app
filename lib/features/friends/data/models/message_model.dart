@@ -1,20 +1,23 @@
 import 'dart:io';
+import 'package:intl/intl.dart'; // Import the intl package for date manipulation
 
 import '../../domain/entities/message.dart';
 
 class MessageModel extends Message {
-  const MessageModel({
-    super.imageURL,
-    super.imageFile,
-    super.id,
-    required super.friend_id,
-    super.sender_id,
-    super.message,
-    required super.type,
-    super.created_at
-  });
+  const MessageModel(
+      {super.imageURL,
+      super.imageFile,
+      super.id,
+      required super.friend_id,
+      super.sender_id,
+      super.message,
+      required super.type,
+      super.created_at});
 
   factory MessageModel.fromJson(Map<String, dynamic> json) {
+    DateTime createdAt = DateTime.parse(json['created_at']);
+    createdAt = createdAt.add(Duration(hours: 3));
+
     if (json['image'] != null &&
         !json['image'].isEmpty &&
         !json['image'].contains('http')) {
@@ -28,21 +31,21 @@ class MessageModel extends Message {
       sender_id: json['user_id'],
       message: json['message'],
       type: json['type'],
-      created_at: json['created_at']
+      created_at: DateFormat('yyyy-MM-dd HH:mm:ss')
+          .format(createdAt), // Format it back to a string if needed
     );
   }
 
   factory MessageModel.fromEntity(Message message) {
     return MessageModel(
-      id: message.id,
-      sender_id: message.sender_id,
-      friend_id: message.friend_id,
-      message: message.message,
-      type: message.type,
-      imageFile: message.imageFile,
-      imageURL: message.imageURL,
-      created_at: message.created_at
-    );
+        id: message.id,
+        sender_id: message.sender_id,
+        friend_id: message.friend_id,
+        message: message.message,
+        type: message.type,
+        imageFile: message.imageFile,
+        imageURL: message.imageURL,
+        created_at: message.created_at);
   }
 
   Map<String, String> toJson() {

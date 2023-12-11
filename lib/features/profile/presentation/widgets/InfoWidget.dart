@@ -80,14 +80,14 @@ class _InfoWidgetState extends State<InfoWidget> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Success'),
-          content: Text('Your goal information updated'),
+          title: const Text('Success'),
+          content: const Text('Your goal information updated'),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text('OK'),
+              child: const Text('OK'),
             ),
           ],
         );
@@ -102,7 +102,7 @@ class _InfoWidgetState extends State<InfoWidget> {
         bloc: profileCubit,
         builder: (context, state) {
           if (state is ProfileLoading) {
-            return CircularProgressIndicator();
+            return const CircularProgressIndicator();
           } else if (state is UserGoalErrorState) {
             SchedulerBinding.instance.addPostFrameCallback((_) {
               ScaffoldMessenger.of(context).showSnackBar(
@@ -112,7 +112,7 @@ class _InfoWidgetState extends State<InfoWidget> {
               );
             });
 
-            return Center(child: Text('Could not fetch the user goal'));
+            return const Center(child: Text('Could not fetch the user goal'));
           } else if (state is UserGoalloaded) {
             var goal = state.userGoal;
             _weightController.text = '${goal.targetWeight}';
@@ -124,13 +124,11 @@ class _InfoWidgetState extends State<InfoWidget> {
             return Form(
               child: Container(
                 key: _formKey,
-                padding: EdgeInsets.symmetric(horizontal: 30),
+                padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    SizedBox(
-                      height: 15,
-                    ),
+                    const SizedBox(height: 15),
                     Text(
                       'Target Weight',
                       style: TextStyle(
@@ -140,8 +138,8 @@ class _InfoWidgetState extends State<InfoWidget> {
                       ),
                     ),
                     Container(
-                      margin: EdgeInsets.fromLTRB(0, 5, 0, 0),
-                      padding: EdgeInsets.fromLTRB(0, 5, 10, 0),
+                      margin: const EdgeInsets.fromLTRB(0, 5, 0, 0),
+                      padding: const EdgeInsets.fromLTRB(0, 5, 10, 0),
                       decoration: textField_decoration,
                       child: TextFormField(
                         controller: _weightController,
@@ -149,8 +147,8 @@ class _InfoWidgetState extends State<InfoWidget> {
                         decoration: InputDecoration(
                           suffixText: 'kg',
                           suffixStyle: TextStyle(color: themeDarkBlue),
-                          prefixIcon: Padding(
-                            padding: const EdgeInsets.fromLTRB(0, 0, 0, 8),
+                          prefixIcon: const Padding(
+                            padding: EdgeInsets.fromLTRB(0, 0, 0, 8),
                             child: Icon(
                               Icons.accessibility,
                               color: Colors.black38,
@@ -169,9 +167,7 @@ class _InfoWidgetState extends State<InfoWidget> {
                         },
                       ),
                     ),
-                    SizedBox(
-                      height: 15,
-                    ),
+                    const SizedBox(height: 15),
                     Row(
                       children: [
                         Expanded(
@@ -186,12 +182,10 @@ class _InfoWidgetState extends State<InfoWidget> {
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              SizedBox(
-                                height: 5,
-                              ),
+                              const SizedBox(height: 5),
                               Container(
-                                margin: EdgeInsets.fromLTRB(0, 5, 0, 0),
-                                padding: EdgeInsets.fromLTRB(0, 5, 10, 0),
+                                margin: const EdgeInsets.fromLTRB(0, 5, 0, 0),
+                                padding: const EdgeInsets.fromLTRB(0, 5, 10, 0),
                                 decoration: textField_decoration,
                                 child: TextFormField(
                                   controller: _caloriesController,
@@ -227,7 +221,7 @@ class _InfoWidgetState extends State<InfoWidget> {
                             ],
                           ),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 10,
                         ),
                         Expanded(
@@ -242,12 +236,10 @@ class _InfoWidgetState extends State<InfoWidget> {
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              SizedBox(
-                                height: 5,
-                              ),
+                              const SizedBox(height: 5),
                               Container(
-                                margin: EdgeInsets.fromLTRB(0, 5, 0, 0),
-                                padding: EdgeInsets.fromLTRB(0, 5, 10, 0),
+                                margin: const EdgeInsets.fromLTRB(0, 5, 0, 0),
+                                padding: const EdgeInsets.fromLTRB(0, 5, 10, 0),
                                 decoration: textField_decoration,
                                 child: TextFormField(
                                   controller: _stepsController,
@@ -258,9 +250,8 @@ class _InfoWidgetState extends State<InfoWidget> {
                                         fontSize: 10,
                                         fontWeight: FontWeight.bold,
                                         color: themeDarkBlue),
-                                    prefixIcon: Padding(
-                                      padding:
-                                          const EdgeInsets.fromLTRB(0, 0, 0, 8),
+                                    prefixIcon: const Padding(
+                                      padding: EdgeInsets.fromLTRB(0, 0, 0, 8),
                                       child: Icon(
                                         Icons.local_fire_department_sharp,
                                         color: Colors.red,
@@ -284,23 +275,23 @@ class _InfoWidgetState extends State<InfoWidget> {
                         ),
                       ],
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     Center(
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
                             primary: themeBlue,
-                            padding: EdgeInsets.symmetric(
+                            padding: const EdgeInsets.symmetric(
                                 horizontal: 20, vertical: 13),
                             // Button padding
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(
                                   8), // Button border radius
                             ),
-                            textStyle: TextStyle(
+                            textStyle: const TextStyle(
                               fontWeight: FontWeight.bold,
                             )),
                         onPressed: _saveInfo,
-                        child: Text(
+                        child: const Text(
                           'Save Info',
                           style: TextStyle(color: Colors.white),
                         ),
@@ -311,7 +302,7 @@ class _InfoWidgetState extends State<InfoWidget> {
               ),
             );
           }
-          return Center(child: Text('Could not fetch the user goal'));
+          return const Center(child: Text('Could not fetch the user goal'));
         });
   }
 }

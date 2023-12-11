@@ -15,6 +15,10 @@ Future<Map<String, dynamic>> getNutritionPlan() async {
   final resBody = await res.stream.bytesToString();
 
   if (res.statusCode == 200) {
+    // if empty return empty
+    if(json.decode(resBody)['nutrition_plan'].length == 0){
+      return {};
+    }
     return json.decode(resBody)['nutrition_plan'];
   } else {
     throw ServerException(message: json.decode(resBody)['message']);
@@ -110,6 +114,10 @@ Future<String> generateResponse(String prompt,List<ChatMessage> _messages) async
         {
           "role": "system",
           "content": "app name is Samla"
+        },
+        {
+          "role": "system",
+          "content": "You should give short answers"
         },
         {
           "role": "system",

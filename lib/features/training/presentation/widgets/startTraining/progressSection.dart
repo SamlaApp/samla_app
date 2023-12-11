@@ -294,7 +294,6 @@ class _ProgressSectionState extends State<ProgressSection>
         const SizedBox(width: 10),
         Column(
           children: [
-            const Text(""),
             submitButton(),
           ],
         ),
@@ -388,8 +387,6 @@ class _ProgressSectionState extends State<ProgressSection>
               // show button in the middle
               // simple button for _showCustomToast();
               submitButton(),
-              ElevatedButton(
-                  onPressed: _showCustomToast, child: const Text('S')),
             ],
           ),
         ),
