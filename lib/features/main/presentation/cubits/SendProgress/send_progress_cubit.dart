@@ -1,6 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:samla_app/core/error/failures.dart';
 import 'package:samla_app/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:samla_app/features/friends/presentation/cubit/profile_cubit.dart';
 import 'package:samla_app/features/main/domain/entities/Progress.dart';
 import 'package:samla_app/features/main/domain/entities/StepsLog.dart';
 import 'package:samla_app/features/main/domain/repositories/progress_repository.dart';
@@ -8,6 +10,7 @@ import 'package:samla_app/features/main/home_di.dart';
 import 'package:samla_app/features/main/presentation/cubits/ProgressCubit/progress_cubit.dart';
 import 'package:samla_app/features/main/presentation/cubits/SensorCubit/steps_cubit.dart';
 import 'package:samla_app/features/main/presentation/cubits/StepsLogCubit/steps_log_cubit.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 part 'send_progress_state.dart';
 
@@ -21,10 +24,35 @@ class SendProgressCubit extends Cubit<SendProgressState> {
     result.fold(
         (failure) => emit(const SendProgressError('Failed to send progress')),
         (success) {
+      setCachedWeight(progress.weight as num);
       sl<ProgressCubit>().getProgress();
       emit(SendProgressSuccess());
     });
   }
+
+   setCachedWeight(num weight) async {
+    try {
+      final success =
+          await sl<SharedPreferences>().setString('weight', weight.toString());
+    } catch (e) {
+      emit(const SendProgressError('Failed to set cached weight'));
+    }
+  }
+
+  getCachedWeight() {
+    try {
+      final weight = sl<SharedPreferences>().getString('weight');
+      if (weight != null) {
+        return num.parse(weight);
+      } else {
+        return sl<ProfileCubit>().userGoals.targetWeight ?? 0;
+      }
+    } catch (e) {
+      return sl<ProfileCubit>().userGoals.targetWeight ?? 0;
+    }
+  }
+
+  
 
   Future<void> refreashProgress() async {
     try {
@@ -41,7 +69,7 @@ class SendProgressCubit extends Cubit<SendProgressState> {
           final steps = sensorState.reads - offset + oldSteps;
           Progress progress = Progress(
             height: sl<AuthBloc>().user.height ?? 0,
-            weight: 0,
+            weight:  getCachedWeight(),
             calories: (steps * 0.7).toInt(),
             steps: steps,
             date: DateTime.now(),
@@ -59,6 +87,7 @@ class SendProgressCubit extends Cubit<SendProgressState> {
           Progress progress = lastProgress.copyWith(
             steps: sensorState.reads - offset + oldSteps,
             date: DateTime.now(),
+            weight: getCachedWeight(),
           );
           print('before send to server: $progress.date');
           await sendProgress(progress);
