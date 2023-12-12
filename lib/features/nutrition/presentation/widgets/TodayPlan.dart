@@ -373,25 +373,25 @@ class _TodayPlanState extends State<TodayPlan> {
 
   BlocBuilder<PlanStatusCubit, PlanStatusState> _planStatus(int id) {
 
-    void mealTaken() {
+    void mealTaken() async {
       final status = NutritionPlanStatus(
         nutritionPlanStatusId: id,
         status: 'Taken',
       );
-      statusCubit.updateNutritionPlanStatus(status);
-      statusCubit.getNutritionPlanStatus(id);
-      summaryCubit.getDailyNutritionPlanSummary();
+      await statusCubit.updateNutritionPlanStatus(status);
+      await statusCubit.getNutritionPlanStatus(id);
+      await summaryCubit.getDailyNutritionPlanSummary();
 
     }
 
-    void mealSkipped() {
+    void mealSkipped() async {
       final status = NutritionPlanStatus(
         nutritionPlanStatusId: id,
         status: 'Skipped',
       );
-      statusCubit.updateNutritionPlanStatus(status);
-      statusCubit.getNutritionPlanStatus(id);
-      summaryCubit.getDailyNutritionPlanSummary();
+      await statusCubit.updateNutritionPlanStatus(status);
+      await statusCubit.getNutritionPlanStatus(id);
+      await summaryCubit.getDailyNutritionPlanSummary();
     }
 
     return BlocBuilder<PlanStatusCubit, PlanStatusState>(

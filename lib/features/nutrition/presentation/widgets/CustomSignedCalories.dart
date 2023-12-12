@@ -65,9 +65,9 @@ class _CustomSignedCaloriesState extends State<CustomSignedCalories> {
                       _calories = int.parse(value);
                     });
                   },
-                  keyboardType: TextInputType.number,
-                  inputFormatters: <TextInputFormatter>[
-                    FilteringTextInputFormatter.digitsOnly
+                  keyboardType: TextInputType.numberWithOptions(signed: true),
+                  inputFormatters: [
+                    FilteringTextInputFormatter.digitsOnly,
                   ],
                   decoration: InputDecoration(
                     labelStyle: const TextStyle(color: themeDarkBlue),
@@ -91,11 +91,11 @@ class _CustomSignedCaloriesState extends State<CustomSignedCalories> {
               style: ElevatedButton.styleFrom(
                 backgroundColor: themeBlue,
               ),
-              onPressed: () {
+              onPressed: () async {
                 // check if the calories is not 0
                 if (_calories > 0) {
-                  summaryCubit.setCustomCalories(_calories);
-                  summaryCubit.getDailyNutritionPlanSummary();
+                  await summaryCubit.setCustomCalories(_calories);
+                  await summaryCubit.getDailyNutritionPlanSummary();
 
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
