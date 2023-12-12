@@ -31,6 +31,7 @@ class _TrainingPageState extends State<TrainingPage> {
   final _controller = PageController();
   Map<String, List<ExerciseLibrary>> weeklyExercises = {};
   ValueNotifier<int?> activeTemplateId = ValueNotifier(null);
+  late String Tamplatename;
 
   @override
   void initState() {
@@ -178,6 +179,7 @@ class _TrainingPageState extends State<TrainingPage> {
           dayName: dayName,
           dayIndex: dayIndex,
           exercises: exercises,
+          templateName: Tamplatename,
         ),
       ),
     );
@@ -400,6 +402,7 @@ class _TrainingPageState extends State<TrainingPage> {
             ),
           );
         } else if (state is ActiveTemplateLoaded) {
+          Tamplatename = state.template.name;
           return Padding(
             padding: const EdgeInsets.all(16.0),
             child: Container(

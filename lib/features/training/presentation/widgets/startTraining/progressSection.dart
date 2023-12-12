@@ -13,14 +13,16 @@ import 'customTimer.dart';
 
 class ProgressSection extends StatefulWidget {
   final ExerciseLibrary selectedExercise;
-  final Function onAllSetsCompleted;
+  final Function selectNextExercise;
   final int dayIndex;
+  final String templateName;
 
   const ProgressSection({
     super.key,
     required this.selectedExercise,
-    required this.onAllSetsCompleted,
+    required this.selectNextExercise,
     required this.dayIndex,
+    required this.templateName,
   });
 
   @override
@@ -121,20 +123,24 @@ class _ProgressSectionState extends State<ProgressSection>
         .dispose(); // Dispose of the AnimationController when the widget is disposed.
   }
 
-  Future<int> _getCompletedSetsFromPrefs(int exerciseId, int dayIndex) async {
+  Future<int> _getCompletedSetsFromPrefs(
+      int exerciseId, int dayIndex, String templateName) async {
     final prefs = await SharedPreferences.getInstance();
-    return prefs.getInt('completed_sets_${exerciseId}_$dayIndex') ?? 0;
+    return prefs
+            .getInt('completed_sets_${exerciseId}_${dayIndex}_$templateName') ??
+        0;
   }
 
-  Future<void> _saveCompletedSetsToPrefs(
-      int exerciseId, int completedSets, int dayIndex) async {
+  Future<void> _saveCompletedSetsToPrefs(int exerciseId, int completedSets,
+      int dayIndex, String templateName) async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setInt('completed_sets_${exerciseId}_$dayIndex', completedSets);
+    await prefs.setInt('completed_sets_${exerciseId}_${dayIndex}_$templateName',
+        completedSets);
   }
 
   void _loadCompletedSetsForExercise() async {
     int completedSets = await _getCompletedSetsFromPrefs(
-        widget.selectedExercise.id!, widget.dayIndex);
+        widget.selectedExercise.id!, widget.dayIndex, widget.templateName);
     setState(() {
       finishedSets = completedSets;
     });
@@ -150,13 +156,17 @@ class _ProgressSectionState extends State<ProgressSection>
 
   Future<void> saveCompletedSets() async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setInt('sets_${widget.selectedExercise.id}', finishedSets);
+    await prefs.setInt(
+        'sets_${widget.selectedExercise.id}_${widget.dayIndex}_${widget.templateName}',
+        finishedSets);
   }
 
   Future<void> loadCompletedSets() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
-      finishedSets = prefs.getInt('sets_${widget.selectedExercise.id}') ?? 0;
+      finishedSets = prefs.getInt(
+              'sets_${widget.selectedExercise.id}_${widget.dayIndex}_${widget.templateName}') ??
+          0;
     });
   }
 
@@ -166,7 +176,7 @@ class _ProgressSectionState extends State<ProgressSection>
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (!hasShownDialog) {
           hasShownDialog = true; // Set the flag
-          widget.onAllSetsCompleted();
+          widget.selectNextExercise();
         }
       });
     }
@@ -726,8 +736,8 @@ class _ProgressSectionState extends State<ProgressSection>
         setState(() {
           finishedSets++;
         });
-        await _saveCompletedSetsToPrefs(
-            widget.selectedExercise.id!, finishedSets, widget.dayIndex);
+        await _saveCompletedSetsToPrefs(widget.selectedExercise.id!,
+            finishedSets, widget.dayIndex, widget.templateName);
 
         saveCompletedSets();
 
@@ -763,7 +773,7 @@ class _ProgressSectionState extends State<ProgressSection>
         }
 
         // Notify the parent widget if all sets are finished
-        widget.onAllSetsCompleted(); // Directly call the callback here
+        widget.selectNextExercise(); // Directly call the callback here
       },
       child: const Icon(Icons.check, size: 30, color: themeBlue),
     );

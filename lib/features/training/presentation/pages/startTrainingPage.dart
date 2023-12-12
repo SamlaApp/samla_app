@@ -13,12 +13,14 @@ class StartTraining extends StatefulWidget {
   final String dayName;
   final int dayIndex;
   final List<ExerciseLibrary> exercises;
+  final String templateName;
 
   const StartTraining({
     super.key,
     required this.dayName,
     required this.dayIndex,
     required this.exercises,
+    required this.templateName,
   });
 
   @override
@@ -112,10 +114,11 @@ class StartTrainingState extends State<StartTraining>
     int currentIndex = widget.exercises.indexOf(selectedExercise);
     print("Current index: $currentIndex");
     if (currentIndex < widget.exercises.length - 1) {
+      await Future.delayed(const Duration(milliseconds: 300));
       setState(() {
         selectedExercise = widget.exercises[currentIndex + 1];
       });
-
+      await Future.delayed(const Duration(seconds: 0));
       // Wait for the next frame to ensure the state is updated
       await Future.delayed(Duration.zero, () {
         loadHistoryForExercise();
@@ -174,9 +177,10 @@ class StartTrainingState extends State<StartTraining>
                 ),
                 ProgressSection(
                   selectedExercise: selectedExercise,
-                  onAllSetsCompleted:
+                  selectNextExercise:
                       selectNextExercise, // Pass the new method as a callback
                   dayIndex: widget.dayIndex, // Pass the dayIndex here
+                  templateName: widget.templateName,
                 ),
                 // ## exercise scroll row
                 ExerciseScrollRow(
