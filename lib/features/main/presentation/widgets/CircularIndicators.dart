@@ -50,10 +50,12 @@ class _CircularIndicatorsState extends State<CircularIndicators> {
         if (state is UserGoalloaded) {
           if (state.userGoal.targetSteps as int > 0) {
             _stepsGoal = state.userGoal.targetSteps as int;
+            print('_stepsGoal $_stepsGoal');
           }
 
           if (state.userGoal.targetCalories as int > 0) {
             _caloriresGoal = state.userGoal.targetCalories as int;
+            print('_stepsGoal $_stepsGoal');
           }
         }
         return BlocBuilder<StepsLogCubit, StepsLogState>(
@@ -82,12 +84,17 @@ class _CircularIndicatorsState extends State<CircularIndicators> {
                               width: 10,
                             ),
                             Flexible(
-                              child: Text(
-                                'Sorry, we could not access to your activity recognition!',
-                                style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.normal,
-                                    color: themeDarkBlue.withOpacity(0.7)),
+                              child: GestureDetector(
+                                onTap: () async {
+                                  await _sensorCubit.init();
+                                },
+                                child: Text(
+                                  'Sorry, we could not access to your activity recognition!',
+                                  style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.normal,
+                                      color: themeDarkBlue.withOpacity(0.7)),
+                                ),
                               ),
                             )
                           ],

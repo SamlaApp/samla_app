@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'package:intl/intl.dart'; // Import the intl package for date manipulation
 
 import '../../domain/entities/message.dart';
 
@@ -15,9 +14,6 @@ class MessageModel extends Message {
       super.created_at});
 
   factory MessageModel.fromJson(Map<String, dynamic> json) {
-    DateTime createdAt = DateTime.parse(json['created_at']);
-    createdAt = createdAt.add(Duration(hours: 3));
-
     if (json['image'] != null &&
         !json['image'].isEmpty &&
         !json['image'].contains('http')) {
@@ -25,15 +21,13 @@ class MessageModel extends Message {
           'https://samla.mohsowa.com/api/chat/image/' + json['image'];
     }
     return MessageModel(
-      imageURL: json['image'],
-      id: json['id'],
-      friend_id: json['friend_id'],
-      sender_id: json['user_id'],
-      message: json['message'],
-      type: json['type'],
-      created_at: DateFormat('yyyy-MM-dd HH:mm:ss')
-          .format(createdAt), // Format it back to a string if needed
-    );
+        imageURL: json['image'],
+        id: json['id'],
+        friend_id: json['friend_id'],
+        sender_id: json['user_id'],
+        message: json['message'],
+        type: json['type'],
+        created_at: json['created_at']);
   }
 
   factory MessageModel.fromEntity(Message message) {

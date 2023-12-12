@@ -15,12 +15,14 @@ class SensorCubit extends Cubit<SensorState> {
   Completer<void> completer = Completer<void>();
 
   bool _isInitialized = false;
+  bool isActivityGranted = false;
+  bool isSensorGranted = false;
 
   Future<void> init() async {
-    if (_isInitialized) {
-      // Registration has already occurred, so do nothing.
-      return;
-    }
+    // if (_isInitialized) {
+    //   // Registration has already occurred, so do nothing.
+    //   return;
+    // }
     completer = Completer<void>();
     await _requestPermissions();
     await completer.future;
@@ -32,8 +34,10 @@ class SensorCubit extends Cubit<SensorState> {
   late Stream<PedestrianStatus> _pedestrianStatusStream;
 
   Future<void> _requestPermissions() async {
-    await Permission.activityRecognition.request().isGranted;
-    await Permission.sensors.request().isGranted;
+    isActivityGranted = await  Permission.activityRecognition.request().isGranted;
+    isSensorGranted =  await Permission.sensors.request().isGranted;
+    print('isActivityGranted: $isActivityGranted');
+    print('isSensorGranted: $isSensorGranted');
     _initPlatformState();
   }
 
@@ -46,6 +50,9 @@ class SensorCubit extends Cubit<SensorState> {
     _stepCountStream = Pedometer.stepCountStream;
     _stepCountStream.listen(_onStepCount).onError(onStepCountError);
     if (!_isInitialized) {
+      if (!isActivityGranted) {
+        emit(SensorError('Permission not granted'));
+      }
       _isInitialized = true;
       completer.complete();
     }

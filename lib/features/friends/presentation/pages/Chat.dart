@@ -18,35 +18,20 @@ import '../../../auth/domain/entities/user.dart';
 import '../../domain/entities/message.dart';
 import 'FriendProfilePage.dart';
 
-class ChatPage extends StatefulWidget {
+class ChatPage extends StatelessWidget {
   final int userID;
   final User friend;
+  final thisUserID = int.parse(sl<AuthBloc>().user.id!);
 
   ChatPage({super.key, required this.userID, required this.friend});
 
-  @override
-  State<ChatPage> createState() => _ChatPageState();
-}
-
-class _ChatPageState extends State<ChatPage> {
-  final ScrollController _scrollController = ScrollController();
-  final thisUserID = int.parse(sl<AuthBloc>().user.id!);
-
   final TextEditingController _messageController = TextEditingController();
-
   late BuildContext gContext;
-
-  @override
-  void dispose() {
-    _messageController.dispose();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     gContext = context;
     final messagesCubit = sl<MessagesCubit>();
-    final statusCubit = sl<FriendShipCubit>()..getStatus(widget.userID);
+    final statusCubit = sl<FriendShipCubit>()..getStatus(userID);
     final friendCubit = sl<FriendCubit>();
     final _baseImageUrl =
         'https://chat.mohsowa.com/api/image'; // Replace with your image URL
@@ -60,6 +45,12 @@ class _ChatPageState extends State<ChatPage> {
     // Function to build AppBar with user's profile and name
     AppBar _buildAppBar(user) {
       return AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
         title: Row(
           children: [
             ClipOval(
@@ -67,7 +58,7 @@ class _ChatPageState extends State<ChatPage> {
                 color: Colors.transparent,
                 child: ImageViewer.network(
                   placeholderImagePath: 'images/defaults/user.png',
-                  imageURL: _baseImageUrl + (user.photoUrl ?? ''),
+                  imageURL: user.photoUrl??'',
                   // Use empty string as default if photoUrl is null
                   width: 45,
                   height: 45,
@@ -93,13 +84,13 @@ class _ChatPageState extends State<ChatPage> {
           ],
         ),
         // gradient:
-        backgroundColor: themeDarkBlue,
+        backgroundColor: themeDarkBlue.withOpacity(.8),
         iconTheme: IconThemeData(color: Colors.white),
       );
     }
 
     return Scaffold(
-      appBar: _buildAppBar(widget.friend),
+      appBar: _buildAppBar(friend),
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
@@ -172,28 +163,36 @@ class _ChatPageState extends State<ChatPage> {
 
   // still not done with the ui i just want to see if it works ;)
   Widget _buildMessagesSection(MessagesCubit messagesCubit, int friendID) {
-    // Fetch messages for the friend
-    messagesCubit.getMessages(friend_id: friendID);
+    ScrollController _scrollController = ScrollController();
 
     return BlocBuilder<MessagesCubit, MessagesState>(
-      bloc: messagesCubit,
+      bloc: messagesCubit..getMessages(friend_id: friendID),
       builder: (context, messagesState) {
         if (messagesState is MessagesLoaded) {
-          // Scroll to bottom when a new message is added
-          if (_scrollController.hasClients) {
-            _scrollController.jumpTo(0);
-          }
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (_scrollController.hasClients) {
+              _scrollController.animateTo(
+                _scrollController.position.maxScrollExtent + 300,
+                curve: Curves.easeOut,
+                duration: const Duration(milliseconds: 500),
+              );
+            }
+          });
+          // if not empty print last message
 
-          return ListView.builder(
-            controller: _scrollController,
-            reverse: true,
-            itemCount: messagesCubit.messages.length,
-            itemBuilder: (context, index) {
-              // Since the list is reversed, adjust the index accordingly
-              final message = messagesCubit
-                  .messages[messagesCubit.messages.length - 1 - index];
-              return MessageWidget(message);
-            },
+          // Build the messages list
+          return Container(
+            child: LayoutBuilder(
+              builder: (context, constraints) => ListView.builder(
+                controller: _scrollController,
+                itemCount: messagesCubit.messages.length,
+                itemBuilder: (context, index) {
+                  final message = messagesCubit.messages[index];
+                  // Add message list item UI
+                  return MessageWidget(message, constraints);
+                },
+              ),
+            ),
           );
         } else if (messagesState is MessagesError) {
           return Center(child: Text(messagesState.message));
@@ -203,18 +202,18 @@ class _ChatPageState extends State<ChatPage> {
     );
   }
 
-  Widget MessageWidget(Message message) {
+  Widget MessageWidget(Message message, constraints) {
     final align = message.sender_id != thisUserID
         ? Alignment.centerLeft
         : Alignment.centerRight;
-    final constraints = MediaQuery.of(gContext).size.width;
+
     return Align(
       alignment: align,
       child: SizedBox(
         // width: ,
         child: Container(
-            constraints:
-                BoxConstraints(minWidth: 80, maxWidth: constraints * 0.7),
+            constraints: BoxConstraints(
+                minWidth: 80, maxWidth: constraints.maxWidth * 0.7),
             padding: EdgeInsets.all(10),
             margin: EdgeInsets.all(20),
             // change border according to user sender
@@ -252,14 +251,14 @@ class _ChatPageState extends State<ChatPage> {
                         ? ImageViewer.file(
                             isRectangular: true,
                             imageFile: message.imageFile!,
-                            width: constraints * 0.7,
-                            height: constraints * 0.7,
+                            width: constraints.maxWidth * 0.7,
+                            height: constraints.maxWidth * 0.7,
                           )
                         : ImageViewer.network(
                             isRectangular: true,
                             imageURL: message.imageURL ?? '',
-                            width: constraints * 0.7,
-                            height: constraints * 0.7,
+                            width: constraints.maxWidth * 0.7,
+                            height: constraints.maxWidth * 0.7,
                           ),
                   if (message.type == 'both')
                     SizedBox(
@@ -315,7 +314,7 @@ class _ChatPageState extends State<ChatPage> {
     return Container(
       //top border
       decoration: BoxDecoration(
-        color: themeDarkBlue,
+        color: themeDarkBlue.withOpacity(0.9),
         border: Border(
           top: BorderSide(
             color: Colors.grey.shade300,
@@ -324,32 +323,32 @@ class _ChatPageState extends State<ChatPage> {
         ),
       ),
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
-      child: SafeArea(
-        child: Row(
-          children: <Widget>[
-            IconButton(
-              onPressed: () {
-                Completer<File> completer = Completer();
-                // File? image;
-                ImageHelper helper = ImageHelper();
-                helper.pickImage(_context, (image) {
-                  if (image != null) {
-                    print('image selected');
-                    completer.complete(image);
-                    // show dialog with image and input to add caption
-                  }
-                });
-                completer.future.then((image) {
-                  addCaptionDialog(_context, messageController, messagesCubit,
-                      friendID, image, MediaQuery.of(_context).size.width);
-                });
-              },
-              icon: Icon(
-                Icons.camera_alt,
-                color: Colors.white,
-              ),
+      child: Row(
+        children: <Widget>[
+          IconButton(
+            onPressed: () {
+              Completer<File> completer = Completer();
+              // File? image;
+              ImageHelper helper = ImageHelper();
+              helper.pickImage(_context, (image) {
+                if (image != null) {
+                  print('image selected');
+                  completer.complete(image);
+                  // show dialog with image and input to add caption
+                }
+              });
+              completer.future.then((image) {
+                addCaptionDialog(_context, messageController, messagesCubit,
+                    friendID, image, MediaQuery.of(_context).size.width);
+              });
+            },
+            icon: Icon(
+              Icons.camera_alt,
+              color: Colors.white,
             ),
-            Expanded(
+          ),
+          Expanded(
+            child: SafeArea(
               child: TextField(
                 style: TextStyle(color: Colors.white),
                 controller: messageController,
@@ -359,27 +358,27 @@ class _ChatPageState extends State<ChatPage> {
                 ),
               ),
             ),
-            IconButton(
-              icon: Icon(
-                Icons.send,
-                color: Colors.white,
-              ),
-              onPressed: () {
-                if (messageController.text.isNotEmpty) {
-                  messagesCubit.sendMessage(
-                    Message(
-                        sender_id: thisUserID,
-                        friend_id: friendID,
-                        message: messageController.text,
-                        type: 'text',
-                        created_at: 'pending'),
-                  );
-                  messageController.clear();
-                }
-              },
+          ),
+          IconButton(
+            icon: Icon(
+              Icons.send,
+              color: Colors.white,
             ),
-          ],
-        ),
+            onPressed: () {
+              if (messageController.text.isNotEmpty) {
+                messagesCubit.sendMessage(
+                  Message(
+                      sender_id: thisUserID,
+                      friend_id: friendID,
+                      message: messageController.text,
+                      type: 'text',
+                      created_at: 'pending'),
+                );
+                messageController.clear();
+              }
+            },
+          ),
+        ],
       ),
     );
   }
