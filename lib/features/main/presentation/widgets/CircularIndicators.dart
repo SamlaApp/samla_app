@@ -86,7 +86,7 @@ class _CircularIndicatorsState extends State<CircularIndicators> {
                             Flexible(
                               child: GestureDetector(
                                 onTap: () async {
-                                  await _sensorCubit.init();
+                                  await _sensorCubit.init(true);
                                 },
                                 child: Text(
                                   'Sorry, we could not access to your activity recognition!',

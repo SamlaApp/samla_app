@@ -215,7 +215,7 @@ class ChatPage extends StatelessWidget {
             constraints: BoxConstraints(
                 minWidth: 80, maxWidth: constraints.maxWidth * 0.7),
             padding: EdgeInsets.all(10),
-            margin: EdgeInsets.all(20),
+            margin: EdgeInsets.symmetric(horizontal:20, vertical: 5),
             // change border according to user sender
             decoration: BoxDecoration(
               //box shadow
