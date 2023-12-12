@@ -53,8 +53,7 @@ class _StepsGoalWidgetState extends State<StepsGoalWidget> {
                 width: widget.width * 0.8,
                   child: CustomTextFormField(
                     controller: controller,
-                      keyboardType: TextInputType.number,
-
+                      isDigt: true,
                       label: 'Enter number of stpes',
                       iconData: Icons.directions_walk)),
                       SizedBox(height: 20,)
