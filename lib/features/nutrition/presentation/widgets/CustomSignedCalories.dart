@@ -65,9 +65,9 @@ class _CustomSignedCaloriesState extends State<CustomSignedCalories> {
                       _calories = int.parse(value);
                     });
                   },
-                  keyboardType: TextInputType.number,
-                  inputFormatters: <TextInputFormatter>[
-                    FilteringTextInputFormatter.digitsOnly
+                  keyboardType: TextInputType.numberWithOptions(signed: true),
+                  inputFormatters: [
+                    FilteringTextInputFormatter.digitsOnly,
                   ],
                   decoration: InputDecoration(
                     labelStyle: const TextStyle(color: themeDarkBlue),

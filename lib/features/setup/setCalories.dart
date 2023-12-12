@@ -49,7 +49,6 @@ class _CaloriesGoalWidgetState extends State<CaloriesGoalWidget> {
                   height: 50,
                   width: widget.width * 0.8,
                   child: CustomTextFormField(
-                      keyboardType: TextInputType.number,
                       controller: controller,
                       label: 'Enter number of calories you want to burn',
                       iconData: Icons.local_fire_department_sharp)),

@@ -28,13 +28,11 @@ class CustomTextFormField extends StatelessWidget {
     return TextFormField(
       onChanged: onChanged,
       maxLines: textAreaLike ? null : 1,
-      keyboardType: textAreaLike ? TextInputType.multiline : keyboardType,
+      keyboardType: TextInputType.numberWithOptions(signed: true),
+      inputFormatters: [
+        FilteringTextInputFormatter.digitsOnly,
+      ],
       autovalidateMode: AutovalidateMode.onUserInteraction,
-      inputFormatters: () {
-        if (keyboardType == TextInputType.number) {
-          return [FilteringTextInputFormatter.digitsOnly];
-        } 
-      }(),
       controller: controller,
       validator: validator,
       key: formKey,
