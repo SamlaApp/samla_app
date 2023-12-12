@@ -19,14 +19,14 @@ import '../../domain/entities/message.dart';
 import 'FriendProfilePage.dart';
 
 class ChatPage extends StatelessWidget {
-  final int userID;
+  final int friendUserID;
   final User friend;
   final bool showRejection;
   final thisUserID = int.parse(sl<AuthBloc>().user.id!);
 
   ChatPage(
       {super.key,
-      required this.userID,
+      required this.friendUserID,
       required this.friend,
       this.showRejection = true});
 
@@ -34,9 +34,10 @@ class ChatPage extends StatelessWidget {
   late BuildContext gContext;
   @override
   Widget build(BuildContext context) {
+    print('this is friend  id $friendUserID , this is user id $thisUserID');
     gContext = context;
     final messagesCubit = sl<MessagesCubit>();
-    final statusCubit = sl<FriendShipCubit>()..getStatus(userID);
+    final statusCubit = sl<FriendShipCubit>()..getStatus(friendUserID);
     final friendCubit = sl<FriendCubit>();
     final _baseImageUrl =
         'https://chat.mohsowa.com/api/image'; // Replace with your image URL
@@ -126,7 +127,9 @@ class ChatPage extends StatelessWidget {
     return Column(
       children: [
         () {
-          if (state.status.status == 'pending' && showRejection) {
+          if (state.status.status == 'pending' &&
+              showRejection &&
+              state.status.userId != thisUserID) {
             print(showRejection);
             return _buildFriendRequestButtons(
                 context, state.status.id, friendCubit);

@@ -76,7 +76,7 @@ class ExploreWidget extends StatelessWidget {
                               context,
                               MaterialPageRoute(
                                   builder: (context) => ChatPage(
-                                        userID: int.parse(user.id!),
+                                        friendUserID: int.parse(user.id!),
                                         friend: user,
                                         showRejection: false,
                                       )),
