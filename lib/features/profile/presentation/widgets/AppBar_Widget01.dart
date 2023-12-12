@@ -47,7 +47,7 @@ class buildAAppBar extends StatelessWidget implements PreferredSizeWidget {
                 size: 30,
                 color: themePink,
               ),
-              onPressed: () {
+              onPressed: () async{
                 authBloc.add(LogOutEvent(context));
               },
             ),

@@ -5,7 +5,8 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:samla_app/config/themes/common_styles.dart';
-import 'package:samla_app/features/auth/auth_injection_container.dart' as authDI;
+import 'package:samla_app/features/auth/auth_injection_container.dart'
+    as authDI;
 import 'package:samla_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:samla_app/features/profile/presentation/cubit/profile_cubit.dart';
 import 'package:samla_app/features/profile/presentation/pages/PersonalInfo.dart';
@@ -39,123 +40,126 @@ class _ProfilePageState extends State<ProfilePage> {
     return BlocBuilder<AuthBloc, AuthState>(
       bloc: authBloc,
       builder: (context, state) {
-        return Scaffold(
-          appBar: buildAAppBar(),
-          body: ListView(
-            physics: BouncingScrollPhysics(),
-            children: [
-              SizedBox(
-                height: 10,
-              ),
-              ProfileWidget(
-                imageName: '${user.photoUrl}',
-                onClicked: () async {},
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              buildName_email(user),
-              // NumbersWidget(), => Not needed
-              SizedBox(
-                height: 20,
-              ),
-
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 20),
-                child: Column(
-                  children: <Widget>[
-                    Row(
-                      children: [
-                        // Info Button
-                        Expanded(
-                          child: Container(
-                            decoration: BoxDecoration(
-                              border: Border(
-                                bottom: BorderSide(
-                                  color: (_selectedIndex == 0)
-                                      ? const Color.fromRGBO(64, 194, 210, 1)
-                                      : Colors.grey,
-                                  width: 3,
-                                  style: BorderStyle.solid,
-                                ),
-                              ),
-                            ),
-                            child: TextButton(
-                              onPressed: () {
-                                setState(() {
-                                  _selectedIndex = 0;
-                                });
-                              },
-                              child: const Text(
-                                'Info',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  color: Color.fromRGBO(10, 44, 64, 1),
-                                  fontWeight: FontWeight.bold,
-                                  decoration: TextDecoration.none,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-
-                        // Phone Button
-                        Expanded(
-                          child: Container(
-                            decoration: BoxDecoration(
-                              border: Border(
-                                bottom: BorderSide(
-                                  color: (_selectedIndex == 1)
-                                      ? const Color.fromRGBO(64, 194, 210, 1)
-                                      : Colors.grey,
-                                  width: 3,
-                                  style: BorderStyle.solid,
-                                ),
-                              ),
-                            ),
-                            child: TextButton(
-                              onPressed: () {
-                                setState(() {
-                                  _selectedIndex = 1;
-                                });
-                              },
-                              child: const Text(
-                                'Settings',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  color: Color.fromRGBO(10, 44, 64, 1),
-                                  fontWeight: FontWeight.bold,
-                                  decoration: TextDecoration.none,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
+        if (state is! UnauthenticatedState) {
+          return Scaffold(
+            appBar: buildAAppBar(),
+            body: ListView(
+              physics: BouncingScrollPhysics(),
+              children: [
+                SizedBox(
+                  height: 10,
                 ),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 20),
-                child: Column(
-                  children: <Widget>[
-                    if (_selectedIndex == 0) ...[
-                      // Info
-                      InfoWidget(),
-                    ] else if (_selectedIndex == 1) ...[
-                      // Settings
-                      SettingsWidget(),
+                ProfileWidget(
+                  imageName: '${user.photoUrl}',
+                  onClicked: () async {},
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                buildName_email(user),
+                // NumbersWidget(), => Not needed
+                SizedBox(
+                  height: 20,
+                ),
+
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  child: Column(
+                    children: <Widget>[
+                      Row(
+                        children: [
+                          // Info Button
+                          Expanded(
+                            child: Container(
+                              decoration: BoxDecoration(
+                                border: Border(
+                                  bottom: BorderSide(
+                                    color: (_selectedIndex == 0)
+                                        ? const Color.fromRGBO(64, 194, 210, 1)
+                                        : Colors.grey,
+                                    width: 3,
+                                    style: BorderStyle.solid,
+                                  ),
+                                ),
+                              ),
+                              child: TextButton(
+                                onPressed: () {
+                                  setState(() {
+                                    _selectedIndex = 0;
+                                  });
+                                },
+                                child: const Text(
+                                  'Info',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    color: Color.fromRGBO(10, 44, 64, 1),
+                                    fontWeight: FontWeight.bold,
+                                    decoration: TextDecoration.none,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+
+                          // Phone Button
+                          Expanded(
+                            child: Container(
+                              decoration: BoxDecoration(
+                                border: Border(
+                                  bottom: BorderSide(
+                                    color: (_selectedIndex == 1)
+                                        ? const Color.fromRGBO(64, 194, 210, 1)
+                                        : Colors.grey,
+                                    width: 3,
+                                    style: BorderStyle.solid,
+                                  ),
+                                ),
+                              ),
+                              child: TextButton(
+                                onPressed: () {
+                                  setState(() {
+                                    _selectedIndex = 1;
+                                  });
+                                },
+                                child: const Text(
+                                  'Settings',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    color: Color.fromRGBO(10, 44, 64, 1),
+                                    fontWeight: FontWeight.bold,
+                                    decoration: TextDecoration.none,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ],
-                  ],
+                  ),
                 ),
-              ),
-            ],
-          ),
-        );
+                SizedBox(
+                  height: 20,
+                ),
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  child: Column(
+                    children: <Widget>[
+                      if (_selectedIndex == 0) ...[
+                        // Info
+                        InfoWidget(),
+                      ] else if (_selectedIndex == 1) ...[
+                        // Settings
+                        SettingsWidget(),
+                      ],
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          );
+        }
+        return Container();
       },
     );
   }

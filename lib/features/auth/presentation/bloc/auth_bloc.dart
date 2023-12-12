@@ -83,6 +83,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           emit(UnauthenticatedState());
           Navigator.of(event.context).pushNamedAndRemoveUntil(
               '/login', (Route<dynamic> route) => false);
+
         });
       }
 

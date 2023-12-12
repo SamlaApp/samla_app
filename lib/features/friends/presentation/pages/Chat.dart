@@ -21,7 +21,7 @@ import 'FriendProfilePage.dart';
 class ChatPage extends StatefulWidget {
   final int friendUserID;
   final User friend;
-  final bool showRejection;
+  bool showRejection;
   ChatPage(
       {super.key,
       required this.friendUserID,
@@ -162,33 +162,57 @@ class _ChatPageState extends State<ChatPage> {
 
   Widget _buildFriendRequestButtons(
       BuildContext context, int friendRequestId, FriendCubit friendCubit) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        TextButton(
-          onPressed: () async {
-            await friendCubit.acceptFriend(friendRequestId);
-            // Additional logic if needed
-          },
-          child: Text('Accept'),
-          style: TextButton.styleFrom(
-            backgroundColor: Colors.green, // Replace with your color
-            primary: Colors.white, // Text color
+    return Container(
+      decoration: primaryDecoration,
+      margin: EdgeInsets.all(10),
+      padding: EdgeInsets.all(10),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SizedBox(height: 10,),
+          Text('This user wants to be your friend', style: TextStyle(fontSize: 16, color: Colors.blueGrey)),
+          SizedBox(height: 20,),
+          Container
+          (
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: themeBlue,
+            ),
+            width: double.maxFinite,
+            height: 50,
+            child: TextButton(
+              onPressed: () async {
+                await friendCubit.acceptFriend(friendRequestId);
+                setState(() {
+                  widget.showRejection = false;
+                });
+                // Additional logic if needed
+              },
+              child: Text('Accept', style: TextStyle(color: Colors.white)),
+             
+            ),
           ),
-        ),
-        SizedBox(width: 10),
-        TextButton(
-          onPressed: () async {
-            await friendCubit.rejectFriend(friendRequestId);
-            Navigator.pop(context);
-          },
-          child: Text('Reject'),
-          style: TextButton.styleFrom(
-            backgroundColor: Colors.red, // Replace with your color
-            primary: Colors.white, // Text color
+          SizedBox(
+            height: 10),
+          Container(
+            width: double.infinity,
+            height: 50,
+            // border radius
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: themeRed,
+            ),
+            child: TextButton(
+              onPressed: () async {
+                await friendCubit.rejectFriend(friendRequestId);
+                Navigator.pop(context);
+              },
+              child: Text('Reject', style: TextStyle(color: Colors.white)),
+              
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 

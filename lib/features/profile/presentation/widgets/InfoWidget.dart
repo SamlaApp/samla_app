@@ -4,6 +4,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:io/ansi.dart';
 import 'package:samla_app/features/auth/auth_injection_container.dart';
+import 'package:samla_app/features/auth/presentation/bloc/auth_bloc.dart';
 
 import '../../../../config/themes/common_styles.dart';
 import '../../domain/Goals.dart';
@@ -97,214 +98,226 @@ class _InfoWidgetState extends State<InfoWidget> {
 
   @override
   Widget build(BuildContext context) {
-    profileCubit.getGoal();
-    return BlocBuilder<ProfileCubit, ProfileState>(
-        bloc: profileCubit,
-        builder: (context, state) {
-          if (state is ProfileLoading) {
-            return const CircularProgressIndicator();
-          } else if (state is UserGoalErrorState) {
-            SchedulerBinding.instance.addPostFrameCallback((_) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(state.message),
-                ),
-              );
-            });
+    return BlocBuilder<AuthBloc, AuthState>(
+      builder: (context, state) {
+        if (state is UnauthenticatedState) {
+          return  Container();
+        }
+        profileCubit.getGoal();
 
-            return const Center(child: Text('Could not fetch the user goal'));
-          } else if (state is UserGoalloaded) {
-            var goal = state.userGoal;
-            _weightController.text = '${goal.targetWeight}';
-            calories = goal.targetCalories!.toInt();
-            _caloriesController.text = '$calories';
-            steps = goal.targetSteps!.toInt();
-            _stepsController.text = '$steps';
-
-            return Form(
-              child: Container(
-                key: _formKey,
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    const SizedBox(height: 15),
-                    Text(
-                      'Target Weight',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14.0,
-                        color: themeBlue,
-                      ),
+        return BlocBuilder<ProfileCubit, ProfileState>(
+            bloc: profileCubit,
+            builder: (context, state) {
+              if (state is ProfileLoading) {
+                return const CircularProgressIndicator();
+              } else if (state is UserGoalErrorState) {
+                SchedulerBinding.instance.addPostFrameCallback((_) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(state.message),
                     ),
-                    Container(
-                      margin: const EdgeInsets.fromLTRB(0, 5, 0, 0),
-                      padding: const EdgeInsets.fromLTRB(0, 5, 10, 0),
-                      decoration: textField_decoration,
-                      child: TextFormField(
-                        controller: _weightController,
-                        style: inputText,
-                        decoration: InputDecoration(
-                          suffixText: 'kg',
-                          suffixStyle: TextStyle(color: themeDarkBlue),
-                          prefixIcon: const Padding(
-                            padding: EdgeInsets.fromLTRB(0, 0, 0, 8),
-                            child: Icon(
-                              Icons.accessibility,
-                              color: Colors.black38,
+                  );
+                });
+
+                return const Center(
+                    child: Text('Could not fetch the user goal'));
+              } else if (state is UserGoalloaded) {
+                var goal = state.userGoal;
+                _weightController.text = '${goal.targetWeight}';
+                calories = goal.targetCalories!.toInt();
+                _caloriesController.text = '$calories';
+                steps = goal.targetSteps!.toInt();
+                _stepsController.text = '$steps';
+
+                return Form(
+                  child: Container(
+                    key: _formKey,
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        const SizedBox(height: 15),
+                        Text(
+                          'Target Weight',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14.0,
+                            color: themeBlue,
+                          ),
+                        ),
+                        Container(
+                          margin: const EdgeInsets.fromLTRB(0, 5, 0, 0),
+                          padding: const EdgeInsets.fromLTRB(0, 5, 10, 0),
+                          decoration: textField_decoration,
+                          child: TextFormField(
+                            controller: _weightController,
+                            style: inputText,
+                            decoration: InputDecoration(
+                              suffixText: 'kg',
+                              suffixStyle: TextStyle(color: themeDarkBlue),
+                              prefixIcon: const Padding(
+                                padding: EdgeInsets.fromLTRB(0, 0, 0, 8),
+                                child: Icon(
+                                  Icons.accessibility,
+                                  color: Colors.black38,
+                                ),
+                              ),
+                              border: InputBorder.none,
                             ),
-                          ),
-                          border: InputBorder.none,
-                        ),
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return 'Please enter your height';
-                          }
-                          return null;
-                        },
-                        onSaved: (value) {
-                          // print('Height: $value');
-                        },
-                      ),
-                    ),
-                    const SizedBox(height: 15),
-                    Row(
-                      children: [
-                        
-                       
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Target Steps:',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color: themeBlue,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              const SizedBox(height: 5),
-                              Container(
-                                margin: const EdgeInsets.fromLTRB(0, 5, 0, 0),
-                                padding: const EdgeInsets.fromLTRB(0, 5, 10, 0),
-                                decoration: textField_decoration,
-                                child: TextFormField(
-                                  controller: _stepsController,
-                                  style: inputText,
-                                  decoration: InputDecoration(
-                                    suffixText: 'Steps/Day',
-                                    suffixStyle: TextStyle(
-                                        fontSize: 10,
-                                        fontWeight: FontWeight.bold,
-                                        color: themeDarkBlue),
-                                    prefixIcon: const Padding(
-                                      padding: EdgeInsets.fromLTRB(0, 0, 0, 8),
-                                      child: Icon(
-                                        Icons.directions_walk,
-                                        color: Colors.red,
-                                      ),
-                                    ),
-                                    border: InputBorder.none,
-                                  ),
-                                  validator: (value) {
-                                    if (value!.isEmpty) {
-                                      return 'Please enter your Target steps';
-                                    }
-                                    return null;
-                                  },
-                                  onSaved: (value) {
-                                    // print('calories: $value');
-                                  },
-                                ),
-                              ),
-                            ],
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return 'Please enter your height';
+                              }
+                              return null;
+                            },
+                            onSaved: (value) {
+                              // print('Height: $value');
+                            },
                           ),
                         ),
-                         const SizedBox(
-                          width: 10,
-                        ),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Target Calories:',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color: themeBlue,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              const SizedBox(height: 5),
-                              Container(
-                                margin: const EdgeInsets.fromLTRB(0, 5, 0, 0),
-                                padding: const EdgeInsets.fromLTRB(0, 5, 10, 0),
-                                decoration: textField_decoration,
-                                child: TextFormField(
-                                  controller: _caloriesController,
-                                  style: inputText,
-                                  decoration: InputDecoration(
-                                    suffixText: 'Calories/Day',
-                                    suffixStyle: TextStyle(
-                                      fontSize: 10,
+                        const SizedBox(height: 15),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Target Steps:',
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: themeBlue,
                                       fontWeight: FontWeight.bold,
-                                      color: themeDarkBlue,
                                     ),
-                                    prefixIcon: Padding(
-                                      padding:
-                                          const EdgeInsets.fromLTRB(0, 0, 0, 8),
-                                      child: Icon(
-                                        Icons.local_fire_department_sharp,
-                                        color: themeBlue,
-                                      ),
-                                    ),
-                                    border: InputBorder.none,
                                   ),
-                                  validator: (value) {
-                                    if (value!.isEmpty) {
-                                      return 'Please enter your Target calories';
-                                    }
-                                    return null;
-                                  },
-                                  onSaved: (value) {
-                                    // print('calories: $value');
-                                  },
-                                ),
+                                  const SizedBox(height: 5),
+                                  Container(
+                                    margin:
+                                        const EdgeInsets.fromLTRB(0, 5, 0, 0),
+                                    padding:
+                                        const EdgeInsets.fromLTRB(0, 5, 10, 0),
+                                    decoration: textField_decoration,
+                                    child: TextFormField(
+                                      controller: _stepsController,
+                                      style: inputText,
+                                      decoration: InputDecoration(
+                                        suffixText: 'Steps/Day',
+                                        suffixStyle: TextStyle(
+                                            fontSize: 10,
+                                            fontWeight: FontWeight.bold,
+                                            color: themeDarkBlue),
+                                        prefixIcon: const Padding(
+                                          padding:
+                                              EdgeInsets.fromLTRB(0, 0, 0, 8),
+                                          child: Icon(
+                                            Icons.directions_walk,
+                                            color: Colors.red,
+                                          ),
+                                        ),
+                                        border: InputBorder.none,
+                                      ),
+                                      validator: (value) {
+                                        if (value!.isEmpty) {
+                                          return 'Please enter your Target steps';
+                                        }
+                                        return null;
+                                      },
+                                      onSaved: (value) {
+                                        // print('calories: $value');
+                                      },
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ],
+                            ),
+                            const SizedBox(
+                              width: 10,
+                            ),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Target Calories:',
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: themeBlue,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 5),
+                                  Container(
+                                    margin:
+                                        const EdgeInsets.fromLTRB(0, 5, 0, 0),
+                                    padding:
+                                        const EdgeInsets.fromLTRB(0, 5, 10, 0),
+                                    decoration: textField_decoration,
+                                    child: TextFormField(
+                                      controller: _caloriesController,
+                                      style: inputText,
+                                      decoration: InputDecoration(
+                                        suffixText: 'Calories/Day',
+                                        suffixStyle: TextStyle(
+                                          fontSize: 10,
+                                          fontWeight: FontWeight.bold,
+                                          color: themeDarkBlue,
+                                        ),
+                                        prefixIcon: Padding(
+                                          padding: const EdgeInsets.fromLTRB(
+                                              0, 0, 0, 8),
+                                          child: Icon(
+                                            Icons.local_fire_department_sharp,
+                                            color: themeBlue,
+                                          ),
+                                        ),
+                                        border: InputBorder.none,
+                                      ),
+                                      validator: (value) {
+                                        if (value!.isEmpty) {
+                                          return 'Please enter your Target calories';
+                                        }
+                                        return null;
+                                      },
+                                      onSaved: (value) {
+                                        // print('calories: $value');
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 20),
+                        Center(
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                primary: themeBlue,
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 20, vertical: 13),
+                                // Button padding
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(
+                                      8), // Button border radius
+                                ),
+                                textStyle: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                )),
+                            onPressed: _saveInfo,
+                            child: const Text(
+                              'Save Info',
+                              style: TextStyle(color: Colors.white),
+                            ),
                           ),
                         ),
                       ],
                     ),
-                    const SizedBox(height: 20),
-                    Center(
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                            primary: themeBlue,
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 20, vertical: 13),
-                            // Button padding
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(
-                                  8), // Button border radius
-                            ),
-                            textStyle: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                            )),
-                        onPressed: _saveInfo,
-                        child: const Text(
-                          'Save Info',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            );
-          }
-          return const Center(child: Text('Could not fetch the user goal'));
-        });
+                  ),
+                );
+              }
+              return const Center(child: Text('Could not fetch the user goal'));
+            });
+      },
+    );
   }
 }
