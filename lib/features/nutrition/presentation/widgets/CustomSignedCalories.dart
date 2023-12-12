@@ -91,11 +91,11 @@ class _CustomSignedCaloriesState extends State<CustomSignedCalories> {
               style: ElevatedButton.styleFrom(
                 backgroundColor: themeBlue,
               ),
-              onPressed: () {
+              onPressed: () async {
                 // check if the calories is not 0
                 if (_calories > 0) {
-                  summaryCubit.setCustomCalories(_calories);
-                  summaryCubit.getDailyNutritionPlanSummary();
+                  await summaryCubit.setCustomCalories(_calories);
+                  await summaryCubit.getDailyNutritionPlanSummary();
 
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
