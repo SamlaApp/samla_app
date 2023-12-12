@@ -170,6 +170,60 @@ class _InfoWidgetState extends State<InfoWidget> {
                     const SizedBox(height: 15),
                     Row(
                       children: [
+                        
+                       
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Target Steps:',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: themeBlue,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const SizedBox(height: 5),
+                              Container(
+                                margin: const EdgeInsets.fromLTRB(0, 5, 0, 0),
+                                padding: const EdgeInsets.fromLTRB(0, 5, 10, 0),
+                                decoration: textField_decoration,
+                                child: TextFormField(
+                                  controller: _stepsController,
+                                  style: inputText,
+                                  decoration: InputDecoration(
+                                    suffixText: 'Steps/Day',
+                                    suffixStyle: TextStyle(
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.bold,
+                                        color: themeDarkBlue),
+                                    prefixIcon: const Padding(
+                                      padding: EdgeInsets.fromLTRB(0, 0, 0, 8),
+                                      child: Icon(
+                                        Icons.directions_walk,
+                                        color: Colors.red,
+                                      ),
+                                    ),
+                                    border: InputBorder.none,
+                                  ),
+                                  validator: (value) {
+                                    if (value!.isEmpty) {
+                                      return 'Please enter your Target steps';
+                                    }
+                                    return null;
+                                  },
+                                  onSaved: (value) {
+                                    // print('calories: $value');
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                         const SizedBox(
+                          width: 10,
+                        ),
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -201,7 +255,7 @@ class _InfoWidgetState extends State<InfoWidget> {
                                       padding:
                                           const EdgeInsets.fromLTRB(0, 0, 0, 8),
                                       child: Icon(
-                                        Icons.directions_walk,
+                                        Icons.local_fire_department_sharp,
                                         color: themeBlue,
                                       ),
                                     ),
@@ -214,59 +268,7 @@ class _InfoWidgetState extends State<InfoWidget> {
                                     return null;
                                   },
                                   onSaved: (value) {
-                                    print('calories: $value');
-                                  },
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Target Steps:',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color: themeBlue,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              const SizedBox(height: 5),
-                              Container(
-                                margin: const EdgeInsets.fromLTRB(0, 5, 0, 0),
-                                padding: const EdgeInsets.fromLTRB(0, 5, 10, 0),
-                                decoration: textField_decoration,
-                                child: TextFormField(
-                                  controller: _stepsController,
-                                  style: inputText,
-                                  decoration: InputDecoration(
-                                    suffixText: 'Steps/Day',
-                                    suffixStyle: TextStyle(
-                                        fontSize: 10,
-                                        fontWeight: FontWeight.bold,
-                                        color: themeDarkBlue),
-                                    prefixIcon: const Padding(
-                                      padding: EdgeInsets.fromLTRB(0, 0, 0, 8),
-                                      child: Icon(
-                                        Icons.local_fire_department_sharp,
-                                        color: Colors.red,
-                                      ),
-                                    ),
-                                    border: InputBorder.none,
-                                  ),
-                                  validator: (value) {
-                                    if (value!.isEmpty) {
-                                      return 'Please enter your Target steps';
-                                    }
-                                    return null;
-                                  },
-                                  onSaved: (value) {
-                                    print('calories: $value');
+                                    // print('calories: $value');
                                   },
                                 ),
                               ),

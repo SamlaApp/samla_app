@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:samla_app/config/themes/new_style.dart';
 import 'package:samla_app/core/widgets/image_viewer.dart';
+import 'package:samla_app/features/friends/chat_di.dart';
 import 'package:samla_app/features/friends/presentation/cubit/explore/explore_cubit.dart';
+import 'package:samla_app/features/friends/presentation/cubit/friends/friends_cubit.dart';
+import 'package:samla_app/features/friends/presentation/pages/Chat.dart';
 
 class ExploreWidget extends StatelessWidget {
   final ExploreCubit exploreCubit;
@@ -38,14 +41,13 @@ class ExploreWidget extends StatelessWidget {
                     },
                     child: ListTile(
                       leading: CircleAvatar(
-                        backgroundColor: themeBlue,
-                        radius: 28,
-                        child: ImageViewer.network(
-                          imageURL:user.photoUrl,
-                          placeholderImagePath: 'images/defaults/user.png',
-                          viewerMode: false,
-                        )
-                      ),
+                          backgroundColor: themeBlue,
+                          radius: 28,
+                          child: ImageViewer.network(
+                            imageURL: user.photoUrl,
+                            placeholderImagePath: 'images/defaults/user.png',
+                            viewerMode: false,
+                          )),
                       title: Text(user.name,
                           style: TextStyle(
                             color: Theme.of(context).textTheme.bodyLarge!.color,
@@ -63,9 +65,31 @@ class ExploreWidget extends StatelessWidget {
                           Icons.person_add,
                           color: Theme.of(context).textTheme.bodyLarge!.color,
                         ),
-                        onPressed: () {
+                        onPressed: () async {
                           // Logic for adding friend
                           // ...
+                          final isAdded = await sl<FriendCubit>()
+                              .addFriend(int.parse(user.id!));
+                          if (isAdded) {
+                            //navigate to chat page
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ChatPage(
+                                        friendUserID: int.parse(user.id!),
+                                        friend: user,
+                                        showRejection: false,
+                                      )),
+                            );
+                            exploreCubit.searchExplore('$user.name');
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('Failed to send friend request'),
+                                duration: Duration(seconds: 2),
+                              ),
+                            );
+                          }
                         },
                       ),
                     ),

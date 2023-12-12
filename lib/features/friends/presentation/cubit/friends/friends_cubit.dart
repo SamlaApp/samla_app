@@ -16,7 +16,7 @@ class FriendCubit extends Cubit<FriendState> {
   // getFriends with storing all friends
 
   // addFriend
-  Future<void> addFriend(int friendId) async {
+  Future<bool> addFriend(int friendId) async {
     // emit(FriendLoading());
     bool isAdded = false;
     final result = await repository.addFriend(friendId);
@@ -26,6 +26,7 @@ class FriendCubit extends Cubit<FriendState> {
     if (isAdded) {
       await getFriends(); //refreash firends list
     }
+    return isAdded;
   }
 
   // getFriends with storing all friends
@@ -83,8 +84,6 @@ class FriendCubit extends Cubit<FriendState> {
 
     emit(FriendLoaded(friends: filteredFriends));
   }
-
-  
 
   bool isExistInList(String id) {
     for (var friend in allFriends) {

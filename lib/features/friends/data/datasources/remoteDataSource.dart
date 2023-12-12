@@ -29,8 +29,7 @@ abstract class RemoteDataSource {
   Future<FriendStatusModel> rejectFriend(int id);
 
   // sendMessage
-  Future<List<MessageModel>> sendMessage(
-      MessageModel messageModel);
+  Future<List<MessageModel>> sendMessage(MessageModel messageModel);
 
   // getMessages
   Future<List<MessageModel>> getMessages(int friend_id);
@@ -46,10 +45,38 @@ class RemoteDataSourceImpl implements RemoteDataSource {
       final res = await samlaAPI(data: {
         'search': query,
       }, endPoint: '/chat/explore_search', method: 'POST');
-      final resBody = json.decode(await res.stream.bytesToString());
+      final Map<String, dynamic> resBody =
+          json.decode(await res.stream.bytesToString());
       if (res.statusCode != 200) {
         throw ServerException(message: resBody['message']);
+
+
+        
       }
+
+      if (resBody['users'] is List) {
+        final users = resBody['users'].map<UserModel>((user) {
+          return UserModel.fromJson(user);
+        }).toList();
+        return users;
+      }
+      
+
+
+      final arr = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
+  
+      // check if the first key is one of the above
+
+      bool isDigit = false;
+      arr.forEach((element) {
+        if (resBody['users'].keys.first == element) {
+          isDigit = true;
+        }
+      });
+      if (isDigit) {
+        resBody['users'] = [resBody['users'][resBody['users'].keys.first]];
+      }
+
       final users = resBody['users'].map<UserModel>((user) {
         return UserModel.fromJson(user);
       }).toList();
@@ -173,8 +200,7 @@ class RemoteDataSourceImpl implements RemoteDataSource {
 
   // sendMessage
   @override
-  Future<List<MessageModel>> sendMessage(
-    MessageModel message) async {
+  Future<List<MessageModel>> sendMessage(MessageModel message) async {
     try {
       http.MultipartFile? multipartFile = null;
       final file = message.imageFile;
@@ -193,7 +219,7 @@ class RemoteDataSourceImpl implements RemoteDataSource {
           method: 'POST',
           data: {
             'friend_id': message.friend_id.toString(),
-            'message':message.message!,
+            'message': message.message!,
             'type': message.type,
           },
           file: multipartFile);
@@ -246,15 +272,15 @@ class RemoteDataSourceImpl implements RemoteDataSource {
 void main(List<String> args) async {
   try {
     final datasource = RemoteDataSourceImpl();
-    final friends = await datasource.getFriends();
-    print(friends[0].name);
+    // final friends = await datasource.getFriends();
+    // print(friends[0].name);
 
     // final friendStatus = await datasource.addFriend(5);
     // final friendStatus = await datasource.rejectFriend(8);
     // final friendStatus = await datasource.acceptFriend(10);
     // final friendStatus = await datasource.getFriendshipStatus(4);
-    // final explore = await datasource.searchExplore('adhm');
-    // // print(explore[0].name);
+    final explore = await datasource.searchExplore('adhm');
+    // print(explore[0].name);
 
     // final msg = await datasource.sendMessage(
     //     MessageModel(friend_id: 3, message: 'hello, world!', type: 'text'));

@@ -18,23 +18,43 @@ import '../../../auth/domain/entities/user.dart';
 import '../../domain/entities/message.dart';
 import 'FriendProfilePage.dart';
 
-class ChatPage extends StatelessWidget {
-  final int userID;
+class ChatPage extends StatefulWidget {
+  final int friendUserID;
   final User friend;
+  final bool showRejection;
+  ChatPage(
+      {super.key,
+      required this.friendUserID,
+      required this.friend,
+      this.showRejection = true});
+
+  @override
+  State<ChatPage> createState() => _ChatPageState();
+}
+
+class _ChatPageState extends State<ChatPage> {
   final thisUserID = int.parse(sl<AuthBloc>().user.id!);
 
-  ChatPage({super.key, required this.userID, required this.friend});
+  Timer? _timer;
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
 
   final TextEditingController _messageController = TextEditingController();
+
   late BuildContext gContext;
+
   @override
   Widget build(BuildContext context) {
+    print('this is friend  id ${widget.friendUserID} , this is user id $thisUserID');
     gContext = context;
     final messagesCubit = sl<MessagesCubit>();
-    final statusCubit = sl<FriendShipCubit>()..getStatus(userID);
+    final statusCubit = sl<FriendShipCubit>()..getStatus(widget.friendUserID);
     final friendCubit = sl<FriendCubit>();
-    final _baseImageUrl =
-        'https://chat.mohsowa.com/api/image'; // Replace with your image URL
+    // Replace with your image URL
     //frint has these
     // print(friend.id);
     // print(friend.name);
@@ -58,7 +78,7 @@ class ChatPage extends StatelessWidget {
                 color: Colors.transparent,
                 child: ImageViewer.network(
                   placeholderImagePath: 'images/defaults/user.png',
-                  imageURL: user.photoUrl??'',
+                  imageURL: user.photoUrl ?? '',
                   // Use empty string as default if photoUrl is null
                   width: 45,
                   height: 45,
@@ -90,7 +110,7 @@ class ChatPage extends StatelessWidget {
     }
 
     return Scaffold(
-      appBar: _buildAppBar(friend),
+      appBar: _buildAppBar(widget.friend),
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
@@ -120,8 +140,19 @@ class ChatPage extends StatelessWidget {
       FriendCubit friendCubit, MessagesCubit messagesCubit) {
     return Column(
       children: [
-        if (state.status.status == 'pending')
-          _buildFriendRequestButtons(context, state.status.id, friendCubit),
+        () {
+          if (state.status.status == 'pending' &&
+              widget.showRejection &&
+              state.status.userId != thisUserID) {
+            print(widget.showRejection);
+            return _buildFriendRequestButtons(
+                context, state.status.id, friendCubit);
+          }
+          return Container();
+        }(),
+        SizedBox(
+          height: 10,
+        ),
         Expanded(child: _buildMessagesSection(messagesCubit, state.status.id)),
         _buildMessageInputField(
             messagesCubit, _messageController, state.status.id, context),
@@ -164,17 +195,30 @@ class ChatPage extends StatelessWidget {
   // still not done with the ui i just want to see if it works ;)
   Widget _buildMessagesSection(MessagesCubit messagesCubit, int friendID) {
     ScrollController _scrollController = ScrollController();
+    bool isMessagesWorks = false;
+
+    _timer = Timer.periodic(Duration(seconds: 3), (timer) {
+      if (isMessagesWorks) {
+        messagesCubit.getMessages(friend_id: friendID);
+        print('retrive messages: from ${widget.friend.name}');
+      }
+    });
 
     return BlocBuilder<MessagesCubit, MessagesState>(
       bloc: messagesCubit..getMessages(friend_id: friendID),
+      buildWhen: (previous, current) => true,
       builder: (context, messagesState) {
+        print('update states');
         if (messagesState is MessagesLoaded) {
+          isMessagesWorks = true;
+          
+
           WidgetsBinding.instance.addPostFrameCallback((_) {
             if (_scrollController.hasClients) {
-              _scrollController.animateTo(
-                _scrollController.position.maxScrollExtent + 300,
-                curve: Curves.easeOut,
-                duration: const Duration(milliseconds: 500),
+              _scrollController.jumpTo(
+                _scrollController.position.maxScrollExtent,
+                // curve: Curves.easeOut,
+                // duration: const Duration(milliseconds: 000),
               );
             }
           });
@@ -215,7 +259,7 @@ class ChatPage extends StatelessWidget {
             constraints: BoxConstraints(
                 minWidth: 80, maxWidth: constraints.maxWidth * 0.7),
             padding: EdgeInsets.all(10),
-            margin: EdgeInsets.symmetric(horizontal:20, vertical: 5),
+            margin: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
             // change border according to user sender
             decoration: BoxDecoration(
               //box shadow
