@@ -21,9 +21,14 @@ import 'FriendProfilePage.dart';
 class ChatPage extends StatelessWidget {
   final int userID;
   final User friend;
+  final bool showRejection;
   final thisUserID = int.parse(sl<AuthBloc>().user.id!);
 
-  ChatPage({super.key, required this.userID, required this.friend});
+  ChatPage(
+      {super.key,
+      required this.userID,
+      required this.friend,
+      this.showRejection = true});
 
   final TextEditingController _messageController = TextEditingController();
   late BuildContext gContext;
@@ -58,7 +63,7 @@ class ChatPage extends StatelessWidget {
                 color: Colors.transparent,
                 child: ImageViewer.network(
                   placeholderImagePath: 'images/defaults/user.png',
-                  imageURL: user.photoUrl??'',
+                  imageURL: user.photoUrl ?? '',
                   // Use empty string as default if photoUrl is null
                   width: 45,
                   height: 45,
@@ -120,8 +125,17 @@ class ChatPage extends StatelessWidget {
       FriendCubit friendCubit, MessagesCubit messagesCubit) {
     return Column(
       children: [
-        if (state.status.status == 'pending')
-          _buildFriendRequestButtons(context, state.status.id, friendCubit),
+        () {
+          if (state.status.status == 'pending' && showRejection) {
+            print(showRejection);
+            return _buildFriendRequestButtons(
+                context, state.status.id, friendCubit);
+          }
+          return Container();
+        }(),
+        SizedBox(
+          height: 10,
+        ),
         Expanded(child: _buildMessagesSection(messagesCubit, state.status.id)),
         _buildMessageInputField(
             messagesCubit, _messageController, state.status.id, context),
@@ -215,7 +229,7 @@ class ChatPage extends StatelessWidget {
             constraints: BoxConstraints(
                 minWidth: 80, maxWidth: constraints.maxWidth * 0.7),
             padding: EdgeInsets.all(10),
-            margin: EdgeInsets.symmetric(horizontal:20, vertical: 5),
+            margin: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
             // change border according to user sender
             decoration: BoxDecoration(
               //box shadow
