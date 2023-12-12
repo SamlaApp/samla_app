@@ -18,29 +18,43 @@ import '../../../auth/domain/entities/user.dart';
 import '../../domain/entities/message.dart';
 import 'FriendProfilePage.dart';
 
-class ChatPage extends StatelessWidget {
+class ChatPage extends StatefulWidget {
   final int friendUserID;
   final User friend;
   final bool showRejection;
-  final thisUserID = int.parse(sl<AuthBloc>().user.id!);
-
   ChatPage(
       {super.key,
       required this.friendUserID,
       required this.friend,
       this.showRejection = true});
 
+  @override
+  State<ChatPage> createState() => _ChatPageState();
+}
+
+class _ChatPageState extends State<ChatPage> {
+  final thisUserID = int.parse(sl<AuthBloc>().user.id!);
+
+  Timer? _timer;
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
   final TextEditingController _messageController = TextEditingController();
+
   late BuildContext gContext;
+
   @override
   Widget build(BuildContext context) {
-    print('this is friend  id $friendUserID , this is user id $thisUserID');
+    print('this is friend  id ${widget.friendUserID} , this is user id $thisUserID');
     gContext = context;
     final messagesCubit = sl<MessagesCubit>();
-    final statusCubit = sl<FriendShipCubit>()..getStatus(friendUserID);
+    final statusCubit = sl<FriendShipCubit>()..getStatus(widget.friendUserID);
     final friendCubit = sl<FriendCubit>();
-    final _baseImageUrl =
-        'https://chat.mohsowa.com/api/image'; // Replace with your image URL
+    // Replace with your image URL
     //frint has these
     // print(friend.id);
     // print(friend.name);
@@ -96,7 +110,7 @@ class ChatPage extends StatelessWidget {
     }
 
     return Scaffold(
-      appBar: _buildAppBar(friend),
+      appBar: _buildAppBar(widget.friend),
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
@@ -128,9 +142,9 @@ class ChatPage extends StatelessWidget {
       children: [
         () {
           if (state.status.status == 'pending' &&
-              showRejection &&
+              widget.showRejection &&
               state.status.userId != thisUserID) {
-            print(showRejection);
+            print(widget.showRejection);
             return _buildFriendRequestButtons(
                 context, state.status.id, friendCubit);
           }
@@ -181,17 +195,30 @@ class ChatPage extends StatelessWidget {
   // still not done with the ui i just want to see if it works ;)
   Widget _buildMessagesSection(MessagesCubit messagesCubit, int friendID) {
     ScrollController _scrollController = ScrollController();
+    bool isMessagesWorks = false;
+
+    _timer = Timer.periodic(Duration(seconds: 3), (timer) {
+      if (isMessagesWorks) {
+        messagesCubit.getMessages(friend_id: friendID);
+        print('retrive messages: from ${widget.friend.name}');
+      }
+    });
 
     return BlocBuilder<MessagesCubit, MessagesState>(
       bloc: messagesCubit..getMessages(friend_id: friendID),
+      buildWhen: (previous, current) => true,
       builder: (context, messagesState) {
+        print('update states');
         if (messagesState is MessagesLoaded) {
+          isMessagesWorks = true;
+          
+
           WidgetsBinding.instance.addPostFrameCallback((_) {
             if (_scrollController.hasClients) {
-              _scrollController.animateTo(
-                _scrollController.position.maxScrollExtent + 300,
-                curve: Curves.easeOut,
-                duration: const Duration(milliseconds: 500),
+              _scrollController.jumpTo(
+                _scrollController.position.maxScrollExtent,
+                // curve: Curves.easeOut,
+                // duration: const Duration(milliseconds: 000),
               );
             }
           });

@@ -50,7 +50,7 @@ class MessagesCubit extends Cubit<MessagesState> {
   // }
 
   Future<void> getMessages({required int friend_id}) async {
-    emit(MessagesLoading());
+    // emit(MessagesLoading());
     final result = await repository.getMessages(friend_id);
     result.fold(
       (failure) => emit(MessagesError(message: failure.message)),
