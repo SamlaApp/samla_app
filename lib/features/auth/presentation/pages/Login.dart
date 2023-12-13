@@ -317,6 +317,7 @@ class _LoginState extends State<Login> {
                               prefixIcon: const Icon(Icons.email,
                                   color: Color.fromRGBO(64, 194, 210, 1)),
                               hintText: 'Email',
+                              hintStyle: TextStyle(color: themeDarkBlue.withOpacity(0.5)),
                               focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10),
                                 borderSide: const BorderSide(
@@ -372,6 +373,8 @@ class _LoginState extends State<Login> {
                             prefixIcon: const Icon(Icons.lock,
                                 color: Color.fromRGBO(64, 194, 210, 1)),
                             hintText: 'Password',
+                            hintStyle: TextStyle(color: themeDarkBlue.withOpacity(0.5)),
+
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10),
                               borderSide: const BorderSide(
@@ -450,6 +453,8 @@ class _LoginState extends State<Login> {
                             prefixIcon: const Icon(Icons.person,
                                 color: Color.fromRGBO(64, 194, 210, 1)),
                             hintText: 'Username',
+                            hintStyle: TextStyle(color: themeDarkBlue.withOpacity(0.5)),
+
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10),
                               borderSide: const BorderSide(
@@ -505,6 +510,8 @@ class _LoginState extends State<Login> {
                             prefixIcon: const Icon(Icons.lock,
                                 color: Color.fromRGBO(64, 194, 210, 1)),
                             hintText: 'Password',
+                            hintStyle: TextStyle(color: themeDarkBlue.withOpacity(0.5)),
+
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10),
                               borderSide: const BorderSide(
@@ -590,10 +597,10 @@ class _LoginState extends State<Login> {
                               color: Color.fromRGBO(64, 194, 210, 1),
                             ),
                           ),
-                          inputDecoration: const InputDecoration(
+                          inputDecoration:  InputDecoration(
                             hintText: 'Phone Number',
-                            hintStyle: TextStyle(color: themeDarkBlue),
-                            focusedBorder: OutlineInputBorder(
+                            hintStyle: TextStyle(color: themeDarkBlue.withOpacity(0.5)),
+                            focusedBorder: const OutlineInputBorder(
                               borderSide: BorderSide(
                                 color: Color.fromRGBO(64, 194, 210, 1),
                               ),
