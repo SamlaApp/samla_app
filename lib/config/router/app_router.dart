@@ -28,6 +28,6 @@ Map<String, Widget Function(BuildContext)> routes = {
   '/Register': (context) => RegisterPage(),
   '/PersonalInfo': (context) => PersonalInfoPage(),
   '/NutritionPlan': (context) => NutritionPlan(),
-  '/Friend': (context) => FriendProfilePage(),
+  // '/Friend': (context) => FriendProfilePage(),
   '/AssistantPage': (context) => AssistantPage(),
 };

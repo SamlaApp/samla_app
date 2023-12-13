@@ -9,6 +9,7 @@ abstract class RemoteDataSource {
   Future<List<ProgressModel>> getAllProgress();
   Future<int> getStreak();
   Future<void> sendProgress(ProgressModel progress);
+  Future<List<ProgressModel>> getFriendProgress(int friendId);
 }
 
 class ProgressRemoteDataSourceImpl implements RemoteDataSource {
@@ -61,4 +62,26 @@ class ProgressRemoteDataSourceImpl implements RemoteDataSource {
       throw ServerException(message: 'Server Error');
     }
   }
+
+
+  Future<List<ProgressModel>> getFriendProgress(int friendId) async {
+    final response = await samlaAPI(
+      endPoint: '/progress/get/$friendId',
+      method: 'GET',
+    );
+    if (response.statusCode == 200) {
+      final body = await response.stream.bytesToString();
+      final List<ProgressModel> progress = [];
+      final parsed = jsonDecode(body)['user_progress'];
+      for (var item in parsed) {
+        progress.add(ProgressModel.fromJson(item));
+      }
+
+      return progress;
+    } else {
+      throw ServerException(message: 'Server Error');
+    }
+  }
 }
+
+

@@ -25,7 +25,7 @@ class ProgressRepositoryImpl implements ProgressRepository {
       try {
         var remoteProgress = await remoteDataSource.getAllProgress();
         remoteProgress = _helperFilter(remoteProgress);
-        print('remoteProgress: $remoteProgress');
+        // print('remoteProgress: $remoteProgress');
         localDataSource.cacheProgress(remoteProgress);
         return Right(remoteProgress);
       } on ServerException catch (e) {
@@ -76,4 +76,25 @@ class ProgressRepositoryImpl implements ProgressRepository {
     }
     return filtered.reversed.toList();
   }
+  
+  @override
+  Future<Either<Failure, List<Progress>>> getFriendProgress(int friendID) async{
+    if (await networkInfo.isConnected) {
+      try {
+        var remoteProgress = await remoteDataSource.getFriendProgress(friendID);
+        // print('remoteProgress: $remoteProgress');
+        return Right(remoteProgress);
+      } on ServerException catch (e) {
+        return Left(ServerFailure(message: e.message));
+      } 
+      catch (e) {
+        // print(e.toString());
+        return Left(ServerFailure(message: e.toString()));
+      }
+    } else{
+      return Left(ServerFailure(message: 'No Internet Connection'));
+    }
+  }
+
+
 }

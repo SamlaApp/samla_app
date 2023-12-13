@@ -25,13 +25,17 @@ class FriendRepositoryImpl extends FriendRepository {
   //addFriend
   @override
   Future<Either<Failure, FriendStatus>> addFriend(int friendId) async {
-    try {
-      final status = await remoteDataSource.addFriend(friendId);
-      return Right(status);
-    } on ServerException catch (e) {
-      return Left(ServerFailure(message: e.message));
-    } catch (e) {
-      return Left(ServerFailure(message: e.toString()));
+    if (await networkInfo.isConnected) {
+      try {
+        final status = await remoteDataSource.addFriend(friendId);
+        return Right(status);
+      } on ServerException catch (e) {
+        return Left(ServerFailure(message: e.message));
+      } catch (e) {
+        return Left(ServerFailure(message: e.toString()));
+      }
+    } else {
+      return Left(ServerFailure(message: 'No internet connection'));
     }
   }
 
@@ -56,39 +60,67 @@ class FriendRepositoryImpl extends FriendRepository {
   @override
   Future<Either<Failure, FriendStatus>> getFriendshipStatus(
       int friendId) async {
-    try {
-      final status = await remoteDataSource.getFriendshipStatus(friendId);
-      return Right(status);
-    } on ServerException catch (e) {
-      return Left(ServerFailure(message: e.message));
-    } catch (e) {
-      return Left(ServerFailure(message: e.toString()));
+    if (await networkInfo.isConnected) {
+      try {
+        final status = await remoteDataSource.getFriendshipStatus(friendId);
+        return Right(status);
+      } on ServerException catch (e) {
+        return Left(ServerFailure(message: e.message));
+      } catch (e) {
+        return Left(ServerFailure(message: e.toString()));
+      }
+    } else {
+      return Left(ServerFailure(message: 'No internet connection'));
     }
   }
 
   //acceptFriend
   @override
   Future<Either<Failure, FriendStatus>> acceptFriend(int id) async {
-    try {
-      final status = await remoteDataSource.acceptFriend(id);
-      return Right(status);
-    } on ServerException catch (e) {
-      return Left(ServerFailure(message: e.message));
-    } catch (e) {
-      return Left(ServerFailure(message: e.toString()));
+    if (await networkInfo.isConnected) {
+      try {
+        final status = await remoteDataSource.acceptFriend(id);
+        return Right(status);
+      } on ServerException catch (e) {
+        return Left(ServerFailure(message: e.message));
+      } catch (e) {
+        return Left(ServerFailure(message: e.toString()));
+      }
+    } else {
+      return Left(ServerFailure(message: 'No internet connection'));
     }
   }
 
   //rejectFriend
   @override
   Future<Either<Failure, FriendStatus>> rejectFriend(int id) async {
-    try {
-      final status = await remoteDataSource.rejectFriend(id);
-      return Right(status);
-    } on ServerException catch (e) {
-      return Left(ServerFailure(message: e.message));
-    } catch (e) {
-      return Left(ServerFailure(message: e.toString()));
+    if (await networkInfo.isConnected) {
+      try {
+        final status = await remoteDataSource.rejectFriend(id);
+        return Right(status);
+      } on ServerException catch (e) {
+        return Left(ServerFailure(message: e.message));
+      } catch (e) {
+        return Left(ServerFailure(message: e.toString()));
+      }
+    } else {
+      return Left(ServerFailure(message: 'No internet connection'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, int>> getFriendStreak(int friendId) async{
+    if(await networkInfo.isConnected){
+      try{
+        final streak = await remoteDataSource.getFriendStreak(friendId);
+        return Right(streak);
+      }on ServerException catch(e){
+        return Left(ServerFailure(message: e.message));
+      }catch(e){
+        return Left(ServerFailure(message: e.toString()));
+      }
+    } else{
+      return Left(ServerFailure(message: 'No internet connection'));
     }
   }
 }

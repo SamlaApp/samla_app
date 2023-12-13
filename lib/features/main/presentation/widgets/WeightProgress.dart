@@ -61,7 +61,6 @@ class WeightProgressState extends State<WeightProgress> {
 
     Progress? lastProgress;
     height = sl<AuthBloc>().user!.height!.toDouble();
-    print('weights progress after api : $height');
 
     return BlocBuilder<ProgressCubit, ProgressState>(
       bloc: sl<ProgressCubit>(),
@@ -80,7 +79,6 @@ class WeightProgressState extends State<WeightProgress> {
 
           // int currentWeightIndex = weights.length - 1; /
           int currentWeightIndex = weights.length - 2; //
-          print('currentWeightIndex $currentWeightIndex');
           currentWeight = weights.last; //
           currentBMI = calculateBMI(currentWeight, height); //
           currentBMICatogry = getBMIcategory(currentBMI); //
@@ -347,7 +345,6 @@ Map<String, double> getLast7DaysProgress(List<Progress> progressList) {
   final Map<String, double> last7DaysProgressMap = {};
 
   //List<ProgressModel> progressList = await ProgressRemoteDataSourceImpl().getAllProgress();
-  print('Weight Progress progress List : $progressList');
   // Get the current date
   final currentDate = DateTime.now();
 
@@ -355,11 +352,9 @@ Map<String, double> getLast7DaysProgress(List<Progress> progressList) {
   for (var i = 0; i < 7; i++) {
     // Calculate the date for the current iteration
     final date = currentDate.subtract(Duration(days: i));
-    print('Iteration $i - date $date');
     // Format the date to a day name (e.g., "MON", "TUE")
     final dayName =
         DateFormat('EEEE').format(date).substring(0, 3).toUpperCase();
-    print('Iteration $i - dayName $dayName');
 
     // Find progress for the current date
     var progressForDate = progressList.where((progress) {
@@ -367,21 +362,17 @@ Map<String, double> getLast7DaysProgress(List<Progress> progressList) {
           progress.date!.month == date.month &&
           progress.date!.day == date.day);
     });
-    print('Iteration $i - progressForDate List : $progressForDate');
 
     // Store the progress for the day in the map
     if (progressForDate.isNotEmpty) {
       var x = progressForDate.first.weight!.toDouble();
-      print(
-          'Iteration $i - progressForDate.first.weight!.toDouble() VALUE : $x');
+      
 
       last7DaysProgressMap[dayName] = progressForDate.first.weight!.toDouble();
     } else {
       last7DaysProgressMap[dayName] = 0;
-      print('last7DaysProgressMap 0');
     }
   }
-  print('Weight Progress last7DaysProgressMap $last7DaysProgressMap');
 
   return reverseMap(last7DaysProgressMap);
 }

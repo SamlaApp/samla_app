@@ -33,6 +33,8 @@ abstract class RemoteDataSource {
 
   // getMessages
   Future<List<MessageModel>> getMessages(int friend_id);
+
+  Future<int> getFriendStreak(int friendId);
 }
 
 class RemoteDataSourceImpl implements RemoteDataSource {
@@ -49,9 +51,6 @@ class RemoteDataSourceImpl implements RemoteDataSource {
           json.decode(await res.stream.bytesToString());
       if (res.statusCode != 200) {
         throw ServerException(message: resBody['message']);
-
-
-        
       }
 
       if (resBody['users'] is List) {
@@ -60,11 +59,9 @@ class RemoteDataSourceImpl implements RemoteDataSource {
         }).toList();
         return users;
       }
-      
-
 
       final arr = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
-  
+
       // check if the first key is one of the above
 
       bool isDigit = false;
@@ -261,6 +258,26 @@ class RemoteDataSourceImpl implements RemoteDataSource {
         return MessageModel.fromJson(message);
       }).toList();
       return messages;
+    } on ServerException catch (e) {
+      throw ServerException(message: e.message);
+    } catch (e) {
+      throw ServerException(message: e.toString());
+    }
+  }
+
+  @override
+  Future<int> getFriendStreak(int friendId) async {
+    try {
+      final res = await samlaAPI(
+        endPoint: '/user/streak/get/$friendId',
+        method: 'GET',
+      );
+
+      final resBody = json.decode(await res.stream.bytesToString());
+      if (res.statusCode != 200) {
+        throw ServerException(message: resBody['message']);
+      }
+      return resBody['streak'];
     } on ServerException catch (e) {
       throw ServerException(message: e.message);
     } catch (e) {

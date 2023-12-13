@@ -1,4 +1,5 @@
 import 'package:get_it/get_it.dart';
+import 'package:samla_app/features/friends/presentation/cubit/FetchStreak/fetch_streak_cubit.dart';
 import 'package:samla_app/features/friends/presentation/cubit/explore/explore_cubit.dart';
 import 'package:samla_app/features/friends/presentation/cubit/friendShip/friend_ship_cubit.dart';
 import 'package:samla_app/features/friends/presentation/cubit/friends/friends_cubit.dart';
@@ -27,6 +28,7 @@ Future<void> chatInit() async {
   sl.registerLazySingleton(() => FriendCubit(sl()));
   sl.registerFactory(() => MessagesCubit(sl()));
   sl.registerFactory(() => FriendShipCubit(sl()));
+  sl.registerFactory(() => FetchStreakCubit(sl()));
 
   sl.registerLazySingleton<ExploreRepository>(() => ExploreRepositoryImpl(
       localDataSource: sl(), remoteDataSource: sl(), networkInfo: sl()));

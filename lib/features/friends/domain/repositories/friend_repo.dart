@@ -14,4 +14,6 @@ abstract class FriendRepository {
   Future<Either<Failure, FriendStatus>> acceptFriend(int id);
 
   Future<Either<Failure, FriendStatus>> rejectFriend(int id);
+
+  Future<Either<Failure, int>> getFriendStreak(int friendId);
 }

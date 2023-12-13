@@ -54,13 +54,7 @@ class _ChatPageState extends State<ChatPage> {
     final messagesCubit = sl<MessagesCubit>();
     final statusCubit = sl<FriendShipCubit>()..getStatus(widget.friendUserID);
     final friendCubit = sl<FriendCubit>();
-    // Replace with your image URL
-    //frint has these
-    // print(friend.id);
-    // print(friend.name);
-    // print(friend.email);
-    // print(friend.image);
-    // print(friend.photoUrl);
+  
 
     // Function to build AppBar with user's profile and name
     AppBar _buildAppBar(user) {
@@ -79,6 +73,8 @@ class _ChatPageState extends State<ChatPage> {
                 child: ImageViewer.network(
                   placeholderImagePath: 'images/defaults/user.png',
                   imageURL: user.photoUrl ?? '',
+                  animationTag: 'friend${widget.friend.id}}',
+
                   // Use empty string as default if photoUrl is null
                   width: 45,
                   height: 45,
@@ -92,7 +88,7 @@ class _ChatPageState extends State<ChatPage> {
                 // Navigate to the friend's profile page
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => FriendProfilePage(),
+                    builder: (context) => FriendProfilePage(friend:widget.friend),
                   ),
                 );
               },
