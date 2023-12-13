@@ -21,6 +21,7 @@ Future<Map<String, dynamic>> getNutritionPlan() async {
     }
     return json.decode(resBody)['nutrition_plan'];
   } else {
+    return {};
     throw ServerException(message: json.decode(resBody)['message']);
   }
 }
@@ -39,6 +40,7 @@ Future<Map<String, dynamic>> getProgress() async {
       return {};
     }
   } else {
+    return {};
     throw ServerException(message: json.decode(resBody)['message']);
   }
 }
@@ -71,6 +73,12 @@ Future<Map<String, dynamic>> getNutritionSummary() async {
       return json.decode(resBody)['nutrition_summary'][0];
     }
   } else {
+    return {
+      "total_carbs": 0,
+      "total_protein": 0,
+      "total_fat": 0,
+      "total_calories": 0
+    };
     throw ServerException(message: json.decode(resBody)['message']);
   }
 }
@@ -82,6 +90,20 @@ Future<Map<String, dynamic>> getTrainingSummary() async {
   if (res.statusCode == 200) {
     return json.decode(resBody)['summary'];
   } else {
+    return {};
+    throw ServerException(message: json.decode(resBody)['message']);
+  }
+}
+
+
+Future<Map<String, dynamic>> getGoals() async {
+  final res = await samlaAPI(endPoint: '/goals/get_goals', method: 'GET');
+  final resBody = await res.stream.bytesToString();
+  print(resBody);
+  if (res.statusCode == 200) {
+    return json.decode(resBody)['user_goals'];
+  } else {
+    return {};
     throw ServerException(message: json.decode(resBody)['message']);
   }
 }
@@ -118,6 +140,10 @@ Future<String> generateResponse(String prompt,List<ChatMessage> _messages) async
         {
           "role": "system",
           "content": "You should give short answers"
+        },
+        {
+          "role": "system",
+          "content": "this is my goals data: as json string => ${await getGoals()}"
         },
         {
           "role": "system",
