@@ -8,7 +8,7 @@ import '../models/chatMessage_model.dart';
 import 'package:samla_app/core/network/samlaAPI.dart';
 
 
-const apiSecretKey = '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';
+const apiSecretKey = 'you should put your api key here';
 
 Future<Map<String, dynamic>> getNutritionPlan() async {
   final res = await samlaAPI(endPoint: '/nutrition/plan/get_full', method: 'GET');
