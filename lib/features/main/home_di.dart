@@ -56,31 +56,4 @@ Future<void> HomeInit() async {
   _isInitialized = true;
 }
 
-// void callbackDispatcher() {
-//   Workmanager().executeTask((task, inputData) async {
-//     await HomeInit();
-//     await AuthInit();
-//     switch (task) {
-//       case "stepsBackground":
-//         try {
-//           await stepsBackground(inputData!['cubit']);
-//         } catch (e) {
-//           print('error in stepsBackground');
-//           print(e.toString());
-//           return Future.value(false);
-//         }
-//         break;
-//     }
-//     return Future.value(true);
-//   });
-// }
 
-// Future<void> initWorkManager() async {
-//   await Workmanager().initialize(callbackDispatcher, isInDebugMode: true);
-//   await Workmanager().registerPeriodicTask(
-//     inputData: {'cubit': sl.get<SensorCubit>()},
-//     "stepsBackground",
-//     "stepsBackground",
-//     frequency: Duration(minutes: 15),
-//   );
-// }
