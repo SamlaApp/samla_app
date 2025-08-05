@@ -60,7 +60,6 @@ ThemeData lightTheme = ThemeData(
   scaffoldBackgroundColor: Colors.white, // Another background color option
   highlightColor: Colors.blue, // Highlight color for elements
   // splashColor: Colors.grey, // Splash color for inkwell effects
-  selectedRowColor: Colors.blue[50], // Color for selected rows in tables, etc.
   unselectedWidgetColor: Colors.grey, // Color for unselected widgets (checkboxes, radios)
   disabledColor: Colors.grey[400], // Default button color
   secondaryHeaderColor: Colors.blue[200], // Secondary header color

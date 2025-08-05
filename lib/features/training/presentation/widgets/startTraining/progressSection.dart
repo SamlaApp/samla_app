@@ -723,14 +723,13 @@ class _ProgressSectionState extends State<ProgressSection>
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
         padding:
-            const EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 10),
+            const EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 10), backgroundColor: themeDarkBlue,
         shape: const CircleBorder(
           side: BorderSide(
             color: themeBlue,
             width: 4,
           ),
         ),
-        primary: themeDarkBlue,
       ),
       onPressed: () async {
         setState(() {

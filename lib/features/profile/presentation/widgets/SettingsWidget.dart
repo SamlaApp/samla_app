@@ -374,7 +374,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
             Center(
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                    primary: themeBlue,
+                    backgroundColor: themeBlue,
                     padding: EdgeInsets.symmetric(horizontal: 50, vertical: 13),
                     // Button padding
                     shape: RoundedRectangleBorder(
@@ -398,7 +398,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
             Center(
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                    primary: theme_red,
+                    backgroundColor: theme_red,
                     padding: EdgeInsets.symmetric(horizontal: 20, vertical: 13),
                     shape: RoundedRectangleBorder(
                       borderRadius:

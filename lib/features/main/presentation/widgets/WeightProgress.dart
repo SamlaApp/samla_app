@@ -47,7 +47,7 @@ class WeightProgressState extends State<WeightProgress> {
     String text = weightsTitles[value.toInt()];
 
     return SideTitleWidget(
-      axisSide: meta.axisSide,
+      meta: meta,
       space: 4,
       child: Text(text, style: style),
     );

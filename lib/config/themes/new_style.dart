@@ -34,16 +34,6 @@ ThemeData lightTheme = ThemeData(
   // main font is cairo
   textTheme: GoogleFonts.cairoTextTheme(),
   primaryTextTheme: GoogleFonts.cairoTextTheme(),
-
-  // card theme
-  cardTheme: CardTheme(
-    color: white,
-    shadowColor: themeDarkBlue.withOpacity(0.1),
-    elevation: 0,
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(12),
-    ),
-  ),
 );
 
 BoxDecoration primaryDecoration = BoxDecoration(

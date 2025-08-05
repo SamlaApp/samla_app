@@ -37,7 +37,6 @@ class _BarChart extends StatelessWidget {
   BarTouchData get barTouchData => BarTouchData(
         enabled: false,
         touchTooltipData: BarTouchTooltipData(
-          tooltipBgColor: Colors.transparent,
           tooltipPadding: EdgeInsets.zero,
           tooltipMargin: 8,
           getTooltipItem: (
@@ -67,8 +66,8 @@ class _BarChart extends StatelessWidget {
     String text = progresses.keys.toList()[value.toInt()];
 
     return SideTitleWidget(
-      axisSide: meta.axisSide,
       space: 4,
+      meta: meta,
       child: Text(text, style: style),
     );
   }

@@ -50,7 +50,6 @@ class ImageHelper {
       ],
       sourcePath: imagePath,
       aspectRatio: aspectRatio ?? const CropAspectRatio(ratioX: 1, ratioY: 1),
-      cropStyle: cropStyle ?? CropStyle.rectangle,
       maxWidth: maxWidth,
     );
     return croppedFile;

@@ -144,7 +144,7 @@ class _ProfileWidgetState extends State<ProfileWidget> {
             ),
             TextButton(
               style: TextButton.styleFrom(
-                primary: themeBlue,
+                foregroundColor: themeBlue,
               ),
               onPressed: () {
                 _submitForm();

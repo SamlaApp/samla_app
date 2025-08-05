@@ -149,7 +149,6 @@ class _FriendWeeklyProgressState extends State<FriendWeeklyProgress> {
 
   BarTouchData get _barTouchData => BarTouchData(
         touchTooltipData: BarTouchTooltipData(
-          tooltipBgColor: Colors.transparent,
           tooltipPadding: EdgeInsets.zero,
           tooltipMargin: 8,
           getTooltipItem: (
@@ -181,7 +180,7 @@ class _FriendWeeklyProgressState extends State<FriendWeeklyProgress> {
             int index = value.toInt();
             if (index >= 0 && index < daysOfWeek.length) {
               return SideTitleWidget(
-                axisSide: meta.axisSide,
+                meta: meta,
                 space: 8.0, // or any other space value
                 child: Text(daysOfWeek[index]),
               );

@@ -122,7 +122,7 @@ class _FriendProfileWidgetState extends State<FriendProfileWidget> {
             ),
             TextButton(
               style: TextButton.styleFrom(
-                primary: themeBlue,
+                foregroundColor: themeBlue,
               ),
               onPressed: () {
                 _submitForm();

@@ -186,9 +186,8 @@ class _ProfilePageState extends State<ProfilePage> {
         children: [
           ElevatedButton(
             style: ElevatedButton.styleFrom(
-                padding: EdgeInsets.symmetric(horizontal: 25.0, vertical: 10.0),
-                shape: StadiumBorder(),
-                primary: themeBlue),
+                padding: EdgeInsets.symmetric(horizontal: 25.0, vertical: 10.0), backgroundColor: themeBlue,
+                shape: StadiumBorder()),
             child: Text(
               'update',
               style: TextStyle(fontWeight: FontWeight.bold),
@@ -214,9 +213,8 @@ class _ProfilePageState extends State<ProfilePage> {
           ElevatedButton(
               style: ElevatedButton.styleFrom(
                   padding:
-                      EdgeInsets.symmetric(horizontal: 26.0, vertical: 10.0),
-                  shape: StadiumBorder(),
-                  primary: theme_red),
+                      EdgeInsets.symmetric(horizontal: 26.0, vertical: 10.0), backgroundColor: theme_red,
+                  shape: StadiumBorder()),
               child: Text(
                 'logout',
                 style: TextStyle(fontWeight: FontWeight.bold),

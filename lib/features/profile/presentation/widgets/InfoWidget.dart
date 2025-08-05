@@ -292,7 +292,7 @@ class _InfoWidgetState extends State<InfoWidget> {
                         Center(
                           child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                                primary: themeBlue,
+                                backgroundColor: themeBlue,
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 20, vertical: 13),
                                 // Button padding
